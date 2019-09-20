@@ -1,22 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public enum ACTION_TYPE
-{
-    none = 0,
-    weapon = 1,
-    item = 2,
-    defense = 3,
-}
-
-public enum OPTION_TYPE
-{
-    none = 0,
-    option1 = 1,
-    option2 = 2,
-    option3 = 3,
-}
-
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
@@ -88,7 +72,7 @@ public class UIManager : MonoBehaviour
             menuDefense.SetActive(false);
         }
     }
-    
+
     public void CloseActionRadialMenu()
     {
         if (isOpenActionRadialMenu)
@@ -269,7 +253,7 @@ public class UIManager : MonoBehaviour
     private void OnMouseDown()
     {
         isOpenActionRadialMenu = true;
-        
+
         UI.transform.position = Input.mousePosition;
         UI.SetActive(true);
         Action1.SetActive(true);
@@ -287,7 +271,7 @@ public class UIManager : MonoBehaviour
             inAction = false;
             _actualLayer = ignoreLayer;
             Enemy enemy = hit.collider.GetComponent<Enemy>();
-            enemy.Damage(10);
+            enemy.ActionReceiveDamage(10);
         }
     }
     public void UpdateBarEnemy(float actualHealthEnemy)

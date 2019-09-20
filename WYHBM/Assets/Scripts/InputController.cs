@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
@@ -18,11 +16,11 @@ public class InputController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, 10, enemyLayer);
-        
+
         if (hit.collider != null)
         {
-        Enemy enemy = hit.collider.GetComponent<Enemy>();
-        enemy.Damage(10);
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            enemy.ActionReceiveDamage(10);
         }
 
     }

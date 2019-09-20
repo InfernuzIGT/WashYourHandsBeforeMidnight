@@ -1,25 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Character
 {
+    [Header("Custom")]
     public float healthEnemy = 100f;
     public GameObject _enemy;
-    public int damage;
     public int defenseEnemy;
     public int healPotion;
     public int healthPlayer;
 
-    void Start()
-    {
-        // Recibir daño y curarse (jugador)
-        // barra de vida 
-        // actualizar barra a 50 
-        // clickear item curar jugador (no supera 100 de vida)
-    }
-    void Update()
+    private void Update()
     {
         if (InputAttack())
         {
@@ -33,10 +23,12 @@ public class Player : MonoBehaviour
             }
         }
     }
+
     private bool InputAttack()
     {
         return Input.GetKeyDown(KeyCode.Space);
     }
+
     private void DeadEnemy()
     {
         healthEnemy = 0;
@@ -54,11 +46,12 @@ public class Player : MonoBehaviour
 
         // healthEnemy = healthEnemy - (defenseEnemy - damage); // TODO Mariano: REVISAR
     }
+
     public void PlayerHeal()
     {
         healthPlayer += healPotion;
         healthPlayer = 0;
-        
+
     }
 
 }
