@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class Character : MonoBehaviour
+[RequireComponent(typeof(BoxCollider2D))]
+public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamageable<float>
 {
     [Header("General")]
     public new string name;
@@ -14,9 +15,27 @@ public class Character : MonoBehaviour
     public float damage;
     public float defense;
 
+    private BoxCollider2D _boxCollider;
+    public BoxCollider2D BoxCollider { get { return _boxCollider; } }
+
+    private void Awake()
+    {
+        _boxCollider = GetComponent<BoxCollider2D>();
+    }
+
+    private void Start()
+    {
+        healthActual = healthMax;
+    }
+
     public virtual void ActionAttack()
     {
 
+    }
+
+    public virtual void ActionHeal(float amountHeal)
+    {
+        healthActual += amountHeal;
     }
 
     public virtual void ActionReceiveDamage(float damageReceived)
@@ -26,6 +45,8 @@ public class Character : MonoBehaviour
 
         healthActual -= damageReceived;
 
+        if (healthActual <= 0)
+            healthActual = 0;
     }
 
 }

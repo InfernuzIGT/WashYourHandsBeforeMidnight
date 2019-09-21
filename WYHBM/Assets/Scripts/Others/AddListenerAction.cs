@@ -9,7 +9,7 @@ public class AddListenerAction : MonoBehaviour
     private void Start()
     {
         Button actionButton = GetComponent<Button>();
-        actionButton.onClick.AddListener(() => UIManager.Instance.SelectAction(actionType));
+        actionButton.onClick.AddListener(() => CombatManager.Instance.uiController.SelectAction(actionType));
     }
 
 }

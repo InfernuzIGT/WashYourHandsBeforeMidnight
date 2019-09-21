@@ -9,7 +9,7 @@ public class AddListenerOption : MonoBehaviour
     private void Start()
     {
         Button optionButton = GetComponent<Button>();
-        optionButton.onClick.AddListener(() => UIManager.Instance.SelectOption(optionType));
+        optionButton.onClick.AddListener(() => CombatManager.Instance.uiController.SelectOption(optionType));
     }
 
 }
