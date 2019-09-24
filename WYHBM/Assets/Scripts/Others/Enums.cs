@@ -35,3 +35,43 @@ public enum OPTION_TYPE
 }
 
 #endregion
+
+#region Equipment
+
+public enum TIER
+{
+    none = 0,
+    common = 1,
+    uncommon = 2,
+    rare = 3,
+    epic = 4,
+    legendary = 5,
+}
+
+public enum ITEM_TYPE
+{
+    none = 0,
+    heal = 1,
+    poison = 2,
+    grenade = 3,
+}
+
+public enum WEAPON_TYPE
+{
+    none = 0,
+    melee = 1,
+    pistol = 2,
+    rifle = 3,
+    shotgun = 3,
+}
+
+public enum ARMOR_TYPE
+{
+    none = 0,
+    head = 1,
+    chest = 2,
+    legs = 3,
+    ring = 4,
+}
+
+#endregion

@@ -13,6 +13,7 @@ namespace GameMode.Combat
         public LayerMask ignoreLayer;
 
         // Private variables
+        private bool _isActionEnable;
         private LayerMask _actualLayer;
         private Ray _ray;
         private RaycastHit2D _hit;
@@ -26,7 +27,9 @@ namespace GameMode.Combat
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0) && !CombatManager.Instance.isPaused && inAction)
+            _isActionEnable = Input.GetMouseButtonDown(0) && !CombatManager.Instance.isPaused && inAction && CombatManager.Instance.isTurnPlayer;
+
+            if (_isActionEnable)
             {
                 ActionDamage();
             }

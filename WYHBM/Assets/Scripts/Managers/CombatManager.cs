@@ -11,6 +11,9 @@ public class CombatManager : MonoBehaviour
 
     [Header("General")]
     public bool isPaused = false; 
+    
+    [Header ("Turn")]
+    public bool isTurnPlayer = true;
 
     private void Awake()
     {
