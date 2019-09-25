@@ -13,6 +13,7 @@ public class ActionObject : MonoBehaviour
 
     private void Start()
     {
+        _toggle.onValueChanged.AddListener(delegate { SelectAction(_toggle); });
         SetAction();
     }
 
@@ -29,8 +30,8 @@ public class ActionObject : MonoBehaviour
         // TODO Mariano: Configure the action
         // actionImg.sprite = action.actionSprite;
         shortcutTxt.text = action.actionKey.ToString().Replace("Alpha", "");
-        
-        if (_toggle.isOn) SelectAction();
+
+        if (_toggle.isOn)SelectAction();
     }
 
     private void SelectAction()
@@ -38,5 +39,14 @@ public class ActionObject : MonoBehaviour
         _toggle.isOn = true;
         CombatManager.Instance.actionController.ChooseAction(action, action.value);
         CombatManager.Instance.uiController.ChooseAction(action);
+    }
+
+    private void SelectAction(bool isOn)
+    {
+        if (isOn)
+        {
+            CombatManager.Instance.actionController.ChooseAction(action, action.value);
+            CombatManager.Instance.uiController.ChooseAction(action);
+        }
     }
 }

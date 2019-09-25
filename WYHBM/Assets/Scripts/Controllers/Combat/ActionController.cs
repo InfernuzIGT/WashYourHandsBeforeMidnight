@@ -68,14 +68,10 @@ namespace GameMode.Combat
                 default:
                     break;
             }
+            
+            // TODO Mariano: Redo THIS!
+            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(10f,20f));
         }
-
-        public void Exit()
-        {
-            Debug.Log($"<b> EXIT! </b>");
-        }
-
-        #region Actions
 
         private RaycastHit2D GetHit(LayerMask hitLayer)
         {
@@ -116,10 +112,6 @@ namespace GameMode.Combat
         //     }
         // }
 
-        #endregion
-
-        #region Options
-
         public void Attack()
         {
             Debug.Log($"Action: Attack");
@@ -145,8 +137,6 @@ namespace GameMode.Combat
         {
             Debug.Log($"Action: Run");
         }
-
-        #endregion
 
     }
 }

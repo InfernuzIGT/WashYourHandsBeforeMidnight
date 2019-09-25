@@ -1,16 +1,15 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GameMode.Combat
 {
     public class UIController : MonoBehaviour
     {
-        [Header ("Menu")]
+        [Header("Menu")]
         public GameObject menuAction;
         public GameObject menuTurn;
         public GameObject exitButton;
-        
+
         [Header("Action")]
         public ACTION_TYPE actualActionType;
         [Space]
@@ -22,24 +21,6 @@ namespace GameMode.Combat
         [Space]
         public TextMeshProUGUI turnTxt;
 
-        [Header("Menu")]
-        public bool isOpenActionMenu = false;
-        public bool isOpenActionRadialMenu = false;
-        public GameObject menuWeapon;
-        public GameObject menuDefense;
-        public GameObject menuItem;
-
-        [Header("GameObjects")]
-        public GameObject WIN;
-        public GameObject LOSE;
-        public GameObject Action1;
-        public GameObject Action2;
-        public GameObject Action3;
-        public GameObject UI;
-
-        public Image barHealthEnemy;
-        public Image barHealthPlayer;
-
         public void ChooseAction(ActionSO _action)
         {
             titleTxt.text = _action.title;
@@ -47,236 +28,48 @@ namespace GameMode.Combat
             informationTxt.text = _action.information;
         }
 
-        private void Update()
+        public void SelectAction(ACTION_TYPE actionType)
         {
-            if (Input.GetMouseButtonDown(1))
-            {
-                OpenRadialMenu();
-            }
+            actualActionType = actionType;
         }
 
-        public void CloseActionMenu()
+        public void SelectOption(OPTION_TYPE optionType)
         {
-            if (isOpenActionMenu)
+            switch (actualActionType)
             {
-                isOpenActionMenu = false;
-                menuWeapon.SetActive(false);
-                menuItem.SetActive(false);
-                menuDefense.SetActive(false);
+                case ACTION_TYPE.weapon:
+                    break;
+
+                case ACTION_TYPE.itemPlayer:
+                case ACTION_TYPE.itemEnemy:
+                    break;
+
+                case ACTION_TYPE.defense:
+                    break;
+
+                default:
+                    break;
             }
         }
-
-        public void CloseActionRadialMenu()
-        {
-            if (isOpenActionRadialMenu)
-            {
-                isOpenActionRadialMenu = false;
-                UI.SetActive(false);
-            }
-        }
-
-        #region Options
 
         public void Attack()
         {
-            CloseActionRadialMenu();
-
-            Action1.SetActive(false);
-            Action2.SetActive(true);
-
             CombatManager.Instance.actionController.Attack();
         }
+
         public void Defense()
         {
-            CloseActionRadialMenu();
-
             CombatManager.Instance.actionController.Defense();
         }
+
         public void Item()
         {
-            CloseActionRadialMenu();
-
-            Action1.SetActive(false);
-            Action3.SetActive(true);
-
             CombatManager.Instance.actionController.Item();
         }
 
         public void Run()
         {
-            CloseActionRadialMenu();
-
             CombatManager.Instance.actionController.Run();
-        }
-        public void Exit()
-        {
-            CloseActionRadialMenu();
-
-            Action1.SetActive(false);
-
-            CombatManager.Instance.actionController.Exit();
-        }
-
-        #endregion
-
-        // Actions Selector -------------------------------------------------------------------------
-
-        public void SelectAction(ACTION_TYPE actionType)
-        {
-            actualActionType = actionType;
-            isOpenActionMenu = true;
-
-            switch (actionType)
-            {
-                case ACTION_TYPE.weapon:
-                    menuWeapon.SetActive(true);
-                    menuItem.SetActive(false);
-                    menuDefense.SetActive(false);
-                    break;
-
-                case ACTION_TYPE.itemEnemy:
-                case ACTION_TYPE.itemPlayer:
-                    menuWeapon.SetActive(false);
-                    menuItem.SetActive(true);
-                    menuDefense.SetActive(false);
-                    break;
-
-                case ACTION_TYPE.defense:
-                    menuWeapon.SetActive(false);
-                    menuItem.SetActive(false);
-                    menuDefense.SetActive(true);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        public void SelectOption(OPTION_TYPE optionType)
-        {
-
-            switch (actualActionType)
-            {
-                case ACTION_TYPE.weapon:
-                    OptionWeapon(optionType);
-                    break;
-
-                case ACTION_TYPE.itemPlayer:
-                case ACTION_TYPE.itemEnemy:
-                    OptionItem(optionType);
-                    break;
-
-                case ACTION_TYPE.defense:
-                    OptionDefense(optionType);
-                    break;
-
-                default:
-                    break;
-            }
-
-            isOpenActionMenu = false;
-        }
-
-        private void OptionWeapon(OPTION_TYPE optionType)
-        {
-            switch (optionType)
-            {
-                case OPTION_TYPE.option1:
-                    Debug.Log($"Weapon - Option 1");
-                    break;
-
-                case OPTION_TYPE.option2:
-                    Debug.Log($"Weapon - Option 2");
-                    break;
-
-                case OPTION_TYPE.option3:
-                    Debug.Log($"Weapon - Option 3");
-                    break;
-
-                default:
-                    break;
-            }
-
-            menuWeapon.SetActive(false);
-        }
-
-        private void OptionDefense(OPTION_TYPE optionType)
-        {
-            switch (optionType)
-            {
-                case OPTION_TYPE.option1:
-                    Debug.Log($"Defense - Option 1");
-                    break;
-
-                case OPTION_TYPE.option2:
-                    Debug.Log($"Defense - Option 2");
-                    break;
-
-                case OPTION_TYPE.option3:
-                    Debug.Log($"Defense - Option 3");
-                    break;
-
-                default:
-                    break;
-            }
-
-            menuDefense.SetActive(false);
-        }
-
-        private void OptionItem(OPTION_TYPE optionType)
-        {
-            switch (optionType)
-            {
-                case OPTION_TYPE.option1:
-                    Debug.Log($"Item - Option 1");
-                    break;
-
-                case OPTION_TYPE.option2:
-                    Debug.Log($"Item - Option 2");
-                    break;
-
-                case OPTION_TYPE.option3:
-                    Debug.Log($"Item - Option 3");
-                    break;
-
-                default:
-                    break;
-            }
-
-            menuItem.SetActive(false);
-        }
-
-        //-------------------------------------------------------------------------
-
-        private void OpenRadialMenu()
-        {
-            isOpenActionRadialMenu = true;
-
-            UI.transform.position = Input.mousePosition;
-            UI.SetActive(true);
-            Action1.SetActive(true);
-            Action2.SetActive(false);
-            Action3.SetActive(false);
-
-        }
-
-        public void UpdateBarEnemy(float actualHealthEnemy)
-        {
-            barHealthEnemy.fillAmount = actualHealthEnemy;
-            if (actualHealthEnemy == 0)
-            {
-                WIN.SetActive(true);
-            }
-        }
-
-        public void UpdateBarPlayer(float actualHealthPlayer)
-        {
-            barHealthEnemy.fillAmount = actualHealthPlayer;
-            if (actualHealthPlayer == 0)
-            {
-                LOSE.SetActive(true);
-            }
-
         }
 
     }
