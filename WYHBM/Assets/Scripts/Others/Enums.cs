@@ -22,8 +22,9 @@ public enum ACTION_TYPE
 {
     none = 0,
     weapon = 1,
-    item = 2,
-    defense = 3,
+    defense = 2,
+    itemPlayer = 3,
+    itemEnemy = 4,
 }
 
 public enum OPTION_TYPE

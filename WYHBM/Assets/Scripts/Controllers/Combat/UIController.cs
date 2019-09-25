@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace GameMode.Combat
@@ -7,6 +8,12 @@ namespace GameMode.Combat
     {
         [Header("Action")]
         public ACTION_TYPE actualActionType;
+        [Space]
+        public Transform panelActions;
+        [Space]
+        public TextMeshProUGUI titleTxt;
+        public TextMeshProUGUI descriptionTxt;
+        public TextMeshProUGUI informationTxt;
 
         [Header("Menu")]
         public bool isOpenActionMenu = false;
@@ -25,6 +32,13 @@ namespace GameMode.Combat
 
         public Image barHealthEnemy;
         public Image barHealthPlayer;
+
+        public void ChooseAction(ActionSO _action)
+        {
+            titleTxt.text = _action.title;
+            descriptionTxt.text = _action.description;
+            informationTxt.text = _action.information;
+        }
 
         private void Update()
         {
@@ -113,7 +127,8 @@ namespace GameMode.Combat
                     menuDefense.SetActive(false);
                     break;
 
-                case ACTION_TYPE.item:
+                case ACTION_TYPE.itemEnemy:
+                case ACTION_TYPE.itemPlayer:
                     menuWeapon.SetActive(false);
                     menuItem.SetActive(true);
                     menuDefense.SetActive(false);
@@ -139,7 +154,8 @@ namespace GameMode.Combat
                     OptionWeapon(optionType);
                     break;
 
-                case ACTION_TYPE.item:
+                case ACTION_TYPE.itemPlayer:
+                case ACTION_TYPE.itemEnemy:
                     OptionItem(optionType);
                     break;
 
