@@ -4,7 +4,8 @@ namespace GameMode.Combat
 {
     public class ActionController : MonoBehaviour
     {
-        public ACTION_TYPE actualAction;
+        public ACTION_TYPE actionActual;
+        public float actionValue;
 
         [Header("General")]
         public bool inAction = false;
@@ -37,27 +38,28 @@ namespace GameMode.Combat
             }
         }
 
-        public void ChooseAction(ActionSO _action)
+        public void ChooseAction(ActionSO _action, float _value)
         {
-            actualAction = _action.actionType;
+            actionActual = _action.actionType;
+            actionValue = _value;
         }
 
         public void Play()
         {
-            Debug.Log($"<b> Play action: {actualAction.ToString()} </b>");
+            Debug.Log($"<b> Play action: {actionActual.ToString()} </b>");
             // TODO Mariano: Modo accion, donde desaparece la UI y se muestra la accion a realizar.
 
-            switch (actualAction)
+            switch (actionActual)
             {
                 case ACTION_TYPE.weapon:
-                    // TODO Mariano: Seleccionar enemigo
+                    CombatManager.Instance.listEnemies[0].ActionReceiveDamage(actionValue);
                     break;
                 case ACTION_TYPE.defense:
                     // TODO Mariano: Desaparece UI
                     // TODO Mariano: Modo Defensa
                     break;
                 case ACTION_TYPE.itemPlayer:
-                    // TODO Mariano: Seleccionar jugador
+                    CombatManager.Instance.listPlayers[0].ActionHeal(actionValue);
                     break;
                 case ACTION_TYPE.itemEnemy:
                     // TODO Mariano: Seleccionar enemigo

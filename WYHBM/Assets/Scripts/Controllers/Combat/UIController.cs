@@ -6,6 +6,11 @@ namespace GameMode.Combat
 {
     public class UIController : MonoBehaviour
     {
+        [Header ("Menu")]
+        public GameObject menuAction;
+        public GameObject menuTurn;
+        public GameObject exitButton;
+        
         [Header("Action")]
         public ACTION_TYPE actualActionType;
         [Space]
@@ -14,6 +19,8 @@ namespace GameMode.Combat
         public TextMeshProUGUI titleTxt;
         public TextMeshProUGUI descriptionTxt;
         public TextMeshProUGUI informationTxt;
+        [Space]
+        public TextMeshProUGUI turnTxt;
 
         [Header("Menu")]
         public bool isOpenActionMenu = false;

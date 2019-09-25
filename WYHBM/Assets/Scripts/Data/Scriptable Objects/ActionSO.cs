@@ -13,4 +13,6 @@ public class ActionSO : ScriptableObject
     public Sprite actionSprite;
     public string information;
     public KeyCode actionKey;
+    
+    public float value;
 }

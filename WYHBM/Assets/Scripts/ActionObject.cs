@@ -23,18 +23,20 @@ public class ActionObject : MonoBehaviour
             SelectAction();
         }
     }
-    
+
     private void SetAction()
     {
         // TODO Mariano: Configure the action
         // actionImg.sprite = action.actionSprite;
         shortcutTxt.text = action.actionKey.ToString().Replace("Alpha", "");
+        
+        if (_toggle.isOn) SelectAction();
     }
 
     private void SelectAction()
     {
         _toggle.isOn = true;
-        CombatManager.Instance.actionController.ChooseAction(action);
+        CombatManager.Instance.actionController.ChooseAction(action, action.value);
         CombatManager.Instance.uiController.ChooseAction(action);
     }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(BoxCollider2D))]
 public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamageable<float>
@@ -10,10 +12,20 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
 
     [Header("Stats")]
     public float healthMax;
-    public float healthActual;
-    [Space]
     public float damage;
     public float defense;
+
+    [Header("Interface")]
+    public Image healthBar;
+
+    [Header("Equipment")]
+    public List<WeaponSO> equipmentWeapon;
+    [Space]
+    public List<ItemSO> equipmentItem;
+    [Space]
+    public List<ArmorSO> equipmentArmor;
+    
+    private float healthActual;
 
     private BoxCollider2D _boxCollider;
     public BoxCollider2D BoxCollider { get { return _boxCollider; } }
@@ -26,6 +38,7 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
     private void Start()
     {
         healthActual = healthMax;
+        healthBar.fillAmount = healthActual / healthMax;
     }
 
     public virtual void ActionAttack()
@@ -36,6 +49,7 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
     public virtual void ActionHeal(float amountHeal)
     {
         healthActual += amountHeal;
+        healthBar.fillAmount = healthActual / healthMax;
     }
 
     public virtual void ActionReceiveDamage(float damageReceived)
@@ -44,9 +58,13 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
             return;
 
         healthActual -= damageReceived;
+        healthBar.fillAmount = healthActual / healthMax;
 
         if (healthActual <= 0)
+        {
             healthActual = 0;
+            healthBar.fillAmount = 0;
+        }
     }
 
 }
