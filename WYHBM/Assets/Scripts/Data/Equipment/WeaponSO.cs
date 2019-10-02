@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New weapon", menuName = "Data/Weapon", order = 0)]
-public class WeaponSO : Equipment
+[CreateAssetMenu(fileName = "New weapon", menuName = "Equipment/Weapon", order = 0)]
+public class WeaponSO : EquipmentSO
 {
 	[Header("Weapon")]
 	public WEAPON_TYPE weaponType;

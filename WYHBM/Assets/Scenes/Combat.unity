@@ -1739,18 +1739,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46428009130d1f438c17888925fbaa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 11400000, guid: 78e90c12460b71c4d999c9742430ce0f, type: 2}
   name: 
   characterType: 1
   characterBehaviour: 0
   healthMax: 100
   damage: 17
   defense: 10
-  healthBar: {fileID: 915249891}
-  equipmentWeapon:
-  - {fileID: 11400000, guid: 4f13331e70dc6de46b0b1f24b117678b, type: 2}
-  equipmentItem:
-  - {fileID: 11400000, guid: 1c6b2683bbb951046b534a4c65ddedc6, type: 2}
-  equipmentArmor: []
+  _healthBar: {fileID: 915249891}
 --- !u!4 &1032475949
 Transform:
   m_ObjectHideFlags: 0
@@ -1887,16 +1883,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3db4e58d88bd26646bb0f360b2df5a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 11400000, guid: d85249bb8c40ada429bb63d048692f7c, type: 2}
   name: 
   characterType: 2
   characterBehaviour: 0
   healthMax: 100
   damage: 12
   defense: 20
-  healthBar: {fileID: 1173285558}
-  equipmentWeapon: []
-  equipmentItem: []
-  equipmentArmor: []
+  _healthBar: {fileID: 1173285558}
 --- !u!61 &1054803279
 BoxCollider2D:
   m_ObjectHideFlags: 0

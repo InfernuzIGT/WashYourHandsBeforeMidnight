@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Equipment : ScriptableObject
+public class EquipmentSO : ScriptableObject
 {
     [Header ("General")]
     public new string name;
