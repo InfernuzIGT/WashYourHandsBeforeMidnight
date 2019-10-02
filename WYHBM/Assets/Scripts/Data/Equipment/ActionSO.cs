@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Action", menuName = "Data/Action", order = 0)]
+[CreateAssetMenu(fileName = "New Action", menuName = "Action", order = 0)]
 public class ActionSO : ScriptableObject
 {
     [Header("General")]
