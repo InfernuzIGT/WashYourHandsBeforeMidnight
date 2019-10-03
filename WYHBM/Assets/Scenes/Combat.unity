@@ -194,6 +194,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 113751391}
   m_CullTransparentMesh: 0
+--- !u!1 &236850538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 236850539}
+  - component: {fileID: 236850541}
+  - component: {fileID: 236850540}
+  m_Layer: 5
+  m_Name: FadeScreen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &236850539
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236850538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2033510457}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 10, y: 10}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &236850540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236850538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &236850541
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236850538}
+  m_CullTransparentMesh: 0
 --- !u!1 &258858226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,6 +1162,8 @@ MonoBehaviour:
   menuAction: {fileID: 1219635321}
   menuTurn: {fileID: 258858226}
   exitButton: {fileID: 295798833}
+  fadeScreen: {fileID: 236850540}
+  panelTxt: {fileID: 0}
   actualActionType: 0
   panelActions: {fileID: 799893600}
   titleTxt: {fileID: 465935064}
@@ -1740,12 +1815,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 11400000, guid: 78e90c12460b71c4d999c9742430ce0f, type: 2}
-  name: 
-  characterType: 1
-  characterBehaviour: 0
-  healthMax: 100
-  damage: 17
-  defense: 10
   _healthBar: {fileID: 915249891}
 --- !u!4 &1032475949
 Transform:
@@ -1884,12 +1953,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 11400000, guid: d85249bb8c40ada429bb63d048692f7c, type: 2}
-  name: 
-  characterType: 2
-  characterBehaviour: 0
-  healthMax: 100
-  damage: 12
-  defense: 20
   _healthBar: {fileID: 1173285558}
 --- !u!61 &1054803279
 BoxCollider2D:
@@ -2580,6 +2643,7 @@ MonoBehaviour:
   actionActual: 0
   actionValue: 0
   inAction: 0
+  canDoAction: 1
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -3008,6 +3072,9 @@ MonoBehaviour:
   actionController: {fileID: 1524963962}
   isPaused: 0
   isTurnPlayer: 1
+  fadeDuration: 3
+  fadeInText: COMBAT!
+  fadeOutText: FINISH
   groupPlayers: {fileID: 560412162}
   groupEnemies: {fileID: 1700110865}
   listPlayers: []
@@ -3105,6 +3172,7 @@ RectTransform:
   - {fileID: 1219635322}
   - {fileID: 258858227}
   - {fileID: 295798834}
+  - {fileID: 236850539}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
