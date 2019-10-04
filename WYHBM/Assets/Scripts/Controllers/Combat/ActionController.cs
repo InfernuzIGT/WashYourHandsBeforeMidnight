@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using Events;
+using UnityEngine;
 
 namespace GameMode.Combat
 {
@@ -9,6 +11,7 @@ namespace GameMode.Combat
 
         [Header("General")]
         public bool inAction = false;
+        public bool canDoAction = true;
 
         [Header("Layers")]
         public LayerMask playerLayer;
@@ -26,6 +29,17 @@ namespace GameMode.Combat
         private void Start()
         {
             _actualLayer = ignoreLayer;
+        }
+
+        private void OnEnable()
+        {
+            EventController.AddListener<FadeOutEvent>(FadeOut);
+        }
+
+        private void OnDisable()
+        {
+            EventController.RemoveListener<FadeOutEvent>(FadeOut);
+
         }
 
         private void Update()
@@ -68,9 +82,9 @@ namespace GameMode.Combat
                 default:
                     break;
             }
-            
+
             // TODO Mariano: Redo THIS!
-            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(10f,20f));
+            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(10f, 20f));
         }
 
         private RaycastHit2D GetHit(LayerMask hitLayer)
@@ -137,6 +151,31 @@ namespace GameMode.Combat
         {
             Debug.Log($"Action: Run");
         }
+        
+        private void FadeIn(FadeInEvent evt)
+        {
+            StartCoroutine(StartFadeIn(evt.duration));
+        }
+        
+        private void FadeOut(FadeOutEvent evt)
+        {
+            StartCoroutine(StartFadeOut(evt.duration));
+        }
+        
+        private IEnumerator StartFadeIn(float duration)
+        {
+            canDoAction = true;
+            yield return new WaitForSeconds(duration);
+            canDoAction = false;
+        }
 
+        
+        private IEnumerator StartFadeOut(float duration)
+        {
+            canDoAction = false;
+            yield return new WaitForSeconds(duration);
+            canDoAction = true;
+        }
+        
     }
 }
