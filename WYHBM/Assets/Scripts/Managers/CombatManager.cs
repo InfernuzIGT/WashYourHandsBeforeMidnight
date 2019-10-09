@@ -8,17 +8,12 @@ public class CombatManager : MonoBehaviour
     public static CombatManager Instance;
 
     [Header("Controllers")]
-    public UIController uiController;
+    public UIController uIController;
     public ActionController actionController;
 
     [Header("General")]
     public bool isPaused = false;
     public bool isTurnPlayer = true;
-    
-    [Header ("Fade")]
-    public float fadeDuration = 3;
-    public string fadeInText = "COMBAT!";
-    public string fadeOutText = "FINISH";
 
     [Header("Characters")]
     public Transform groupPlayers;
@@ -30,6 +25,8 @@ public class CombatManager : MonoBehaviour
 
     private FadeInEvent fadeInEvent = new FadeInEvent();
     private FadeOutEvent fadeOutEvent = new FadeOutEvent();
+    private FadeInCanvasEvent fadeInCanvasEvent = new FadeInCanvasEvent();
+    private FadeOutCanvasEvent fadeOutCanvasEvent = new FadeOutCanvasEvent();
 
     private void Awake()
     {
@@ -42,31 +39,55 @@ public class CombatManager : MonoBehaviour
     private void Start()
     {
         GetCharacters();
-        
+
+        fadeInEvent.duration = 3;
         fadeOutEvent.duration = 3;
-        fadeInEvent.text = fadeInText;        
-        fadeOutEvent.text = fadeOutText;        
-        
+        fadeInEvent.text = GameData.Instance.textConfig.fadeInText;
+        fadeOutEvent.text = GameData.Instance.textConfig.fadeOutText;
+
+        fadeInCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
+        fadeOutCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
+
         FadeOut();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     private void GetCharacters()
     {
+        // TODO Mariano: REDO THIS!
+
         for (int i = 0; i < groupPlayers.childCount; i++)
             listPlayers.Add(groupPlayers.GetChild(i).GetComponent<Player>());
 
         for (int i = 0; i < groupEnemies.childCount; i++)
             listEnemies.Add(groupEnemies.GetChild(i).GetComponent<Enemy>());
     }
-    
+
     public void FadeIn()
     {
         EventController.TriggerEvent(fadeInEvent);
     }
-    
+
     public void FadeOut()
     {
         EventController.TriggerEvent(fadeOutEvent);
     }
-    
+
+    public void FadeInCanvas()
+    {
+        EventController.TriggerEvent(fadeInCanvasEvent);
+    }
+
+    public void FadeOutCanvas()
+    {
+        EventController.TriggerEvent(fadeOutCanvasEvent);
+    }
+
 }

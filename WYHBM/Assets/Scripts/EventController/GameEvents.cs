@@ -11,4 +11,7 @@ namespace Events
 
     public class FadeInEvent : FadeEvent { }
     public class FadeOutEvent : FadeEvent { }
+    
+    public class FadeInCanvasEvent : FadeEvent { }
+    public class FadeOutCanvasEvent : FadeEvent { }
 }
