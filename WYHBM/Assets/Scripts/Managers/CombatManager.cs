@@ -14,7 +14,7 @@ public class CombatManager : MonoBehaviour
     [Header("General")]
     public bool isPaused = false;
     public bool isTurnPlayer = true;
-    
+
     [Header("Characters")]
     public Transform groupPlayers;
     public Transform groupEnemies;
@@ -25,6 +25,8 @@ public class CombatManager : MonoBehaviour
 
     private FadeInEvent fadeInEvent = new FadeInEvent();
     private FadeOutEvent fadeOutEvent = new FadeOutEvent();
+    private FadeInCanvasEvent fadeInCanvasEvent = new FadeInCanvasEvent();
+    private FadeOutCanvasEvent fadeOutCanvasEvent = new FadeOutCanvasEvent();
 
     private void Awake()
     {
@@ -37,33 +39,55 @@ public class CombatManager : MonoBehaviour
     private void Start()
     {
         GetCharacters();
-        
+
+        fadeInEvent.duration = 3;
         fadeOutEvent.duration = 3;
-        fadeInEvent.text = GameData.Instance.textConfig.fadeInText;        
-        fadeOutEvent.text = GameData.Instance.textConfig.fadeOutText;        
-        
+        fadeInEvent.text = GameData.Instance.textConfig.fadeInText;
+        fadeOutEvent.text = GameData.Instance.textConfig.fadeOutText;
+
+        fadeInCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
+        fadeOutCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
+
         FadeOut();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     private void GetCharacters()
     {
         // TODO Mariano: REDO THIS!
-        
+
         for (int i = 0; i < groupPlayers.childCount; i++)
             listPlayers.Add(groupPlayers.GetChild(i).GetComponent<Player>());
 
         for (int i = 0; i < groupEnemies.childCount; i++)
             listEnemies.Add(groupEnemies.GetChild(i).GetComponent<Enemy>());
     }
-    
+
     public void FadeIn()
     {
         EventController.TriggerEvent(fadeInEvent);
     }
-    
+
     public void FadeOut()
     {
         EventController.TriggerEvent(fadeOutEvent);
     }
-    
+
+    public void FadeInCanvas()
+    {
+        EventController.TriggerEvent(fadeInCanvasEvent);
+    }
+
+    public void FadeOutCanvas()
+    {
+        EventController.TriggerEvent(fadeOutCanvasEvent);
+    }
+
 }

@@ -6,8 +6,10 @@ public class Player : Character
     private List<EquipmentSO> equipment;
     public List<EquipmentSO> Equipment { get { return equipment; } set { equipment = value; } }
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
+        
         CreateEquipmentList();
     }
 
@@ -24,15 +26,6 @@ public class Player : Character
         CombatManager.Instance.uIController.CreateActionObjects(equipment);
     }
 
-    public override void ActionReceiveDamage(float damageReceived)
-    {
-        base.ActionReceiveDamage(damageReceived);
-
-    }
-
-    public override void ActionHeal(float amountHeal)
-    {
-        base.ActionHeal(amountHeal);
-    }
+   
 
 }

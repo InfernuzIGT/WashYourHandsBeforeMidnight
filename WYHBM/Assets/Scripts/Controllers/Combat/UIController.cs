@@ -10,14 +10,13 @@ namespace GameMode.Combat
 {
     public class UIController : MonoBehaviour
     {
-        [Header("Menu")]
+        [Header("General")]
+        public CanvasGroup canvasGroup;
+        public Image fadeScreen;
+        [Space]
         public GameObject menuAction;
         public GameObject menuTurn;
-        public GameObject exitButton;
-
-        [Header("Panels")]
-        public Image fadeScreen;
-        public TextMeshProUGUI panelTxt;
+        public GameObject buttonExit;
 
         [Header("Action")]
         public ACTION_TYPE actualActionType;
@@ -32,7 +31,7 @@ namespace GameMode.Combat
 
         private string _informationType;
         private ActionObject _actionObject;
-        
+
         private List<ActionObject> _actionObjects;
 
         private void Start()
@@ -44,25 +43,29 @@ namespace GameMode.Combat
         {
             EventController.AddListener<FadeInEvent>(FadeIn);
             EventController.AddListener<FadeOutEvent>(FadeOut);
+            EventController.AddListener<FadeInCanvasEvent>(FadeInCanvas);
+            EventController.AddListener<FadeOutCanvasEvent>(FadeOutCanvas);
         }
         private void OnDisable()
         {
             EventController.RemoveListener<FadeInEvent>(FadeIn);
             EventController.RemoveListener<FadeOutEvent>(FadeOut);
+            EventController.RemoveListener<FadeInCanvasEvent>(FadeInCanvas);
+            EventController.RemoveListener<FadeOutCanvasEvent>(FadeOutCanvas);
 
         }
 
         public void CreateActionObjects(List<EquipmentSO> _equipment)
         {
             _actionObjects = new List<ActionObject>();
-            
+
             for (int i = 0; i < _equipment.Count; i++)
             {
                 _actionObject = Instantiate(GameData.Instance.combatConfig.actionObjectPrefab, panelActions.transform);
                 _actionObject.equipment = _equipment[i];
                 _actionObjects.Add(_actionObject);
             }
-            
+
             _actionObjects[0].SelectAction();
         }
 
@@ -162,32 +165,39 @@ namespace GameMode.Combat
             CombatManager.Instance.actionController.Run();
         }
 
+        public void ChangeUI(bool isPlayer)
+        {
+            menuAction.SetActive(isPlayer);
+            menuTurn.SetActive(!isPlayer);
+            buttonExit.SetActive(isPlayer);
+        }
+
         #region Fade
 
         private void FadeIn(FadeInEvent evt)
         {
             // TODO Mariano: Add start text
             // panelTxt.text = evt.text;           
-            StartCoroutine(StartFadeIn(evt.duration));
+            fadeScreen.DOFade(1, evt.duration);
         }
 
         private void FadeOut(FadeOutEvent evt)
         {
             // TODO Mariano: Add end text
             // panelTxt.text = evt.text;           
-            StartCoroutine(StartFadeOut(evt.duration));
+            fadeScreen.DOFade(0, evt.duration);
         }
 
-        private IEnumerator StartFadeIn(float duration)
+        private void FadeInCanvas(FadeInCanvasEvent evt)
         {
-            fadeScreen.DOFade(1, duration);
-            yield return null;
+            canvasGroup.interactable = true;
+            canvasGroup.DOFade(1, evt.duration);
         }
 
-        private IEnumerator StartFadeOut(float duration)
+        private void FadeOutCanvas(FadeOutCanvasEvent evt)
         {
-            fadeScreen.DOFade(0, duration);
-            yield return null;
+            canvasGroup.interactable = false;
+            canvasGroup.DOFade(0, evt.duration);
         }
 
         #endregion
