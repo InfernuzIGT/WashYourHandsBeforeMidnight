@@ -52,10 +52,10 @@ namespace GameMode.Combat
             }
         }
 
-        public void ChooseAction(ActionSO _action, float _value)
+        public void ChooseAction(EquipmentSO _equipment, float _minValue, float _maxValue)
         {
-            actionActual = _action.actionType;
-            actionValue = _value;
+            actionActual = _equipment.actionType;
+            actionValue = Random.Range(_minValue, _maxValue);
         }
 
         public void Play()
@@ -84,6 +84,11 @@ namespace GameMode.Combat
             }
 
             // TODO Mariano: Redo THIS!
+            
+            
+            
+            
+            
             CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(10f, 20f));
         }
 

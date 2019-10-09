@@ -8,18 +8,13 @@ public class CombatManager : MonoBehaviour
     public static CombatManager Instance;
 
     [Header("Controllers")]
-    public UIController uiController;
+    public UIController uIController;
     public ActionController actionController;
 
     [Header("General")]
     public bool isPaused = false;
     public bool isTurnPlayer = true;
     
-    [Header ("Fade")]
-    public float fadeDuration = 3;
-    public string fadeInText = "COMBAT!";
-    public string fadeOutText = "FINISH";
-
     [Header("Characters")]
     public Transform groupPlayers;
     public Transform groupEnemies;
@@ -44,14 +39,16 @@ public class CombatManager : MonoBehaviour
         GetCharacters();
         
         fadeOutEvent.duration = 3;
-        fadeInEvent.text = fadeInText;        
-        fadeOutEvent.text = fadeOutText;        
+        fadeInEvent.text = GameData.Instance.textConfig.fadeInText;        
+        fadeOutEvent.text = GameData.Instance.textConfig.fadeOutText;        
         
         FadeOut();
     }
 
     private void GetCharacters()
     {
+        // TODO Mariano: REDO THIS!
+        
         for (int i = 0; i < groupPlayers.childCount; i++)
             listPlayers.Add(groupPlayers.GetChild(i).GetComponent<Player>());
 

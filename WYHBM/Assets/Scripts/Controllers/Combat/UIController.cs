@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using TMPro;
@@ -21,18 +22,22 @@ namespace GameMode.Combat
         [Header("Action")]
         public ACTION_TYPE actualActionType;
         [Space]
-        public Transform panelActions;
+        public PanelActions panelActions;
         [Space]
-        public TextMeshProUGUI titleTxt;
-        public TextMeshProUGUI descriptionTxt;
-        public TextMeshProUGUI informationTxt;
+        [SerializeField] private TextMeshProUGUI _playTxt = null;
+        [SerializeField] private TextMeshProUGUI _descriptionTxt = null;
+        [SerializeField] private TextMeshProUGUI _informationTxt = null;
         [Space]
         public TextMeshProUGUI turnTxt;
 
+        private string _informationType;
+        private ActionObject _actionObject;
+        
+        private List<ActionObject> _actionObjects;
 
         private void Start()
         {
-
+            _playTxt.text = GameData.Instance.textConfig.playActionTxt;
         }
 
         private void OnEnable()
@@ -46,11 +51,71 @@ namespace GameMode.Combat
             EventController.RemoveListener<FadeOutEvent>(FadeOut);
 
         }
-        public void ChooseAction(ActionSO _action)
+
+        public void CreateActionObjects(List<EquipmentSO> _equipment)
         {
-            titleTxt.text = _action.title;
-            descriptionTxt.text = _action.description;
-            informationTxt.text = _action.information;
+            _actionObjects = new List<ActionObject>();
+            
+            for (int i = 0; i < _equipment.Count; i++)
+            {
+                _actionObject = Instantiate(GameData.Instance.combatConfig.actionObjectPrefab, panelActions.transform);
+                _actionObject.equipment = _equipment[i];
+                _actionObjects.Add(_actionObject);
+            }
+            
+            _actionObjects[0].SelectAction();
+        }
+
+        public void ChooseAction(EquipmentSO _equipment)
+        {
+            _descriptionTxt.text = _equipment.actionDescription;
+
+            switch (_equipment.actionType)
+            {
+                case ACTION_TYPE.weapon:
+                    _informationType = GameData.Instance.textConfig.actionTypeWeapon;
+                    break;
+
+                case ACTION_TYPE.itemPlayer:
+                    _informationType = null;
+                    break;
+
+                case ACTION_TYPE.itemEnemy:
+                    _informationType = null;
+                    break;
+
+                case ACTION_TYPE.defense:
+                    _informationType = GameData.Instance.textConfig.actionTypeDefense;
+                    break;
+
+                default:
+                    Debug.LogError($"<color=red><b>[ERROR]</b></color> \"None\" in \"GetEquipmentText\"");
+                    _informationType = "";
+                    break;
+            }
+
+            if (_informationType != null)
+            {
+                if (_equipment.valueMin == _equipment.valueMax)
+                {
+                    _informationTxt.text = string.Format(
+                        GameData.Instance.textConfig.informationOneText,
+                        _informationType,
+                        _equipment.valueMax);
+                }
+                else
+                {
+                    _informationTxt.text = string.Format(
+                        GameData.Instance.textConfig.informationTwoText,
+                        _informationType,
+                        _equipment.valueMin,
+                        _equipment.valueMax);
+                }
+            }
+            else
+            {
+                _informationTxt.text = "";
+            }
         }
 
         public void SelectAction(ACTION_TYPE actionType)
@@ -104,8 +169,8 @@ namespace GameMode.Combat
             // TODO Mariano: Add start text
             // panelTxt.text = evt.text;           
             StartCoroutine(StartFadeIn(evt.duration));
-        }        
-        
+        }
+
         private void FadeOut(FadeOutEvent evt)
         {
             // TODO Mariano: Add end text
@@ -118,13 +183,12 @@ namespace GameMode.Combat
             fadeScreen.DOFade(1, duration);
             yield return null;
         }
-        
+
         private IEnumerator StartFadeOut(float duration)
         {
             fadeScreen.DOFade(0, duration);
             yield return null;
         }
-        
 
         #endregion
     }

@@ -3,6 +3,7 @@ using System.Text;
 #endif
 
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
     public CharacterSO character;
 
     [Header("Interface")]
-    [SerializeField] private Image _healthBar;
+    [SerializeField] private Image _healthBar = null;
 
 #if UNITY_EDITOR
     private StringBuilder _characterData = new StringBuilder();
@@ -50,7 +51,7 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
         SetCharacter();
 
         _healthActual = _healthMax;
-        _healthBar.fillAmount = _healthActual / _healthMax;
+        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
 
 #if UNITY_EDITOR
         UpdateCharacterData();
@@ -80,7 +81,7 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
     public virtual void ActionHeal(float amountHeal)
     {
         _healthActual += amountHeal;
-        _healthBar.fillAmount = _healthActual / _healthMax;
+        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
 
 #if UNITY_EDITOR
         UpdateCharacterData();
@@ -93,12 +94,12 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
             return;
 
         _healthActual -= damageReceived;
-        _healthBar.fillAmount = _healthActual / _healthMax;
+        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
 
         if (_healthActual <= 0)
         {
             _healthActual = 0;
-            _healthBar.fillAmount = 0;
+            _healthBar.DOFillAmount(0, GameData.Instance.combatConfig.fillDuration);
         }
 
 #if UNITY_EDITOR

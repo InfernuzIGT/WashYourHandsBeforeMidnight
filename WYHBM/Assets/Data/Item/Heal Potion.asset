@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e769e2a7fe3364d855031d6ed24bac, type: 3}
   m_Name: Heal Potion
   m_EditorClassIdentifier: 
-  name: Heal Potion
-  description: Heal player with this heal potion
-  sprite: {fileID: 0}
+  name: Medkit
+  description: A nice medkit
+  sprite: {fileID: 21300000, guid: b71ee080a95505f4893cf7133cdeb8ea, type: 3}
   tier: 1
   price: 50
+  valueMin: 20
+  valueMax: 25
+  order: 1
+  actionType: 3
+  actionKey: 50
+  actionDescription: Heal player with this medkit
   itemType: 1
-  itemPoints: 25
-  actionItem: {fileID: 11400000, guid: f8e20c69aa1a3354180c55510df9f336, type: 2}

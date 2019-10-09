@@ -2,7 +2,7 @@
 
 public class EquipmentSO : ScriptableObject
 {
-    [Header ("General")]
+    [Header("General")]
     public new string name;
     [TextArea]
     public string description;
@@ -11,4 +11,15 @@ public class EquipmentSO : ScriptableObject
     [Space]
     public TIER tier;
     public float price;
+    [Space]
+    public float valueMin;
+    public float valueMax;
+
+    [Header("Action")]
+    public int order;
+    public ACTION_TYPE actionType;
+    public KeyCode actionKey;
+    [TextArea]
+    public string actionDescription;
+    
 }
