@@ -3,17 +3,18 @@ using System.Text;
 #endif
 
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamageable<float>
+public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamageable<float>
 {
     [Header("Character")]
     public CharacterSO character;
 
     [Header("Interface")]
-    [SerializeField] private Image _healthBar;
+    [SerializeField] private Image _healthBar = null;
 
 #if UNITY_EDITOR
     private StringBuilder _characterData = new StringBuilder();
@@ -28,6 +29,7 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
     private float _healthMax;
     private float _damage;
     private float _defense;
+    private Vector3 _scaleNormal;
 
     private List<WeaponSO> _equipmentWeapon;
     private List<ItemSO> _equipmentItem;
@@ -41,16 +43,18 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
         _boxCollider = GetComponent<BoxCollider2D>();
     }
 
-    private void Start()
+    public virtual void Start()
     {
         _equipmentWeapon = new List<WeaponSO>();
         _equipmentItem = new List<ItemSO>();
         _equipmentArmor = new List<ArmorSO>();
 
+        _scaleNormal = transform.localScale;
+
         SetCharacter();
 
         _healthActual = _healthMax;
-        _healthBar.fillAmount = _healthActual / _healthMax;
+        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
 
 #if UNITY_EDITOR
         UpdateCharacterData();
@@ -72,15 +76,23 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
         _equipmentArmor?.AddRange(character.equipmentArmor);
     }
 
-    public virtual void ActionAttack()
+    public virtual void ActionStartCombat()
     {
+        transform.DOScale(GameData.Instance.combatConfig.scaleCombat, GameData.Instance.combatConfig.transitionDuration);
+    }
 
+    public virtual void ActionStopCombat()
+    {
+        transform.DOScale(_scaleNormal, GameData.Instance.combatConfig.transitionDuration);
     }
 
     public virtual void ActionHeal(float amountHeal)
     {
         _healthActual += amountHeal;
-        _healthBar.fillAmount = _healthActual / _healthMax;
+
+        if (_healthActual > _healthMax)_healthActual = _healthMax;
+
+        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
 
 #if UNITY_EDITOR
         UpdateCharacterData();
@@ -93,12 +105,12 @@ public class Character : MonoBehaviour, IAttackable, IHealeable<float>, IDamagea
             return;
 
         _healthActual -= damageReceived;
-        _healthBar.fillAmount = _healthActual / _healthMax;
+        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
 
         if (_healthActual <= 0)
         {
             _healthActual = 0;
-            _healthBar.fillAmount = 0;
+            _healthBar.DOFillAmount(0, GameData.Instance.combatConfig.fillDuration);
         }
 
 #if UNITY_EDITOR

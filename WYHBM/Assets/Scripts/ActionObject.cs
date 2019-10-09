@@ -4,22 +4,23 @@ using UnityEngine.UI;
 
 public class ActionObject : MonoBehaviour
 {
-    public ActionSO action;
+    public EquipmentSO equipment;
 
     [Header("Complete")]
-    [SerializeField] private Toggle _toggle;
-    [SerializeField] private Image actionImg;
-    [SerializeField] private TextMeshProUGUI shortcutTxt;
+    [SerializeField] private Toggle _toggle = null;
+    [SerializeField] private Image actionImg = null;
+    [SerializeField] private TextMeshProUGUI shortcutTxt = null;
 
     private void Start()
     {
         _toggle.onValueChanged.AddListener(delegate { SelectAction(_toggle); });
+        _toggle.group = CombatManager.Instance.uIController.panelActions.toggleGroup;
         SetAction();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(action.actionKey))
+        if (Input.GetKeyDown(equipment.actionKey))
         {
             SelectAction();
         }
@@ -27,26 +28,25 @@ public class ActionObject : MonoBehaviour
 
     private void SetAction()
     {
-        // TODO Mariano: Configure the action
-        // actionImg.sprite = action.actionSprite;
-        shortcutTxt.text = action.actionKey.ToString().Replace("Alpha", "");
+        actionImg.sprite = equipment.sprite;
+        shortcutTxt.text = equipment.actionKey.ToString().Replace("Alpha", "");
 
         if (_toggle.isOn)SelectAction();
     }
 
-    private void SelectAction()
+    public void SelectAction()
     {
         _toggle.isOn = true;
-        CombatManager.Instance.actionController.ChooseAction(action, action.value);
-        CombatManager.Instance.uiController.ChooseAction(action);
+        CombatManager.Instance.actionController.ChooseAction(equipment, equipment.valueMin, equipment.valueMax);
+        CombatManager.Instance.uIController.ChooseAction(equipment);
     }
 
     private void SelectAction(bool isOn)
     {
         if (isOn)
         {
-            CombatManager.Instance.actionController.ChooseAction(action, action.value);
-            CombatManager.Instance.uiController.ChooseAction(action);
+            CombatManager.Instance.actionController.ChooseAction(equipment, equipment.valueMin, equipment.valueMax);
+            CombatManager.Instance.uIController.ChooseAction(equipment);
         }
     }
 }
