@@ -9,9 +9,9 @@ public class CharacterSO : ScriptableObject
     public CHARACTER_BEHAVIOUR characterBehaviour = CHARACTER_BEHAVIOUR.none;
 
     [Header("Stats")]
-    public float healthMax;
-    public float damage;
-    public float defense;
+    public int healthMax;
+    public int damage;
+    public int defense;
 
     [Header("Equipment")]
     public List<WeaponSO> equipmentWeapon;
@@ -20,5 +20,7 @@ public class CharacterSO : ScriptableObject
     [Space]
     public List<ArmorSO> equipmentArmor;
     
-    // TODO Mariano: Add sprite
+    [Header ("Sprites")]
+    public Sprite spriteCharacter;
+    
 }

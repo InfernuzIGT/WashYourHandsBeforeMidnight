@@ -7,7 +7,7 @@ namespace GameMode.Combat
     public class ActionController : MonoBehaviour
     {
         public ACTION_TYPE actionActual;
-        public float actionValue;
+        public int actionValue;
 
         [Header("General")]
         public bool inAction = false;
@@ -29,6 +29,8 @@ namespace GameMode.Combat
         private WaitForSeconds combatTransition;
         private WaitForSeconds combatWaitTime;
 
+        private ShakeEvent shakeEvent = new ShakeEvent();
+
         private void Start()
         {
             combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
@@ -45,10 +47,9 @@ namespace GameMode.Combat
         private void OnDisable()
         {
             EventController.RemoveListener<FadeOutEvent>(FadeOut);
-
         }
 
-        public void ChooseAction(EquipmentSO _equipment, float _minValue, float _maxValue)
+        public void ChooseAction(EquipmentSO _equipment, int _minValue, int _maxValue)
         {
             actionActual = _equipment.actionType;
             actionValue = Random.Range(_minValue, _maxValue);
@@ -76,7 +77,8 @@ namespace GameMode.Combat
             yield return combatTransition;
 
             PlayAction();
-            CombatManager.Instance.uIController.ChangeUI(false);
+            CombatManager.Instance.uIController.ChangeUI(!CombatManager.Instance.listEnemies[0].IsAlive);
+            // CombatManager.Instance.uIController.ChangeUI(false);
 
             yield return combatWaitTime;
 
@@ -89,27 +91,36 @@ namespace GameMode.Combat
 
             // TODO Mariano: Redo THIS!
             //-------------------------------
-            
-            yield return new WaitForSeconds(1.5f);
 
-            CombatManager.Instance.FadeOutCanvas();
-            CombatManager.Instance.listPlayers[0].ActionStartCombat();
-            CombatManager.Instance.listEnemies[0].ActionStartCombat();
+            yield return new WaitForSeconds(1.25f);
 
-            yield return combatTransition;
+            if (CombatManager.Instance.listEnemies[0].IsAlive)
+            {
+                CombatManager.Instance.FadeOutCanvas();
+                CombatManager.Instance.listPlayers[0].ActionStartCombat();
+                CombatManager.Instance.listEnemies[0].ActionStartCombat();
 
-            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(13f, 16f));
-            CombatManager.Instance.uIController.ChangeUI(true);
+                yield return combatTransition;
 
-            yield return combatWaitTime;
+                CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(19, 23));
+                EventController.TriggerEvent(shakeEvent);
+                CombatManager.Instance.uIController.ChangeUI(true);
 
-            CombatManager.Instance.FadeInCanvas();
-            CombatManager.Instance.listPlayers[0].ActionStopCombat();
-            CombatManager.Instance.listEnemies[0].ActionStopCombat();
+                yield return combatWaitTime;
 
-            yield return combatTransition;
+                CombatManager.Instance.FadeInCanvas();
+                CombatManager.Instance.listPlayers[0].ActionStopCombat();
+                CombatManager.Instance.listEnemies[0].ActionStopCombat();
 
-            CombatManager.Instance.isTurnPlayer = true;
+                yield return combatTransition;
+
+                CombatManager.Instance.isTurnPlayer = true;
+            }
+            else
+            {
+                CombatManager.Instance.EndGame(true);
+            }
+
         }
 
         private void PlayAction()
@@ -118,9 +129,11 @@ namespace GameMode.Combat
             {
                 case ACTION_TYPE.weapon:
                     CombatManager.Instance.listEnemies[0].ActionReceiveDamage(actionValue);
+                    EventController.TriggerEvent(shakeEvent);
                     break;
 
                 case ACTION_TYPE.defense:
+                
                     break;
 
                 case ACTION_TYPE.itemPlayer:

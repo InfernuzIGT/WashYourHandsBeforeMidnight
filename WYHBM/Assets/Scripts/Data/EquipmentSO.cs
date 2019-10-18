@@ -10,10 +10,10 @@ public class EquipmentSO : ScriptableObject
     public Sprite sprite;
     [Space]
     public TIER tier;
-    public float price;
+    public int price;
     [Space]
-    public float valueMin;
-    public float valueMax;
+    public int valueMin;
+    public int valueMax;
 
     [Header("Action")]
     public int order;
