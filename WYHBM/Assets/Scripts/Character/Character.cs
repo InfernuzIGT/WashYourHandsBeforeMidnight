@@ -1,26 +1,17 @@
-﻿#if UNITY_EDITOR
-using System.Text;
-#endif
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamageable<float>
+public class Character : MonoBehaviour, ICombatable, IHealeable<int>, IDamageable<int>
 {
     [Header("Character")]
     public CharacterSO character;
 
     [Header("Interface")]
-    [SerializeField] private Image _healthBar = null;
-
-#if UNITY_EDITOR
-    private StringBuilder _characterData = new StringBuilder();
-    public StringBuilder CharacterData { get { return _characterData; } }
-#endif    
+    [SerializeField] private CharacterUI characterUI = null;
 
     private string _name;
     private CHARACTER_TYPE _characterType = CHARACTER_TYPE.none;
@@ -28,8 +19,8 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
 
     private float _healthActual;
     private float _healthMax;
-    private float _damage;
-    private float _defense;
+    private int _damage;
+    private int _defense;
     private Vector3 _scaleNormal;
     private Vector2 _infoTextPosition;
 
@@ -39,15 +30,22 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
 
     private InfoTextEvent infoTextEvent = new InfoTextEvent();
 
+    private bool _isAlive;
+    public bool IsAlive { get { return _isAlive; } }
+
     private Vector3 _startPosition;
     public Vector3 StartPosition { get { return _startPosition; } }
 
     private BoxCollider2D _boxCollider;
     public BoxCollider2D BoxCollider { get { return _boxCollider; } }
 
+    private SpriteRenderer _spriteRenderer;
+    public SpriteRenderer SpriteRenderer { get { return _spriteRenderer; } }
+
     private void Awake()
     {
         _boxCollider = GetComponent<BoxCollider2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public virtual void Start()
@@ -63,15 +61,12 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
         SetCharacter();
 
         _healthActual = _healthMax;
-        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
-
-#if UNITY_EDITOR
-        UpdateCharacterData();
-#endif    
+        characterUI.healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
     }
 
-    private void SetCharacter()
+    public virtual void SetCharacter()
     {
+        _isAlive = true;
         _name = character.name;
         _characterType = character.characterType;
         _characterBehaviour = character.characterBehaviour;
@@ -83,6 +78,8 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
         _equipmentWeapon?.AddRange(character.equipmentWeapon);
         _equipmentItem?.AddRange(character.equipmentItem);
         _equipmentArmor?.AddRange(character.equipmentArmor);
+
+        _spriteRenderer.sprite = character.spriteCharacter;
     }
 
     public virtual void ActionStartCombat()
@@ -95,7 +92,7 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
         transform.DOScale(_scaleNormal, GameData.Instance.combatConfig.transitionDuration);
     }
 
-    public virtual void ActionHeal(float amountHeal)
+    public virtual void ActionHeal(int amountHeal)
     {
         _healthActual += amountHeal;
 
@@ -103,32 +100,28 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
 
         if (_healthActual > _healthMax)_healthActual = _healthMax;
 
-        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
-
-#if UNITY_EDITOR
-        UpdateCharacterData();
-#endif  
+        characterUI.healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
     }
 
-    public virtual void ActionReceiveDamage(float damageReceived)
+    public virtual void ActionDefense(int amountDefense)
+    {
+        _defense = amountDefense;
+    }
+
+    public virtual void ActionReceiveDamage(int damageReceived)
     {
         if (_healthActual == 0)
             return;
 
         _healthActual -= damageReceived;
-        _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
+
+        _isAlive = _healthActual >= 0;
+
+        characterUI.healthBar.
+        DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration).
+        OnComplete(Kill);
 
         ShowInfoText(damageReceived);
-
-        if (_healthActual <= 0)
-        {
-            _healthActual = 0;
-            _healthBar.DOFillAmount(0, GameData.Instance.combatConfig.fillDuration);
-        }
-
-#if UNITY_EDITOR
-        UpdateCharacterData();
-#endif  
     }
 
     private void ShowInfoText(float value)
@@ -138,24 +131,24 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
         EventController.TriggerEvent(infoTextEvent);
     }
 
-#if UNITY_EDITOR
-
-    private void UpdateCharacterData()
+    private void Kill()
     {
-        _characterData.Clear();
+        if (_healthActual <= 0)
+        {
+            _healthActual = 0;
 
-        _characterData.AppendFormat(
-            "- Name: {0}\n- Type: {1}\n- Behaviour: {2}\n\n- Health: {3}/{4}\n\n- Damage: {5}\n- Defense: {6}",
-            _name,
-            _characterType.ToString(),
-            _characterBehaviour.ToString(),
-            _healthActual,
-            _healthMax,
-            _damage,
-            _defense
-        );
+            characterUI.Kill();
+
+            _spriteRenderer.
+            DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
+            SetEase(Ease.OutQuad).OnComplete(CheckGame);
+        }
     }
 
-#endif 
+    private void CheckGame()
+    {
+        // TODO Mariano: ADD EVENT TO CHECK THE LIST OF ENEMIES
+        gameObject.SetActive(false);
+    }
 
 }

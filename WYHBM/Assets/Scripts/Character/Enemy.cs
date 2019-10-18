@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+	public override void SetCharacter()
+	{
+		base.SetCharacter();
+
+		SpriteRenderer.flipX = true;
+	}
+
 	public override void ActionStartCombat()
 	{
 		base.ActionStartCombat();

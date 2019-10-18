@@ -13,6 +13,7 @@ namespace GameMode.Combat
         [Header("General")]
         public CanvasGroup canvasGroup;
         public Image fadeScreen;
+        public TextMeshProUGUI endTxt;
         [Space]
         public GameObject menuAction;
         public GameObject menuTurn;
