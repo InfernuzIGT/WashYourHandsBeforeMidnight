@@ -29,6 +29,8 @@ namespace GameMode.Combat
         private WaitForSeconds combatTransition;
         private WaitForSeconds combatWaitTime;
 
+        private ShakeEvent shakeEvent = new ShakeEvent();
+
         private void Start()
         {
             combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
@@ -45,7 +47,6 @@ namespace GameMode.Combat
         private void OnDisable()
         {
             EventController.RemoveListener<FadeOutEvent>(FadeOut);
-
         }
 
         public void ChooseAction(EquipmentSO _equipment, float _minValue, float _maxValue)
@@ -89,7 +90,7 @@ namespace GameMode.Combat
 
             // TODO Mariano: Redo THIS!
             //-------------------------------
-            
+
             yield return new WaitForSeconds(1.5f);
 
             CombatManager.Instance.FadeOutCanvas();
@@ -99,6 +100,7 @@ namespace GameMode.Combat
             yield return combatTransition;
 
             CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(13f, 16f));
+            EventController.TriggerEvent(shakeEvent);
             CombatManager.Instance.uIController.ChangeUI(true);
 
             yield return combatWaitTime;
@@ -118,6 +120,7 @@ namespace GameMode.Combat
             {
                 case ACTION_TYPE.weapon:
                     CombatManager.Instance.listEnemies[0].ActionReceiveDamage(actionValue);
+                    EventController.TriggerEvent(shakeEvent);
                     break;
 
                 case ACTION_TYPE.defense:

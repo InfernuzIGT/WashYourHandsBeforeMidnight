@@ -4,6 +4,7 @@ using System.Text;
 
 using System.Collections.Generic;
 using DG.Tweening;
+using Events;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,10 +31,16 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
     private float _damage;
     private float _defense;
     private Vector3 _scaleNormal;
+    private Vector2 _infoTextPosition;
 
     private List<WeaponSO> _equipmentWeapon;
     private List<ItemSO> _equipmentItem;
     private List<ArmorSO> _equipmentArmor;
+
+    private InfoTextEvent infoTextEvent = new InfoTextEvent();
+
+    private Vector3 _startPosition;
+    public Vector3 StartPosition { get { return _startPosition; } }
 
     private BoxCollider2D _boxCollider;
     public BoxCollider2D BoxCollider { get { return _boxCollider; } }
@@ -50,6 +57,8 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
         _equipmentArmor = new List<ArmorSO>();
 
         _scaleNormal = transform.localScale;
+        _startPosition = transform.position;
+        _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
 
         SetCharacter();
 
@@ -90,6 +99,8 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
     {
         _healthActual += amountHeal;
 
+        ShowInfoText(amountHeal);
+
         if (_healthActual > _healthMax)_healthActual = _healthMax;
 
         _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
@@ -107,6 +118,8 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
         _healthActual -= damageReceived;
         _healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
 
+        ShowInfoText(damageReceived);
+
         if (_healthActual <= 0)
         {
             _healthActual = 0;
@@ -116,6 +129,13 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<float>, IDamagea
 #if UNITY_EDITOR
         UpdateCharacterData();
 #endif  
+    }
+
+    private void ShowInfoText(float value)
+    {
+        infoTextEvent.text = value.ToString("F0");
+        infoTextEvent.position = _infoTextPosition;
+        EventController.TriggerEvent(infoTextEvent);
     }
 
 #if UNITY_EDITOR

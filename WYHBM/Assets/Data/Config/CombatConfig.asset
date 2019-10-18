@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeDuration: 3
   fillDuration: 0.25
-  transitionDuration: 0.35
-  waitCombatDuration: 1.25
-  scaleCombat: 17.5
   actionObjectPrefab: {fileID: 2867091352469623503, guid: b958cb889a88ff84a9fb0dc87cf919de,
     type: 3}
+  transitionDuration: 0.1
+  waitCombatDuration: 1.5
+  scaleCombat: 17.5
+  positionCombat: {x: -3.5, y: 0, z: 0}
+  positionXTo: -4
+  shakeDuration: 0.35
+  shakeAmplitude: 0.25
+  shakeFrequency: 25
