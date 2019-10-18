@@ -1,17 +1,36 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 public class Enemy : Character
 {
+	public override void SetCharacter()
+	{
+		base.SetCharacter();
 
-    public override void ActionReceiveDamage(float damageReceived)
-    {
-        base.ActionReceiveDamage(damageReceived);
+		SpriteRenderer.flipX = true;
+	}
 
-    }
+	public override void ActionStartCombat()
+	{
+		base.ActionStartCombat();
 
-    public override void ActionHeal(float amountHeal)
-    {
-        base.ActionHeal(amountHeal);
-    }
+		transform.
+		DOMove(-GameData.Instance.combatConfig.positionCombat, GameData.Instance.combatConfig.transitionDuration).
+		SetEase(Ease.OutQuad);
+
+		transform.
+		DOMoveX(-GameData.Instance.combatConfig.positionXCharacter, GameData.Instance.combatConfig.waitCombatDuration).
+		SetEase(Ease.OutQuad).
+		SetDelay(GameData.Instance.combatConfig.transitionDuration);
+	}
+
+	public override void ActionStopCombat()
+	{
+		base.ActionStopCombat();
+
+		transform.
+		DOMove(StartPosition, GameData.Instance.combatConfig.transitionDuration).
+		SetEase(Ease.OutQuad);
+	}
 
 }

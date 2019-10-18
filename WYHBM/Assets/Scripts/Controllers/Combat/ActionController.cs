@@ -7,7 +7,7 @@ namespace GameMode.Combat
     public class ActionController : MonoBehaviour
     {
         public ACTION_TYPE actionActual;
-        public float actionValue;
+        public int actionValue;
 
         [Header("General")]
         public bool inAction = false;
@@ -26,8 +26,16 @@ namespace GameMode.Combat
         private Player _player;
         private Enemy _enemy;
 
+        private WaitForSeconds combatTransition;
+        private WaitForSeconds combatWaitTime;
+
+        private ShakeEvent shakeEvent = new ShakeEvent();
+
         private void Start()
         {
+            combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
+            combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
+
             _actualLayer = ignoreLayer;
         }
 
@@ -39,52 +47,105 @@ namespace GameMode.Combat
         private void OnDisable()
         {
             EventController.RemoveListener<FadeOutEvent>(FadeOut);
-
         }
 
-        private void Update()
+        public void ChooseAction(EquipmentSO _equipment, int _minValue, int _maxValue)
         {
-            _isActionEnable = Input.GetMouseButtonDown(0) && !CombatManager.Instance.isPaused && inAction && CombatManager.Instance.isTurnPlayer;
+            actionActual = _equipment.actionType;
+            actionValue = Random.Range(_minValue, _maxValue);
+        }
 
-            if (_isActionEnable)
+        public void StartCombat()
+        {
+            _isActionEnable = !CombatManager.Instance.isPaused && CombatManager.Instance.isTurnPlayer;
+
+            if (!_isActionEnable)
+                return;
+
+            CombatManager.Instance.isTurnPlayer = false;
+
+            StartCoroutine(CombatPlayer());
+        }
+
+        private IEnumerator CombatPlayer()
+        {
+            // TODO Mariano: Fade IN
+            CombatManager.Instance.FadeOutCanvas();
+            CombatManager.Instance.listPlayers[0].ActionStartCombat();
+            CombatManager.Instance.listEnemies[0].ActionStartCombat();
+
+            yield return combatTransition;
+
+            PlayAction();
+            CombatManager.Instance.uIController.ChangeUI(!CombatManager.Instance.listEnemies[0].IsAlive);
+            // CombatManager.Instance.uIController.ChangeUI(false);
+
+            yield return combatWaitTime;
+
+            // TODO Mariano: Fade OUT
+            CombatManager.Instance.FadeInCanvas();
+            CombatManager.Instance.listPlayers[0].ActionStopCombat();
+            CombatManager.Instance.listEnemies[0].ActionStopCombat();
+
+            yield return combatTransition;
+
+            // TODO Mariano: Redo THIS!
+            //-------------------------------
+
+            yield return new WaitForSeconds(1.25f);
+
+            if (CombatManager.Instance.listEnemies[0].IsAlive)
             {
-                ActionDamage();
+                CombatManager.Instance.FadeOutCanvas();
+                CombatManager.Instance.listPlayers[0].ActionStartCombat();
+                CombatManager.Instance.listEnemies[0].ActionStartCombat();
+
+                yield return combatTransition;
+
+                CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(19, 23));
+                EventController.TriggerEvent(shakeEvent);
+                CombatManager.Instance.uIController.ChangeUI(true);
+
+                yield return combatWaitTime;
+
+                CombatManager.Instance.FadeInCanvas();
+                CombatManager.Instance.listPlayers[0].ActionStopCombat();
+                CombatManager.Instance.listEnemies[0].ActionStopCombat();
+
+                yield return combatTransition;
+
+                CombatManager.Instance.isTurnPlayer = true;
             }
+            else
+            {
+                CombatManager.Instance.EndGame(true);
+            }
+
         }
 
-        public void ChooseAction(ActionSO _action, float _value)
+        private void PlayAction()
         {
-            actionActual = _action.actionType;
-            actionValue = _value;
-        }
-
-        public void Play()
-        {
-            Debug.Log($"<b> Play action: {actionActual.ToString()} </b>");
-            // TODO Mariano: Modo accion, donde desaparece la UI y se muestra la accion a realizar.
-
             switch (actionActual)
             {
                 case ACTION_TYPE.weapon:
                     CombatManager.Instance.listEnemies[0].ActionReceiveDamage(actionValue);
+                    EventController.TriggerEvent(shakeEvent);
                     break;
+
                 case ACTION_TYPE.defense:
-                    // TODO Mariano: Desaparece UI
-                    // TODO Mariano: Modo Defensa
+                
                     break;
+
                 case ACTION_TYPE.itemPlayer:
                     CombatManager.Instance.listPlayers[0].ActionHeal(actionValue);
                     break;
+
                 case ACTION_TYPE.itemEnemy:
-                    // TODO Mariano: Seleccionar enemigo
                     break;
 
                 default:
                     break;
             }
-
-            // TODO Mariano: Redo THIS!
-            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(10f, 20f));
         }
 
         private RaycastHit2D GetHit(LayerMask hitLayer)
@@ -93,38 +154,6 @@ namespace GameMode.Combat
 
             return Physics2D.Raycast(_ray.origin, _ray.direction, 10, hitLayer);
         }
-
-        public void ActionDamage()
-        {
-            _hit = GetHit(enemyLayer);
-
-            if (_hit.collider != null)
-            {
-                inAction = false;
-
-                _actualLayer = ignoreLayer;
-
-                // TODO Mariano: Identificar al enemigo de otra manera
-                _enemy = _hit.collider.GetComponent<Enemy>();
-                _enemy.ActionReceiveDamage(10);
-            }
-
-        }
-
-        // public void ActionHeal()
-        // {
-        //     _hit = GetHit(_actualLayer);
-
-        //     if (_hit.collider != null)
-        //     {
-        //         inAction = false;
-
-        //         _actualLayer = ignoreLayer;
-
-        //         _player = _hit.collider.GetComponent<Player>();
-        //         _player.ActionHeal(10);
-        //     }
-        // }
 
         public void Attack()
         {
@@ -151,17 +180,17 @@ namespace GameMode.Combat
         {
             Debug.Log($"Action: Run");
         }
-        
+
         private void FadeIn(FadeInEvent evt)
         {
             StartCoroutine(StartFadeIn(evt.duration));
         }
-        
+
         private void FadeOut(FadeOutEvent evt)
         {
             StartCoroutine(StartFadeOut(evt.duration));
         }
-        
+
         private IEnumerator StartFadeIn(float duration)
         {
             canDoAction = true;
@@ -169,13 +198,12 @@ namespace GameMode.Combat
             canDoAction = false;
         }
 
-        
         private IEnumerator StartFadeOut(float duration)
         {
             canDoAction = false;
             yield return new WaitForSeconds(duration);
             canDoAction = true;
         }
-        
+
     }
 }

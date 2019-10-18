@@ -4,6 +4,5 @@
 public class ArmorSO : EquipmentSO
 {
     [Header("Armor")]
-    public WEAPON_TYPE weaponType;
-    public float weaponValue;
+    public ARMOR_TYPE armorType;
 }

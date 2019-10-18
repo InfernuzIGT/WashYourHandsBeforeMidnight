@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e0e2cef7fa61943bbaba6cf0a1150e, type: 3}
+  m_Name: CombatConfig
+  m_EditorClassIdentifier: 
+  fadeDuration: 3
+  fillDuration: 0.25
+  canvasFadeDuration: 0.35
+  fadeOutEndDuration: 0.75
+  actionObjectPrefab: {fileID: 2867091352469623503, guid: b958cb889a88ff84a9fb0dc87cf919de,
+    type: 3}
+  transitionDuration: 0.05
+  waitCombatDuration: 1.25
+  scaleCombat: 1.75
+  positionCombat: {x: -3.5, y: 0, z: 0}
+  positionXCharacter: -4
+  infoTextMoveDuration: 1
+  infoTextFadeDuration: 0.35
+  infoTextFadeDelay: 0.65
+  positionYTextStart: 1
+  positionYTextEnd: 2.5
+  shakeDuration: 0.5
+  shakeAmplitude: 0.25
+  shakeFrequency: 25

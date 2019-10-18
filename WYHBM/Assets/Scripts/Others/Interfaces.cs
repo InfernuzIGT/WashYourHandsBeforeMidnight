@@ -1,6 +1,7 @@
-﻿public interface IAttackable
+﻿public interface ICombatable
 {
-    void ActionAttack();
+    void ActionStartCombat();
+    void ActionStopCombat();
 }
 
 public interface IHealeable<T>

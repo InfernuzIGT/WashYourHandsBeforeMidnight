@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using TMPro;
@@ -9,48 +10,116 @@ namespace GameMode.Combat
 {
     public class UIController : MonoBehaviour
     {
-        [Header("Menu")]
+        [Header("General")]
+        public CanvasGroup canvasGroup;
+        public Image fadeScreen;
+        public TextMeshProUGUI endTxt;
+        [Space]
         public GameObject menuAction;
         public GameObject menuTurn;
-        public GameObject exitButton;
-
-        [Header("Panels")]
-        public Image fadeScreen;
-        public TextMeshProUGUI panelTxt;
+        public GameObject buttonExit;
 
         [Header("Action")]
         public ACTION_TYPE actualActionType;
         [Space]
-        public Transform panelActions;
+        public PanelActions panelActions;
         [Space]
-        public TextMeshProUGUI titleTxt;
-        public TextMeshProUGUI descriptionTxt;
-        public TextMeshProUGUI informationTxt;
+        [SerializeField] private TextMeshProUGUI _playTxt = null;
+        [SerializeField] private TextMeshProUGUI _descriptionTxt = null;
+        [SerializeField] private TextMeshProUGUI _informationTxt = null;
         [Space]
         public TextMeshProUGUI turnTxt;
 
+        private string _informationType;
+        private ActionObject _actionObject;
+
+        private List<ActionObject> _actionObjects;
 
         private void Start()
         {
-
+            _playTxt.text = GameData.Instance.textConfig.playActionTxt;
         }
 
         private void OnEnable()
         {
             EventController.AddListener<FadeInEvent>(FadeIn);
             EventController.AddListener<FadeOutEvent>(FadeOut);
+            EventController.AddListener<FadeInCanvasEvent>(FadeInCanvas);
+            EventController.AddListener<FadeOutCanvasEvent>(FadeOutCanvas);
         }
         private void OnDisable()
         {
             EventController.RemoveListener<FadeInEvent>(FadeIn);
             EventController.RemoveListener<FadeOutEvent>(FadeOut);
+            EventController.RemoveListener<FadeInCanvasEvent>(FadeInCanvas);
+            EventController.RemoveListener<FadeOutCanvasEvent>(FadeOutCanvas);
 
         }
-        public void ChooseAction(ActionSO _action)
+
+        public void CreateActionObjects(List<EquipmentSO> _equipment)
         {
-            titleTxt.text = _action.title;
-            descriptionTxt.text = _action.description;
-            informationTxt.text = _action.information;
+            _actionObjects = new List<ActionObject>();
+
+            for (int i = 0; i < _equipment.Count; i++)
+            {
+                _actionObject = Instantiate(GameData.Instance.combatConfig.actionObjectPrefab, panelActions.transform);
+                _actionObject.equipment = _equipment[i];
+                _actionObjects.Add(_actionObject);
+            }
+
+            _actionObjects[0].SelectAction();
+        }
+
+        public void ChooseAction(EquipmentSO _equipment)
+        {
+            _descriptionTxt.text = _equipment.actionDescription;
+
+            switch (_equipment.actionType)
+            {
+                case ACTION_TYPE.weapon:
+                    _informationType = GameData.Instance.textConfig.actionTypeWeapon;
+                    break;
+
+                case ACTION_TYPE.itemPlayer:
+                    _informationType = null;
+                    break;
+
+                case ACTION_TYPE.itemEnemy:
+                    _informationType = null;
+                    break;
+
+                case ACTION_TYPE.defense:
+                    _informationType = GameData.Instance.textConfig.actionTypeDefense;
+                    break;
+
+                default:
+                    Debug.LogError($"<color=red><b>[ERROR]</b></color> \"None\" in \"GetEquipmentText\"");
+                    _informationType = "";
+                    break;
+            }
+
+            if (_informationType != null)
+            {
+                if (_equipment.valueMin == _equipment.valueMax)
+                {
+                    _informationTxt.text = string.Format(
+                        GameData.Instance.textConfig.informationOneText,
+                        _informationType,
+                        _equipment.valueMax);
+                }
+                else
+                {
+                    _informationTxt.text = string.Format(
+                        GameData.Instance.textConfig.informationTwoText,
+                        _informationType,
+                        _equipment.valueMin,
+                        _equipment.valueMax);
+                }
+            }
+            else
+            {
+                _informationTxt.text = "";
+            }
         }
 
         public void SelectAction(ACTION_TYPE actionType)
@@ -97,34 +166,40 @@ namespace GameMode.Combat
             CombatManager.Instance.actionController.Run();
         }
 
+        public void ChangeUI(bool isPlayer)
+        {
+            menuAction.SetActive(isPlayer);
+            menuTurn.SetActive(!isPlayer);
+            buttonExit.SetActive(isPlayer);
+        }
+
         #region Fade
 
         private void FadeIn(FadeInEvent evt)
         {
             // TODO Mariano: Add start text
             // panelTxt.text = evt.text;           
-            StartCoroutine(StartFadeIn(evt.duration));
-        }        
-        
+            fadeScreen.DOFade(1, evt.duration);
+        }
+
         private void FadeOut(FadeOutEvent evt)
         {
             // TODO Mariano: Add end text
             // panelTxt.text = evt.text;           
-            StartCoroutine(StartFadeOut(evt.duration));
+            fadeScreen.DOFade(0, evt.duration);
         }
 
-        private IEnumerator StartFadeIn(float duration)
+        private void FadeInCanvas(FadeInCanvasEvent evt)
         {
-            fadeScreen.DOFade(1, duration);
-            yield return null;
+            canvasGroup.interactable = true;
+            canvasGroup.DOFade(1, evt.duration);
         }
-        
-        private IEnumerator StartFadeOut(float duration)
+
+        private void FadeOutCanvas(FadeOutCanvasEvent evt)
         {
-            fadeScreen.DOFade(0, duration);
-            yield return null;
+            canvasGroup.interactable = false;
+            canvasGroup.DOFade(0, evt.duration);
         }
-        
 
         #endregion
     }
