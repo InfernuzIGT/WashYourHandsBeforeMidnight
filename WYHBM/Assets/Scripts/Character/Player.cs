@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Player : Character
@@ -9,7 +10,7 @@ public class Player : Character
     public override void Start()
     {
         base.Start();
-        
+
         CreateEquipmentList();
     }
 
@@ -22,10 +23,31 @@ public class Player : Character
         equipment.AddRange(character.equipmentArmor);
 
         equipment.Sort((e1, e2) => e1.order.CompareTo(e2.order));
-        
+
         CombatManager.Instance.uIController.CreateActionObjects(equipment);
     }
 
-   
+    public override void ActionStartCombat()
+    {
+        base.ActionStartCombat();
+
+        transform.
+        DOMove(GameData.Instance.combatConfig.positionCombat, GameData.Instance.combatConfig.transitionDuration).
+        SetEase(Ease.OutQuad);
+
+        transform.
+        DOMoveX(GameData.Instance.combatConfig.positionXCharacter, GameData.Instance.combatConfig.waitCombatDuration).
+        SetEase(Ease.OutQuad).
+        SetDelay(GameData.Instance.combatConfig.transitionDuration);
+    }
+
+    public override void ActionStopCombat()
+    {
+        base.ActionStopCombat();
+
+        transform.
+        DOMove(StartPosition, GameData.Instance.combatConfig.transitionDuration).
+        SetEase(Ease.OutQuad);
+    }
 
 }

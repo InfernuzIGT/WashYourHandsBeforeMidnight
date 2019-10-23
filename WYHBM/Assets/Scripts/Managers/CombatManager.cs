@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Events;
 using GameMode.Combat;
 using UnityEngine;
@@ -27,6 +28,7 @@ public class CombatManager : MonoBehaviour
     private FadeOutEvent fadeOutEvent = new FadeOutEvent();
     private FadeInCanvasEvent fadeInCanvasEvent = new FadeInCanvasEvent();
     private FadeOutCanvasEvent fadeOutCanvasEvent = new FadeOutCanvasEvent();
+    private FadeOutCanvasEvent fadeOutEndEvent = new FadeOutCanvasEvent();
 
     private void Awake()
     {
@@ -47,6 +49,8 @@ public class CombatManager : MonoBehaviour
 
         fadeInCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
         fadeOutCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
+
+        fadeOutEndEvent.duration = GameData.Instance.combatConfig.fadeOutEndDuration;
 
         FadeOut();
     }
@@ -88,6 +92,20 @@ public class CombatManager : MonoBehaviour
     public void FadeOutCanvas()
     {
         EventController.TriggerEvent(fadeOutCanvasEvent);
+    }
+
+    public void EndGame(bool isWin)
+    {
+        EventController.TriggerEvent(fadeOutEndEvent);
+        EventController.TriggerEvent(fadeInEvent);
+
+        uIController.endTxt.text = isWin ? "WIN" : "LOSE";
+
+        uIController.endTxt.gameObject.SetActive(true);
+
+        uIController.endTxt.transform.
+        DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 1, 5, .5f).
+        SetEase(Ease.OutQuad);
     }
 
 }
