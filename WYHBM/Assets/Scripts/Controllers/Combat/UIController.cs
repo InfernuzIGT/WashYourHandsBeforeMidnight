@@ -170,7 +170,7 @@ namespace GameMode.Combat
         {
             menuAction.SetActive(isPlayer);
             menuTurn.SetActive(!isPlayer);
-            buttonExit.SetActive(isPlayer);
+            // buttonExit.SetActive(isPlayer);
         }
 
         #region Fade

@@ -19,5 +19,10 @@ public class TextConfig : ScriptableObject
     public string actionTypeItemPlayer = "";
     public string actionTypeItemEnemy = "";
     public string actionTypeDefense = "DEFENSE";
+    
+    [Header("Message")]
+    public Color colorMsgHeal;
+    public Color colorMsgDamage;
+    public Color colorMsgDefense;
 
 }

@@ -21,7 +21,7 @@ namespace Events
     {
         public string text;
         public Vector2 position;
-        // TODO Mariano: Add aspect of text
+        public Color color;
     }
 
 }
