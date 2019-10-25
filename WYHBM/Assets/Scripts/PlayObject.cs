@@ -11,7 +11,7 @@ public class PlayObject : MonoBehaviour
     private void Start()
     {
         _actionBtn = GetComponent<Button>();
-        _actionBtn.onClick.AddListener(() => CombatManager.Instance.actionController.StartCombat());
+        _actionBtn.onClick.AddListener(() => CombatManager.Instance.StartCombat());
     }
 
     private void Update()

@@ -90,13 +90,20 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<int>, IDamageabl
     public virtual void ActionStopCombat()
     {
         transform.DOScale(_scaleNormal, GameData.Instance.combatConfig.transitionDuration);
+
+        // _defense = 0; // TODO Mariano: Use the default Defense
+    }
+
+    public virtual void SetDefense(int newDefense)
+    {
+        _defense = newDefense;
     }
 
     public virtual void ActionHeal(int amountHeal)
     {
         _healthActual += amountHeal;
 
-        ShowInfoText(amountHeal);
+        ShowInfoText(amountHeal, GameData.Instance.textConfig.colorMsgHeal);
 
         if (_healthActual > _healthMax)_healthActual = _healthMax;
 
@@ -106,6 +113,8 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<int>, IDamageabl
     public virtual void ActionDefense(int amountDefense)
     {
         _defense = amountDefense;
+
+        ShowInfoText(amountDefense, GameData.Instance.textConfig.colorMsgDefense);
     }
 
     public virtual void ActionReceiveDamage(int damageReceived)
@@ -113,7 +122,9 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<int>, IDamageabl
         if (_healthActual == 0)
             return;
 
-        _healthActual -= damageReceived;
+        int totalDamage = damageReceived - _defense;
+
+        _healthActual -= totalDamage;
 
         _isAlive = _healthActual >= 0;
 
@@ -121,13 +132,14 @@ public class Character : MonoBehaviour, ICombatable, IHealeable<int>, IDamageabl
         DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration).
         OnComplete(Kill);
 
-        ShowInfoText(damageReceived);
+        ShowInfoText(totalDamage, GameData.Instance.textConfig.colorMsgDamage);
     }
 
-    private void ShowInfoText(float value)
+    private void ShowInfoText(float value, Color color)
     {
         infoTextEvent.text = value.ToString("F0");
         infoTextEvent.position = _infoTextPosition;
+        infoTextEvent.color = color;
         EventController.TriggerEvent(infoTextEvent);
     }
 

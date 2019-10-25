@@ -15,6 +15,7 @@ public class CombatConfig : ScriptableObject
     [Header("Animation - Combat")]
     public float transitionDuration = .35f;
     public float waitCombatDuration = 1.65f;
+    public float evaluationDuration = 1.25f;
     public float scaleCombat = 17.5f;
     [Space]
     public Vector3 positionCombat = new Vector3(-3.5f, 0, 0);

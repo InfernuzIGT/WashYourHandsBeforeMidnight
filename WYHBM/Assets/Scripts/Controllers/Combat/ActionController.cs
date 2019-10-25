@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Events;
 using UnityEngine;
 
@@ -19,23 +20,16 @@ namespace GameMode.Combat
         public LayerMask ignoreLayer;
 
         // Private variables
-        private bool _isActionEnable;
         private LayerMask _actualLayer;
         private Ray _ray;
         private RaycastHit2D _hit;
         private Player _player;
         private Enemy _enemy;
 
-        private WaitForSeconds combatTransition;
-        private WaitForSeconds combatWaitTime;
-
         private ShakeEvent shakeEvent = new ShakeEvent();
 
         private void Start()
         {
-            combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
-            combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
-
             _actualLayer = ignoreLayer;
         }
 
@@ -55,75 +49,7 @@ namespace GameMode.Combat
             actionValue = Random.Range(_minValue, _maxValue);
         }
 
-        public void StartCombat()
-        {
-            _isActionEnable = !CombatManager.Instance.isPaused && CombatManager.Instance.isTurnPlayer;
-
-            if (!_isActionEnable)
-                return;
-
-            CombatManager.Instance.isTurnPlayer = false;
-
-            StartCoroutine(CombatPlayer());
-        }
-
-        private IEnumerator CombatPlayer()
-        {
-            // TODO Mariano: Fade IN
-            CombatManager.Instance.FadeOutCanvas();
-            CombatManager.Instance.listPlayers[0].ActionStartCombat();
-            CombatManager.Instance.listEnemies[0].ActionStartCombat();
-
-            yield return combatTransition;
-
-            PlayAction();
-            CombatManager.Instance.uIController.ChangeUI(!CombatManager.Instance.listEnemies[0].IsAlive);
-            // CombatManager.Instance.uIController.ChangeUI(false);
-
-            yield return combatWaitTime;
-
-            // TODO Mariano: Fade OUT
-            CombatManager.Instance.FadeInCanvas();
-            CombatManager.Instance.listPlayers[0].ActionStopCombat();
-            CombatManager.Instance.listEnemies[0].ActionStopCombat();
-
-            yield return combatTransition;
-
-            // TODO Mariano: Redo THIS!
-            //-------------------------------
-
-            yield return new WaitForSeconds(1.25f);
-
-            if (CombatManager.Instance.listEnemies[0].IsAlive)
-            {
-                CombatManager.Instance.FadeOutCanvas();
-                CombatManager.Instance.listPlayers[0].ActionStartCombat();
-                CombatManager.Instance.listEnemies[0].ActionStartCombat();
-
-                yield return combatTransition;
-
-                CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(19, 23));
-                EventController.TriggerEvent(shakeEvent);
-                CombatManager.Instance.uIController.ChangeUI(true);
-
-                yield return combatWaitTime;
-
-                CombatManager.Instance.FadeInCanvas();
-                CombatManager.Instance.listPlayers[0].ActionStopCombat();
-                CombatManager.Instance.listEnemies[0].ActionStopCombat();
-
-                yield return combatTransition;
-
-                CombatManager.Instance.isTurnPlayer = true;
-            }
-            else
-            {
-                CombatManager.Instance.EndGame(true);
-            }
-
-        }
-
-        private void PlayAction()
+        public void PlayAction(List<Player> players)
         {
             switch (actionActual)
             {
@@ -133,7 +59,7 @@ namespace GameMode.Combat
                     break;
 
                 case ACTION_TYPE.defense:
-                
+                    CombatManager.Instance.listPlayers[0].ActionDefense(actionValue);
                     break;
 
                 case ACTION_TYPE.itemPlayer:
@@ -146,6 +72,35 @@ namespace GameMode.Combat
                 default:
                     break;
             }
+        }
+        public void PlayAction(List<Enemy> enemies)
+        {
+            // TODO Mariano: REDO THIS!
+            
+            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(17, 21));
+            EventController.TriggerEvent(shakeEvent);
+
+            // switch (actionActual)
+            // {
+            //     case ACTION_TYPE.weapon:
+            //         CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(19, 23));
+            //         EventController.TriggerEvent(shakeEvent);
+            //         break;
+
+            //     case ACTION_TYPE.defense:
+
+            //         break;
+
+            //     case ACTION_TYPE.itemPlayer:
+            //         CombatManager.Instance.listEnemies[0].ActionHeal(actionValue);
+            //         break;
+
+            //     case ACTION_TYPE.itemEnemy:
+            //         break;
+
+            //     default:
+            //         break;
+            // }
         }
 
         private RaycastHit2D GetHit(LayerMask hitLayer)
