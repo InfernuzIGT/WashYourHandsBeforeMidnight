@@ -59,7 +59,7 @@ namespace GameMode.Combat
                     break;
 
                 case ACTION_TYPE.defense:
-
+                    CombatManager.Instance.listPlayers[0].ActionDefense(actionValue);
                     break;
 
                 case ACTION_TYPE.itemPlayer:
@@ -77,7 +77,7 @@ namespace GameMode.Combat
         {
             // TODO Mariano: REDO THIS!
             
-            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(19, 23));
+            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(17, 21));
             EventController.TriggerEvent(shakeEvent);
 
             // switch (actionActual)

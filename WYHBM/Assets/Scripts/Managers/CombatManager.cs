@@ -166,6 +166,8 @@ public class CombatManager : MonoBehaviour
             if (listPlayers[0].IsAlive) // TODO Mariano: Si hay algun PLAYER vivo
             {
                 isTurnPlayer = true;
+                listPlayers[0].SetDefense(0); // TODO Mariano: DELETE
+
             }
             else
             {
