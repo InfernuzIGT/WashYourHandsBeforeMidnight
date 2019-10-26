@@ -80,8 +80,10 @@ public class CombatManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
+            isPaused = !isPaused;
+            uIController.Menu(isPaused);
         }
+
     }
 
     public void StartCombat()
