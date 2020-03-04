@@ -32,6 +32,7 @@ public class InfoText : MonoBehaviour
     {
         transform.position = evt.position;
         infoTxt.text = evt.text;
+        infoTxt.color = evt.color;
 
         _canvasGroup.alpha = 1;
 

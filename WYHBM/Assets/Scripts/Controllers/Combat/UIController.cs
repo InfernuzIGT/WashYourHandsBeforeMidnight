@@ -18,6 +18,10 @@ namespace GameMode.Combat
         public GameObject menuAction;
         public GameObject menuTurn;
         public GameObject buttonExit;
+        public GameObject CanvasPlay;
+        public GameObject CanvasOptions;
+        public GameObject CanvasExit;
+        public GameObject CanvasMenu;
 
         [Header("Action")]
         public ACTION_TYPE actualActionType;
@@ -170,7 +174,7 @@ namespace GameMode.Combat
         {
             menuAction.SetActive(isPlayer);
             menuTurn.SetActive(!isPlayer);
-            buttonExit.SetActive(isPlayer);
+            // buttonExit.SetActive(isPlayer);
         }
 
         #region Fade
@@ -202,6 +206,11 @@ namespace GameMode.Combat
         }
 
         #endregion
-    }
 
+        public void Menu(bool isPaused)
+        {
+            CanvasMenu.SetActive(isPaused);
+        }
+
+    }
 }
