@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class CharacterCombatController : MonoBehaviour
 {
-    private StatsSO stats;
-    private int _speedBase = 2;
-    private int _damageBase = 2;
-    private int _healthBase = 100;
-    private int _dexterityBase = 2;
+    public StatsSO stats;
+
+    public int _speedBase = 2;
+    public int _damageBase = 2;
+    public int _healthBase = 100;
+    public int _dexterityBase = 2;
     private int _currentHealth;
 
 private void Start()
 {
     Stats();
+    
+    _currentHealth = _healthBase;
 }
 
 private void Update()
@@ -26,11 +29,12 @@ private void Update()
 
 private void Attack()
 {
-    _currentHealth = _healthBase;
-
-    
-    
-    
+    if (Input.GetKeyDown (KeyCode.Space))
+    {
+        _currentHealth -= _damageBase;
+        
+        Debug.Log ($"<b> Vida actual: </b>" + _currentHealth);
+    }
 }
 
 private void Stats()
