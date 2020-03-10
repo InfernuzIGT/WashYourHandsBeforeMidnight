@@ -5,9 +5,12 @@ public class StatsSO : ScriptableObject
 {   
     [Header("Stats - General")]
     
-    public int speed;
-    public int strength;
     public int vitality;
+    public int reaction;
+    public int strength;
     public int dexterity;
+    public int criticPercentage;
+    public int hitPercentage;
+    public int dodgePercentage;
    
 }
