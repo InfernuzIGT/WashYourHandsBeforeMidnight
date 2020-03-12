@@ -14,6 +14,7 @@ public class Unit : MonoBehaviour
     public int agility;
     public int maxHP;
     public int currentHP;
+    public int defense;
 
     public void Stats()
     {
@@ -63,6 +64,12 @@ public class Unit : MonoBehaviour
         // Bolsa de probabilidad de acertar critico.
         // https://gist.github.com/angeldelrio/0aa70ca63e0e153c6022
         
+    }
+
+    public void Defense()
+    {
+        
+
     }
     
 }
