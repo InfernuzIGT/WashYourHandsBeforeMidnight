@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Unit : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Unit : MonoBehaviour
     public int maxHP;
     public int currentHP;
     public int defense;
+    public Slider healthBar;
+
 
     public void Stats()
     {
@@ -68,8 +71,22 @@ public class Unit : MonoBehaviour
 
     public void Defense()
     {
-        
+        currentHP += defense;
+    }
 
+    public void UseItem()
+    {
+        // Seleccioner que item usar y a quien
+        // Setear beneficios de usar item
+        Debug.Log ($"<b> Player use an item </b>");
+    }
+    
+    public void Escape()
+    {
+        // El personaje vuelve al mundo y escapa del combate
+        // Aplicar dolencia por escape
+        Debug.Log ($"<b> Player escape from the enemy </b>");
+        
     }
     
 }

@@ -32,12 +32,16 @@ public class CombatSystem : MonoBehaviour
 
     void Start()
     {
-        Renderer rend = GetComponent<Renderer>();   
-
         playerUnit.Stats();
         state = CombatState.START;
         
         StartCoroutine(SetupBattle());
+    }
+
+    void Update()
+    {
+        playerUnit.healthBar.value = playerUnit.currentHP;
+        enemyUnit.healthBar.value = enemyUnit.currentHP;
     }
     private IEnumerator SetupBattle()
     {
@@ -98,13 +102,45 @@ public class CombatSystem : MonoBehaviour
 
         playerUnit.Defense();
 
-        Debug.Log ($"<b> Defense increase");
+        Debug.Log ($"<b> Defense increase. </b>");
 
         menu.SetActive(false);
 
         yield return new WaitForSeconds(2f);
 
         playerPrefab.GetComponent<MeshRenderer>().material = playerColor;
+
+        state = CombatState.ENEMYTURN;
+
+        StartCoroutine(EnemyTurn());
+    }
+    IEnumerator PlayerItem()
+    {
+        // Aplicar distintivo de player usando item
+
+        playerUnit.UseItem();
+
+        menu.SetActive(false);
+
+        yield return new WaitForSeconds(2f);
+
+        state = CombatState.ENEMYTURN;
+
+        StartCoroutine(EnemyTurn());
+    }
+    IEnumerator PlayerEscape()
+    {
+        // Mover al personaje en direccion a la salida
+
+        playerUnit.Escape();
+
+        menu.SetActive(false);
+
+        yield return new WaitForSeconds(2f);
+
+        state = CombatState.ENEMYTURN;
+
+        EndCombat();
     }
     
     IEnumerator EnemyTurn()
@@ -156,5 +192,21 @@ public class CombatSystem : MonoBehaviour
         return;
 
         StartCoroutine(PlayerDefense());
+    }
+    
+    public void OnItemButton()
+    {
+        if (state != CombatState.PLAYERTURN)
+        return;   
+        
+        StartCoroutine(PlayerItem());
+    }
+
+    public void OnEscapeButton()
+    {
+        if (state != CombatState.PLAYERTURN)
+        return;   
+        
+        StartCoroutine(PlayerEscape());
     }
 }
