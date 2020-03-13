@@ -152,7 +152,7 @@ public class CombatSystem : MonoBehaviour
 
     public void OnDefenseButton()
     {
-        if(state != CombatState.PlayerTurn)
+        if(state != CombatState.PLAYERTURN)
         return;
 
         StartCoroutine(PlayerDefense());
