@@ -4,48 +4,48 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public bool isSmooth;
-    [Space]
-    public float speed = 5f;
-    public float speedSmooth = 10f;
+    public float speed = 15f;
 
+    //private AnimatorController _animatorController;
+
+    // Movement Values
     private float _moveHorizontal;
     private float _moveVertical;
-
     private float _posX;
     private float _posZ;
 
-    private void Update()
+    //Movement Input
+    private string _inputHorizontal = "Horizontal";
+    private string _inputVertical= "Vertical";
+    private string _inputInteraction = "E";
+
+    //private void Awake ()
+    //{
+    //    _animatorController = GetComponent<AnimatorController> ();
+    //}
+
+    private void Update ()
     {
-        Movement();
-        Interaction();
+        Movement ();
+        Interaction ();
     }
 
-    private void Movement()
+    private void Movement ()
     {
-        if (isSmooth)
-        {
-            _moveHorizontal = Input.GetAxis("Horizontal");
-            _moveVertical = Input.GetAxis("Vertical");
+        _moveHorizontal = Input.GetAxisRaw (_inputHorizontal);
+        _moveVertical = Input.GetAxisRaw (_inputVertical);
 
-            _posX = _moveHorizontal * speedSmooth * Time.deltaTime;
-            _posZ = _moveVertical * speedSmooth * Time.deltaTime;
-        }
-        else
-        {
-            _moveHorizontal = Input.GetAxisRaw("Horizontal");
-            _moveVertical = Input.GetAxisRaw("Vertical");
+        _posX = _moveHorizontal * speed * Time.deltaTime;
+        _posZ = _moveVertical * speed * Time.deltaTime;
 
-            _posX = _moveHorizontal * speed * Time.deltaTime;
-            _posZ = _moveVertical * speed * Time.deltaTime;
-        }
+        transform.Translate (_posX, 0, _posZ);
 
-        transform.position += new Vector3(_posX, 0, _posZ);
+        //_animatorController.Movement (_posX, _posZ);
     }
 
-    private void Interaction()
+    private void Interaction ()
     {
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey (_inputInteraction))
         {
             // sphere gizmo interact w quad to open chest w colliders
             // Debug.Log ($"<b> Chest Open </b>");
