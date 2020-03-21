@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +10,9 @@ public class PlayerController : MonoBehaviour
     [Space]
     public float speed = 5f;
     public float speedSmooth = 10f;
+    public Dialog dialog;
+    public GameObject dialogUI;
+    public static BoxCollider NPCBox;
 
     private float _moveHorizontal;
     private float _moveVertical;
@@ -40,15 +45,26 @@ public class PlayerController : MonoBehaviour
             _posZ = _moveVertical * speed * Time.deltaTime;
         }
 
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            isSmooth = true;
+        }
+
         transform.position += new Vector3(_posX, 0, _posZ);
     }
 
     private void Interaction()
     {
+        // TODO Marco: Remove possibilty of spam interact and break code
         if (Input.GetKey(KeyCode.E))
         {
-            // sphere gizmo interact w quad to open chest w colliders
-            // Debug.Log ($"<b> Chest Open </b>");
+        dialogUI.SetActive(true);
+        StartCoroutine(dialog.Type());
         }
+    }
+
+    public void OnTriggerEnter(Collider NPCBox)
+    {
+        Interaction();
     }
 }

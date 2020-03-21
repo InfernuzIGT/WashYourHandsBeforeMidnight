@@ -5,9 +5,17 @@ using UnityEngine.UI;
 
 public enum CombatState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
+[System.Serializable]
+public class Ch
+{
+    public string name;
+    public int speed;
+}
+
 public class CombatSystem : MonoBehaviour
 {
     public CombatState state;
+    public Queue turner;
 
     [Header ("GameObjects")]
     public GameObject playerPrefab;
@@ -36,26 +44,26 @@ public class CombatSystem : MonoBehaviour
         state = CombatState.START;
         
         StartCoroutine(SetupBattle());
-    }
+        // turner = new Queue();
+        // QueueTurner();
+    }   
+
+    // public void QueueTurner()
+    // {
+    //     turner.Enqueue(characters);
+
+    //     if (characters.speed == 1)
+    //     {
+    //         turner.Dequeue();
+    //     }
+    // }
 
     void Update()
     {
         playerUnit.healthBar.value = playerUnit.currentHP;
         enemyUnit.healthBar.value = enemyUnit.currentHP;
     }
-    private IEnumerator SetupBattle()
-    {
-        // Instantiate(playerPrefab, playerStation);
 
-        // Instantiate(enemyPrefab, enemyStation);
-
-        Debug.Log ($"<b> The combat is just started..  </b>");
-
-        yield return new WaitForSeconds(2f);
-
-        state = CombatState.PLAYERTURN;
-        PlayerTurn();
-    }
     public void EndCombat()
     {
         if (state == CombatState.WON)
@@ -66,6 +74,22 @@ public class CombatSystem : MonoBehaviour
         {
             Debug.Log ($"<b> You lost the combat </b>");
         }
+    }
+
+    public void PlayerTurn()
+    {
+        Debug.Log ($"<b> Choose an action... </b>");
+    }
+
+    #region Enumerators
+    private IEnumerator SetupBattle()
+    {
+        Debug.Log ($"<b> The combat is just started..  </b>");
+
+        yield return new WaitForSeconds(2f);
+
+        state = CombatState.PLAYERTURN;
+        PlayerTurn();
     }
 
     IEnumerator PlayerAttack()
@@ -114,6 +138,7 @@ public class CombatSystem : MonoBehaviour
 
         StartCoroutine(EnemyTurn());
     }
+
     IEnumerator PlayerItem()
     {
         // Aplicar distintivo de player usando item
@@ -128,6 +153,7 @@ public class CombatSystem : MonoBehaviour
 
         StartCoroutine(EnemyTurn());
     }
+
     IEnumerator PlayerEscape()
     {
         // Mover al personaje en direccion a la salida
@@ -173,11 +199,9 @@ public class CombatSystem : MonoBehaviour
         }
     }
 
-    public void PlayerTurn()
-    {
-        Debug.Log ($"<b> Choose an action... </b>");
-    }
+    #endregion
 
+    #region Buttons
     public void OnAttackButton()
     {
         if(state != CombatState.PLAYERTURN)
@@ -208,5 +232,7 @@ public class CombatSystem : MonoBehaviour
         return;   
         
         StartCoroutine(PlayerEscape());
-    }
+    } 
+    #endregion
+    
 }

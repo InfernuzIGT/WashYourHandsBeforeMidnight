@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Unit : MonoBehaviour
 {
+
     [Header ("Variables")]
     public string unitName;
     public int unitLevel;
@@ -17,8 +18,16 @@ public class Unit : MonoBehaviour
     public int currentHP;
     public int defense;
     public Slider healthBar;
+    private List<WeaponSO> _equipmentWeapon;
+    private List<ItemSO> _equipmentItem;
+    private List<ArmorSO> _equipmentArmor;
 
-
+    public virtual void Start()
+    {
+        _equipmentWeapon = new List<WeaponSO>();
+        _equipmentItem = new List<ItemSO>();
+        _equipmentArmor = new List<ArmorSO>();
+    }
     public void Stats()
     {
         damageMelee *= strength;
