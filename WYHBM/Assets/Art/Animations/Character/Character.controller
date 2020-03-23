@@ -397,7 +397,7 @@ BlendTree:
   m_Name: Character Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 0}
+    m_Motion: {fileID: 7400000, guid: c553ce1c6b1fe9c42ac97a2a8a87eb9a, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -405,17 +405,17 @@ BlendTree:
     m_DirectBlendParameter: valueX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 0}
+    m_Motion: {fileID: 7400000, guid: eefd24836a968f9459837a56242ce1d1, type: 2}
     m_Threshold: 0.20000002
-    m_Position: {x: -1, y: 0}
+    m_Position: {x: 1, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: valueX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 0}
+    m_Motion: {fileID: 7400000, guid: eefd24836a968f9459837a56242ce1d1, type: 2}
     m_Threshold: 0.40000004
-    m_Position: {x: 1, y: 0}
+    m_Position: {x: -1, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: valueX
@@ -426,7 +426,7 @@ BlendTree:
   m_MaxThreshold: 0.40000004
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
-  m_BlendType: 1
+  m_BlendType: 2
 --- !u!1102 &-881842692494567565
 AnimatorState:
   serializedVersion: 5
