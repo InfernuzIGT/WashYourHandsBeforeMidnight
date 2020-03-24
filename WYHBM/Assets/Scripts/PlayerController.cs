@@ -10,8 +10,7 @@ public class PlayerController : MonoBehaviour
     [Space]
     public float speed = 5f;
     public float speedSmooth = 10f;
-    public Dialog dialog;
-    public GameObject dialogUI;
+    public DialogManager dialogManager;
     public static BoxCollider NPCBox;
 
     private float _moveHorizontal;
@@ -58,8 +57,7 @@ public class PlayerController : MonoBehaviour
         // TODO Marco: Remove possibilty of spam interact and break code
         if (Input.GetKey(KeyCode.E))
         {
-        dialogUI.SetActive(true);
-        StartCoroutine(dialog.Type());
+            dialogManager.SetText();
         }
     }
 
