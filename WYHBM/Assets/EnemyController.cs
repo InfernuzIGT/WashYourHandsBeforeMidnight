@@ -4,49 +4,54 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    static NavMeshAgent agent;
-    public Vector3 velocityEnemy;
+    [Header ("Positions")]
+    public Vector3[] positions;
+    [Space]
+    [Header ("Colliders")]
+    public BoxCollider NPCBox;
+    public CapsuleCollider CHABox;
+    [Space]
 
-    public Transform pos1;
-    public Transform pos2;
-    public Transform pos3;
+    public DialogManager dialogManager;
     public GameObject enemy;
-    public CapsuleCollider playerCollider;
-    public BoxCollider enemyCollider;
-    public bool isStopped = true;
+    private bool isStopped = true;
+    public NavMeshAgent agent;
+    
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         StartCoroutine(MovementAgent());
     }
-    void Update()
-    {
-    }
 
     IEnumerator MovementAgent()
     {
-        agent.SetDestination(pos1.position);
-        yield return new WaitForSeconds(6f);
-
-        agent.SetDestination(pos2.position);
-        yield return new WaitForSeconds(6f);
-
-        agent.SetDestination(pos3.position);
+        ChangeDestination();
         yield return new WaitForSeconds(6f);
         yield return MovementAgent();
     }
-    void OnTriggerEnter(Collider enemyCollider)
+    
+    public void ChangeDestination()
     {
-        if (enemyCollider == playerCollider)
+        int randomValue = Random.Range(0, positions.Length);
+        agent.SetDestination(positions[randomValue]);
+    }
+
+    void OnTriggerEnter(Collider NPCBox)
+    {
+        if (NPCBox == CHABox)
         {
-            Debug.Log ($"<b> Hit </b>");
-            this.GetComponent<NavMeshAgent>().isStopped = true;
+            dialogManager.isTriggerArea = true;
+            agent.isStopped = true;
         }
-        else
+    }
+    void OnTriggerExit(Collider NPCBox)
+    {
+        if (NPCBox == CHABox)
         {
-            Debug.Log ($"<b> Out of Hit </b>");
-            gameObject.GetComponent<NavMeshAgent>().isStopped = false;
+            dialogManager.isTriggerArea = false;
+            agent.isStopped = false;
         }
+            
     }
 }

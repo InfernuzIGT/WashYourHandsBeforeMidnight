@@ -1,29 +1,56 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using DG.Tweening;
-using System;
-using System.Text;
-
 public class DialogManager : MonoBehaviour
 {
-    public TextMeshProUGUI textDisplay;
+
+[Header ("GameObjects")]
     public GameObject textUI;
     public GameObject continueBtn;
-    public Dialog dialog;
+    [Space]
+    public TextMeshProUGUI textDisplay;
     public float typingSpeed;
-    
-    void Start()
-    {
-        // string.Join(".", dialog.sentences);
-    }
+    public Dialog dialog;
+    public bool isPass = false;
+    public Tween txtAnimation;
+    private int _dialogIndex;
+    private string _currentSentence;
+    public bool isTriggerArea = false;
+    public bool isEndConversation = false;
+
+    //when player enter in conversation he can't move or Ui desactivates?
 
     public void SetText()
     {
-        // textDisplay.text = dialog.sentences;
-        textUI.SetActive(true);
-        textDisplay.DOFade(1, 5);
+        isEndConversation = false;
+
+            if (_dialogIndex < dialog.sentences.Length && isTriggerArea)
+            {
+                textDisplay.text = "";
+                ExecuteText();
+            }
+    }
+    
+    public void ExecuteText()
+    {
+        isPass = true;
+        _currentSentence = dialog.sentences[_dialogIndex];
+        txtAnimation = textDisplay.DOText(_currentSentence, typingSpeed);
+        _dialogIndex++;
+
+       if (_dialogIndex == dialog.sentences.Length)
+       {
+            isEndConversation = true;
+            _dialogIndex = 0;
+       }
     }
 
+    public void CompleteText()
+    {
+        txtAnimation.Kill();
+        textDisplay.text = _currentSentence;
+        isPass = false;
+    }
 
 }

@@ -5881,9 +5881,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1308456317}
-  - {fileID: 1367039819}
-  - {fileID: 1726119876}
+  - {fileID: 852044537}
   m_Father: {fileID: 0}
   m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9658,6 +9656,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &852044536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 852044537}
+  m_Layer: 0
+  m_Name: PosEnemy3 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &852044537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852044536}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 46, y: 1.34, z: -5.84}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 600416198}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &873093362
 GameObject:
   m_ObjectHideFlags: 0
@@ -10046,7 +10074,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1389652584}
+        m_MethodName: NextSentence
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &876846448
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -17198,36 +17237,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &1308456316
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1308456317}
-  m_Layer: 0
-  m_Name: PosEnemy1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1308456317
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1308456316}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 38.78, y: 1.34, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 600416198}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1331750661
 GameObject:
   m_ObjectHideFlags: 0
@@ -17921,36 +17930,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 249454789}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1367039818
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1367039819}
-  m_Layer: 0
-  m_Name: PosEnemy2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1367039819
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1367039818}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 49.7, y: 1.34, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 600416198}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1372967688
 Mesh:
@@ -20166,11 +20145,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4980662dc8ccb644ba4784ef233aa2e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textDisplay: {fileID: 599627683}
   textUI: {fileID: 262084443}
   continueBtn: {fileID: 876846445}
-  dialog: {fileID: 0}
-  typingSpeed: 0.01
+  textDisplay: {fileID: 599627683}
+  typingSpeed: 3
+  dialog: {fileID: 11400000, guid: 4069aec461269424a92b4099bc2223d8, type: 2}
+  isPass: 0
+  isTriggerArea: 0
+  isEndConversation: 0
 --- !u!4 &1389652585
 Transform:
   m_ObjectHideFlags: 0
@@ -23034,8 +23016,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 5
+  m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -23058,14 +23040,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2563c4ba5aa969c44ba8c90e5b6436fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocityEnemy: {x: 0, y: 0, z: 0}
-  pos1: {fileID: 1308456317}
-  pos2: {fileID: 1367039819}
-  pos3: {fileID: 2052913815}
+  positions:
+  - {x: 38.78, y: 1, z: 0}
+  - {x: 49.7, y: 1, z: 0}
+  - {x: 46, y: 1, z: 2.62}
+  - {x: 46, y: 1, z: -5.84}
+  - {x: 79.36, y: 1, z: 2.62}
+  NPCBox: {fileID: 1723048952}
+  CHABox: {fileID: 2052913812}
+  dialogManager: {fileID: 1389652584}
   enemy: {fileID: 1723048949}
-  playerCollider: {fileID: 2052913812}
-  enemyCollider: {fileID: 1723048952}
-  isStopped: 1
+  agent: {fileID: 1723048950}
 --- !u!65 &1723048952
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23163,7 +23148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723048949}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 46.06, y: 2, z: -0.747}
+  m_LocalPosition: {x: 52.5, y: 2, z: -0.747}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -23477,36 +23462,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723264726}
   m_Mesh: {fileID: 1345883603}
---- !u!1 &1726119875
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1726119876}
-  m_Layer: 0
-  m_Name: PosEnemy3
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1726119876
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1726119875}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 46, y: 1.34, z: 2.62}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 600416198}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1730553564
 Mesh:
   m_ObjectHideFlags: 0
@@ -28426,7 +28381,7 @@ GameObject:
   - component: {fileID: 2052913816}
   - component: {fileID: 2052913817}
   - component: {fileID: 2052913812}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28519,7 +28474,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSmooth: 0
   speed: 5
   speedSmooth: 10
   dialogManager: {fileID: 1389652584}

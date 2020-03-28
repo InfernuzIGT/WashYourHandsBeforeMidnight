@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public bool isSmooth;
+    private bool isSmooth;
     [Space]
+
+    [Header ("Velocity")]
     public float speed = 5f;
     public float speedSmooth = 10f;
+    [Space]
     public DialogManager dialogManager;
-    public static BoxCollider NPCBox;
 
     private float _moveHorizontal;
     private float _moveVertical;
@@ -44,7 +42,7 @@ public class PlayerController : MonoBehaviour
             _posZ = _moveVertical * speed * Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             isSmooth = true;
         }
@@ -54,15 +52,25 @@ public class PlayerController : MonoBehaviour
 
     private void Interaction()
     {
-        // TODO Marco: Remove possibilty of spam interact and break code
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && dialogManager.isTriggerArea)
         {
-            dialogManager.SetText();
+            if (dialogManager.isPass)
+            {
+                dialogManager.CompleteText();
+                Debug.Log ($"<b> Texto salteado </b>");
+                return;
+            }
+            if (dialogManager.isEndConversation)
+            {
+                dialogManager.textUI.SetActive(false);
+                dialogManager.isEndConversation = false;                
+            }
+            else
+            {
+                dialogManager.SetText();
+                dialogManager.textUI.SetActive(true);
+            }
         }
-    }
 
-    public void OnTriggerEnter(Collider NPCBox)
-    {
-        Interaction();
     }
 }

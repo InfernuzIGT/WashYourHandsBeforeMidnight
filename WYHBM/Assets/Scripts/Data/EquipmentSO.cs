@@ -4,6 +4,8 @@ public class EquipmentSO : ScriptableObject
 {
     [Header("General")]
     public new string name;
+    public int effectValueMin;
+    public int effectValueMax;
     [TextArea]
     public string description;
     [PreviewTexture(48)]

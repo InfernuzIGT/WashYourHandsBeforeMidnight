@@ -20,7 +20,7 @@ public class CombatSystem : MonoBehaviour
     [Header ("GameObjects")]
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
-    public GameObject menu;
+    public Slider BarEnemy;
 
     [Header ("Transform")]
     public Transform  playerStation;
@@ -31,6 +31,7 @@ public class CombatSystem : MonoBehaviour
     [Header ("Scripts")]
     public Unit playerUnit;
     public Unit enemyUnit;
+    public UIManager uiManager;
 
     [Header("Materials")]
     public Material red;
@@ -60,8 +61,24 @@ public class CombatSystem : MonoBehaviour
 
     void Update()
     {
-        playerUnit.healthBar.value = playerUnit.currentHP;
-        enemyUnit.healthBar.value = enemyUnit.currentHP;
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            StartCoroutine(PlayerAttack());
+            
+        }
+        // uiManager.HPBar.value = playerUnit.currentHP;
+        // uiManager.HPBarEnemy.value = enemyUnit.currentHP;
+
+    //     public virtual void ActionHeal(int amountHeal)
+    // {
+    //     _healthActual += amountHeal;
+
+    //     ShowInfoText(amountHeal, GameData.Instance.textConfig.colorMsgHeal);
+
+    //     if (_healthActual > _healthMax)_healthActual = _healthMax;
+
+    //     characterUI.healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
+    // }
     }
 
     public void EndCombat()
@@ -100,7 +117,7 @@ public class CombatSystem : MonoBehaviour
 
         Debug.Log ($"<b> Enemy Health: </b>" + enemyUnit.currentHP);
 
-        menu.SetActive(false);
+        // menu.SetActive(false);
 
         yield return new WaitForSeconds(2f);
 
@@ -109,13 +126,13 @@ public class CombatSystem : MonoBehaviour
         if (isDead)
         {
             state = CombatState.WON;
-            menu.SetActive(false);
+            // menu.SetActive(false);
             EndCombat();
         }
         else
         {
             state = CombatState.ENEMYTURN;
-            menu.SetActive(false);
+            // menu.SetActive(false);
             StartCoroutine(EnemyTurn());
         }
     }
@@ -128,7 +145,7 @@ public class CombatSystem : MonoBehaviour
 
         Debug.Log ($"<b> Defense increase. </b>");
 
-        menu.SetActive(false);
+        // menu.SetActive(false);
 
         yield return new WaitForSeconds(2f);
 
@@ -145,7 +162,7 @@ public class CombatSystem : MonoBehaviour
 
         playerUnit.UseItem();
 
-        menu.SetActive(false);
+        // menu.SetActive(false);
 
         yield return new WaitForSeconds(2f);
 
@@ -160,7 +177,7 @@ public class CombatSystem : MonoBehaviour
 
         playerUnit.Escape();
 
-        menu.SetActive(false);
+        // menu.SetActive(false);
 
         yield return new WaitForSeconds(2f);
 
@@ -188,13 +205,13 @@ public class CombatSystem : MonoBehaviour
         if (isDead)
         {
             state = CombatState.LOST;
-            menu.SetActive(false);
+            // menu.SetActive(false);
             EndCombat();
         }
         else 
         {
             state = CombatState.PLAYERTURN;
-            menu.SetActive(true);
+            // menu.SetActive(true);
             PlayerTurn();
         }
     }

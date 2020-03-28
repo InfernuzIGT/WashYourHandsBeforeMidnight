@@ -13,11 +13,13 @@ public class Unit : MonoBehaviour
     [Header ("Stats")]
     public int damageMelee;
     public int strength;
+    public int dexterity;
+    public int defense;
     public int agility;
+    public int luck;
+    public int reaction;
     public int maxHP;
     public int currentHP;
-    public int defense;
-    public Slider healthBar;
     private List<WeaponSO> _equipmentWeapon;
     private List<ItemSO> _equipmentItem;
     private List<ArmorSO> _equipmentArmor;
