@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 15f;
+    public DialogManager dialogManager; // TODO Mariano: REMOVE
+
+    [Header("Velocity")]
+    public float speed = 5f;
 
     private AnimatorController _animatorController;
 
@@ -17,7 +18,6 @@ public class PlayerController : MonoBehaviour
     //Movement Input
     private string _inputHorizontal = "Horizontal";
     private string _inputVertical = "Vertical";
-    // private string _inputInteraction = "E";
 
     private void Awake()
     {
@@ -45,10 +45,39 @@ public class PlayerController : MonoBehaviour
 
     private void Interaction()
     {
-        // if (Input.GetKey (_inputInteraction))
-        // {
-        //    // sphere gizmo interact w quad to open chest w colliders
-        //    // Debug.Log ($"<b> Chest Open </b>");
-        // }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            InteractDialog();
+        }
+    }
+
+    // TODO Mariano: REMOVE
+    private void InteractDialog()
+    {
+        if (dialogManager == null)
+        {
+            Debug.Log($"DialogManager NULL");
+            return;
+        }
+
+        if (dialogManager.isTriggerArea)
+        {
+            if (dialogManager.isPass)
+            {
+                dialogManager.CompleteText();
+                Debug.Log($"<b> Texto salteado </b>");
+                return;
+            }
+            if (dialogManager.isEndConversation)
+            {
+                dialogManager.textUI.SetActive(false);
+                dialogManager.isEndConversation = false;
+            }
+            else
+            {
+                dialogManager.SetText();
+                dialogManager.textUI.SetActive(true);
+            }
+        }
     }
 }
