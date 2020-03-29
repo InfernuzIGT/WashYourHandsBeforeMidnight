@@ -2,20 +2,27 @@
 
 public class PlayerController : MonoBehaviour
 {
-    private bool isSmooth;
-    [Space]
+    public DialogManager dialogManager; // TODO Mariano: REMOVE
 
-    [Header ("Velocity")]
+    [Header("Velocity")]
     public float speed = 5f;
-    public float speedSmooth = 10f;
-    [Space]
-    public DialogManager dialogManager;
 
+    private AnimatorController _animatorController;
+
+    // Movement Values
     private float _moveHorizontal;
     private float _moveVertical;
-
     private float _posX;
     private float _posZ;
+
+    //Movement Input
+    private string _inputHorizontal = "Horizontal";
+    private string _inputVertical = "Vertical";
+
+    private void Awake()
+    {
+        _animatorController = GetComponent<AnimatorController>();
+    }
 
     private void Update()
     {
@@ -25,45 +32,46 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        if (isSmooth)
-        {
-            _moveHorizontal = Input.GetAxis("Horizontal");
-            _moveVertical = Input.GetAxis("Vertical");
+        _moveHorizontal = Input.GetAxisRaw(_inputHorizontal);
+        _moveVertical = Input.GetAxisRaw(_inputVertical);
 
-            _posX = _moveHorizontal * speedSmooth * Time.deltaTime;
-            _posZ = _moveVertical * speedSmooth * Time.deltaTime;
-        }
-        else
-        {
-            _moveHorizontal = Input.GetAxisRaw("Horizontal");
-            _moveVertical = Input.GetAxisRaw("Vertical");
+        _posX = _moveHorizontal * speed * Time.deltaTime;
+        _posZ = _moveVertical * speed * Time.deltaTime;
 
-            _posX = _moveHorizontal * speed * Time.deltaTime;
-            _posZ = _moveVertical * speed * Time.deltaTime;
-        }
+        transform.Translate(_posX, 0, _posZ);
 
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            isSmooth = true;
-        }
-
-        transform.position += new Vector3(_posX, 0, _posZ);
+        _animatorController.Movement(_moveHorizontal, _moveVertical);
     }
 
     private void Interaction()
     {
-        if (Input.GetKeyDown(KeyCode.E) && dialogManager.isTriggerArea)
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            InteractDialog();
+        }
+    }
+
+    // TODO Mariano: REMOVE
+    private void InteractDialog()
+    {
+        if (dialogManager == null)
+        {
+            Debug.Log($"DialogManager NULL");
+            return;
+        }
+
+        if (dialogManager.isTriggerArea)
         {
             if (dialogManager.isPass)
             {
                 dialogManager.CompleteText();
-                Debug.Log ($"<b> Texto salteado </b>");
+                Debug.Log($"<b> Texto salteado </b>");
                 return;
             }
             if (dialogManager.isEndConversation)
             {
                 dialogManager.textUI.SetActive(false);
-                dialogManager.isEndConversation = false;                
+                dialogManager.isEndConversation = false;
             }
             else
             {
@@ -71,6 +79,5 @@ public class PlayerController : MonoBehaviour
                 dialogManager.textUI.SetActive(true);
             }
         }
-
     }
 }
