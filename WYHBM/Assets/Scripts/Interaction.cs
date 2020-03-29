@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
-
 public class Interaction : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)

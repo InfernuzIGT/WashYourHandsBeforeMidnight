@@ -1,13 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public bool isSmooth;
+    private bool isSmooth;
     [Space]
+
+    [Header ("Velocity")]
     public float speed = 5f;
     public float speedSmooth = 10f;
+    [Space]
+    public DialogManager dialogManager;
 
     private float _moveHorizontal;
     private float _moveVertical;
@@ -40,15 +42,35 @@ public class PlayerController : MonoBehaviour
             _posZ = _moveVertical * speed * Time.deltaTime;
         }
 
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isSmooth = true;
+        }
+
         transform.position += new Vector3(_posX, 0, _posZ);
     }
 
     private void Interaction()
     {
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && dialogManager.isTriggerArea)
         {
-            // sphere gizmo interact w quad to open chest w colliders
-            // Debug.Log ($"<b> Chest Open </b>");
+            if (dialogManager.isPass)
+            {
+                dialogManager.CompleteText();
+                Debug.Log ($"<b> Texto salteado </b>");
+                return;
+            }
+            if (dialogManager.isEndConversation)
+            {
+                dialogManager.textUI.SetActive(false);
+                dialogManager.isEndConversation = false;                
+            }
+            else
+            {
+                dialogManager.SetText();
+                dialogManager.textUI.SetActive(true);
+            }
         }
+
     }
 }
