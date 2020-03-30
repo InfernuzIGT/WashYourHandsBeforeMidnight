@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider))]
 public class Interaction : MonoBehaviour
 {
+    [System.Serializable]
+    public class InteractionEvent : UnityEvent<Collider> { }
+
+    public InteractionEvent onEnter;
+    public InteractionEvent onExit;
+
     private void OnTriggerEnter(Collider other)
     {
-        // Turn on box collider 
-        // Character can interact
-        Debug.Log ($"<b> Interaction </b>");
+        onEnter.Invoke(other);
     }
+
     private void OnTriggerExit(Collider other)
     {
-        // Turn off box collider 
-        // Character can't interact
-        Debug.Log ($"<b> No Interaction </b>");
+        onExit.Invoke(other);
     }
 }

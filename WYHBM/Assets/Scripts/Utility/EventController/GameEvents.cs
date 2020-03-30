@@ -3,6 +3,26 @@
 namespace Events
 {
     public class GameEvent { }
+
+    #region Dialogues
+
+    public class UIEnableDialogEvent : GameEvent
+    {
+        public bool enable;
+        public DialogSO dialog;
+    }
+
+    public class UIExecuteDialogEvent : GameEvent { }
+
+    public class StopMovementEvent : GameEvent
+    {
+        public bool enable;
+    }
+
+    #endregion
+
+    //-----------
+
     public class FadeEvent : GameEvent
     {
         public string text;
