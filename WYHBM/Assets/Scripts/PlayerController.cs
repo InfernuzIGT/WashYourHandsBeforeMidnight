@@ -1,15 +1,17 @@
-﻿using UnityEngine;
+﻿using Events;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public DialogManager dialogManager; // TODO Mariano: REMOVE
-
     [Header("Velocity")]
-    public float speed = 5f;
+    public float speedWalk = 7.5f;
+    public float speedRun = 15f;
 
     private AnimatorController _animatorController;
+    private UIExecuteDialogEvent _UIExecuteDialogEvent;
 
     // Movement Values
+    private bool _canMove = true;
     private float _moveHorizontal;
     private float _moveVertical;
     private float _posX;
@@ -23,6 +25,20 @@ public class PlayerController : MonoBehaviour
     {
         _animatorController = GetComponent<AnimatorController>();
     }
+    private void Start()
+    {
+        _UIExecuteDialogEvent = new UIExecuteDialogEvent();
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<StopMovementEvent>(OnStopMovement);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<StopMovementEvent>(OnStopMovement);
+    }
 
     private void Update()
     {
@@ -32,11 +48,13 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
+        if (!_canMove)return;
+
         _moveHorizontal = Input.GetAxisRaw(_inputHorizontal);
         _moveVertical = Input.GetAxisRaw(_inputVertical);
 
-        _posX = _moveHorizontal * speed * Time.deltaTime;
-        _posZ = _moveVertical * speed * Time.deltaTime;
+        _posX = _moveHorizontal * speedRun * Time.deltaTime;
+        _posZ = _moveVertical * speedRun * Time.deltaTime;
 
         transform.Translate(_posX, 0, _posZ);
 
@@ -47,37 +65,22 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            InteractDialog();
+            ExecuteDialog();
         }
     }
 
-    // TODO Mariano: REMOVE
-    private void InteractDialog()
+    #region Events
+
+    private void ExecuteDialog()
     {
-        if (dialogManager == null)
-        {
-            Debug.Log($"DialogManager NULL");
-            return;
-        }
-
-        if (dialogManager.isTriggerArea)
-        {
-            if (dialogManager.isPass)
-            {
-                dialogManager.CompleteText();
-                Debug.Log($"<b> Texto salteado </b>");
-                return;
-            }
-            if (dialogManager.isEndConversation)
-            {
-                dialogManager.textUI.SetActive(false);
-                dialogManager.isEndConversation = false;
-            }
-            else
-            {
-                dialogManager.SetText();
-                dialogManager.textUI.SetActive(true);
-            }
-        }
+        EventController.TriggerEvent(_UIExecuteDialogEvent);
     }
+
+    private void OnStopMovement(StopMovementEvent evt)
+    {
+        _canMove = evt.enable;
+    }
+
+    #endregion
+
 }
