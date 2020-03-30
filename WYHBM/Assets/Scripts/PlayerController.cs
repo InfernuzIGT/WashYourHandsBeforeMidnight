@@ -1,21 +1,44 @@
-﻿using UnityEngine;
+﻿using Events;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private bool isSmooth;
-    [Space]
+    [Header("Velocity")]
+    public float speedWalk = 7.5f;
+    public float speedRun = 15f;
 
-    [Header ("Velocity")]
-    public float speed = 5f;
-    public float speedSmooth = 10f;
-    [Space]
-    public DialogManager dialogManager;
+    private AnimatorController _animatorController;
+    private UIExecuteDialogEvent _UIExecuteDialogEvent;
 
+    // Movement Values
+    private bool _canMove = true;
     private float _moveHorizontal;
     private float _moveVertical;
-
     private float _posX;
     private float _posZ;
+
+    //Movement Input
+    private string _inputHorizontal = "Horizontal";
+    private string _inputVertical = "Vertical";
+
+    private void Awake()
+    {
+        _animatorController = GetComponent<AnimatorController>();
+    }
+    private void Start()
+    {
+        _UIExecuteDialogEvent = new UIExecuteDialogEvent();
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<StopMovementEvent>(OnStopMovement);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<StopMovementEvent>(OnStopMovement);
+    }
 
     private void Update()
     {
@@ -25,52 +48,39 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        if (isSmooth)
-        {
-            _moveHorizontal = Input.GetAxis("Horizontal");
-            _moveVertical = Input.GetAxis("Vertical");
+        if (!_canMove)return;
 
-            _posX = _moveHorizontal * speedSmooth * Time.deltaTime;
-            _posZ = _moveVertical * speedSmooth * Time.deltaTime;
-        }
-        else
-        {
-            _moveHorizontal = Input.GetAxisRaw("Horizontal");
-            _moveVertical = Input.GetAxisRaw("Vertical");
+        _moveHorizontal = Input.GetAxisRaw(_inputHorizontal);
+        _moveVertical = Input.GetAxisRaw(_inputVertical);
 
-            _posX = _moveHorizontal * speed * Time.deltaTime;
-            _posZ = _moveVertical * speed * Time.deltaTime;
-        }
+        _posX = _moveHorizontal * speedRun * Time.deltaTime;
+        _posZ = _moveVertical * speedRun * Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            isSmooth = true;
-        }
+        transform.Translate(_posX, 0, _posZ);
 
-        transform.position += new Vector3(_posX, 0, _posZ);
+        _animatorController.Movement(_moveHorizontal, _moveVertical);
     }
 
     private void Interaction()
     {
-        if (Input.GetKeyDown(KeyCode.E) && dialogManager.isTriggerArea)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if (dialogManager.isPass)
-            {
-                dialogManager.CompleteText();
-                Debug.Log ($"<b> Texto salteado </b>");
-                return;
-            }
-            if (dialogManager.isEndConversation)
-            {
-                dialogManager.textUI.SetActive(false);
-                dialogManager.isEndConversation = false;                
-            }
-            else
-            {
-                dialogManager.SetText();
-                dialogManager.textUI.SetActive(true);
-            }
+            ExecuteDialog();
         }
-
     }
+
+    #region Events
+
+    private void ExecuteDialog()
+    {
+        EventController.TriggerEvent(_UIExecuteDialogEvent);
+    }
+
+    private void OnStopMovement(StopMovementEvent evt)
+    {
+        _canMove = evt.enable;
+    }
+
+    #endregion
+
 }
