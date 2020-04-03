@@ -10,15 +10,17 @@ public class AnimatorController : MonoBehaviour
         Run = 2
     }
 
-    // Texture
+    [Header("Textures")]
     public Texture2D textureIdle;
     // public Texture2D textureWalk;
     public Texture2D textureMovement;
 
-    // Normal
     // public Texture2D normalIdle;
     // public Texture2D normalWalk;
     // public Texture2D normalMovement;
+
+    [Header("Material")]
+    public Material dither;
 
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
@@ -27,7 +29,7 @@ public class AnimatorController : MonoBehaviour
     private AnimationState _currentState;
 
     private Material _material;
-    private string _textureBase = "_MainText";
+    private string _textureBase = "_MainTex";
     // private string _textureNormal = "_BumpMap";
 
     private bool _isFlipped;
@@ -89,16 +91,19 @@ public class AnimatorController : MonoBehaviour
             case AnimationState.Idle:
                 _material.SetTexture(_textureBase, textureIdle);
                 // _material.SetTexture(_textureNormal, normalIdle);
+                dither.SetTexture(_textureBase, textureIdle);
                 break;
 
                 // case AnimationState.Walk:
                 //     _material.SetTexture(_textureBase, spriteWalk);
-                // _material.SetTexture(_textureNormal, normalWalk);
+                //     _material.SetTexture(_textureNormal, normalWalk);
+                //     dither.SetTexture(_textureBase, spriteWalk);
                 //     break;
 
             case AnimationState.Run:
                 _material.SetTexture(_textureBase, textureMovement);
                 // _material.SetTexture(_textureNormal, normalMovement);
+                dither.SetTexture(_textureBase, textureMovement);
                 break;
 
             default:
