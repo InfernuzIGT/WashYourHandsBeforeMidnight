@@ -3,8 +3,32 @@
 [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
 public class AnimatorController : MonoBehaviour
 {
+    private enum AnimationState
+    {
+        Idle = 0,
+        Walk = 1,
+        Run = 2
+    }
+
+    // Texture
+    public Texture2D textureIdle;
+    // public Texture2D textureWalk;
+    public Texture2D textureMovement;
+
+    // Normal
+    // public Texture2D normalIdle;
+    // public Texture2D normalWalk;
+    // public Texture2D normalMovement;
+
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
+
+    private AnimationState _animationState = AnimationState.Idle;
+    private AnimationState _currentState;
+
+    private Material _material;
+    private string _textureBase = "_MainText";
+    // private string _textureNormal = "_BumpMap";
 
     private bool _isFlipped;
 
@@ -21,12 +45,14 @@ public class AnimatorController : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _material = _spriteRenderer.material;
     }
 
     public void Movement(float valueX, float valueY)
     {
         FlipSprite(valueX);
-        
+        SetTexture(valueX, valueY);
+
         _animValueX.Execute(_animator, valueX);
         _animValueY.Execute(_animator, valueY);
     }
@@ -41,8 +67,45 @@ public class AnimatorController : MonoBehaviour
         {
             _isFlipped = false;
         }
-        
+
         _spriteRenderer.flipX = _isFlipped;
+    }
+
+    private void SetTexture(float valueX, float valueY)
+    {
+        if (valueX == 0 && valueY == 0)
+        {
+            _currentState = AnimationState.Idle;
+        }
+        else
+        {
+            _currentState = AnimationState.Run;
+        }
+
+        if (_animationState == _currentState)return;
+
+        switch (_currentState)
+        {
+            case AnimationState.Idle:
+                _material.SetTexture(_textureBase, textureIdle);
+                // _material.SetTexture(_textureNormal, normalIdle);
+                break;
+
+                // case AnimationState.Walk:
+                //     _material.SetTexture(_textureBase, spriteWalk);
+                // _material.SetTexture(_textureNormal, normalWalk);
+                //     break;
+
+            case AnimationState.Run:
+                _material.SetTexture(_textureBase, textureMovement);
+                // _material.SetTexture(_textureNormal, normalMovement);
+                break;
+
+            default:
+                break;
+        }
+
+        _animationState = _currentState;
     }
 
 }
