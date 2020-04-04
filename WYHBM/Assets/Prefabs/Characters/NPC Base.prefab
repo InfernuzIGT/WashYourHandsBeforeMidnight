@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4020343793686724908, guid: eb3df72836f4e9f41b9f76ab27060deb,
+  m_Sprite: {fileID: -1165399278658134991, guid: 9a3cc0d00c940a647a5cf6299987fcc3,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -118,7 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19808560acaa54d47af94cb6167f1412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAlive: 1
+  canMove: 1
+  isEnemy: 0
   movePositions: []
   waitTime: 5
 --- !u!114 &7882800319852633499
@@ -238,6 +239,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1494829862185696034, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
       propertyPath: onEnter.m_PersistentCalls.m_Calls.Array.size
@@ -297,21 +313,6 @@ PrefabInstance:
         type: 3}
       propertyPath: onExit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 109232e5a0434c744a00baf85d3299f2, type: 3}

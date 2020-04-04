@@ -7,9 +7,10 @@ namespace GameMode.World
 {
     public class UIManager : MonoBehaviour
     {
+        public GameObject panelDialog;
+
         [Header("Dialogues")]
         public bool isDialogReady;
-        public Canvas canvasDialog;
         public TextMeshProUGUI dialogTxt;
         public TextMeshProUGUI continueTxt;
         public float dialogSpeed;
@@ -24,11 +25,19 @@ namespace GameMode.World
         private string _currentSentence;
         private int _dialogIndex;
 
+        private Canvas _canvas;
+
+        private void Awake()
+        {
+            _canvas = GetComponent<Canvas>();
+        }
+
         private void Start()
         {
             _stopMovementEvent = new StopMovementEvent();
-            canvasDialog.enabled = false;
             continueTxt.enabled = false;
+
+            panelDialog.SetActive(false);
         }
 
         private void OnEnable()
@@ -70,7 +79,7 @@ namespace GameMode.World
                 if (_dialogIndex == currentDialog.sentences.Length)
                 {
                     _dialogIndex = 0;
-                    canvasDialog.enabled = false;
+                    panelDialog.SetActive(false);
 
                     TurnOffTxt();
 
@@ -80,7 +89,7 @@ namespace GameMode.World
                 else
                 {
                     SetText();
-                    canvasDialog.enabled = true;
+                    panelDialog.SetActive(true);
 
                     _stopMovementEvent.enable = false;
                     EventController.TriggerEvent(_stopMovementEvent);
@@ -127,10 +136,15 @@ namespace GameMode.World
         }
 
         private void TurnOffTxt()
-        {   
+        {
             continueTxt.enabled = false;
         }
 
         #endregion
+
+        public void EnableCanvas(bool enabled)
+        {
+            _canvas.enabled = enabled;
+        }
     }
 }
