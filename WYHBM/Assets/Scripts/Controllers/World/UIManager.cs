@@ -72,6 +72,8 @@ namespace GameMode.World
                     _dialogIndex = 0;
                     canvasDialog.enabled = false;
 
+                    TurnOffTxt();
+
                     _stopMovementEvent.enable = true;
                     EventController.TriggerEvent(_stopMovementEvent);
                 }
@@ -106,7 +108,10 @@ namespace GameMode.World
             _currentSentence = currentDialog.sentences[_dialogIndex];
             _txtAnimation = dialogTxt.DOText(_currentSentence, dialogSpeed);
 
-            // TODO Mariano: Habilitar/Desabilitar CONTINUE
+            if (_isSentenceComplete)
+            {
+                TurnOffTxt();
+            }
 
             _dialogIndex++;
         }
@@ -119,6 +124,11 @@ namespace GameMode.World
             continueTxt.enabled = true;
 
             _isSentenceComplete = false;
+        }
+
+        private void TurnOffTxt()
+        {   
+            continueTxt.enabled = false;
         }
 
         #endregion
