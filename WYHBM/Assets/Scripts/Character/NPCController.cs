@@ -74,15 +74,18 @@ public class NPCController : Character
 
     private void ChangeDestination()
     {
-        _randomValue = Random.Range(0, movePositions.Length);
-        _agent.SetDestination(movePositions[_randomValue].position);
+        if (!_agent.isStopped)
+        {
+            _randomValue = Random.Range(0, movePositions.Length);
+            _agent.SetDestination(movePositions[_randomValue].position);
+        }
     }
 
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
         {
-            if (isEnemy)
+            if (isEnemy && GameManager.Instance.currentAmbient != Ambient.Combat)
             {
                 TriggerCombat();
             }
@@ -117,7 +120,7 @@ public class NPCController : Character
     {
         _agent.isStopped = true;
         _animatorController.Movement(0, 0);
-        
+
         GameManager.Instance.ChangeAmbient(Ambient.Combat);
     }
 }
