@@ -1,9 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
-public enum CombatState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
+public enum CombatState
+{
+    START,
+    PLAYERTURN,
+    ENEMYTURN,
+    WON,
+    LOST
+}
 
 [System.Serializable]
 public class Ch
@@ -16,48 +23,35 @@ public class CombatSystem : MonoBehaviour
 {
     public CombatState state;
 
-
     private float _playerSpeed;
     private float _enemySpeed;
 
     public GameObject Character1, Character2, Character3;
     private List<GameObject> characters = new List<GameObject>();
-    private Queue<int> _turner  = new Queue<int>();
+    private Queue<int> _turner = new Queue<int>();
 
-    [Header ("GameObjects")]
+    [Header("GameObjects")]
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
     public GameObject enemyPrefab2;
 
-    [Header ("Scripts")]
-    public Unit playerUnit;
-    public Unit enemyUnit;
-    
-    [Header("Materials")]
-    public Material red;
-    public Material blue;
-    public Material playerColor;
-    public Material enemyColor;
+    [Header("Characters")]
+    public List<CombatCharacter> listCharacters;
+    [Space]
+    public CombatCharacter playerUnit; // TODO Mariano: DELETE
+    public CombatCharacter enemyUnit; // TODO Mariano: DELETE
 
-    private bool _turnedPass;
+    private bool _turnedPass; // TODO Mariano: NO SE USA
     private int _characterIndex;
 
-    void Awake()
+    private void StartCombat()
     {
         AddCharactersToList();
-
-        playerUnit = playerPrefab.GetComponent<Unit>();
-        enemyUnit = enemyPrefab.GetComponent<Unit>();
-
-        playerUnit.Stats();
-    }
-
-    void Start()
-    {
+        // TODO Mariano: Setear las stats
         QueueTurner();
         state = CombatState.START;
-        
-    }   
+
+    }
 
     public void QueueTurner()
     {
@@ -67,7 +61,7 @@ public class CombatSystem : MonoBehaviour
         foreach (var unit in characters)
         {
             // Se mete en cola el GameObject con mas agility(stat en el componente unit)
-            if (playerUnit.agility > enemyUnit.agility )
+            if (playerUnit.StatsAgility > enemyUnit.StatsAgility)
             {
                 _turner.Enqueue(1);
                 _turner.Enqueue(2);
@@ -108,31 +102,31 @@ public class CombatSystem : MonoBehaviour
         characters.Add(enemyPrefab2);
     }
 
+    // TODO Mariano: Player Ataca
+    // void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.A))
+    //     {
+    //         StartCoroutine(PlayerAttack());
+    //     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            StartCoroutine(PlayerAttack());
-        }
-
-    }
+    // }
 
     public void EndCombat()
     {
         if (state == CombatState.WON)
         {
-            Debug.Log ($"<b> You won the combat </b>");
+            Debug.Log($"<b> You won the combat </b>");
         }
         else if (state == CombatState.LOST)
         {
-            Debug.Log ($"<b> You lost the combat </b>");
+            Debug.Log($"<b> You lost the combat </b>");
         }
     }
 
     public void PlayerTurn()
     {
-        Debug.Log ($"<b> Choose an action... </b>");
+        Debug.Log($"<b> Choose an action... </b>");
     }
 
     #region Enumerators
@@ -140,7 +134,7 @@ public class CombatSystem : MonoBehaviour
     /*Da comienzo al combate*/
     private IEnumerator SetupBattle()
     {
-        Debug.Log ($"<b> The combat is just started..  </b>");
+        Debug.Log($"<b> The combat is just started..  </b>");
 
         yield return new WaitForSeconds(2f);
 
@@ -151,19 +145,16 @@ public class CombatSystem : MonoBehaviour
     /*Ejecuta la accion del jugador atacando*/
     IEnumerator PlayerAttack()
     {
-        enemyUnit.TakeDamage(playerUnit);
-        
-        enemyPrefab.GetComponent<MeshRenderer>().material = red;
+        // enemyUnit.TakeDamage(playerUnit);
+        // TODO Mariano: Dañar ENEMIGO
 
-        Debug.Log ($"<b> Enemy Health: </b>" + enemyUnit.currentHP);
+        // Debug.Log($"<b> Enemy Health: </b>" + enemyUnit.currentHP);
 
         // menu.SetActive(false);
 
         yield return new WaitForSeconds(2f);
 
-        enemyPrefab.GetComponent<MeshRenderer>().material = enemyColor;
-
-        if (enemyUnit.isAlive)
+        if (enemyUnit.IsAlive)
         {
             state = CombatState.ENEMYTURN;
             // menu.SetActive(false);
@@ -180,17 +171,14 @@ public class CombatSystem : MonoBehaviour
     /**/
     IEnumerator PlayerDefense()
     {
-        playerPrefab.GetComponent<MeshRenderer>().material = blue;
+        // playerUnit.Defense();
+        // TODO Mariano: Jugador se DEFIENDE
 
-        playerUnit.Defense();
-
-        Debug.Log ($"<b> Defense increase. </b>");
+        Debug.Log($"<b> Defense increase. </b>");
 
         // menu.SetActive(false);
 
         yield return new WaitForSeconds(2f);
-
-        playerPrefab.GetComponent<MeshRenderer>().material = playerColor;
 
         state = CombatState.ENEMYTURN;
 
@@ -202,7 +190,8 @@ public class CombatSystem : MonoBehaviour
     {
         // Aplicar distintivo de player usando item
 
-        playerUnit.UseItem();
+        // playerUnit.UseItem();
+        // TODO Mariano: Jugador USA ITEM
 
         // menu.SetActive(false);
 
@@ -218,7 +207,8 @@ public class CombatSystem : MonoBehaviour
     {
         // Mover al personaje en direccion a la salida
 
-        playerUnit.Escape();
+        // playerUnit.Escape();
+        // TODO Mariano: Jugador ESCAPA
 
         // menu.SetActive(false);
 
@@ -228,31 +218,28 @@ public class CombatSystem : MonoBehaviour
 
         EndCombat();
     }
-    
+
     /*Ejecuta la corrutina del enemigo atacando*/
     IEnumerator EnemyTurn()
     {
-        Debug.Log ($"<b> Enemy turn! </b>");
+        Debug.Log($"<b> Enemy turn! </b>");
 
         yield return new WaitForSeconds(2f);
 
-        playerUnit.TakeDamage(enemyUnit);
+        // playerUnit.TakeDamage(enemyUnit);
+        // TODO Mariano: Daña al JUGADOR
 
-        playerPrefab.GetComponent<MeshRenderer>().material = red;
+        // Debug.Log($"<b> Health player: </b>" + playerUnit.currentHP);
 
-        Debug.Log ($"<b> Health player: </b>" + playerUnit.currentHP);
-        
         yield return new WaitForSeconds(1f);
-        
-        playerPrefab.GetComponent<MeshRenderer>().material = playerColor;
 
-        if (playerUnit.isAlive)
+        if (playerUnit.IsAlive)
         {
             state = CombatState.PLAYERTURN;
             // menu.SetActive(true);
             PlayerTurn();
         }
-        else 
+        else
         {
             state = CombatState.LOST;
             // menu.SetActive(false);
@@ -265,35 +252,35 @@ public class CombatSystem : MonoBehaviour
     #region Buttons
     public void OnAttackButton()
     {
-        if(state != CombatState.PLAYERTURN)
-        return;
+        if (state != CombatState.PLAYERTURN)
+            return;
 
         StartCoroutine(PlayerAttack());
     }
 
     public void OnDefenseButton()
     {
-        if(state != CombatState.PLAYERTURN)
-        return;
+        if (state != CombatState.PLAYERTURN)
+            return;
 
         StartCoroutine(PlayerDefense());
     }
-    
+
     public void OnItemButton()
     {
         if (state != CombatState.PLAYERTURN)
-        return;   
-        
+            return;
+
         StartCoroutine(PlayerItem());
     }
 
     public void OnEscapeButton()
     {
         if (state != CombatState.PLAYERTURN)
-        return;   
-        
+            return;
+
         StartCoroutine(PlayerEscape());
-    } 
+    }
     #endregion
 
 }
