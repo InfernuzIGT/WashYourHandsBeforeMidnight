@@ -33,16 +33,6 @@ namespace GameMode.Combat
             _actualLayer = ignoreLayer;
         }
 
-        private void OnEnable()
-        {
-            EventController.AddListener<FadeOutEvent>(FadeOut);
-        }
-
-        private void OnDisable()
-        {
-            EventController.RemoveListener<FadeOutEvent>(FadeOut);
-        }
-
         public void ChooseAction(EquipmentSO _equipment, int _minValue, int _maxValue)
         {
             actionActual = _equipment.actionType;
@@ -54,16 +44,16 @@ namespace GameMode.Combat
             switch (actionActual)
             {
                 case ACTION_TYPE.weapon:
-                    CombatManager.Instance.listEnemies[0].ActionReceiveDamage(actionValue);
+                    // CombatManager.Instance.listEnemies[0].ActionReceiveDamage(actionValue);
                     EventController.TriggerEvent(shakeEvent);
                     break;
 
                 case ACTION_TYPE.defense:
-                    CombatManager.Instance.listPlayers[0].ActionDefense(actionValue);
+                    // CombatManager.Instance.listPlayers[0].ActionDefense(actionValue);
                     break;
 
                 case ACTION_TYPE.itemPlayer:
-                    CombatManager.Instance.listPlayers[0].ActionHeal(actionValue);
+                    // CombatManager.Instance.listPlayers[0].ActionHeal(actionValue);
                     break;
 
                 case ACTION_TYPE.itemEnemy:
@@ -76,8 +66,9 @@ namespace GameMode.Combat
         public void PlayAction(List<Enemy> enemies)
         {
             // TODO Mariano: REDO THIS!
-            
-            CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(17, 21));
+
+            // CombatManager.Instance.listPlayers[0].ActionReceiveDamage(Random.Range(17, 21));
+            // TODO Mariano: Multiplicar damage por strength
             EventController.TriggerEvent(shakeEvent);
 
             // switch (actionActual)
@@ -134,16 +125,6 @@ namespace GameMode.Combat
         public void Run()
         {
             Debug.Log($"Action: Run");
-        }
-
-        private void FadeIn(FadeInEvent evt)
-        {
-            StartCoroutine(StartFadeIn(evt.duration));
-        }
-
-        private void FadeOut(FadeOutEvent evt)
-        {
-            StartCoroutine(StartFadeOut(evt.duration));
         }
 
         private IEnumerator StartFadeIn(float duration)

@@ -21,21 +21,7 @@ namespace Events
 
     #endregion
 
-    //-----------
-
-    public class FadeEvent : GameEvent
-    {
-        public string text;
-        public float duration;
-    }
-
-    public class FadeInEvent : FadeEvent { }
-    public class FadeOutEvent : FadeEvent { }
-
-    public class FadeInCanvasEvent : FadeEvent { }
-    public class FadeOutCanvasEvent : FadeEvent { }
-
-    public class ShakeEvent : FadeEvent { }
+    public class ShakeEvent : GameEvent { }
 
     public class InfoTextEvent : GameEvent
     {

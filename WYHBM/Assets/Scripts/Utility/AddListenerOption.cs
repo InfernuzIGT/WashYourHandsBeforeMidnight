@@ -9,7 +9,8 @@ public class AddListenerOption : MonoBehaviour
     private void Start()
     {
         Button optionButton = GetComponent<Button>();
-        optionButton.onClick.AddListener(() => CombatManager.Instance.uIController.SelectOption(optionType));
+        // TODO Mariano: Enable
+        // optionButton.onClick.AddListener(() => CombatManager.Instance.uIController.SelectOption(optionType));
     }
 
 }

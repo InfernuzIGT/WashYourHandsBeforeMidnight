@@ -14,7 +14,7 @@ public class ActionObject : MonoBehaviour
     private void Start()
     {
         _toggle.onValueChanged.AddListener(delegate { SelectAction(_toggle); });
-        _toggle.group = CombatManager.Instance.uIController.panelActions.toggleGroup;
+        // _toggle.group = CombatManager.Instance.uIController.panelActions.toggleGroup;
         SetAction();
     }
 
@@ -37,16 +37,16 @@ public class ActionObject : MonoBehaviour
     public void SelectAction()
     {
         _toggle.isOn = true;
-        CombatManager.Instance.actionController.ChooseAction(equipment, equipment.valueMin, equipment.valueMax);
-        CombatManager.Instance.uIController.ChooseAction(equipment);
+        // CombatManager.Instance.actionController.ChooseAction(equipment, equipment.valueMin, equipment.valueMax);
+        // CombatManager.Instance.uIController.ChooseAction(equipment);
     }
 
     private void SelectAction(bool isOn)
     {
         if (isOn)
         {
-            CombatManager.Instance.actionController.ChooseAction(equipment, equipment.valueMin, equipment.valueMax);
-            CombatManager.Instance.uIController.ChooseAction(equipment);
+            // CombatManager.Instance.actionController.ChooseAction(equipment, equipment.valueMin, equipment.valueMax);
+            // CombatManager.Instance.uIController.ChooseAction(equipment);
         }
     }
 }
