@@ -12,6 +12,7 @@ public class NPCController : MonoBehaviour
     [Range(0f, 10f)]
     public float waitTime = 5;
 
+    private AnimatorController _animatorController;
     private DialogController _dialogController;
 
     private Interaction _interaction;
@@ -23,6 +24,7 @@ public class NPCController : MonoBehaviour
 
     private void Awake()
     {
+        _animatorController = GetComponent<AnimatorController>();
         _dialogController = GetComponent<DialogController>();
         _interaction = GetComponentInChildren<Interaction>();
         _agent = GetComponent<NavMeshAgent>();
@@ -30,8 +32,27 @@ public class NPCController : MonoBehaviour
 
     private void Start()
     {
+        _agent.updateRotation = false;
+
         _waitForSeconds = new WaitForSeconds(waitTime);
         StartCoroutine(MovementAgent());
+    }
+
+    private void Update()
+    {
+        Movement();
+    }
+
+    private void Movement()
+    {
+        if (_agent.remainingDistance > _agent.stoppingDistance)
+        {
+            _animatorController.Movement(_agent.desiredVelocity.x, _agent.desiredVelocity.z);
+        }
+        else
+        {
+            _animatorController.Movement(0, 0);
+        }
     }
 
     private IEnumerator MovementAgent()
@@ -68,6 +89,8 @@ public class NPCController : MonoBehaviour
     private void ChangeState(bool state)
     {
         _agent.isStopped = state;
+
+        _animatorController.Movement(0, 0);
 
         if (_dialogController != null)
         {
