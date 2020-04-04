@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using System.Linq;
 
 public enum CombatState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
@@ -15,70 +15,107 @@ public class Ch
 public class CombatSystem : MonoBehaviour
 {
     public CombatState state;
-    public Queue turner;
+
+
+    private float _playerSpeed;
+    private float _enemySpeed;
+
+    public GameObject Character1, Character2, Character3;
+    private List<GameObject> characters = new List<GameObject>();
+    private Queue<int> _turner  = new Queue<int>();
 
     [Header ("GameObjects")]
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
-    public Slider BarEnemy;
-
-    [Header ("Transform")]
-    public Transform  playerStation;
-    public Transform  playerStation1;
-    public Transform  enemyStation;
-    public Transform  enemyStation1;
+    public GameObject enemyPrefab2;
 
     [Header ("Scripts")]
     public Unit playerUnit;
     public Unit enemyUnit;
-    public UIManager uiManager;
-
+    
     [Header("Materials")]
     public Material red;
     public Material blue;
     public Material playerColor;
     public Material enemyColor;
 
+    private bool _turnedPass;
+    private int _characterIndex;
+
+    void Awake()
+    {
+        AddCharactersToList();
+
+        playerUnit = playerPrefab.GetComponent<Unit>();
+        enemyUnit = enemyPrefab.GetComponent<Unit>();
+
+        playerUnit.Stats();
+    }
+
     void Start()
     {
-        playerUnit.Stats();
+        QueueTurner();
         state = CombatState.START;
         
-        StartCoroutine(SetupBattle());
-        // turner = new Queue();
-        // QueueTurner();
     }   
 
-    // public void QueueTurner()
-    // {
-    //     turner.Enqueue(characters);
+    public void QueueTurner()
+    {
+        characters = characters.OrderBy(GameObject => characters).ToList();
 
-    //     if (characters.speed == 1)
-    //     {
-    //         turner.Dequeue();
-    //     }
-    // }
+        // Recorre el componente Unit en toda la lista de personajes
+        foreach (var unit in characters)
+        {
+            // Se mete en cola el GameObject con mas agility(stat en el componente unit)
+            if (playerUnit.agility > enemyUnit.agility )
+            {
+                _turner.Enqueue(1);
+                _turner.Enqueue(2);
+                _turner.Enqueue(3);
+            }
+            else
+            {
+                _turner.Enqueue(3);
+                _turner.Enqueue(2);
+                _turner.Enqueue(1);
+
+            }
+        }
+
+        DequeueTurner();
+
+    }
+
+    /*Devuelve al jugador que primero fue insertado en la cola, es decir, el que tiene mas velocidad*/
+    public void DequeueTurner()
+    {
+        _turner.Dequeue();
+    }
+
+    private void QueueAux()
+    {
+        if (_turnedPass)
+        {
+            _turner.Dequeue();
+        }
+    }
+
+    /**/
+    private void AddCharactersToList()
+    {
+        characters.Add(playerPrefab);
+        characters.Add(enemyPrefab);
+        characters.Add(enemyPrefab2);
+    }
+
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
             StartCoroutine(PlayerAttack());
-            
         }
-        // uiManager.HPBar.value = playerUnit.currentHP;
-        // uiManager.HPBarEnemy.value = enemyUnit.currentHP;
 
-    //     public virtual void ActionHeal(int amountHeal)
-    // {
-    //     _healthActual += amountHeal;
-
-    //     ShowInfoText(amountHeal, GameData.Instance.textConfig.colorMsgHeal);
-
-    //     if (_healthActual > _healthMax)_healthActual = _healthMax;
-
-    //     characterUI.healthBar.DOFillAmount(_healthActual / _healthMax, GameData.Instance.combatConfig.fillDuration);
-    // }
     }
 
     public void EndCombat()
@@ -99,6 +136,8 @@ public class CombatSystem : MonoBehaviour
     }
 
     #region Enumerators
+
+    /*Da comienzo al combate*/
     private IEnumerator SetupBattle()
     {
         Debug.Log ($"<b> The combat is just started..  </b>");
@@ -109,9 +148,10 @@ public class CombatSystem : MonoBehaviour
         PlayerTurn();
     }
 
+    /*Ejecuta la accion del jugador atacando*/
     IEnumerator PlayerAttack()
     {
-        bool isDead = enemyUnit.TakeDamage(playerUnit.damageMelee);
+        enemyUnit.TakeDamage(playerUnit);
         
         enemyPrefab.GetComponent<MeshRenderer>().material = red;
 
@@ -123,20 +163,21 @@ public class CombatSystem : MonoBehaviour
 
         enemyPrefab.GetComponent<MeshRenderer>().material = enemyColor;
 
-        if (isDead)
-        {
-            state = CombatState.WON;
-            // menu.SetActive(false);
-            EndCombat();
-        }
-        else
+        if (enemyUnit.isAlive)
         {
             state = CombatState.ENEMYTURN;
             // menu.SetActive(false);
             StartCoroutine(EnemyTurn());
         }
+        else
+        {
+            state = CombatState.WON;
+            // menu.SetActive(false);
+            EndCombat();
+        }
     }
 
+    /**/
     IEnumerator PlayerDefense()
     {
         playerPrefab.GetComponent<MeshRenderer>().material = blue;
@@ -156,6 +197,7 @@ public class CombatSystem : MonoBehaviour
         StartCoroutine(EnemyTurn());
     }
 
+    /**/
     IEnumerator PlayerItem()
     {
         // Aplicar distintivo de player usando item
@@ -171,6 +213,7 @@ public class CombatSystem : MonoBehaviour
         StartCoroutine(EnemyTurn());
     }
 
+    /**/
     IEnumerator PlayerEscape()
     {
         // Mover al personaje en direccion a la salida
@@ -186,13 +229,14 @@ public class CombatSystem : MonoBehaviour
         EndCombat();
     }
     
+    /*Ejecuta la corrutina del enemigo atacando*/
     IEnumerator EnemyTurn()
     {
         Debug.Log ($"<b> Enemy turn! </b>");
 
         yield return new WaitForSeconds(2f);
 
-        bool isDead = playerUnit.TakeDamage(enemyUnit.damageMelee);
+        playerUnit.TakeDamage(enemyUnit);
 
         playerPrefab.GetComponent<MeshRenderer>().material = red;
 
@@ -202,17 +246,17 @@ public class CombatSystem : MonoBehaviour
         
         playerPrefab.GetComponent<MeshRenderer>().material = playerColor;
 
-        if (isDead)
-        {
-            state = CombatState.LOST;
-            // menu.SetActive(false);
-            EndCombat();
-        }
-        else 
+        if (playerUnit.isAlive)
         {
             state = CombatState.PLAYERTURN;
             // menu.SetActive(true);
             PlayerTurn();
+        }
+        else 
+        {
+            state = CombatState.LOST;
+            // menu.SetActive(false);
+            EndCombat();
         }
     }
 
@@ -251,5 +295,5 @@ public class CombatSystem : MonoBehaviour
         StartCoroutine(PlayerEscape());
     } 
     #endregion
-    
+
 }

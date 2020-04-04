@@ -1,14 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System;
+using DG.Tweening;
 
 public class Unit : MonoBehaviour
 {
-
     [Header ("Variables")]
-    public string unitName;
-    public int unitLevel;
+    public string name;
+    public int level;
+    public bool isAlive;
+    public Image HPBar;
 
     [Header ("Stats")]
     public int damageMelee;
@@ -18,11 +20,16 @@ public class Unit : MonoBehaviour
     public int agility;
     public int luck;
     public int reaction;
-    public int maxHP;
-    public int currentHP;
+    public float maxHP;
+    public float currentHP;
     private List<WeaponSO> _equipmentWeapon;
     private List<ItemSO> _equipmentItem;
     private List<ArmorSO> _equipmentArmor;
+
+    void Awake()
+    {
+    }
+
 
     public virtual void Start()
     {
@@ -35,51 +42,27 @@ public class Unit : MonoBehaviour
         damageMelee *= strength;
     }
 
-    public bool TakeDamage(int dmg)
+    public void TakeDamage(Unit unit)
     {
-        currentHP -= dmg;
+        if (currentHP == 0)
+            return;
 
-        if (currentHP <= 0)
+        int totalDamage = damageMelee * strength - defense;
+
+        currentHP -= totalDamage;
+
+        isAlive = currentHP >= 0;
+
+        HPBar.DOFillAmount(currentHP / maxHP, 0.25f);
+        // OnComplete(Kill);
+        if (currentHP < 0)
         {
-            return true;
+            currentHP = 0;
         }
-        else
-        {
-            return false;
-        }
-    }
-    public void Agility()
-    {
-        // Bolsa de probabilidad de esquivar y acertar hit.
 
-        // float Choose (float[] probs) {
-
-        // float total = 0;
-
-        // foreach (float elem in probs) {
-        //     total += elem;
-        // }
-
-        // float randomPoint = Random.value * total;
-
-        // for (int i= 0; i < probs.Length; i++) {
-        //     if (randomPoint < probs[i]) {
-        //         return i;
-        //     }
-        //     else {
-        //         randomPoint -= probs[i];
-        //     }
-        // }
-        // return probs.Length - 1;
-    }
-    
-    public void Luck()
-    {
-        // Bolsa de probabilidad de acertar critico.
-        // https://gist.github.com/angeldelrio/0aa70ca63e0e153c6022
-        
     }
 
+    /*Executes corresponding actions*/
     public void Defense()
     {
         currentHP += defense;
