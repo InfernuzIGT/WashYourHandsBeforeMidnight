@@ -13,13 +13,14 @@ public class TextConfig : ScriptableObject
     public string playActionTxt = "EXECUTE";
     public string informationOneText = "{0}: <size=175>{1}</size>";
     public string informationTwoText = "{0}: <size=175>{1}-{2}</size>";
-    
+    public string formatStats = "STR {0}\nDEX {1}\nDEF {2}\nAGI {3}\nLCK {4}\nRCT {5}";
+
     [Header("Combat - Actions")]
     public string actionTypeWeapon = "DAMAGE";
     public string actionTypeItemPlayer = "";
     public string actionTypeItemEnemy = "";
     public string actionTypeDefense = "DEFENSE";
-    
+
     [Header("Message")]
     public Color colorMsgHeal;
     public Color colorMsgDamage;

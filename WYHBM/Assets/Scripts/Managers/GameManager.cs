@@ -97,6 +97,8 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
+                combatUI.selectableButton.Select(); // TODO Mariano: REMOVE
+
                 // TODO Mariano: Save Player Position
                 // TODO Mariano: Move Player to Combat Zone
                 // TODO Mariano: Spawn Enemies

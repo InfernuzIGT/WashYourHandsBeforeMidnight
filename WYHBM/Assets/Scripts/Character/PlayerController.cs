@@ -27,6 +27,9 @@ public class PlayerController : Character
     }
     private void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        
         _UIExecuteDialogEvent = new UIExecuteDialogEvent();
     }
 
