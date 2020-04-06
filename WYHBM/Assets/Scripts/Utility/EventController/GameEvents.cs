@@ -4,19 +4,27 @@ namespace Events
 {
     public class GameEvent { }
 
-    #region Dialogues
+    #region Interaction
 
-    public class UIEnableDialogEvent : GameEvent
+    public class InteractionEvent : GameEvent
+    {
+        public Vector3 lastPlayerPosition;
+    }
+
+    public class EnableDialogEvent : GameEvent
     {
         public bool enable;
         public DialogSO dialog;
     }
 
-    public class UIExecuteDialogEvent : GameEvent { }
-
-    public class StopMovementEvent : GameEvent
+    public class EnableMovementEvent : GameEvent
     {
-        public bool enable;
+        public bool canMove;
+    }
+    
+    public class ChangePlayerPositionEvent : GameEvent
+    {
+        public Vector3 newPosition;
     }
 
     #endregion

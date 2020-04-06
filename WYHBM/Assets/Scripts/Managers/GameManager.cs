@@ -6,18 +6,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public enum Ambient
-{
-    World = 0,
-    Interior = 1,
-    Location = 2,
-    Combat = 3
-}
-
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("Ambients")]
-    public Ambient currentAmbient;
+    public AMBIENT currentAmbient;
+    public GameObject currentInterior;
     [Space]
     public CombatManager combatManager;
     public GameMode.World.UIManager worldUI;
@@ -32,7 +25,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Other")]
     public Image fadeImg;
 
-    private Ambient _lastAmbient;
+    private AMBIENT _lastAmbient;
     private Camera _cameraMain;
 
     private void Start()
@@ -48,7 +41,7 @@ public class GameManager : MonoSingleton<GameManager>
         // SwitchCamera();
     }
 
-    public void ChangeAmbient(Ambient newAmbient)
+    public void ChangeAmbient(AMBIENT newAmbient)
     {
         _lastAmbient = currentAmbient;
         currentAmbient = newAmbient;
@@ -72,28 +65,28 @@ public class GameManager : MonoSingleton<GameManager>
     {
         switch (currentAmbient)
         {
-            case Ambient.World:
+            case AMBIENT.World:
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
                 player.ChangeMovement(true);
                 break;
 
-            case Ambient.Interior:
+            case AMBIENT.Interior:
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
                 player.ChangeMovement(true);
                 break;
 
-            case Ambient.Location:
+            case AMBIENT.Location:
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
                 player.ChangeMovement(true);
                 break;
 
-            case Ambient.Combat:
+            case AMBIENT.Combat:
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
@@ -105,6 +98,10 @@ public class GameManager : MonoSingleton<GameManager>
                 // TODO Mariano: Wait X seconds, and StartCombat!
                 break;
 
+            case AMBIENT.Development:
+                // Nothing
+                break;
+
             default:
                 break;
         }
@@ -114,6 +111,18 @@ public class GameManager : MonoSingleton<GameManager>
     {
         cameras[(int)_lastAmbient].SetActive(false);
         cameras[(int)currentAmbient].SetActive(true);
+    }
+
+    public void CreateInterior(bool isCreating, GameObject newInterior)
+    {
+        if (isCreating)
+        {
+            currentInterior = Instantiate(newInterior, GameData.Instance.gameConfig.interiorPosition, Quaternion.identity);
+        }
+        else
+        {
+            Destroy(currentInterior);
+        }
     }
 
     private void FadeOff()

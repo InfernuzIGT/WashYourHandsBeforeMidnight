@@ -1,46 +1,61 @@
 ﻿using Events;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : Character
 {
     [Header("Movement")]
     public float speedWalk = 7.5f;
     public float speedRun = 15f;
 
+    private CharacterController _characterController;
     private AnimatorController _animatorController;
-    private UIExecuteDialogEvent _UIExecuteDialogEvent;
 
-    // Movement Values
+    private InteractionEvent _interactionEvent;
+
+    // Movement 
     private bool _canMove = true;
+    private bool _isRunning;
+    private float _jump = 9.81f;
+    private float _gravity = 29.43f;
+    private Vector3 _movement;
+    private float _speedHorizontal;
+    private float _speedVertical;
+
     private float _moveHorizontal;
     private float _moveVertical;
     private float _posX;
     private float _posZ;
 
-    //Movement Input
+    private Vector3 _lastPosition;
+
+    // Input
     private string _inputHorizontal = "Horizontal";
     private string _inputVertical = "Vertical";
 
     private void Awake()
     {
+        _characterController = GetComponent<CharacterController>();
         _animatorController = GetComponent<AnimatorController>();
     }
     private void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        
-        _UIExecuteDialogEvent = new UIExecuteDialogEvent();
+        // Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
+
+        _interactionEvent = new InteractionEvent();
     }
 
     private void OnEnable()
     {
-        EventController.AddListener<StopMovementEvent>(OnStopMovement);
+        EventController.AddListener<EnableMovementEvent>(OnStopMovement);
+        EventController.AddListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
     }
 
     private void OnDisable()
     {
-        EventController.RemoveListener<StopMovementEvent>(OnStopMovement);
+        EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
+        EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
     }
 
     private void Update()
@@ -63,28 +78,61 @@ public class PlayerController : Character
 
     private void Movement()
     {
+        // Stop animation
         if (!_canMove)
         {
-            _animatorController.Movement(0, 0);
+            _isRunning = false;
+            _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
             return;
         }
 
+        // Get input
         _moveHorizontal = Input.GetAxisRaw(_inputHorizontal);
         _moveVertical = Input.GetAxisRaw(_inputVertical);
 
-        _posX = _moveHorizontal * speedRun * Time.deltaTime;
-        _posZ = _moveVertical * speedRun * Time.deltaTime;
+        // Speed movement
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _isRunning = _moveHorizontal == 0 && _moveVertical == 0 || !_characterController.isGrounded ? false : true;
+            _speedHorizontal = speedRun;
+        }
+        else
+        {
+            _isRunning = false;
+            _speedHorizontal = speedWalk;
+        }
 
-        transform.Translate(_posX, 0, _posZ);
+        // Add movement
+        _movement.x = _moveHorizontal * _speedHorizontal;
+        _movement.z = _moveVertical * _speedHorizontal;
+        _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
 
-        _animatorController.Movement(_moveHorizontal, _moveVertical);
+        // Jump
+        if (_characterController.isGrounded)
+        {
+            _speedVertical = -1;
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                _speedVertical = _jump;
+            }
+        }
+
+        // Move
+        _speedVertical -= _gravity * Time.deltaTime;
+        _movement.y = _speedVertical;
+        _characterController.Move(_movement * Time.deltaTime);
+
+        // Animation       
+        _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
     }
 
     private void Interaction()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            ExecuteDialog();
+            _interactionEvent.lastPlayerPosition = transform.position;
+            EventController.TriggerEvent(_interactionEvent);
         }
     }
 
@@ -95,14 +143,14 @@ public class PlayerController : Character
 
     #region Events
 
-    private void ExecuteDialog()
+    private void OnStopMovement(EnableMovementEvent evt)
     {
-        EventController.TriggerEvent(_UIExecuteDialogEvent);
+        _canMove = evt.canMove;
     }
 
-    private void OnStopMovement(StopMovementEvent evt)
+    private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)
     {
-        _canMove = evt.enable;
+        transform.position = evt.newPosition;
     }
 
     #endregion
