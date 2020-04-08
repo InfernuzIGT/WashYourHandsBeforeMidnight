@@ -4,18 +4,12 @@ using UnityEngine;
 public class InteractionAnimation : Interaction, IInteractable
 {
 	[Header("Animation")]
+	public Animator animator;
 	public bool isTrigger;
-	public bool boolValue = true;
 
-	private Animator _animator;
-
+	private bool _boolValue = true;
 	private AnimationCommandBool _animInteractionBool = new AnimInteractionBool();
 	private AnimationCommandTrigger _animInteractionTrigger = new AnimInteractionTrigger();
-
-	private void Awake()
-	{
-		_animator = GetComponentInParent<Animator>();
-	}
 
 	public void OnInteractionEnter(Collider other)
 	{
@@ -37,12 +31,12 @@ public class InteractionAnimation : Interaction, IInteractable
 	{
 		if (isTrigger)
 		{
-			_animInteractionTrigger.Execute(_animator);
+			_animInteractionTrigger.Execute(animator);
 		}
 		else
 		{
-			_animInteractionBool.Execute(_animator, boolValue);
-			boolValue = !boolValue;
+			_animInteractionBool.Execute(animator, _boolValue);
+			_boolValue = !_boolValue;
 		}
 	}
 
