@@ -1,10 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
-using Events;
+﻿using Events;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -22,17 +17,30 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Characters")]
     public PlayerController player;
 
-    [Header("Other")]
-    public Image fadeImg;
-
     private AMBIENT _lastAmbient;
     private Camera _cameraMain;
+
+    private FadeEvent _fadeEvent;
 
     private void Start()
     {
         _cameraMain = Camera.main;
 
+        _fadeEvent = new FadeEvent();
+        _fadeEvent.fadeFast = false;
+        _fadeEvent.callbackStart = SetAmbient;
+
         StartGame();
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<CreateInteriorEvent>(OnCreateInterior);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<CreateInteriorEvent>(OnCreateInterior);
     }
 
     private void StartGame()
@@ -46,9 +54,6 @@ public class GameManager : MonoSingleton<GameManager>
         _lastAmbient = currentAmbient;
         currentAmbient = newAmbient;
 
-        fadeImg.enabled = true;
-        fadeImg.DOFade(1, GameData.Instance.gameConfig.fadeDuration).OnKill(SetAmbient);
-
         player.ChangeMovement(false);
     }
 
@@ -56,9 +61,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         SwitchAmbient();
         // SwitchCamera();
-
-        fadeImg.DOFade(0, GameData.Instance.gameConfig.fadeDuration)
-            .OnKill(FadeOff);
     }
 
     private void SwitchAmbient()
@@ -113,21 +115,19 @@ public class GameManager : MonoSingleton<GameManager>
         cameras[(int)currentAmbient].SetActive(true);
     }
 
-    public void CreateInterior(bool isCreating, GameObject newInterior)
+    #region Events
+
+    private void OnCreateInterior(CreateInteriorEvent evt)
     {
-        if (isCreating)
+        if (evt.isCreating)
         {
-            currentInterior = Instantiate(newInterior, GameData.Instance.gameConfig.interiorPosition, Quaternion.identity);
+            currentInterior = Instantiate(evt.newInterior, GameData.Instance.gameConfig.interiorPosition, Quaternion.identity);
         }
         else
         {
-            Destroy(currentInterior);
+            Destroy(currentInterior, 1);
         }
     }
 
-    private void FadeOff()
-    {
-        fadeImg.enabled = false;
-    }
-
+    #endregion
 }

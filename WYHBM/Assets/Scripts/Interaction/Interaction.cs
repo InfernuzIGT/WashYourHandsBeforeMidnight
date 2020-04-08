@@ -5,12 +5,12 @@ using UnityEngine.Events;
 public class Interaction : MonoBehaviour
 {
     [System.Serializable]
-    public class InteractionEvent : UnityEvent<Collider> { }
+    public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     public bool showPopup = true;
     [Space]
-    public InteractionEvent onEnter;
-    public InteractionEvent onExit;
+    public InteractionUnityEvent onEnter;
+    public InteractionUnityEvent onExit;
 
     private GameObject _popupGO;
 

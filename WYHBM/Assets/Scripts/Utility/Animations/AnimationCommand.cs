@@ -8,10 +8,14 @@ public abstract class AnimationCommand
     protected readonly int hash_ModeCombat = Animator.StringToHash("modeCombat"); // Bool
     protected readonly int hash_ValueX = Animator.StringToHash("valueX"); // Float
     protected readonly int hash_ValueY = Animator.StringToHash("valueY"); // Float
+
     protected readonly int hash_ActionAttack = Animator.StringToHash("actionAttack"); // Bool
     protected readonly int hash_ActionItem = Animator.StringToHash("actionItem"); // Bool
     protected readonly int hash_ActionReceiveDamage = Animator.StringToHash("actionReceiveDamage"); // Bool
     protected readonly int hash_ActionType = Animator.StringToHash("actionType"); // Int
+
+    protected readonly int hash_InteractionBool = Animator.StringToHash("interactionBool"); // Bool
+    protected readonly int hash_InteractionTrigger = Animator.StringToHash("interactionTrigger"); // Trigger
 }
 
 #region Animation Command - Float
@@ -121,5 +125,21 @@ public class AnimActionType : AnimationCommandInt
     public override void Execute(Animator anim, int value)
     {
         anim.SetInteger(hash_ActionType, value);
+    }
+}
+
+public class AnimInteractionBool : AnimationCommandBool
+{
+    public override void Execute(Animator anim, bool value)
+    {
+        anim.SetBool(hash_InteractionBool, value);
+    }
+}
+
+public class AnimInteractionTrigger : AnimationCommandTrigger
+{
+    public override void Execute(Animator anim)
+    {
+        anim.SetTrigger(hash_InteractionTrigger);
     }
 }

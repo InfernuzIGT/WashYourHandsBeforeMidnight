@@ -15,6 +15,7 @@ public class PlayerController : Character
 
     // Movement 
     private bool _canMove = true;
+    private bool _canJump = true;
     private bool _isRunning;
     private float _jump = 9.81f;
     private float _gravity = 29.43f;
@@ -112,7 +113,7 @@ public class PlayerController : Character
         {
             _speedVertical = -1;
 
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space) && _canJump)
             {
                 _speedVertical = _jump;
             }
@@ -146,6 +147,7 @@ public class PlayerController : Character
     private void OnStopMovement(EnableMovementEvent evt)
     {
         _canMove = evt.canMove;
+        _canJump = !evt.enterToInterior;
     }
 
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)

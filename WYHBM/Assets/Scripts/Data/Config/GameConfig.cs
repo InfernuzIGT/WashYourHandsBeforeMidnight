@@ -8,6 +8,7 @@ public class GameConfig : ScriptableObject
     public Vector3 interiorPosition = new Vector3(500, 500, 500);
 
     [Header("Fade")]
-    public float fadeDuration = 3;
+    public float fadeFastDuration = 1.5f;
+    public float fadeSlowDuration = 3;
 
 }
