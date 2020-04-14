@@ -7,9 +7,9 @@ namespace GameMode.World
 {
     public class UIManager : MonoBehaviour
     {
+        public GameObject panelDialog;
+
         [Header("Dialogues")]
-        public bool isDialogReady;
-        public Canvas canvasDialog;
         public TextMeshProUGUI dialogTxt;
         public TextMeshProUGUI continueTxt;
         public float dialogSpeed;
@@ -17,72 +17,88 @@ namespace GameMode.World
 
         private Tween _txtAnimation;
 
-        private StopMovementEvent _stopMovementEvent;
+        private EnableMovementEvent _enableMovementEvent;
 
         // Dialogues
         private bool _isSentenceComplete;
         private string _currentSentence;
         private int _dialogIndex;
 
+        private Canvas _canvas;
+
+        private void Awake()
+        {
+            _canvas = GetComponent<Canvas>();
+        }
+
         private void Start()
         {
-            _stopMovementEvent = new StopMovementEvent();
-            canvasDialog.enabled = false;
+            _enableMovementEvent = new EnableMovementEvent();
             continueTxt.enabled = false;
+
+            panelDialog.SetActive(false);
         }
 
         private void OnEnable()
         {
-            EventController.AddListener<UIEnableDialogEvent>(OnEnableDialog);
-            EventController.AddListener<UIExecuteDialogEvent>(OnExecuteDialog);
+            EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
         }
 
         private void OnDisable()
         {
-            EventController.RemoveListener<UIEnableDialogEvent>(OnEnableDialog);
-            EventController.RemoveListener<UIExecuteDialogEvent>(OnExecuteDialog);
+            EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
         }
 
         #region Events
 
-        private void OnEnableDialog(UIEnableDialogEvent evt)
+        // Enable interaction dialog
+        private void OnEnableDialog(EnableDialogEvent evt)
         {
-            isDialogReady = evt.enable;
-            currentDialog = evt.dialog;
+            if (evt.enable)
+            {
+                currentDialog = evt.dialog;
+                EventController.AddListener<InteractionEvent>(OnInteractionDialog);
+            }
+            else
+            {
+                currentDialog = null;
+                EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+            }
         }
 
-        private void OnExecuteDialog(UIExecuteDialogEvent evt)
+        // Execute dialog
+        private void OnInteractionDialog(InteractionEvent evt)
         {
-            if (isDialogReady)
+            if (currentDialog.sentences.Length == 0)
             {
-                if (currentDialog.sentences.Length == 0)
-                {
-                    Debug.Log($"Dialog EMPTY");
-                    return;
-                }
+                Debug.Log($"Dialog EMPTY");
+                return;
+            }
 
-                if (_isSentenceComplete)
-                {
-                    CompleteText();
-                    return;
-                }
+            if (_isSentenceComplete)
+            {
+                CompleteText();
+                return;
+            }
+            
+            // Dialogues
+            if (_dialogIndex == currentDialog.sentences.Length)
+            {
+                _dialogIndex = 0;
+                panelDialog.SetActive(false);
 
-                if (_dialogIndex == currentDialog.sentences.Length)
-                {
-                    _dialogIndex = 0;
-                    canvasDialog.enabled = false;
+                TurnOffTxt();
 
-                    _stopMovementEvent.enable = true;
-                    EventController.TriggerEvent(_stopMovementEvent);
-                }
-                else
-                {
-                    SetText();
-                    canvasDialog.enabled = true;
+                _enableMovementEvent.canMove = true;
+                EventController.TriggerEvent(_enableMovementEvent);
+            }
+            else
+            {
+                SetText();
+                panelDialog.SetActive(true);
 
-                    _stopMovementEvent.enable = false;
-                    EventController.TriggerEvent(_stopMovementEvent);
-                }
+                _enableMovementEvent.canMove = false;
+                EventController.TriggerEvent(_enableMovementEvent);
             }
         }
 
@@ -106,7 +122,10 @@ namespace GameMode.World
             _currentSentence = currentDialog.sentences[_dialogIndex];
             _txtAnimation = dialogTxt.DOText(_currentSentence, dialogSpeed);
 
-            // TODO Mariano: Habilitar/Desabilitar CONTINUE
+            if (_isSentenceComplete)
+            {
+                TurnOffTxt();
+            }
 
             _dialogIndex++;
         }
@@ -121,6 +140,16 @@ namespace GameMode.World
             _isSentenceComplete = false;
         }
 
+        private void TurnOffTxt()
+        {
+            continueTxt.enabled = false;
+        }
+
         #endregion
+
+        public void EnableCanvas(bool enabled)
+        {
+            _canvas.enabled = enabled;
+        }
     }
 }

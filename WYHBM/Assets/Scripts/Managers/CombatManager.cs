@@ -7,14 +7,11 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
-    public static CombatManager Instance;
-
     [Header("Controllers")]
     public UIController uIController;
     public ActionController actionController;
 
     [Header("General")]
-    public bool isPaused = false;
     public bool isTurnPlayer = true;
 
     [Header("Characters")]
@@ -30,19 +27,137 @@ public class CombatManager : MonoBehaviour
     private WaitForSeconds combatWaitTime;
     private WaitForSeconds evaluationDuration;
 
-    private FadeInEvent fadeInEvent = new FadeInEvent();
-    private FadeOutEvent fadeOutEvent = new FadeOutEvent();
-    private FadeInCanvasEvent fadeInCanvasEvent = new FadeInCanvasEvent();
-    private FadeOutCanvasEvent fadeOutCanvasEvent = new FadeOutCanvasEvent();
-    private FadeOutCanvasEvent fadeOutEndEvent = new FadeOutCanvasEvent();
 
-    private void Awake()
+    //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    //-----------------------------------------------------------
+
+    [Header("NEW COMBAT")]
+    public CombatCharacter currentCharacter;
+    [Space]
+    public List<CombatCharacter> listCharacter;
+    public int turnCount;
+
+    private List<CombatCharacter> waitingForAction;
+    private bool endOfCombat = false;
+
+    // Start Combat
+    public void InitiateTurn()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(this);
+        AddToWaiting(InitialSort());
+        SetInitialCharactersTurn();
+
+        StartCoroutine(TurnsLoop());
+        UnleashRace();
     }
+
+    private IEnumerator TurnsLoop()
+    {
+        while (!endOfCombat)
+        {
+            // Waiting for the current character to do his action.
+            yield return currentCharacter.StartWaitingForAction();
+
+            SendBottom();
+
+            turnCount++;
+
+            // The Action Was done. Now should be the Next Characters Action.
+
+            yield return null;
+        }
+    }
+
+    public List<CombatCharacter> InitialSort()
+    {
+        List<CombatCharacter> sortedCharacters = new List<CombatCharacter>();
+        sortedCharacters.AddRange(listCharacter);
+
+        // CombatCharacter[] sortedCharacters = new CombatCharacter[characters.Length];
+        // sortedCharacters = characters;
+
+        CombatCharacter fastestCharacter;
+        fastestCharacter = sortedCharacters[0];
+
+        for (int i = 0; i < sortedCharacters.Count; i++) // ONE MINUS
+        {
+            for (int j = 0; j < sortedCharacters.Count; j++) // ONE MINUS
+            {
+                if (sortedCharacters[j].StatsReaction < sortedCharacters[j + 1].StatsReaction)
+                {
+                    // Saving the Fastest one.
+                    fastestCharacter = sortedCharacters[j + 1];
+
+                    // Swaping the characters.
+                    sortedCharacters[j + 1] = sortedCharacters[j];
+                    sortedCharacters[j] = fastestCharacter;
+                }
+            }
+        }
+
+        return sortedCharacters;
+    }
+
+    public void AddToWaiting(List<CombatCharacter> charactersToAdd)
+    {
+        for (int i = 0; i < charactersToAdd.Count; i++)
+            waitingForAction.Add(charactersToAdd[i]);
+    }
+
+    public void SetInitialCharactersTurn()
+    {
+        currentCharacter = waitingForAction[0];
+        currentCharacter.IsMyTurn = true;
+    }
+
+    public void SendBottom()
+    {
+        currentCharacter.StartGettingAhead();
+
+        waitingForAction.Remove(currentCharacter);
+        waitingForAction.Add(currentCharacter);
+        currentCharacter = waitingForAction[0];
+
+        currentCharacter.IsMyTurn = true;
+    }
+
+    public void UnleashRace()
+    {
+        for (int i = 2; i < waitingForAction.Count; i++)
+        {
+            waitingForAction[i].StartGettingAhead();
+        }
+    }
+
+    public void CharacterIsReadyToGoAhead(CombatCharacter characterGoingAhead)
+    {
+        int index;
+        CombatCharacter auxCharacter;
+
+        index = waitingForAction.IndexOf(characterGoingAhead);
+
+        if (index <= 1)
+        {
+            waitingForAction[index].StartGettingAhead();
+            return;
+        }
+
+        auxCharacter = waitingForAction[index - 1];
+
+        waitingForAction[index - 1] = characterGoingAhead;
+        waitingForAction[index] = auxCharacter;
+
+        if ((index - 1) > 1)
+        {
+            characterGoingAhead.StartGettingAhead();
+        }
+
+        waitingForAction[index].StartGettingAhead();
+    }
+
+    //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    //-----------------------------------------------------------
 
     private void Start()
     {
@@ -51,44 +166,16 @@ public class CombatManager : MonoBehaviour
         combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
         combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
         evaluationDuration = new WaitForSeconds(GameData.Instance.combatConfig.evaluationDuration);
-
-        fadeInEvent.duration = 3;
-        fadeOutEvent.duration = 3;
-        fadeInEvent.text = GameData.Instance.textConfig.fadeInText;
-        fadeOutEvent.text = GameData.Instance.textConfig.fadeOutText;
-
-        fadeInCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
-        fadeOutCanvasEvent.duration = GameData.Instance.combatConfig.transitionDuration;
-
-        fadeOutEndEvent.duration = GameData.Instance.combatConfig.fadeOutEndDuration;
-
-        FadeOut();
     }
 
     private void GetCharacters()
     {
-        // TODO Mariano: REDO THIS!
-
-        for (int i = 0; i < groupPlayers.childCount; i++)
-            listPlayers.Add(groupPlayers.GetChild(i).GetComponent<Player>());
-
-        for (int i = 0; i < groupEnemies.childCount; i++)
-            listEnemies.Add(groupEnemies.GetChild(i).GetComponent<Enemy>());
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            isPaused = !isPaused;
-            uIController.Menu(isPaused);
-        }
-
+        // TODO Mariano: Spawn Players and Enemies
     }
 
     public void StartCombat()
     {
-        _isActionEnable = !isPaused && isTurnPlayer;
+        _isActionEnable = isTurnPlayer;
 
         if (!_isActionEnable)
             return;
@@ -103,7 +190,6 @@ public class CombatManager : MonoBehaviour
         if (listPlayers[0].IsAlive) // TODO Mariano: Si hay algun PLAYER vivo
         {
             // TODO Mariano: Fade IN + BLUR
-            FadeOutCanvas();
 
             // TODO Mariano: Fade de los personajes involucrados
             listPlayers[0].ActionStartCombat();
@@ -117,7 +203,6 @@ public class CombatManager : MonoBehaviour
             yield return combatWaitTime;
 
             // TODO Mariano: Fade OUT + BLUR
-            FadeInCanvas();
 
             // TODO Mariano: Fade de los personajes involucrados
             listPlayers[0].ActionStopCombat();
@@ -143,7 +228,6 @@ public class CombatManager : MonoBehaviour
             yield return evaluationDuration;
 
             // TODO Mariano: Fade IN + BLUR
-            FadeOutCanvas();
 
             // TODO Mariano: Fade de los personajes involucrados
             listPlayers[0].ActionStartCombat();
@@ -157,7 +241,6 @@ public class CombatManager : MonoBehaviour
             yield return combatWaitTime;
 
             // TODO Mariano: Fade OUT + BLUR
-            FadeInCanvas();
 
             // TODO Mariano: Fade de los personajes involucrados
             listPlayers[0].ActionStopCombat();
@@ -191,9 +274,8 @@ public class CombatManager : MonoBehaviour
 
     public void EndGame(bool isWin)
     {
-        EventController.TriggerEvent(fadeOutEndEvent);
-        EventController.TriggerEvent(fadeInEvent);
-
+        // TODO Mariano: FADE
+        
         uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
 
         uIController.endTxt.gameObject.SetActive(true);
@@ -202,29 +284,4 @@ public class CombatManager : MonoBehaviour
         DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 1, 5, .5f).
         SetEase(Ease.OutQuad);
     }
-
-    #region Fade
-
-    public void FadeIn()
-    {
-        EventController.TriggerEvent(fadeInEvent);
-    }
-
-    public void FadeOut()
-    {
-        EventController.TriggerEvent(fadeOutEvent);
-    }
-
-    public void FadeInCanvas()
-    {
-        EventController.TriggerEvent(fadeInCanvasEvent);
-    }
-
-    public void FadeOutCanvas()
-    {
-        EventController.TriggerEvent(fadeOutCanvasEvent);
-    }
-
-    #endregion
-
 }

@@ -44,22 +44,6 @@ namespace GameMode.Combat
             _playTxt.text = GameData.Instance.textConfig.playActionTxt;
         }
 
-        private void OnEnable()
-        {
-            EventController.AddListener<FadeInEvent>(FadeIn);
-            EventController.AddListener<FadeOutEvent>(FadeOut);
-            EventController.AddListener<FadeInCanvasEvent>(FadeInCanvas);
-            EventController.AddListener<FadeOutCanvasEvent>(FadeOutCanvas);
-        }
-        private void OnDisable()
-        {
-            EventController.RemoveListener<FadeInEvent>(FadeIn);
-            EventController.RemoveListener<FadeOutEvent>(FadeOut);
-            EventController.RemoveListener<FadeInCanvasEvent>(FadeInCanvas);
-            EventController.RemoveListener<FadeOutCanvasEvent>(FadeOutCanvas);
-
-        }
-
         public void CreateActionObjects(List<EquipmentSO> _equipment)
         {
             _actionObjects = new List<ActionObject>();
@@ -152,22 +136,22 @@ namespace GameMode.Combat
 
         public void Attack()
         {
-            CombatManager.Instance.actionController.Attack();
+            // CombatManager.Instance.actionController.Attack();
         }
 
         public void Defense()
         {
-            CombatManager.Instance.actionController.Defense();
+            // CombatManager.Instance.actionController.Defense();
         }
 
         public void Item()
         {
-            CombatManager.Instance.actionController.Item();
+            // CombatManager.Instance.actionController.Item();
         }
 
         public void Run()
         {
-            CombatManager.Instance.actionController.Run();
+            // CombatManager.Instance.actionController.Run();
         }
 
         public void ChangeUI(bool isPlayer)
@@ -176,36 +160,6 @@ namespace GameMode.Combat
             menuTurn.SetActive(!isPlayer);
             // buttonExit.SetActive(isPlayer);
         }
-
-        #region Fade
-
-        private void FadeIn(FadeInEvent evt)
-        {
-            // TODO Mariano: Add start text
-            // panelTxt.text = evt.text;           
-            fadeScreen.DOFade(1, evt.duration);
-        }
-
-        private void FadeOut(FadeOutEvent evt)
-        {
-            // TODO Mariano: Add end text
-            // panelTxt.text = evt.text;           
-            fadeScreen.DOFade(0, evt.duration);
-        }
-
-        private void FadeInCanvas(FadeInCanvasEvent evt)
-        {
-            canvasGroup.interactable = true;
-            canvasGroup.DOFade(1, evt.duration);
-        }
-
-        private void FadeOutCanvas(FadeOutCanvasEvent evt)
-        {
-            canvasGroup.interactable = false;
-            canvasGroup.DOFade(0, evt.duration);
-        }
-
-        #endregion
 
         public void Menu(bool isPaused)
         {

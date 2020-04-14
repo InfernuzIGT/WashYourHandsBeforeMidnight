@@ -11,6 +11,7 @@ public class CombatConfig : ScriptableObject
 
     [Header("Action")]
     public ActionObject actionObjectPrefab;
+    public float actionTimeThresholdMultiplier = 1f;
 
     [Header("Animation - Combat")]
     public float transitionDuration = .35f;

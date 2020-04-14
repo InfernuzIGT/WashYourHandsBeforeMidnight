@@ -1,15 +1,7 @@
-﻿public interface ICombatable
-{
-    void ActionStartCombat();
-    void ActionStopCombat();
-}
+﻿using UnityEngine;
 
-public interface IHealeable<T>
+public interface IInteractable
 {
-    void ActionHeal(T amountHeal);
-}
-
-public interface IDamageable<T>
-{
-    void ActionReceiveDamage(T damageReceived);
+    void OnInteractionEnter(Collider other);
+    void OnInteractionExit(Collider other);
 }
