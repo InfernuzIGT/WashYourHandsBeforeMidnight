@@ -47,6 +47,6 @@ public class Interaction : MonoBehaviour
 
     public virtual void Execute() { }
     public virtual void Execute(bool enable) { }
-    
+
     #endregion
 }
