@@ -1,5 +1,6 @@
 ﻿using Events;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerController : Character
 {
@@ -7,6 +8,14 @@ public class PlayerController : Character
     public float speedWalk = 7.5f;
     public float speedRun = 15f;
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+    private CharacterController _characterController;
+=======
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     private AnimatorController _animatorController;
     private UIExecuteDialogEvent _UIExecuteDialogEvent;
 
@@ -21,10 +30,15 @@ public class PlayerController : Character
     private string _inputHorizontal = "Horizontal";
     private string _inputVertical = "Vertical";
 
+    public Quest quest;
+
+    Dictionary<int, Quest> questLog = new Dictionary<int, Quest>();
+
     private void Awake()
     {
         _animatorController = GetComponent<AnimatorController>();
     }
+
     private void Start()
     {
         Cursor.visible = false;
@@ -103,6 +117,32 @@ public class PlayerController : Character
     private void OnStopMovement(StopMovementEvent evt)
     {
         _canMove = evt.enable;
+    }
+
+    #endregion
+
+    #region Quest
+
+    public void Quests()
+    {
+
+        if (Quest.isActive)
+        {
+            if (quest.goal.isReached())
+            {
+                // experience += _quest.experienceReward; ADD VARIABLE IN SO CHARACTER
+                // gold += _quest.goldReward; ADD VARIABLE IN SO CHARACTER
+                quest.goal.Complete();
+            }
+            
+        }
+        
+    }
+
+    public void AddQuest()
+    {
+        questLog.Add( 1, quest);
+        
     }
 
     #endregion

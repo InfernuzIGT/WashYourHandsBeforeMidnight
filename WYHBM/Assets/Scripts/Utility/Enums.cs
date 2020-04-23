@@ -75,4 +75,15 @@ public enum ARMOR_TYPE
     ring = 4,
 }
 
+
+#endregion
+
+#region Quest
+public enum GOAL_TYPE
+{
+    none = 0,
+    kill = 1,
+    gathering = 2,
+    
+}
 #endregion
