@@ -10,7 +10,8 @@ public class NPCController : Character, IInteractable
     public bool isEnemy = false;
 
     [Header("Movement")]
-    public Transform[] movePositions;
+    public WaypointController waypoints;
+    public bool useRandomPosition = true;
     [Range(0f, 10f)]
     public float waitTime = 5;
 
@@ -19,7 +20,8 @@ public class NPCController : Character, IInteractable
 
     private NavMeshAgent _agent;
     private WaitForSeconds _waitForSeconds;
-    private int _randomValue;
+    private bool _isMoving;
+    private int _positionIndex = 0;
 
     private void Awake()
     {
@@ -33,6 +35,11 @@ public class NPCController : Character, IInteractable
         if (!_agent.isOnNavMesh && canMove)
         {
             Debug.LogError($"<color=red><b>[ERROR]</b></color> NPC '{gameObject.name}' isn't on NavMesh!");
+            return;
+        }
+
+        if (!canMove || waypoints == null)
+        {
             return;
         }
 
@@ -59,6 +66,7 @@ public class NPCController : Character, IInteractable
         else
         {
             _animatorController.Movement(Vector3.zero);
+            _isMoving = false;
         }
     }
 
@@ -67,6 +75,12 @@ public class NPCController : Character, IInteractable
         while (canMove)
         {
             ChangeDestination();
+
+            while (_isMoving)
+            {
+                yield return null;
+            }
+
             yield return _waitForSeconds;
         }
     }
@@ -75,8 +89,17 @@ public class NPCController : Character, IInteractable
     {
         if (!_agent.isStopped)
         {
-            _randomValue = Random.Range(0, movePositions.Length);
-            _agent.SetDestination(movePositions[_randomValue].position);
+            if (useRandomPosition)
+            {
+                _positionIndex = Random.Range(0, waypoints.positions.Length);
+            }
+            else
+            {
+                _positionIndex = _positionIndex < waypoints.positions.Length - 1 ? _positionIndex + 1 : 0;
+            }
+
+            _agent.SetDestination(waypoints.positions[_positionIndex]);
+            _isMoving = true;
         }
     }
 
