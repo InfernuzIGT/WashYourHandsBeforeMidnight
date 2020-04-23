@@ -16,6 +16,15 @@ public enum CHARACTER_BEHAVIOUR
 
 #endregion
 
+public enum AMBIENT
+{
+    World = 0,
+    Interior = 1,
+    Location = 2,
+    Combat = 3,
+    Development = 4
+}
+
 #region Actions
 
 public enum ACTION_TYPE

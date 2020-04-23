@@ -1,39 +1,45 @@
 ﻿using System.Collections;
+using Events;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class NPCController : Character
+public class NPCController : Character, IInteractable
 {
     public bool canMove = true;
     public bool isEnemy = false;
 
     [Header("Movement")]
-    public Transform[] movePositions;
+    public WaypointController waypoints;
+    public bool useRandomPosition = true;
     [Range(0f, 10f)]
     public float waitTime = 5;
 
     private AnimatorController _animatorController;
-    private DialogController _dialogController;
+    private InteractionDialog _interactionDialog;
 
-    private Interaction _interaction;
     private NavMeshAgent _agent;
     private WaitForSeconds _waitForSeconds;
-    private int _randomValue;
+    private bool _isMoving;
+    private int _positionIndex = 0;
 
     private void Awake()
     {
         _animatorController = GetComponent<AnimatorController>();
-        _dialogController = GetComponent<DialogController>();
-        _interaction = GetComponentInChildren<Interaction>();
+        _interactionDialog = GetComponentInChildren<InteractionDialog>();
         _agent = GetComponent<NavMeshAgent>();
     }
 
     private void Start()
     {
-        if (!_agent.isOnNavMesh)
+        if (!_agent.isOnNavMesh && canMove)
         {
             Debug.LogError($"<color=red><b>[ERROR]</b></color> NPC '{gameObject.name}' isn't on NavMesh!");
+            return;
+        }
+
+        if (!canMove || waypoints == null)
+        {
             return;
         }
 
@@ -45,7 +51,7 @@ public class NPCController : Character
 
     private void Update()
     {
-        if (_agent.isOnNavMesh)
+        if (_agent.isOnNavMesh && canMove)
         {
             Movement();
         }
@@ -55,11 +61,12 @@ public class NPCController : Character
     {
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
-            _animatorController.Movement(_agent.desiredVelocity.x, _agent.desiredVelocity.z);
+            _animatorController.Movement(_agent.desiredVelocity);
         }
         else
         {
-            _animatorController.Movement(0, 0);
+            _animatorController.Movement(Vector3.zero);
+            _isMoving = false;
         }
     }
 
@@ -68,6 +75,12 @@ public class NPCController : Character
         while (canMove)
         {
             ChangeDestination();
+
+            while (_isMoving)
+            {
+                yield return null;
+            }
+
             yield return _waitForSeconds;
         }
     }
@@ -76,8 +89,17 @@ public class NPCController : Character
     {
         if (!_agent.isStopped)
         {
-            _randomValue = Random.Range(0, movePositions.Length);
-            _agent.SetDestination(movePositions[_randomValue].position);
+            if (useRandomPosition)
+            {
+                _positionIndex = Random.Range(0, waypoints.positions.Length);
+            }
+            else
+            {
+                _positionIndex = _positionIndex < waypoints.positions.Length - 1 ? _positionIndex + 1 : 0;
+            }
+
+            _agent.SetDestination(waypoints.positions[_positionIndex]);
+            _isMoving = true;
         }
     }
 
@@ -85,13 +107,15 @@ public class NPCController : Character
     {
         if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
         {
-            if (isEnemy && GameManager.Instance.currentAmbient != Ambient.Combat)
+            EventController.AddListener<EnableMovementEvent>(OnStopMovement);
+
+            if (isEnemy && GameManager.Instance.currentAmbient != AMBIENT.Combat)
             {
-                TriggerCombat();
+                GameManager.Instance.ChangeAmbient(AMBIENT.Combat);
             }
             else
             {
-                ChangeState(true);
+                _interactionDialog?.Execute(true);
             }
         }
     }
@@ -100,27 +124,16 @@ public class NPCController : Character
     {
         if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
         {
-            ChangeState(false);
+            EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
+
+            _interactionDialog?.Execute(false);
         }
     }
 
-    private void ChangeState(bool state)
+    private void OnStopMovement(EnableMovementEvent evt)
     {
-        _agent.isStopped = state;
+        if (canMove)_agent.isStopped = !evt.canMove;
 
-        _animatorController.Movement(0, 0);
-
-        if (_dialogController != null)
-        {
-            _dialogController.ChangeState(state);
-        }
-    }
-
-    private void TriggerCombat()
-    {
-        _agent.isStopped = true;
-        _animatorController.Movement(0, 0);
-
-        GameManager.Instance.ChangeAmbient(Ambient.Combat);
+        _animatorController?.Movement(Vector3.zero);
     }
 }

@@ -1,23 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
-using Events;
+﻿using Events;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-
-public enum Ambient
-{
-    World = 0,
-    Interior = 1,
-    Location = 2,
-    Combat = 3
-}
 
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("Ambients")]
-    public Ambient currentAmbient;
+    public AMBIENT currentAmbient;
+    public GameObject currentInterior;
     [Space]
     public CombatManager combatManager;
     public GameMode.World.UIManager worldUI;
@@ -29,17 +17,30 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Characters")]
     public PlayerController player;
 
-    [Header("Other")]
-    public Image fadeImg;
-
-    private Ambient _lastAmbient;
+    private AMBIENT _lastAmbient;
     private Camera _cameraMain;
+
+    private FadeEvent _fadeEvent;
 
     private void Start()
     {
         _cameraMain = Camera.main;
 
+        _fadeEvent = new FadeEvent();
+        _fadeEvent.fadeFast = false;
+        _fadeEvent.callbackStart = SetAmbient;
+
         StartGame();
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<CreateInteriorEvent>(OnCreateInterior);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<CreateInteriorEvent>(OnCreateInterior);
     }
 
     private void StartGame()
@@ -48,13 +49,10 @@ public class GameManager : MonoSingleton<GameManager>
         // SwitchCamera();
     }
 
-    public void ChangeAmbient(Ambient newAmbient)
+    public void ChangeAmbient(AMBIENT newAmbient)
     {
         _lastAmbient = currentAmbient;
         currentAmbient = newAmbient;
-
-        fadeImg.enabled = true;
-        fadeImg.DOFade(1, GameData.Instance.gameConfig.fadeDuration).OnKill(SetAmbient);
 
         player.ChangeMovement(false);
     }
@@ -63,37 +61,34 @@ public class GameManager : MonoSingleton<GameManager>
     {
         SwitchAmbient();
         // SwitchCamera();
-
-        fadeImg.DOFade(0, GameData.Instance.gameConfig.fadeDuration)
-            .OnKill(FadeOff);
     }
 
     private void SwitchAmbient()
     {
         switch (currentAmbient)
         {
-            case Ambient.World:
+            case AMBIENT.World:
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
                 player.ChangeMovement(true);
                 break;
 
-            case Ambient.Interior:
+            case AMBIENT.Interior:
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
                 player.ChangeMovement(true);
                 break;
 
-            case Ambient.Location:
+            case AMBIENT.Location:
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
                 player.ChangeMovement(true);
                 break;
 
-            case Ambient.Combat:
+            case AMBIENT.Combat:
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
@@ -103,6 +98,10 @@ public class GameManager : MonoSingleton<GameManager>
                 // TODO Mariano: Move Player to Combat Zone
                 // TODO Mariano: Spawn Enemies
                 // TODO Mariano: Wait X seconds, and StartCombat!
+                break;
+
+            case AMBIENT.Development:
+                // Nothing
                 break;
 
             default:
@@ -116,9 +115,19 @@ public class GameManager : MonoSingleton<GameManager>
         cameras[(int)currentAmbient].SetActive(true);
     }
 
-    private void FadeOff()
+    #region Events
+
+    private void OnCreateInterior(CreateInteriorEvent evt)
     {
-        fadeImg.enabled = false;
+        if (evt.isCreating)
+        {
+            currentInterior = Instantiate(evt.newInterior, GameData.Instance.gameConfig.interiorPosition, Quaternion.identity);
+        }
+        else
+        {
+            Destroy(currentInterior, 1);
+        }
     }
 
+    #endregion
 }

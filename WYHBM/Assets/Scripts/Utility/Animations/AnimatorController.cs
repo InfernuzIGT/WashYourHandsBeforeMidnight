@@ -7,17 +7,20 @@ public class AnimatorController : MonoBehaviour
     {
         Idle = 0,
         Walk = 1,
-        Run = 2
+        Run = 2,
+        Jump = 3
     }
 
     [Header("Textures")]
     public Texture2D textureIdle;
-    // public Texture2D textureWalk;
-    public Texture2D textureMovement;
+    public Texture2D textureWalk;
+    public Texture2D textureRun;
+    public Texture2D textureJump;
 
     // public Texture2D normalIdle;
     // public Texture2D normalWalk;
-    // public Texture2D normalMovement;
+    // public Texture2D normalRun;
+    // public Texture2D normalJump;
 
     [Header("Material")]
     public Material dither;
@@ -35,6 +38,8 @@ public class AnimatorController : MonoBehaviour
     private bool _isFlipped;
 
     private AnimationCommandBool _animIsAlive = new AnimIsAlive();
+    private AnimationCommandBool _animIsRunning = new AnimIsRunning();
+    private AnimationCommandBool _animIsGrounded = new AnimIsGrounded();
     private AnimationCommandBool _animModeCombat = new AnimModeCombat();
     private AnimationCommandFloat _animValueX = new AnimValueX();
     private AnimationCommandFloat _animValueY = new AnimValueY();
@@ -50,13 +55,16 @@ public class AnimatorController : MonoBehaviour
         _material = _spriteRenderer.material;
     }
 
-    public void Movement(float valueX, float valueY)
+    public void Movement(Vector3 movement, bool isRunning = false, bool isGrounded = true)
     {
-        FlipSprite(valueX);
-        SetTexture(valueX, valueY);
+        FlipSprite(movement.x);
+        ChangeState(movement, isRunning, isGrounded);
+        SetTexture();
 
-        _animValueX.Execute(_animator, valueX);
-        _animValueY.Execute(_animator, valueY);
+        _animValueX.Execute(_animator, movement.x);
+        _animValueY.Execute(_animator, movement.z);
+        _animIsRunning.Execute(_animator, isRunning);
+        _animIsGrounded.Execute(_animator, isGrounded);
     }
 
     private void FlipSprite(float valueX)
@@ -73,17 +81,27 @@ public class AnimatorController : MonoBehaviour
         _spriteRenderer.flipX = _isFlipped;
     }
 
-    private void SetTexture(float valueX, float valueY)
+    private void ChangeState(Vector3 movement, bool isRunning, bool isGrounded)
     {
-        if (valueX == 0 && valueY == 0)
+        if (movement.x == 0 && movement.z == 0 && isGrounded)
         {
             _currentState = AnimationState.Idle;
         }
         else
         {
-            _currentState = AnimationState.Run;
+            if (isGrounded)
+            {
+                _currentState = isRunning ? AnimationState.Run : AnimationState.Walk;
+            }
+            else
+            {
+                _currentState = AnimationState.Jump;
+            }
         }
+    }
 
+    private void SetTexture()
+    {
         if (_animationState == _currentState)return;
 
         switch (_currentState)
@@ -94,16 +112,22 @@ public class AnimatorController : MonoBehaviour
                 dither.SetTexture(_textureBase, textureIdle);
                 break;
 
-                // case AnimationState.Walk:
-                //     _material.SetTexture(_textureBase, spriteWalk);
-                //     _material.SetTexture(_textureNormal, normalWalk);
-                //     dither.SetTexture(_textureBase, spriteWalk);
-                //     break;
+            case AnimationState.Walk:
+                _material.SetTexture(_textureBase, textureWalk);
+                // _material.SetTexture(_textureNormal, normalWalk);
+                dither.SetTexture(_textureBase, textureWalk);
+                break;
 
             case AnimationState.Run:
-                _material.SetTexture(_textureBase, textureMovement);
+                _material.SetTexture(_textureBase, textureRun);
                 // _material.SetTexture(_textureNormal, normalMovement);
-                dither.SetTexture(_textureBase, textureMovement);
+                dither.SetTexture(_textureBase, textureRun);
+                break;
+
+            case AnimationState.Jump:
+                _material.SetTexture(_textureBase, textureJump);
+                // _material.SetTexture(_textureNormal, normalMovement);
+                dither.SetTexture(_textureBase, textureJump);
                 break;
 
             default:
