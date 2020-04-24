@@ -7,7 +7,9 @@ namespace GameMode.World
 {
     public class UIManager : MonoBehaviour
     {
+        [Header("Panels")]
         public GameObject panelDialog;
+        public GameObject panelQuest;
 
         [Header("Dialogues")]
         public TextMeshProUGUI dialogTxt;
@@ -24,6 +26,11 @@ namespace GameMode.World
         private string _currentSentence;
         private int _dialogIndex;
 
+        // Quests
+        private TextMeshProUGUI _questTitleTxt;
+        private TextMeshProUGUI _questDescriptionTxt;
+        private TextMeshProUGUI _questRewardTxt;
+
         private Canvas _canvas;
 
         private void Awake()
@@ -37,6 +44,7 @@ namespace GameMode.World
             continueTxt.enabled = false;
 
             panelDialog.SetActive(false);
+            panelQuest.SetActive(false);
         }
 
         private void OnEnable()
@@ -80,7 +88,7 @@ namespace GameMode.World
                 CompleteText();
                 return;
             }
-            
+
             // Dialogues
             if (_dialogIndex == currentDialog.sentences.Length)
             {
@@ -143,6 +151,22 @@ namespace GameMode.World
         private void TurnOffTxt()
         {
             continueTxt.enabled = false;
+        }
+
+        #endregion
+
+        #region Quest
+
+        public void Diary(bool isOpening)
+        {
+            panelQuest.SetActive(isOpening);
+        }
+
+        public void SetQuest(QuestSO data)
+        {
+            _questTitleTxt.text = data.title;
+            _questDescriptionTxt.text = data.description;
+            _questRewardTxt.text = data.goldReward.ToString();
         }
 
         #endregion

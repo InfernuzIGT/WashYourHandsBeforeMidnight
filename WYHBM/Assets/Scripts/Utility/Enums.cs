@@ -88,11 +88,11 @@ public enum ARMOR_TYPE
 #endregion
 
 #region Quest
+
 public enum GOAL_TYPE
 {
     none = 0,
     kill = 1,
-    gathering = 2,
-    
+    collect = 2,
 }
 #endregion

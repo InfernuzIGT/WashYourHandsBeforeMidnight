@@ -35,9 +35,9 @@ public class PlayerController : Character
     private string _inputHorizontal = "Horizontal";
     private string _inputVertical = "Vertical";
 
-    public Quest quest;
+    public QuestSO quest;
 
-    Dictionary<int, Quest> questLog = new Dictionary<int, Quest>();
+    Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
     {
@@ -163,14 +163,14 @@ public class PlayerController : Character
 
     public void QuestDiary()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            quest.giver.OpenDiary();
-        }
-        else
-        {
-            quest.giver.CloseDiary();
-        }
+        // if (Input.GetKeyDown(KeyCode.L))
+        // {
+        //     quest.giver.OpenDiary();
+        // }
+        // else
+        // {
+        //     quest.giver.CloseDiary();
+        // }
         
     }
 
@@ -178,19 +178,20 @@ public class PlayerController : Character
 
     #region Quest
 
+    // TODO Mariano: MOVE TO GAME MANAGER
     public void Quests()
     {
 
-        if (Quest.isActive)
-        {
-            if (quest.goal.isReached())
-            {
-                // experience += _quest.experienceReward; ADD VARIABLE IN SO CHARACTER
-                // gold += _quest.goldReward; ADD VARIABLE IN SO CHARACTER
-                quest.goal.Complete();
-            }
+        // if (QuestSO.isActive)
+        // {
+        //     if (quest.goal.isReached())
+        //     {
+        //         // experience += _quest.experienceReward; ADD VARIABLE IN SO CHARACTER
+        //         // gold += _quest.goldReward; ADD VARIABLE IN SO CHARACTER
+        //         quest.goal.Complete();
+        //     }
             
-        }
+        // }
         
     }
 
