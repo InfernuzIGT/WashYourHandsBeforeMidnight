@@ -85,3 +85,11 @@ public enum ARMOR_TYPE
 }
 
 #endregion
+
+public enum GROUND_TYPE
+{
+    none = 0,
+    A = 1,
+    B = 2,
+    C = 3,
+}
