@@ -8,6 +8,10 @@ public class Quest : ScriptableObject
 
     [System.NonSerialized]
     public QuestGoal goal;
+    [System.NonSerialized]
+    public QuestGiver giver;
+    [System.NonSerialized]
+    public PlayerController playerController;
     public string title;
     [TextArea()]
     public string description;

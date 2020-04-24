@@ -161,6 +161,19 @@ public class PlayerController : Character
         transform.position = evt.newPosition;
     }
 
+    public void QuestDiary()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            quest.giver.OpenDiary();
+        }
+        else
+        {
+            quest.giver.CloseDiary();
+        }
+        
+    }
+
     #endregion
 
     #region Quest
@@ -184,6 +197,11 @@ public class PlayerController : Character
     public void AddQuest()
     {
         questLog.Add( 1, quest);
+        
+    }
+    public void RemoveQuest()
+    {
+        questLog.Remove(1);
         
     }
 

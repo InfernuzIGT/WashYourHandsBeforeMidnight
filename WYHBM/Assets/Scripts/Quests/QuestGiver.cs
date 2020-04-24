@@ -13,32 +13,33 @@ public class QuestGiver : MonoBehaviour
     public Text experienceText;
     public Text goldText;
 
-    public GameObject questWindow;
+    public GameObject questLog;
 
-    // private Canvas _questUI;
+    private Canvas _questDiary;
 
     private void Awake() 
     {   
         _quest = GetComponent<Quest>();
-        // _questUI = GetComponent<Canvas>();
+        _questDiary = GetComponent<Canvas>();
     }
 
-    public void OpenQuestWindow() //discuss if mockup have window
+    public void OpenDiary() //discuss if mockup have window
     {
-        // _questUI.enabled = true;
-        questWindow.SetActive(true);
-        titleText.text = _quest.title;
-        descriptionText.text = _quest.description;
-        experienceText.text = _quest.experienceReward.ToString();
-        goldText.text = _quest.goldReward.ToString();
+        _questDiary.enabled = true;
+    }
+    public void CloseDiary() //discuss if mockup have window
+    {
+        _questDiary.enabled = true;
     }
 
     public void AcceptQuest()
     {
-        // _questUI.enabled = true;
-        questWindow.SetActive(false);
         Quest.isActive = true;
         playerController.quest = _quest;
+        titleText.text = _quest.title;
+        descriptionText.text = _quest.description;
+        experienceText.text = _quest.experienceReward.ToString();
+        goldText.text = _quest.goldReward.ToString();
 
     }
 }

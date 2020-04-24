@@ -3,6 +3,7 @@
 [System.Serializable]
 public class QuestGoal
 {
+    private Quest _quest;
 
     private int requiredAmount;
     private int currentAmount;
@@ -42,6 +43,7 @@ public class QuestGoal
 
     public void Complete()
     {
+        _quest.playerController.RemoveQuest();
         Quest.isActive = false;
         Debug.Log ($"<b> was completed! </b>");
         
