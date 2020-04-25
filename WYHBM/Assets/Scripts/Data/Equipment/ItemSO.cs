@@ -5,4 +5,9 @@ public class ItemSO : EquipmentSO
 {
 	[Header("Item")]
 	public ITEM_TYPE itemType;
+	public int level;
+    [Range(0, 3)]
+    public int quality;
+    public IntVector2 size;
+	
 }

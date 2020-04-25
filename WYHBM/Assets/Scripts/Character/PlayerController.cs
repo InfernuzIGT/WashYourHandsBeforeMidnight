@@ -1,5 +1,6 @@
 ﻿using Events;
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : Character
@@ -34,11 +35,16 @@ public class PlayerController : Character
     private string _inputHorizontal = "Horizontal";
     private string _inputVertical = "Vertical";
 
+    public QuestSO quest;
+
+    Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _animatorController = GetComponent<AnimatorController>();
     }
+
     private void Start()
     {
         // Cursor.visible = false;
@@ -67,7 +73,9 @@ public class PlayerController : Character
 
         Movement();
         Interaction();
+
     }
+
 
     private void CloseGame()
     {
@@ -135,6 +143,16 @@ public class PlayerController : Character
             _interactionEvent.lastPlayerPosition = transform.position;
             EventController.TriggerEvent(_interactionEvent);
         }
+
+        if (Input.GetKey(KeyCode.L))
+        {
+            GameManager.Instance.worldUI.Diary(true);
+        }
+        else
+        {
+            GameManager.Instance.worldUI.Diary(false);
+        }
+
     }
 
     public void ChangeMovement(bool enabled)
@@ -153,6 +171,38 @@ public class PlayerController : Character
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)
     {
         transform.position = evt.newPosition;
+    }
+
+
+    #endregion
+
+    #region Quest
+
+    // TODO Mariano: MOVE TO GAME MANAGER
+    public void Quests()
+    {
+
+        // if (QuestSO.isActive)
+        // {
+        //     if (quest.goal.isReached())
+        //     {
+        //         // experience += _quest.experienceReward; ADD VARIABLE IN SO CHARACTER
+        //         // gold += _quest.goldReward; ADD VARIABLE IN SO CHARACTER
+        //         quest.goal.Complete();
+        //     }
+            
+        // }
+        
+    }
+
+    // public void AddQuest()
+    // {
+    //     questLog.Add( 1, quest);
+        
+    // }
+    public void RemoveQuest()
+    {
+        GameManager.Instance.worldUI._questLogTitleTxt.alpha = 0;
     }
 
     #endregion

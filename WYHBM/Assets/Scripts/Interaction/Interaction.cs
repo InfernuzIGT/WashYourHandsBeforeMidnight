@@ -9,6 +9,8 @@ public class Interaction : MonoBehaviour
 
     public bool showPopup = true;
     [Space]
+    public QuestSO quest;
+    [Space]
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
