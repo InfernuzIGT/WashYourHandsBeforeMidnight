@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class ItemScript : MonoBehaviour, IPointerClickHandler
 {
+
+    // Mueve el item
     private GameObject invenPanel;
     public static GameObject selectedItem;
     public static IntVector2 selectedItemSize;
@@ -18,7 +20,7 @@ public class ItemScript : MonoBehaviour, IPointerClickHandler
 
     private void Awake()
     {
-        invenPanel = GameObject.FindGameObjectWithTag("InvenPanel");
+        // invenPanel = GameObject.FindGameObjectWithTag("InvenPanel");
         slotSize = invenPanel.GetComponent<InvenGridScript>().slotSize;
     }
 

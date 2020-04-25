@@ -5,4 +5,7 @@ public class DialogSO : ScriptableObject
 {
     [TextArea()]
     public string[] sentences;
+
+    [Header ("Quest")]
+    public QuestSO questSO;
 }

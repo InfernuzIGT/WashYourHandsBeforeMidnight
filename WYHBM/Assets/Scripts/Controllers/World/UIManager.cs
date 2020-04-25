@@ -7,11 +7,11 @@ namespace GameMode.World
 {
     public class UIManager : MonoBehaviour
     {
-        [Header("Panels")]
+        [Header ("Panels")]
         public GameObject panelDialog;
         public GameObject panelQuest;
 
-        [Header("Dialogues")]
+        [Header ("Dialogues")]
         public TextMeshProUGUI dialogTxt;
         public TextMeshProUGUI continueTxt;
         public float dialogSpeed;
@@ -27,65 +27,69 @@ namespace GameMode.World
         private int _dialogIndex;
 
         // Quests
-        private TextMeshProUGUI _questTitleTxt;
-        private TextMeshProUGUI _questDescriptionTxt;
-        private TextMeshProUGUI _questRewardTxt;
+        public TextMeshProUGUI _questTitleTxt;
+        public TextMeshProUGUI _questDescriptionTxt;
+        public TextMeshProUGUI _questRewardTxt;
+        //change variables
+        public TextMeshProUGUI _questLogTitleTxt;
+        public GameObject questComplete;
+        public TextMeshProUGUI questObjectives;
 
         private Canvas _canvas;
 
-        private void Awake()
+        private void Awake ()
         {
-            _canvas = GetComponent<Canvas>();
+            _canvas = GetComponent<Canvas> ();
         }
 
-        private void Start()
+        private void Start ()
         {
-            _enableMovementEvent = new EnableMovementEvent();
+            _enableMovementEvent = new EnableMovementEvent ();
             continueTxt.enabled = false;
 
-            panelDialog.SetActive(false);
-            panelQuest.SetActive(false);
+            panelDialog.SetActive (false);
+            panelQuest.SetActive (false);
         }
 
-        private void OnEnable()
+        private void OnEnable ()
         {
-            EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+            EventController.AddListener<EnableDialogEvent> (OnEnableDialog);
         }
 
-        private void OnDisable()
+        private void OnDisable ()
         {
-            EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+            EventController.RemoveListener<EnableDialogEvent> (OnEnableDialog);
         }
 
         #region Events
 
         // Enable interaction dialog
-        private void OnEnableDialog(EnableDialogEvent evt)
+        private void OnEnableDialog (EnableDialogEvent evt)
         {
             if (evt.enable)
             {
                 currentDialog = evt.dialog;
-                EventController.AddListener<InteractionEvent>(OnInteractionDialog);
+                EventController.AddListener<InteractionEvent> (OnInteractionDialog);
             }
             else
             {
                 currentDialog = null;
-                EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+                EventController.RemoveListener<InteractionEvent> (OnInteractionDialog);
             }
         }
 
         // Execute dialog
-        private void OnInteractionDialog(InteractionEvent evt)
+        private void OnInteractionDialog (InteractionEvent evt)
         {
             if (currentDialog.sentences.Length == 0)
             {
-                Debug.Log($"Dialog EMPTY");
+                Debug.Log ($"Dialog EMPTY");
                 return;
             }
 
             if (_isSentenceComplete)
             {
-                CompleteText();
+                CompleteText ();
                 return;
             }
 
@@ -93,20 +97,23 @@ namespace GameMode.World
             if (_dialogIndex == currentDialog.sentences.Length)
             {
                 _dialogIndex = 0;
-                panelDialog.SetActive(false);
+                panelDialog.SetActive (false);
 
-                TurnOffTxt();
+                TurnOffTxt ();
 
                 _enableMovementEvent.canMove = true;
-                EventController.TriggerEvent(_enableMovementEvent);
+                EventController.TriggerEvent (_enableMovementEvent);
+
+                SetQuest (currentDialog.questSO);
+
             }
             else
             {
-                SetText();
-                panelDialog.SetActive(true);
+                SetText ();
+                panelDialog.SetActive (true);
 
                 _enableMovementEvent.canMove = false;
-                EventController.TriggerEvent(_enableMovementEvent);
+                EventController.TriggerEvent (_enableMovementEvent);
             }
         }
 
@@ -114,33 +121,33 @@ namespace GameMode.World
 
         #region  Dialogues
 
-        private void SetText()
+        private void SetText ()
         {
             if (_dialogIndex < currentDialog.sentences.Length)
             {
                 dialogTxt.text = "";
-                ExecuteText();
+                ExecuteText ();
             }
         }
 
-        private void ExecuteText()
+        private void ExecuteText ()
         {
             _isSentenceComplete = true;
 
             _currentSentence = currentDialog.sentences[_dialogIndex];
-            _txtAnimation = dialogTxt.DOText(_currentSentence, dialogSpeed);
+            _txtAnimation = dialogTxt.DOText (_currentSentence, dialogSpeed);
 
             if (_isSentenceComplete)
             {
-                TurnOffTxt();
+                TurnOffTxt ();
             }
 
             _dialogIndex++;
         }
 
-        private void CompleteText()
+        private void CompleteText ()
         {
-            _txtAnimation.Kill();
+            _txtAnimation.Kill ();
             dialogTxt.text = _currentSentence;
 
             continueTxt.enabled = true;
@@ -148,7 +155,7 @@ namespace GameMode.World
             _isSentenceComplete = false;
         }
 
-        private void TurnOffTxt()
+        private void TurnOffTxt ()
         {
             continueTxt.enabled = false;
         }
@@ -157,21 +164,34 @@ namespace GameMode.World
 
         #region Quest
 
-        public void Diary(bool isOpening)
+        public void Diary (bool isOpening)
         {
-            panelQuest.SetActive(isOpening);
+            panelQuest.SetActive (isOpening);
         }
 
-        public void SetQuest(QuestSO data)
+        public void SetQuest (QuestSO data)
         {
+            GameManager.Instance.quest = data;
+            SetObjectives("0", currentDialog.questSO.requiredAmount.ToString());
             _questTitleTxt.text = data.title;
             _questDescriptionTxt.text = data.description;
-            _questRewardTxt.text = data.goldReward.ToString();
+            _questRewardTxt.text = data.goldReward.ToString ();
+            SetQuestLog (data);
+        }
+
+        public void SetQuestLog (QuestSO data)
+        {
+
+            _questLogTitleTxt.text = data.title;
+        }
+        public void SetObjectives (string current, string required)
+        {
+            questObjectives.text = string.Format ("{0} / {1}", current, required);
         }
 
         #endregion
 
-        public void EnableCanvas(bool enabled)
+        public void EnableCanvas (bool enabled)
         {
             _canvas.enabled = enabled;
         }

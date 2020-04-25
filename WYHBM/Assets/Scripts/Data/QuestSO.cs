@@ -5,6 +5,7 @@ public class QuestSO : ScriptableObject
 {
     public int id;
     public GOAL_TYPE goalType;
+    public int requiredAmount;
 
     [Header("Details")]
     public string title;

@@ -73,7 +73,9 @@ public class PlayerController : Character
 
         Movement();
         Interaction();
+
     }
+
 
     private void CloseGame()
     {
@@ -141,6 +143,16 @@ public class PlayerController : Character
             _interactionEvent.lastPlayerPosition = transform.position;
             EventController.TriggerEvent(_interactionEvent);
         }
+
+        if (Input.GetKey(KeyCode.L))
+        {
+            GameManager.Instance.worldUI.Diary(true);
+        }
+        else
+        {
+            GameManager.Instance.worldUI.Diary(false);
+        }
+
     }
 
     public void ChangeMovement(bool enabled)
@@ -161,18 +173,6 @@ public class PlayerController : Character
         transform.position = evt.newPosition;
     }
 
-    public void QuestDiary()
-    {
-        // if (Input.GetKeyDown(KeyCode.L))
-        // {
-        //     quest.giver.OpenDiary();
-        // }
-        // else
-        // {
-        //     quest.giver.CloseDiary();
-        // }
-        
-    }
 
     #endregion
 
@@ -195,15 +195,14 @@ public class PlayerController : Character
         
     }
 
-    public void AddQuest()
-    {
-        questLog.Add( 1, quest);
+    // public void AddQuest()
+    // {
+    //     questLog.Add( 1, quest);
         
-    }
+    // }
     public void RemoveQuest()
     {
-        questLog.Remove(1);
-        
+        GameManager.Instance.worldUI._questLogTitleTxt.alpha = 0;
     }
 
     #endregion

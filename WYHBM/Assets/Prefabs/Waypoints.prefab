@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427532116291838863}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -18, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,8 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 526fe2630af8bf94f94e749e7c10025f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positions: []
-  showDebug: 0
+  positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 27.165276, y: 0, z: 0}
+  - {x: 27.014187, y: 0, z: -17.420948}
+  - {x: 11.885422, y: 0, z: -29.336197}
+  showDebug: 1
   colorLine: {r: 1, g: 1, b: 1, a: 0.5}
   colorSphere: {r: 1, g: 0, b: 0, a: 0.5}
-  radius: 0.75
+  radius: 0.25
