@@ -89,7 +89,9 @@ public enum ARMOR_TYPE
 public enum GROUND_TYPE
 {
     none = 0,
-    A = 1,
-    B = 2,
-    C = 3,
+    Grass = 1,
+    Dirt = 2,
+    Wood = 3,
+    Cement = 4,
+    Ceramic = 5
 }
