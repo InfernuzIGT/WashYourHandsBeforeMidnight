@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameData : MonoSingleton<GameData>
 {
@@ -9,48 +10,48 @@ public class GameData : MonoSingleton<GameData>
 
 	private static GameData GAME_DATA;
 
-	private static bool LoadData ()
+	private static bool LoadData()
 	{
 		var valid = false;
 
-		var data = PlayerPrefs.GetString ("data", "");
+		var data = PlayerPrefs.GetString("data", "");
 		if (data != "")
 		{
-			var success = DESEncryption.TryDecrypt (data, out var original);
+			var success = DESEncryption.TryDecrypt(data, out var original);
 			if (success)
 			{
-				GAME_DATA = JsonUtility.FromJson<GameData> (original);
+				GAME_DATA = JsonUtility.FromJson<GameData>(original);
 				// GAME_DATA.LoadData ();
 				valid = true;
 			}
 			else
 			{
-				GAME_DATA = new GameData ();
+				GAME_DATA = new GameData();
 			}
 
 		}
 		else
 		{
-			GAME_DATA = new GameData ();
+			GAME_DATA = new GameData();
 		}
 
 		return valid;
 	}
 
-	public static bool SaveData ()
+	public static bool SaveData()
 	{
 		const bool valid = false;
 
 		try
 		{
 			// GAME_DATA.SaveData ();
-			var result = DESEncryption.Encrypt (JsonUtility.ToJson (GameData.GAME_DATA));
-			PlayerPrefs.SetString ("data", result);
-			PlayerPrefs.Save ();
+			var result = DESEncryption.Encrypt(JsonUtility.ToJson(GameData.GAME_DATA));
+			PlayerPrefs.SetString("data", result);
+			PlayerPrefs.Save();
 		}
 		catch (Exception ex)
 		{
-			Debug.LogError (ex.ToString ());
+			Debug.LogError(ex.ToString());
 		}
 
 		return valid;
@@ -61,7 +62,7 @@ public class GameData : MonoSingleton<GameData>
 		get
 		{
 			if (GAME_DATA == null)
-				LoadData ();
+				LoadData();
 			return GAME_DATA;
 		}
 	}
