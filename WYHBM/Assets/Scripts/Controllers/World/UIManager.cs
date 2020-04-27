@@ -2,12 +2,16 @@
 using Events;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameMode.World
 {
     public class UIManager : MonoBehaviour
     {
         public GameObject panelDialog;
+
+        [Header("Player")]
+        public Image staminaImg;
 
         [Header("Dialogues")]
         public TextMeshProUGUI dialogTxt;
@@ -80,7 +84,7 @@ namespace GameMode.World
                 CompleteText();
                 return;
             }
-            
+
             // Dialogues
             if (_dialogIndex == currentDialog.sentences.Length)
             {
@@ -100,6 +104,15 @@ namespace GameMode.World
                 _enableMovementEvent.canMove = false;
                 EventController.TriggerEvent(_enableMovementEvent);
             }
+        }
+
+        #endregion
+
+        #region Player
+
+        public void UpdateStamina(float value)
+        {
+            staminaImg.fillAmount = value;
         }
 
         #endregion
