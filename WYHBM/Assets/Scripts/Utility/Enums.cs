@@ -84,6 +84,7 @@ public enum ARMOR_TYPE
     ring = 4,
 }
 
+
 #endregion
 
 public enum GROUND_TYPE
@@ -95,3 +96,14 @@ public enum GROUND_TYPE
     Cement = 4,
     Ceramic = 5
 }
+
+#region Quest
+
+public enum GOAL_TYPE
+{
+    none = 0,
+    kill = 1,
+    collect = 2,
+    interact = 3,
+}
+#endregion
