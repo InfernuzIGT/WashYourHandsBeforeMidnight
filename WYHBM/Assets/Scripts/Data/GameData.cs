@@ -1,4 +1,7 @@
-﻿public class GameData : MonoSingleton<GameData>
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameData : MonoSingleton<GameData>
 {
 	public GameConfig gameConfig;
 	public CombatConfig combatConfig;
