@@ -35,8 +35,12 @@
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-# Never ignore Asset meta data
+# Never ignore
 !/[Aa]ssets/**/*.meta
+!/FMOD/
+!*/FMOD/
+!/StreamingAssets/
+!*/StreamingAssets/
 
 # Gradle cache directory
 .gradle/
