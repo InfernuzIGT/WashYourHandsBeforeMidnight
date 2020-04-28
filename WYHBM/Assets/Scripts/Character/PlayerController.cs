@@ -1,6 +1,6 @@
-﻿using Events;
+﻿using System.Collections.Generic;
+using Events;
 using UnityEngine;
-using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : Character
@@ -91,7 +91,6 @@ public class PlayerController : Character
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
     }
 
-
     private void CloseGame()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -179,6 +178,7 @@ public class PlayerController : Character
         if (Input.GetKeyDown(KeyCode.E))
         {
             _interactionEvent.lastPlayerPosition = transform.position;
+            _interactionEvent.isRunning = _isRunning;
             EventController.TriggerEvent(_interactionEvent);
         }
 
@@ -211,7 +211,6 @@ public class PlayerController : Character
         transform.position = evt.newPosition;
     }
 
-
     #endregion
 
     #region Quest
@@ -228,15 +227,15 @@ public class PlayerController : Character
         //         // gold += _quest.goldReward; ADD VARIABLE IN SO CHARACTER
         //         quest.goal.Complete();
         //     }
-            
+
         // }
-        
+
     }
 
     // public void AddQuest()
     // {
     //     questLog.Add( 1, quest);
-        
+
     // }
     public void RemoveQuest()
     {

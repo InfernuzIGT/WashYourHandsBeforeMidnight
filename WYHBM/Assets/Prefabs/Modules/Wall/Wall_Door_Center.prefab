@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7324998669025670240}
   - component: {fileID: 8974485877631540834}
   - component: {fileID: 2038365742016118427}
+  - component: {fileID: 4800211944242472834}
+  - component: {fileID: 2308310818264809205}
   m_Layer: 0
   m_Name: Wall_Door_Center
   m_TagString: Untagged
@@ -78,3 +80,29 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &4800211944242472834
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5742493835053216733}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9452657, y: 7, z: 0.25}
+  m_Center: {x: 2.027367, y: 3.5, z: 0.125}
+--- !u!65 &2308310818264809205
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5742493835053216733}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9595284, y: 7, z: 0.25}
+  m_Center: {x: -2.0202358, y: 3.5, z: 0.125}

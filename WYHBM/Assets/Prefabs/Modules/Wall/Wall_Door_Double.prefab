@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7359389596581492678}
   - component: {fileID: 5367813788823912424}
   - component: {fileID: 48493318494348287}
+  - component: {fileID: 868289890766690264}
+  - component: {fileID: 3925899735333553687}
   m_Layer: 0
   m_Name: Wall_Door_Double
   m_TagString: Untagged
@@ -78,3 +80,29 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &868289890766690264
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6492445376132024240}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.89673615, y: 7, z: 0.25}
+  m_Center: {x: 2.551632, y: 3.5, z: 0.125}
+--- !u!65 &3925899735333553687
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6492445376132024240}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9077587, y: 7, z: 0.25}
+  m_Center: {x: -2.5461206, y: 3.5, z: 0.125}
