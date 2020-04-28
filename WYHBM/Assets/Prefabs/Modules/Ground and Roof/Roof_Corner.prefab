@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 9129754865333579300}
   - component: {fileID: 1401462820126281267}
   - component: {fileID: 4007082294229558764}
+  - component: {fileID: 6120517586831575453}
+  - component: {fileID: 8630353591989843042}
+  - component: {fileID: 2280991691298253779}
   m_Layer: 0
   m_Name: Roof_Corner
   m_TagString: Untagged
@@ -78,3 +81,42 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &6120517586831575453
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927402857326289185}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.34689617, y: 0.3189772, z: 6.000001}
+  m_Center: {x: -2.826552, y: 0.1594886, z: -3.0000005}
+--- !u!65 &8630353591989843042
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927402857326289185}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.33411026, y: 0.3189772, z: 6.000001}
+  m_Center: {x: 2.8329449, y: 0.1594886, z: -3.0000005}
+--- !u!65 &2280991691298253779
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927402857326289185}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6, y: 0.3189772, z: 0.3469}
+  m_Center: {x: 0, y: 0.1594886, z: -0.17345}

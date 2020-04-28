@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5126322192572188269}
   - component: {fileID: 3387443763608933571}
   - component: {fileID: 5395622400903272132}
+  - component: {fileID: 2893770271346985737}
+  - component: {fileID: 4749453595249702567}
   m_Layer: 0
   m_Name: Wall_Door_Right
   m_TagString: Untagged
@@ -78,3 +80,29 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &2893770271346985737
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410587596167179555}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.3931046, y: 7, z: 0.25}
+  m_Center: {x: 1.3034477, y: 3.5, z: 0.125}
+--- !u!65 &4749453595249702567
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410587596167179555}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.50779724, y: 7, z: 0.25}
+  m_Center: {x: -2.7461014, y: 3.5, z: 0.125}
