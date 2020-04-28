@@ -2,6 +2,7 @@
 using Events;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameMode.World
 {
@@ -11,7 +12,10 @@ namespace GameMode.World
         public GameObject panelDialog;
         public GameObject panelQuest;
 
-        [Header ("Dialogues")]
+        [Header("Player")]
+        public Image staminaImg;
+
+        [Header("Dialogues")]
         public TextMeshProUGUI dialogTxt;
         public TextMeshProUGUI continueTxt;
         public float dialogSpeed;
@@ -115,6 +119,15 @@ namespace GameMode.World
                 _enableMovementEvent.canMove = false;
                 EventController.TriggerEvent (_enableMovementEvent);
             }
+        }
+
+        #endregion
+
+        #region Player
+
+        public void UpdateStamina(float value)
+        {
+            staminaImg.fillAmount = value;
         }
 
         #endregion

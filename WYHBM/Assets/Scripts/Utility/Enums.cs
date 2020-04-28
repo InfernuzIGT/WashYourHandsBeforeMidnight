@@ -87,6 +87,16 @@ public enum ARMOR_TYPE
 
 #endregion
 
+public enum GROUND_TYPE
+{
+    none = 0,
+    Grass = 1,
+    Dirt = 2,
+    Wood = 3,
+    Cement = 4,
+    Ceramic = 5
+}
+
 #region Quest
 
 public enum GOAL_TYPE
