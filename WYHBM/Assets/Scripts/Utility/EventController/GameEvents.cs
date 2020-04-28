@@ -10,6 +10,7 @@ namespace Events
     public class InteractionEvent : GameEvent
     {
         public Vector3 lastPlayerPosition;
+        public bool isRunning;
     }
 
     public class EnableDialogEvent : GameEvent
