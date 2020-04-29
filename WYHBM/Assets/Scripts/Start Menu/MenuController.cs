@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class MenuController : MonoBehaviour
     public GameObject continueCam;
     public GameObject optionsCam;
     public GameObject extrasCam;
-    public GameObject creditsCam;
+    // public GameObject creditsCam;
     private GameObject _lastCam;
 
     [Header ("Generals")]
@@ -21,6 +22,11 @@ public class MenuController : MonoBehaviour
     public GameObject graphicsPanel;
     public GameObject audioPanel;
     public GameObject gamePanel;
+
+    [Header ("Graphics")]
+    public GameObject DropDownPanel;
+
+    // [Header ("Audio")]
 
     [Header ("Extras")]
     public GameObject creditsPanel;
@@ -61,11 +67,13 @@ public class MenuController : MonoBehaviour
 
         if (_isInSpecificSettings)
         {
+            audioPanel.SetActive(false);
+            graphicsPanel.SetActive(false);
 
             OnOptionsButton ();
 
             _isInSpecificSettings = false;
-            _isInOptions = false;
+            _isInOptions = true;
         }
 
         if (_isInExtras)
@@ -171,7 +179,7 @@ public class MenuController : MonoBehaviour
 
         // gamePanel.SetActive (true);
 
-        _isInExtras =false;
+        _isInOptions =false;
         _isInSpecificSettings = true;
     }
 
@@ -183,9 +191,9 @@ public class MenuController : MonoBehaviour
 
         Debug.Log ($"<b> Graphics settings is open </b>");
 
-        // graphicsPanel.SetActive (true);
+        graphicsPanel.SetActive (true);
 
-        _isInExtras =false;
+        _isInOptions =false;
         _isInSpecificSettings = true;
 
     }
@@ -198,11 +206,20 @@ public class MenuController : MonoBehaviour
 
         Debug.Log ($"<b> Audio settings is open </b>");
 
-        // audioPanel.SetActive (true);
+        audioPanel.SetActive (true);
 
-        _isInExtras =false;
+        _isInOptions =false;
         _isInSpecificSettings = true;
 
+    }
+
+    #endregion
+
+    #region Graphics Menu
+    
+    public void OnDropDownButton(bool isOpening)
+    {
+        DropDownPanel.SetActive(isOpening);
     }
 
     #endregion
@@ -218,7 +235,7 @@ public class MenuController : MonoBehaviour
         _lastCam.SetActive (false);
 
         creditsPanel.SetActive (true);
-        creditsCam.SetActive (true);
+        // creditsCam.SetActive (true);
 
         _isInCredits = true;
         _isInExtras = false;
@@ -253,8 +270,7 @@ public class MenuController : MonoBehaviour
         if (_isContinuing)
         {
             Debug.Log ($"<b> Loading Game </b>");
-            // Load game data in GAMEDATA
-
+            // Load demo scene
         }
 
     }
