@@ -111,7 +111,7 @@ MonoBehaviour:
   m_PivotOffset: {x: 0, y: 0, z: 0}
   m_AmplitudeGain: 0
   m_FrequencyGain: 0
-  mNoiseOffsets: {x: 0, y: 0, z: 0}
+  mNoiseOffsets: {x: 295.92633, y: -716.8589, z: 231.59277}
 --- !u!1 &1911153105
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,8 +202,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2028688371}
   - component: {fileID: 2028688370}
-  - component: {fileID: 2028688369}
   - component: {fileID: 2028688372}
+  - component: {fileID: 5761225559675919492}
+  - component: {fileID: 2576645192697024789}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -218,8 +219,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2028688368}
-  m_LocalRotation: {x: 0.22001289, y: 2.075772e-10, z: -9.2035946e-10, w: 0.975497}
-  m_LocalPosition: {x: 0, y: 7.49, z: -15.76}
+  m_LocalRotation: {x: 0.22001293, y: -0, z: -0, w: 0.97549695}
+  m_LocalPosition: {x: -98.34, y: 9.495, z: -3.4700003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3895262929768338340}
@@ -268,14 +269,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &2028688369
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2028688368}
-  m_Enabled: 1
 --- !u!114 &2028688372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -310,6 +303,42 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5761225559675919492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028688368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListenerNumber: -1
+--- !u!114 &2576645192697024789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2028688368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Music
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 0
 --- !u!1 &8160450674754796521
 GameObject:
   m_ObjectHideFlags: 0

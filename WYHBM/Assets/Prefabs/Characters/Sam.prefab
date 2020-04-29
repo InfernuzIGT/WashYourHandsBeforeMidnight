@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5441447954450045000}
   - component: {fileID: 1255290931}
   - component: {fileID: 4533948557061250270}
+  - component: {fileID: 2239281888086300052}
   m_Layer: 9
   m_Name: Sam
   m_TagString: Player
@@ -30,7 +31,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5441447954450045010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 1.79, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -134,8 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedWalk: 7.5
-  speedRun: 15
+  quest: {fileID: 0}
 --- !u!143 &1255290931
 CharacterController:
   m_ObjectHideFlags: 0
@@ -169,3 +169,26 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 65536
+--- !u!114 &2239281888086300052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5441447954450045010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Player/Footsteps/Concrete
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

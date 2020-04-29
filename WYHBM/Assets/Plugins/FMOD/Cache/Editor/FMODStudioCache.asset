@@ -1,5 +1,100 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9061645342836010958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/SFX.bank
+  SubDir: 
+  lastModified: 637237714501247980
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
+--- !u!114 &-8235181796217272182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637237739091801676
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-4811575865321835648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/SFX.bank
+  SubDir: 
+  lastModified: 637237739094780092
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-2182225114382460928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Interactables/Doors/Open Door
+  m_EditorClassIdentifier: 
+  Path: event:/Interactables/Doors/Open Door
+  guid: b82b6badbfa00444b9372ef1e5f90037
+  Banks:
+  - {fileID: -4811575865321835648}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2131
+--- !u!114 &-501404284964353221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637237714497144234
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
 --- !u!114 &-414967032022935886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17,7 +112,7 @@ MonoBehaviour:
   lastModified: 637234459585053634
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32,15 +127,253 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 7822139020000608846}
-  - {fileID: -414967032022935886}
-  EditorEvents: []
-  EditorParameters: []
+  - {fileID: -8235181796217272182}
+  - {fileID: 3137255160934833906}
+  - {fileID: -4811575865321835648}
+  EditorEvents:
+  - {fileID: 1127526901375522311}
+  - {fileID: 2720140970843532637}
+  - {fileID: 3066543550847937615}
+  - {fileID: 211290239961971704}
+  - {fileID: -2182225114382460928}
+  - {fileID: 436560440940059416}
+  - {fileID: 3523158228275234009}
+  - {fileID: 7881137159371220729}
+  EditorParameters:
+  - {fileID: 8470931304037131295}
   MasterBanks:
-  - {fileID: -414967032022935886}
+  - {fileID: -8235181796217272182}
   StringsBanks:
   - {fileID: 7822139020000608846}
-  stringsBankWriteTime: 637234459585133549
+  stringsBankWriteTime: 637237739091831822
   cacheVersion: 3
+--- !u!114 &211290239961971704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Interactables/Doors/Door Closed
+  m_EditorClassIdentifier: 
+  Path: event:/Interactables/Doors/Door Closed
+  guid: 5c396e71851cdb4e8c7d4c24e56d58ae
+  Banks:
+  - {fileID: -4811575865321835648}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 695
+--- !u!114 &436560440940059416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Interactables/Doors/Close Door
+  m_EditorClassIdentifier: 
+  Path: event:/Interactables/Doors/Close Door
+  guid: c615a0508aa27e43ace0eb267a7e5792
+  Banks:
+  - {fileID: -4811575865321835648}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1788
+--- !u!114 &857675500194264504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637237661599645824
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
+--- !u!114 &1127526901375522311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Footsteps/Grass
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Footsteps/Grass
+  guid: 088fc3a32504d841a0b029ab2fee7adf
+  Banks:
+  - {fileID: -4811575865321835648}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 750
+--- !u!114 &2720140970843532637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Footsteps/Concrete
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Footsteps/Concrete
+  guid: 4afabe8f43643b4391f697127eae1c25
+  Banks:
+  - {fileID: -4811575865321835648}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 406
+--- !u!114 &3066543550847937615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Footsteps/Dirt
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Footsteps/Dirt
+  guid: 54b4c968ceaf194c97f7dda61fb6c2c4
+  Banks:
+  - {fileID: -4811575865321835648}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 375
+--- !u!114 &3137255160934833906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Music.bank
+  SubDir: 
+  lastModified: 637237739152796493
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &3523158228275234009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Footsteps/Wood
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Footsteps/Wood
+  guid: e5f75e03e153b1459c82af4d687684a2
+  Banks:
+  - {fileID: -4811575865321835648}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 437
+--- !u!114 &3845856872899190380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: sprint
+  m_EditorClassIdentifier: 
+  Name: sprint
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 0
+--- !u!114 &4529930813428438575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637236985053110494
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
+--- !u!114 &6772138037906218770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637237054683734965
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
 --- !u!114 &7822139020000608846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,9 +388,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637234459585133549
+  lastModified: 637237739091831822
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 700
+    Value: 1312
   Exists: 1
+--- !u!114 &7881137159371220729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music
+  m_EditorClassIdentifier: 
+  Path: event:/Music
+  guid: 1b88a88b83efc1409d7f787039417df0
+  Banks:
+  - {fileID: 3137255160934833906}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 199999
+--- !u!114 &8470931304037131295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: sprint
+  m_EditorClassIdentifier: 
+  Name: sprint
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 1
+--- !u!114 &8758193063483489433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/SFX.bank
+  SubDir: 
+  lastModified: 637237661606501878
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
