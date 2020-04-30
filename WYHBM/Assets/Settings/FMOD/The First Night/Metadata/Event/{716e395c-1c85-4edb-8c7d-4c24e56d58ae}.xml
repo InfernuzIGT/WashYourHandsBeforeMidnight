@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="Event" id="{716e395c-1c85-4edb-8c7d-4c24e56d58ae}">
 		<property name="name">
-			<value>Door Closed</value>
+			<value>Door Locked</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -147,7 +147,11 @@
 	</object>
 	<object class="MixerBusPanner" id="{8d16d1c2-3a39-4db0-9287-de3982aa0a42}" />
 	<object class="MixerBusFader" id="{cb13b8ee-676f-4627-96b7-91d324d3656f}" />
-	<object class="SpatialiserEffect" id="{e924b118-5676-43d8-b1dd-091cda0bc9e2}" />
+	<object class="SpatialiserEffect" id="{e924b118-5676-43d8-b1dd-091cda0bc9e2}">
+		<property name="maximumDistance">
+			<value>1000</value>
+		</property>
+	</object>
 	<object class="GainEffect" id="{5008637b-1a23-40c2-8700-45d68337f1ff}">
 		<property name="gain">
 			<value>3.5</value>
