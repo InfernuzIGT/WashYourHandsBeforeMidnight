@@ -90,7 +90,7 @@
 	<object class="MixerBusPanner" id="{2a4b8961-e660-4cd9-8956-2048f267c380}" />
 	<object class="MultiSound" id="{0c0a3ec5-2053-4289-8187-99e89ab2822b}">
 		<property name="length">
-			<value>2.1310204081632653</value>
+			<value>1.6438383329235307</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{71b982e7-06ef-41a3-8b3a-3f1e62abbce4}</destination>
@@ -142,15 +142,21 @@
 		<relationship name="effects">
 			<destination>{7ecdf663-b91d-4166-8f64-9e1185b5f725}</destination>
 			<destination>{b3b0cf6d-d84a-4411-9da4-fa2e40dc9092}</destination>
+			<destination>{6a58b8cf-2237-4158-9a1b-792d58517254}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{1b2682d0-bee9-4b46-a3c8-c77de1cc16b4}" />
 	<object class="MixerBusFader" id="{7b7bd693-4b5f-4ad6-a048-6395cfb14fbc}" />
-	<object class="SpatialiserEffect" id="{e257506e-2267-4204-af6e-cd795b10cd67}" />
+	<object class="SpatialiserEffect" id="{e257506e-2267-4204-af6e-cd795b10cd67}">
+		<property name="maximumDistance">
+			<value>1000</value>
+		</property>
+	</object>
 	<object class="GainEffect" id="{7ecdf663-b91d-4166-8f64-9e1185b5f725}">
 		<property name="gain">
 			<value>10</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{b3b0cf6d-d84a-4411-9da4-fa2e40dc9092}" />
+	<object class="TransceiverEffect" id="{6a58b8cf-2237-4158-9a1b-792d58517254}" />
 </objects>
