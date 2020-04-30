@@ -4,12 +4,12 @@
 public class QuestSO : ScriptableObject
 {
     public int id;
-    public GOAL_TYPE goalType;
-    public int requiredAmount;
+    // public int goldReward; // TODO Mariano: Reemplazar por SO de Items
 
     [Header("Details")]
     public string title;
     [TextArea()]
     public string description;
-    public int goldReward; // TODO Mariano: Ver tipos de Rewards
+    [Space]
+    public string[] objetives;
 }
