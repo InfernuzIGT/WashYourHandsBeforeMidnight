@@ -7,7 +7,6 @@ public class InteractionAnimation : Interaction, IInteractable
 	public Animator animator;
 	public bool isTrigger;
 
-
 	private bool _boolValue = true;
 	private AnimationCommandBool _animInteractionBool = new AnimInteractionBool ();
 	private AnimationCommandTrigger _animInteractionTrigger = new AnimInteractionTrigger ();
@@ -43,13 +42,6 @@ public class InteractionAnimation : Interaction, IInteractable
 				_boolValue = !_boolValue;
 			}
 		}
-		Execute ();
-	}
-	public override void Execute ()
-	{
-		base.Execute ();
-
-		GameManager.Instance.ProgressQuest();
 	}
 
 }

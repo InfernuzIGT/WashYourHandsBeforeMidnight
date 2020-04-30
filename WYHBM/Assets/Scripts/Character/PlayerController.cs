@@ -40,6 +40,9 @@ public class PlayerController : Character
 
     private Vector3 _lastPosition;
 
+    // Quest
+    private bool _isOpenDiary;
+
     // Input
     private string _inputHorizontal = "Horizontal";
     private string _inputVertical = "Vertical";
@@ -93,10 +96,10 @@ public class PlayerController : Character
 
     private void CloseGame()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     Application.Quit();
+        // }
     }
 
     private void Movement()
@@ -182,15 +185,11 @@ public class PlayerController : Character
             EventController.TriggerEvent(_interactionEvent);
         }
 
-        if (Input.GetKey(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            GameManager.Instance.worldUI.Diary(true);
+            _isOpenDiary = !_isOpenDiary;
+            GameManager.Instance.worldUI.Diary(_isOpenDiary);
         }
-        else
-        {
-            GameManager.Instance.worldUI.Diary(false);
-        }
-
     }
 
     public void ChangeMovement(bool enabled)
@@ -209,37 +208,6 @@ public class PlayerController : Character
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)
     {
         transform.position = evt.newPosition;
-    }
-
-    #endregion
-
-    #region Quest
-
-    // TODO Mariano: MOVE TO GAME MANAGER
-    public void Quests()
-    {
-
-        // if (QuestSO.isActive)
-        // {
-        //     if (quest.goal.isReached())
-        //     {
-        //         // experience += _quest.experienceReward; ADD VARIABLE IN SO CHARACTER
-        //         // gold += _quest.goldReward; ADD VARIABLE IN SO CHARACTER
-        //         quest.goal.Complete();
-        //     }
-
-        // }
-
-    }
-
-    // public void AddQuest()
-    // {
-    //     questLog.Add( 1, quest);
-
-    // }
-    public void RemoveQuest()
-    {
-        GameManager.Instance.worldUI._questLogTitleTxt.alpha = 0;
     }
 
     #endregion
