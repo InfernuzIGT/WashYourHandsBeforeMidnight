@@ -12,5 +12,8 @@ public class GameConfig : ScriptableObject
 
     [Header("Tags")]
     [Tag] public string tagPlayer;
+    
+    [Header ("UI")]
+    public float messageLifetime = 3;
 
 }
