@@ -15,7 +15,7 @@ MonoBehaviour:
   SwitchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: Assets\Settings\FMOD\The First Night\The First Night.fspro
+  sourceProjectPath: Assets/Settings/FMOD/The First Night/The First Night.fspro
   sourceBankPath: Assets\Settings\FMOD\The First Night\Build
   SourceBankPathUnformatted: 
   AutomaticEventLoading: 1
@@ -31,8 +31,6 @@ MonoBehaviour:
   - Platform: 20
     Value: 3
   SampleRateSettings:
-  - Platform: 1
-    Value: 48000
   - Platform: 2
     Value: 0
   - Platform: 20
@@ -58,7 +56,9 @@ MonoBehaviour:
     Value: 0
   - Platform: 20
     Value: 0
-  BankDirectorySettings: []
+  BankDirectorySettings:
+  - Platform: 2
+    Value: Desktop
   VirtualChannelSettings:
   - Platform: 1
     Value: 1024
@@ -76,7 +76,9 @@ MonoBehaviour:
   Plugins: []
   MasterBanks:
   - Master
-  Banks: []
+  Banks:
+  - Music
+  - SFX
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
