@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 5524929369971981118}
   - component: {fileID: 5524929369971981119}
   - component: {fileID: 5524929369971980480}
-  - component: {fileID: 5524929369971980481}
+  - component: {fileID: 3733784730637442484}
   m_Layer: 5
   m_Name: Canvas (World)
   m_TagString: Untagged
@@ -508,7 +508,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &5524929369971980481
+--- !u!114 &3733784730637442484
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -517,15 +517,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 5524929369971980482}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c990a887e5ca124db967fc1f7b984d7, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f2afb601e1857f4ebe3eb3f45e673c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   panelDialog: {fileID: 5524929370167895652}
   staminaImg: {fileID: 1461294883665537916}
   dialogTxt: {fileID: 5524929369695872668}
   continueTxt: {fileID: 5524929369813625553}
-  dialogSpeed: 6
   currentDialog: {fileID: 0}
+  questTitleDiaryTxt: {fileID: 0}
+  questTitleTxt: {fileID: 0}
+  questDescriptionTxt: {fileID: 0}
+  questObjectives: []
+  questPopupTxt: {fileID: 0}
+  questCompleteTxt: {fileID: 0}
+  questComplete: {fileID: 0}
+  questPopup: {fileID: 0}
 --- !u!1 &5524929370167895652
 GameObject:
   m_ObjectHideFlags: 0
