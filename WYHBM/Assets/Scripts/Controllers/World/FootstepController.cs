@@ -9,11 +9,18 @@ public class FootstepController : MonoBehaviour
     private RaycastHit _hit;
     private PlayerController _player;
 
+    FMODUnity.StudioEventEmitter footstepSound;
+
+
     private void Awake()
     {
         _player = GetComponent<PlayerController>();
     }
 
+    private void Start()
+    {
+        footstepSound = GetComponent<FMODUnity.StudioEventEmitter>();
+    }
     private void Update()
     {
         if (_player.CanPlayFootstep)
@@ -30,32 +37,46 @@ public class FootstepController : MonoBehaviour
             {
                 case "Ground/Grass":
                     groundType = GROUND_TYPE.Grass;
+                    footstepSound.EventInstance.setParameterByName("Ground Type", 2);
                     break;
 
                 case "Ground/Dirt":
                     groundType = GROUND_TYPE.Dirt;
+                    footstepSound.EventInstance.setParameterByName("Ground Type", 1);
                     break;
 
                 case "Ground/Wood":
                     groundType = GROUND_TYPE.Wood;
+                    footstepSound.EventInstance.setParameterByName("Ground Type", 3);
                     break;
 
                 case "Ground/Cement":
                     groundType = GROUND_TYPE.Cement;
+                    footstepSound.EventInstance.setParameterByName("Ground Type", 0);
                     break;
 
                 case "Ground/Ceramic":
                     groundType = GROUND_TYPE.Ceramic;
+                    footstepSound.EventInstance.setParameterByName("Ground Type", 3);
                     break;
 
                 default:
                     groundType = GROUND_TYPE.none;
+                    footstepSound.EventInstance.setParameterByName("Ground Type", 0);
                     break;
             }
         }
+
+       
     }
 
-    public void Play()
+
+    
+
+
+
+
+    /*public void Play()
     {
         switch (groundType)
         {
@@ -83,5 +104,5 @@ public class FootstepController : MonoBehaviour
                 // Sound Default
                 break;
         }
-    }
+    }*/
 }
