@@ -1089,7 +1089,7 @@
 	<object class="MixerBusFader" id="{3d3ee338-69b5-48d2-9112-7dcdd58c4771}" />
 	<object class="SpatialiserEffect" id="{e37dcd9e-774f-4e3f-819f-f3ffef5d4eae}">
 		<property name="maximumDistance">
-			<value>1000</value>
+			<value>35</value>
 		</property>
 	</object>
 	<object class="AutomationCurve" id="{ad4a29a9-6abe-4186-88f6-59282ba81d0d}">
@@ -1112,11 +1112,7 @@
 			<destination>{c1141b86-bb84-41ca-885a-6670749367f7}</destination>
 		</relationship>
 	</object>
-	<object class="GainEffect" id="{d343e3f0-ada9-4e6d-a836-89d6b93126d3}">
-		<property name="gain">
-			<value>3</value>
-		</property>
-	</object>
+	<object class="GainEffect" id="{d343e3f0-ada9-4e6d-a836-89d6b93126d3}" />
 	<object class="MixerBusFader" id="{f867b698-548e-4158-afc1-3334b1624fe8}" />
 	<object class="AutomationCurve" id="{99574629-0abf-4b75-a318-be86b1af3372}">
 		<relationship name="parameter">
@@ -1140,7 +1136,7 @@
 	</object>
 	<object class="GainEffect" id="{d8331cc6-cb36-41a5-9948-ea17f816ebc3}">
 		<property name="gain">
-			<value>-3</value>
+			<value>-4</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{d6b05dbf-586b-4d1f-b0ca-c14de765f56f}" />
@@ -1243,7 +1239,7 @@
 	</object>
 	<object class="GainEffect" id="{f884170f-e140-4dde-b827-e729ea104250}">
 		<property name="gain">
-			<value>10</value>
+			<value>3</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{6993bc9a-de61-4c00-8833-c108431c9902}" />
@@ -1268,7 +1264,7 @@
 	</object>
 	<object class="GainEffect" id="{b7c9cb00-4b6f-44f3-8e04-c206762a504a}">
 		<property name="gain">
-			<value>10</value>
+			<value>3</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{1c063fe4-1f4f-489f-9915-e62041b603e6}" />
