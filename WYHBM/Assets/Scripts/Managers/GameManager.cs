@@ -1,31 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Events;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("Ambients")]
     public AMBIENT currentAmbient;
-    public GameObject currentInterior;
-    [Space]
+
+    [Header("References")]
+    public GlobalController globalController;
     public CombatManager combatManager;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
 
-    [Header("Quest")]
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
-    [Header("Cameras")]
-    public GameObject[] cameras;
-
-    [Header("Characters")]
-    public PlayerController player;
-
     private AMBIENT _lastAmbient;
-    private Camera _cameraMain;
+    private NPCSO _currentNPC;
 
     private WaitForSeconds _waitDeactivateUI;
 
@@ -33,46 +27,25 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
-        _cameraMain = Camera.main;
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
-        _waitDeactivateUI = new WaitForSeconds(GameData.Instance.gameConfig.messageLifetime);
+        _waitDeactivateUI = new WaitForSeconds(seconds: GameData.Instance.gameConfig.messageLifetime);
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = false;
-        _fadeEvent.callbackStart = SetAmbient;
+        _fadeEvent.callbackStart = SwitchAmbient;
 
-        StartGame();
+        SwitchAmbient();
     }
 
     private void OnEnable()
     {
-        EventController.AddListener<CreateInteriorEvent>(OnCreateInterior);
+        EventController.AddListener<TriggerCombatEvent>(OnTriggerCombat);
     }
 
     private void OnDisable()
     {
-        EventController.RemoveListener<CreateInteriorEvent>(OnCreateInterior);
-    }
-
-    private void StartGame()
-    {
-        SwitchAmbient();
-        // SwitchCamera();
-    }
-
-    public void ChangeAmbient(AMBIENT newAmbient)
-    {
-        _lastAmbient = currentAmbient;
-        currentAmbient = newAmbient;
-
-        player.ChangeMovement(false);
-    }
-
-    private void SetAmbient()
-    {
-        SwitchAmbient();
-        // SwitchCamera();
+        EventController.RemoveListener<TriggerCombatEvent>(OnTriggerCombat);
     }
 
     private void SwitchAmbient()
@@ -83,37 +56,38 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
-                player.ChangeMovement(true);
+                globalController.player.ChangeMovement(true);
+                // TODO Mariano: Change camera
                 break;
 
-            case AMBIENT.Interior:
-                worldUI.EnableCanvas(true);
-                combatUI.EnableCanvas(false);
+                // case AMBIENT.Interior:
+                //     worldUI.EnableCanvas(true);
+                //     combatUI.EnableCanvas(false);
 
-                player.ChangeMovement(true);
-                break;
+                //     player.ChangeMovement(true);
+                //     break;
 
-            case AMBIENT.Location:
-                worldUI.EnableCanvas(true);
-                combatUI.EnableCanvas(false);
+                // case AMBIENT.Location:
+                //     worldUI.EnableCanvas(true);
+                //     combatUI.EnableCanvas(false);
 
-                player.ChangeMovement(true);
-                break;
+                //     player.ChangeMovement(true);
+                //     break;
 
             case AMBIENT.Combat:
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
-                combatUI.selectableButton.Select(); // TODO Mariano: REMOVE
+                globalController.player.ChangeMovement(false);
+                // TODO Mariano: Change camera
 
-                // TODO Mariano: Save Player Position
-                // TODO Mariano: Move Player to Combat Zone
-                // TODO Mariano: Spawn Enemies
-                // TODO Mariano: Wait X seconds, and StartCombat!
+                combatManager.SetCombat();
                 break;
 
             case AMBIENT.Development:
                 // Nothing
+
+                Debug.Log($"<color=yellow><b>[DEV]  </b></color> Switch Ambient!");
                 break;
 
             default:
@@ -121,24 +95,22 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    private void SwitchCamera()
-    {
-        cameras[(int)_lastAmbient].SetActive(false);
-        cameras[(int)currentAmbient].SetActive(true);
-    }
+    // private void SwitchCamera()
+    // {
+    //     cameras[(int)_lastAmbient].SetActive(false);
+    //     cameras[(int)currentAmbient].SetActive(true);
+    // }
 
     #region Events
 
-    private void OnCreateInterior(CreateInteriorEvent evt)
+    public void OnTriggerCombat(TriggerCombatEvent evt)
     {
-        if (evt.isCreating)
-        {
-            currentInterior = Instantiate(evt.newInterior, GameData.Instance.gameConfig.interiorPosition, Quaternion.identity);
-        }
-        else
-        {
-            Destroy(currentInterior, 1);
-        }
+        _lastAmbient = currentAmbient;
+        currentAmbient = AMBIENT.Combat;
+
+        _currentNPC = evt.npc;
+
+        EventController.TriggerEvent(_fadeEvent);
     }
 
     #endregion
@@ -147,7 +119,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
-        dictionaryQuest.Add(data.id, data);
+        if (!dictionaryQuest.ContainsKey(data.id))
+        {
+            dictionaryQuest.Add(data.id, data);
+
+        }
     }
 
     public void ProgressQuest(QuestSO quest)
@@ -156,7 +132,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         if (dictionaryProgress[quest.id] == dictionaryQuest[quest.id].objetives.Length)
         {
-            // TODO Mariano: Dar recompensa del QuestSO
             Complete();
         }
         else
@@ -165,24 +140,31 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    // when quest is reached delete quest from log of quest
-    // Make UI follow quests superior corner left 
-
     public void Complete()
     {
         // TODO Mariano: Tachar titulo del diario
-        // worldUI.questObjectives.text = "";
-        // worldUI.questComplete.SetActive(true);
-        worldUI.questTitleDiaryTxt.alpha = 0;
+        worldUI.questTitleDiaryTxt.fontStyle = FontStyles.Strikethrough;
+
+        worldUI.questComplete.SetActive(true);
+
+        worldUI.questCompleteTxt.text = worldUI.questTitleTxt.text;
+        worldUI.questCompleteTxt.fontStyle = FontStyles.Strikethrough;
 
         StartCoroutine(DeactivateWorldUI());
     }
 
-    private IEnumerator DeactivateWorldUI()
+    public void GiveReward()
+    {
+        // TODO Mariano: Dar recompensa del QuestSO
+        // Instantiate item in inventory
+    }
+
+    public IEnumerator DeactivateWorldUI()
     {
         yield return _waitDeactivateUI;
 
         worldUI.questComplete.SetActive(false);
+        worldUI.questPopup.SetActive(false);
     }
 
     #endregion

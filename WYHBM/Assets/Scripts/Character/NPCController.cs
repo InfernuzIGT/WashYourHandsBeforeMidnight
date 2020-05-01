@@ -6,17 +6,15 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class NPCController : Character, IInteractable
 {
-    public bool canMove = true;
-    public bool isEnemy = false;
-
     [Header("Movement")]
+    public bool canMove = true;
     public WaypointController waypoints;
     public bool useRandomPosition = true;
     [Range(0f, 10f)]
     public float waitTime = 5;
 
     private AnimatorController _animatorController;
-    private InteractionDialog _interactionDialog;
+    private InteractionNPC _interactionNPC;
 
     private NavMeshAgent _agent;
     private WaitForSeconds _waitForSeconds;
@@ -26,7 +24,7 @@ public class NPCController : Character, IInteractable
     private void Awake()
     {
         _animatorController = GetComponent<AnimatorController>();
-        _interactionDialog = GetComponentInChildren<InteractionDialog>();
+        _interactionNPC = GetComponentInChildren<InteractionNPC>();
         _agent = GetComponent<NavMeshAgent>();
     }
 
@@ -109,14 +107,7 @@ public class NPCController : Character, IInteractable
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
 
-            if (isEnemy && GameManager.Instance.currentAmbient != AMBIENT.Combat)
-            {
-                GameManager.Instance.ChangeAmbient(AMBIENT.Combat);
-            }
-            else
-            {
-                _interactionDialog?.Execute(true);
-            }
+            _interactionNPC.Execute(true);
         }
     }
 
@@ -126,7 +117,7 @@ public class NPCController : Character, IInteractable
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
 
-            _interactionDialog?.Execute(false);
+            _interactionNPC.Execute(false);
         }
     }
 

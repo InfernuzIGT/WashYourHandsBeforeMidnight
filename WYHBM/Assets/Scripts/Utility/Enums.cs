@@ -96,3 +96,11 @@ public enum GROUND_TYPE
     Cement = 4,
     Ceramic = 5
 }
+
+public enum NPC_INTERACTION_TYPE
+{
+    none = 0,
+    dialog = 1,
+    fight = 2,
+    dialogAndFight = 3
+}

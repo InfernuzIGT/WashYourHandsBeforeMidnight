@@ -13,15 +13,13 @@ MonoBehaviour:
   m_Name: Quest
   m_EditorClassIdentifier: 
   id: 1
-  goalType: 3
-  requiredAmount: 3
-  questGoal:
-    requiredAmount: 3
-    currentAmount: 0
   title: Water for Met
   description: 'Met City will run out of water in the next few weeks if you don''t
     activate the purifier. You must help this poor people and save entire city. They
     expect a lot from you. Show your bravery.
 
     Press three times the button and turn on the purifier.'
-  goldReward: 200
+  objetives:
+  - -Pull the button
+  - -Pip t ebutotn
+  triggerIndex: 2

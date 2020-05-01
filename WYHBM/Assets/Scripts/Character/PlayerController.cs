@@ -200,13 +200,9 @@ public class PlayerController : Character
             _interactionEvent.lastPlayerPosition = transform.position;
             _interactionEvent.isRunning = _isRunning;
             EventController.TriggerEvent(_interactionEvent);
+
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            _isOpenDiary = !_isOpenDiary;
-            GameManager.Instance.worldUI.Diary(_isOpenDiary);
-        }
     }
 
     public void ChangeMovement(bool enabled)
