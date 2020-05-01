@@ -15,12 +15,12 @@ MonoBehaviour:
   Path: event:/Menu Music
   guid: 2c78dbcd21922a4faa80a2a0bdb6caa7
   Banks:
-  - {fileID: 4836322631404425014}
+  - {fileID: -891916612945179158}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 2001275203258809640}
+  - {fileID: -952336248727375151}
   MinDistance: 0
   MaxDistance: 0
   Length: 94340
@@ -39,13 +39,13 @@ MonoBehaviour:
   Path: event:/Player/Footsteps
   guid: 4afabe8f43643b4391f697127eae1c25
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: 2259847211018266026}
-  - {fileID: 4472490574361901964}
+  - {fileID: 7115446695737855580}
+  - {fileID: 947581387989783500}
   MinDistance: 1
   MaxDistance: 35
   Length: 406
@@ -64,7 +64,7 @@ MonoBehaviour:
   Path: event:/Interactables/Doors/Door Locked
   guid: 5c396e71851cdb4e8c7d4c24e56d58ae
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -87,7 +87,7 @@ MonoBehaviour:
   Path: event:/Enemies/Zombi Attack
   guid: dfad171b2acad94a9697a35cdeeae5c6
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -110,7 +110,7 @@ MonoBehaviour:
   Path: event:/Interactables/Doors/Open Door
   guid: b82b6badbfa00444b9372ef1e5f90037
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -133,93 +133,16 @@ MonoBehaviour:
   Path: event:/UI/Buttons
   guid: ecd8730645ac984bbb72f0f19ec95fd7
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters:
-  - {fileID: -548468042532972394}
+  - {fileID: 1477102754508972776}
   MinDistance: 0
   MaxDistance: 0
   Length: 0
---- !u!114 &-548468042532972394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Buttons/UI
-  m_EditorClassIdentifier: 
-  Name: UI
-  Min: 0
-  Max: 5
-  Default: 1
-  Exists: 1
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
-  m_Name: FMODStudioCache
-  m_EditorClassIdentifier: 
-  EditorBanks:
-  - {fileID: 4182477283079308947}
-  - {fileID: 9192896167662693040}
-  - {fileID: 4836322631404425014}
-  - {fileID: 7744726465181459180}
-  EditorEvents:
-  - {fileID: 4107413218043884855}
-  - {fileID: -9010710907412927251}
-  - {fileID: 6648573291983918255}
-  - {fileID: -7081523506280269603}
-  - {fileID: 361751301587951665}
-  - {fileID: -6647716867361330792}
-  - {fileID: -3223415586159077069}
-  - {fileID: 4120314462940990015}
-  - {fileID: 4129666157987552158}
-  - {fileID: 4688369086461845753}
-  - {fileID: -6526618023039953360}
-  - {fileID: -3221842402944022720}
-  EditorParameters: []
-  MasterBanks:
-  - {fileID: 9192896167662693040}
-  StringsBanks:
-  - {fileID: 4182477283079308947}
-  stringsBankWriteTime: 637239479313567291
-  cacheVersion: 3
---- !u!114 &361751301587951665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Enemies/Zombi Roam
-  m_EditorClassIdentifier: 
-  Path: event:/Enemies/Zombi Roam
-  guid: 574eab92d4d99f468d96b24aa2fd174d
-  Banks:
-  - {fileID: 7744726465181459180}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 2089
---- !u!114 &2001275203258809640
+--- !u!114 &-952336248727375151
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,6 +159,170 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 1
+--- !u!114 &-891916612945179158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Music.bank
+  SubDir: 
+  lastModified: 637239550099546639
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-548468042532972394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Buttons/UI
+  m_EditorClassIdentifier: 
+  Name: UI
+  Min: 0
+  Max: 5
+  Default: 1
+  Exists: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
+  m_Name: FMODStudioCache
+  m_EditorClassIdentifier: 
+  EditorBanks:
+  - {fileID: 4182477283079308947}
+  - {fileID: 1001890996180481857}
+  - {fileID: -891916612945179158}
+  - {fileID: 4860393825301679379}
+  EditorEvents:
+  - {fileID: 4107413218043884855}
+  - {fileID: -9010710907412927251}
+  - {fileID: 6648573291983918255}
+  - {fileID: -7081523506280269603}
+  - {fileID: 361751301587951665}
+  - {fileID: -6647716867361330792}
+  - {fileID: -3223415586159077069}
+  - {fileID: 4120314462940990015}
+  - {fileID: 4129666157987552158}
+  - {fileID: 4688369086461845753}
+  - {fileID: -6526618023039953360}
+  - {fileID: -3221842402944022720}
+  EditorParameters: []
+  MasterBanks:
+  - {fileID: 1001890996180481857}
+  StringsBanks:
+  - {fileID: 4182477283079308947}
+  stringsBankWriteTime: 637239550099008046
+  cacheVersion: 3
+--- !u!114 &361751301587951665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Enemies/Zombi Roam
+  m_EditorClassIdentifier: 
+  Path: event:/Enemies/Zombi Roam
+  guid: 574eab92d4d99f468d96b24aa2fd174d
+  Banks:
+  - {fileID: 4860393825301679379}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2089
+--- !u!114 &947581387989783500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps/Ground Type
+  m_EditorClassIdentifier: 
+  Name: Ground Type
+  Min: 0
+  Max: 4
+  Default: 0
+  Exists: 1
+--- !u!114 &1001890996180481857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637239550099018026
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &1477102754508972776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Buttons/UI
+  m_EditorClassIdentifier: 
+  Name: UI
+  Min: 0
+  Max: 5
+  Default: 1
+  Exists: 1
+--- !u!114 &2001275203258809640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Menu Music/Credits
+  m_EditorClassIdentifier: 
+  Name: Credits
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 0
 --- !u!114 &2259847211018266026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,7 +339,7 @@ MonoBehaviour:
   Min: 0
   Max: 2
   Default: 0
-  Exists: 1
+  Exists: 0
 --- !u!114 &4107413218043884855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,7 +355,7 @@ MonoBehaviour:
   Path: event:/Music
   guid: 1b88a88b83efc1409d7f787039417df0
   Banks:
-  - {fileID: 4836322631404425014}
+  - {fileID: -891916612945179158}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -291,7 +378,7 @@ MonoBehaviour:
   Path: event:/Interactables/Doors/Close Door
   guid: c615a0508aa27e43ace0eb267a7e5792
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -314,7 +401,7 @@ MonoBehaviour:
   Path: event:/Enemies/Zombi Hurt
   guid: c68e5b9728b407418bd6f5fa9719175d
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -336,7 +423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637239479313567291
+  lastModified: 637239550099008046
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -358,7 +445,7 @@ MonoBehaviour:
   Min: 0
   Max: 4
   Default: 0
-  Exists: 1
+  Exists: 0
 --- !u!114 &4688369086461845753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,7 +461,7 @@ MonoBehaviour:
   Path: event:/Enemies/Zombi Death
   guid: d9c2fbb729acaf4fa052399adf51ba1c
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -399,6 +486,24 @@ MonoBehaviour:
   lastModified: 637239479315816008
   LoadResult: 0
   FileSizes: []
+  Exists: 0
+--- !u!114 &4860393825301679379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/SFX.bank
+  SubDir: 
+  lastModified: 637239550099217522
+  LoadResult: 0
+  FileSizes: []
   Exists: 1
 --- !u!114 &6648573291983918255
 MonoBehaviour:
@@ -415,7 +520,7 @@ MonoBehaviour:
   Path: event:/Player/Breathing
   guid: 2b9de84123590243a2d87d28538cc66d
   Banks:
-  - {fileID: 7744726465181459180}
+  - {fileID: 4860393825301679379}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -423,6 +528,23 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 35
   Length: 8000
+--- !u!114 &7115446695737855580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps/Sprint
+  m_EditorClassIdentifier: 
+  Name: Sprint
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 1
 --- !u!114 &7744726465181459180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,7 +562,7 @@ MonoBehaviour:
   lastModified: 637239479320979310
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
 --- !u!114 &9192896167662693040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,4 +580,4 @@ MonoBehaviour:
   lastModified: 637239479313497499
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
