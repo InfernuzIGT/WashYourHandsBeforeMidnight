@@ -38,7 +38,7 @@ namespace GameMode.Combat
 
         public void EnableCanvas(bool enabled)
         {
-            _canvas.enabled = enabled;
+            // _canvas.enabled = enabled;
         }
     }
 
