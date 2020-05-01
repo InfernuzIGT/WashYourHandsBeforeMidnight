@@ -56,7 +56,14 @@
 			<destination>{56052abc-d491-4318-8b69-59a3c129aaf3}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{d1e393c6-db2e-4b77-9c2c-49cefd6ee31f}" />
+	<object class="EventAutomatableProperties" id="{d1e393c6-db2e-4b77-9c2c-49cefd6ee31f}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+		<property name="voiceStealing">
+			<value>3</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{655a7d73-3a7a-4f64-97bf-313c7ec26ee4}" />
 	<object class="GroupTrack" id="{2bb1cf30-4ada-4072-9221-aed8acab8f5f}">
 		<relationship name="modules">
@@ -93,7 +100,8 @@
 			<value>8</value>
 		</property>
 		<relationship name="modulators">
-			<destination>{207b9ddf-e7b1-4d48-86c8-dc692d9fe59f}</destination>
+			<destination>{98744e07-11ba-4b62-b15c-7fee2e197ebd}</destination>
+			<destination>{2e1cc3f2-0716-491b-bf74-da99385142fb}</destination>
 		</relationship>
 		<relationship name="fadeOutCurve">
 			<destination>{383af392-e157-445f-a61d-de45dade0e82}</destination>
@@ -105,6 +113,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{99034bd8-585c-4af8-b6b3-a350099b99c0}">
+		<property name="volume">
+			<value>-6</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -126,12 +137,20 @@
 	</object>
 	<object class="MixerBusPanner" id="{23ae41b9-d9a8-4148-89d0-991d7c7fa9b7}" />
 	<object class="MixerBusFader" id="{6b8e756b-234c-46aa-af12-4e311767c864}" />
-	<object class="RandomizerModulator" id="{207b9ddf-e7b1-4d48-86c8-dc692d9fe59f}">
+	<object class="RandomizerModulator" id="{98744e07-11ba-4b62-b15c-7fee2e197ebd}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>pitch</value>
+		</property>
+		<property name="amount">
+			<value>2.5</value>
+		</property>
+	</object>
+	<object class="RandomizerModulator" id="{2e1cc3f2-0716-491b-bf74-da99385142fb}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>volume</value>
 		</property>
 		<property name="amount">
-			<value>3</value>
+			<value>1.5</value>
 		</property>
 	</object>
 	<object class="FadeCurve" id="{383af392-e157-445f-a61d-de45dade0e82}">
@@ -167,12 +186,12 @@
 	<object class="MixerBusFader" id="{fd079525-26ba-4aff-b975-792ffb00852a}" />
 	<object class="SpatialiserEffect" id="{889f57e7-5d51-443c-a298-1320147e439a}">
 		<property name="maximumDistance">
-			<value>800</value>
+			<value>35</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{c7354534-b345-46df-bf70-95d62f301c31}">
 		<property name="position">
-			<value>2</value>
+			<value>0</value>
 		</property>
 		<property name="value">
 			<value>1</value>

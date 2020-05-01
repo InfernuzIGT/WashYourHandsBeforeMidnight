@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Events;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
@@ -28,7 +29,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
-        _waitDeactivateUI = new WaitForSeconds(GameData.Instance.gameConfig.messageLifetime);
+        _waitDeactivateUI = new WaitForSeconds(seconds: GameData.Instance.gameConfig.messageLifetime);
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = false;
@@ -118,7 +119,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
-        dictionaryQuest.Add(data.id, data);
+        if (!dictionaryQuest.ContainsKey(data.id))
+        {
+            dictionaryQuest.Add(data.id, data);
+
+        }
     }
 
     public void ProgressQuest(QuestSO quest)
@@ -127,7 +132,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         if (dictionaryProgress[quest.id] == dictionaryQuest[quest.id].objetives.Length)
         {
-            // TODO Mariano: Dar recompensa del QuestSO
             Complete();
         }
         else
@@ -136,24 +140,31 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    // when quest is reached delete quest from log of quest
-    // Make UI follow quests superior corner left 
-
     public void Complete()
     {
         // TODO Mariano: Tachar titulo del diario
-        // worldUI.questObjectives.text = "";
-        // worldUI.questComplete.SetActive(true);
-        worldUI.questTitleDiaryTxt.alpha = 0;
+        worldUI.questTitleDiaryTxt.fontStyle = FontStyles.Strikethrough;
+
+        worldUI.questComplete.SetActive(true);
+
+        worldUI.questCompleteTxt.text = worldUI.questTitleTxt.text;
+        worldUI.questCompleteTxt.fontStyle = FontStyles.Strikethrough;
 
         StartCoroutine(DeactivateWorldUI());
     }
 
-    private IEnumerator DeactivateWorldUI()
+    public void GiveReward()
+    {
+        // TODO Mariano: Dar recompensa del QuestSO
+        // Instantiate item in inventory
+    }
+
+    public IEnumerator DeactivateWorldUI()
     {
         yield return _waitDeactivateUI;
 
         worldUI.questComplete.SetActive(false);
+        worldUI.questPopup.SetActive(false);
     }
 
     #endregion

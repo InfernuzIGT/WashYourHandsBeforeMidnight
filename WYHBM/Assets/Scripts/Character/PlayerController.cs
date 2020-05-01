@@ -11,6 +11,7 @@ public class PlayerController : Character
     private InteractionEvent _interactionEvent;
 
     FMODUnity.StudioEventEmitter footstepSound;
+    FMODUnity.StudioEventEmitter breathingSound;
 
     // Movement 
     private float _speedWalk = 7.5f;
@@ -71,6 +72,7 @@ public class PlayerController : Character
         _interactionEvent = new InteractionEvent();
 
         footstepSound = GetComponent<FMODUnity.StudioEventEmitter>();
+        breathingSound = GameObject.Find("Breathing Sound").GetComponent<FMODUnity.StudioEventEmitter>();
     }
 
     private void OnEnable()
@@ -97,7 +99,13 @@ public class PlayerController : Character
 
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
 
-
+        if (_stamina == 0f)
+        {
+            if (!breathingSound.IsPlaying())
+            {
+                breathingSound.Play();
+            }
+        }
     }
 
     private void CloseGame()
@@ -192,13 +200,9 @@ public class PlayerController : Character
             _interactionEvent.lastPlayerPosition = transform.position;
             _interactionEvent.isRunning = _isRunning;
             EventController.TriggerEvent(_interactionEvent);
+
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            _isOpenDiary = !_isOpenDiary;
-            GameManager.Instance.worldUI.Diary(_isOpenDiary);
-        }
     }
 
     public void ChangeMovement(bool enabled)
