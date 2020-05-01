@@ -14,6 +14,8 @@ public class GameConfig : ScriptableObject
     [Tag] public string tagPlayer;
     
     [Header ("UI")]
-    public float messageLifetime = 3;
+    public float messageLifetime = 3f;
+    public float timeStart = 0.5f;
+    public float timeSpace = 1f;
 
 }
