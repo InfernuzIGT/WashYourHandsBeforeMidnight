@@ -19,8 +19,6 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.player = player;
-
         SpawnPlayer();
         SetCamera();
     }
