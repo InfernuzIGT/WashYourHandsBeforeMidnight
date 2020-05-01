@@ -10,6 +10,8 @@ public class PlayerController : Character
 
     private InteractionEvent _interactionEvent;
 
+    FMODUnity.StudioEventEmitter footstepSound;
+
     // Movement 
     private float _speedWalk = 7.5f;
     private float _speedRun = 15f;
@@ -67,6 +69,8 @@ public class PlayerController : Character
         // Cursor.lockState = CursorLockMode.Locked;
 
         _interactionEvent = new InteractionEvent();
+
+        footstepSound = GetComponent<FMODUnity.StudioEventEmitter>();
     }
 
     private void OnEnable()
@@ -92,6 +96,8 @@ public class PlayerController : Character
         Interaction();
 
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
+
+
     }
 
     private void CloseGame()
@@ -121,11 +127,13 @@ public class PlayerController : Character
         {
             _isRunning = _moveHorizontal == 0 && _moveVertical == 0 || !_characterController.isGrounded ? false : true;
             _speedHorizontal = _speedRun;
+            footstepSound.EventInstance.setParameterByName("Sprint", 1);
         }
         else
         {
             _isRunning = false;
             _speedHorizontal = _speedWalk;
+            footstepSound.EventInstance.setParameterByName("Sprint", 0);
         }
 
         // Add movement
@@ -174,6 +182,7 @@ public class PlayerController : Character
         }
 
         GameManager.Instance.worldUI.UpdateStamina(_stamina / _staminaMax);
+
     }
 
     private void Interaction()
