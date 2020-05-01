@@ -200,14 +200,12 @@ public class PlayerController : Character
             _interactionEvent.lastPlayerPosition = transform.position;
             _interactionEvent.isRunning = _isRunning;
             EventController.TriggerEvent(_interactionEvent);
-
         }
-
     }
 
-    public void ChangeMovement(bool enabled)
+    public void SwitchMovement()
     {
-        _canMove = enabled;
+        _canMove = !_canMove;
     }
 
     #region Events

@@ -15,6 +15,8 @@ public class GlobalController : MonoBehaviour
     public PlayerController player;
     public CinemachineVirtualCamera virtualCamera;
 
+    private CinemachineVirtualCamera _newVirtualCamera;
+
     private float _offsetPlayer = 1.505f;
 
     private void Start()
@@ -66,8 +68,22 @@ public class GlobalController : MonoBehaviour
     {
         virtualCamera.m_Follow = player.transform;
         virtualCamera.m_LookAt = player.transform;
-
         virtualCamera.transform.position = player.transform.position;
+    }
+
+    public void ChangeCamera(CinemachineVirtualCamera newCamera)
+    {
+        if (newCamera == null)
+        {
+            newCamera.gameObject.SetActive(false);
+            virtualCamera.gameObject.SetActive(true);
+        }
+        else
+        {
+            _newVirtualCamera = newCamera;
+            newCamera.gameObject.SetActive(true);
+            virtualCamera.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
