@@ -8,6 +8,4 @@ public class ItemSO : EquipmentSO
 	public int level;
     [Range(0, 3)]
     public int quality;
-    public IntVector2 size;
-	
 }
