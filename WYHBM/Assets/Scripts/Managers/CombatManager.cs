@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Events;
+using Cinemachine;
 using GameMode.Combat;
 using UnityEngine;
 
@@ -43,12 +44,18 @@ public class CombatManager : MonoBehaviour
     private List<CombatCharacter> waitingForAction;
     private bool endOfCombat = false;
 
-    public void SetCombat()
+    public CinemachineVirtualCamera SetCombat()
     {
-        Debug.Log($"<b> SPAWN ENEMIES! </b>");
         
+        
+        Debug.Log($"<b> SPAWN ENEMIES! </b>");
+
         // TODO Mariano: Spawn Enemies usign _currentNPC
         // TODO Mariano: Wait X seconds, and StartCombat!
+        
+        int random = Random.Range(0, combatAreas.Length);
+        
+        return combatAreas[random].virtualCamera;
     }
 
     // Start Combat

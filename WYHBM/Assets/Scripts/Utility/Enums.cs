@@ -16,6 +16,28 @@ public enum CHARACTER_BEHAVIOUR
 
 #endregion
 
+#region Animator
+
+public enum COMBAT_STATE
+{
+    Idle = 0,
+    Hit = 1,
+    Death = 2,
+    Attack = 3,
+    Defense = 4,
+    Item = 5    
+}
+
+public enum MOVEMENT_STATE
+{
+    Idle = 0,
+    Walk = 1,
+    Run = 2,
+    Jump = 3,
+}
+
+#endregion
+
 public enum AMBIENT
 {
     World = 0,
@@ -83,7 +105,6 @@ public enum ARMOR_TYPE
     legs = 3,
     ring = 4,
 }
-
 
 #endregion
 

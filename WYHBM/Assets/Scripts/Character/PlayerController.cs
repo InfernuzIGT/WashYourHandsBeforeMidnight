@@ -3,10 +3,10 @@ using Events;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : Character
+public class PlayerController : MonoBehaviour
 {
     private CharacterController _characterController;
-    private AnimatorController _animatorController;
+    private WorldAnimator _animatorController;
 
     private InteractionEvent _interactionEvent;
 
@@ -61,7 +61,7 @@ public class PlayerController : Character
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _animatorController = GetComponent<AnimatorController>();
+        _animatorController = GetComponent<WorldAnimator>();
     }
 
     private void Start()
@@ -90,8 +90,6 @@ public class PlayerController : Character
     private void Update()
     {
         CloseGame();
-
-        if (InCombat)return;
 
         Movement();
         Stamina();
@@ -200,14 +198,12 @@ public class PlayerController : Character
             _interactionEvent.lastPlayerPosition = transform.position;
             _interactionEvent.isRunning = _isRunning;
             EventController.TriggerEvent(_interactionEvent);
-
         }
-
     }
 
-    public void ChangeMovement(bool enabled)
+    public void SwitchMovement()
     {
-        _canMove = enabled;
+        _canMove = !_canMove;
     }
 
     #region Events
