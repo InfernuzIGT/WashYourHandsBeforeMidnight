@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Events;
 using TMPro;
 using UnityEngine;
@@ -45,6 +44,16 @@ public class GameManager : MonoSingleton<GameManager>
 
         StartGame();
     }
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        Vector3 pos = new Vector3(player.gameObject.transform.position.x, GameData.Instance.gameConfig.samFoots, player.gameObject.transform.position.z);
+        
+        return pos;
+
+    }
+
+
 
     private void OnEnable()
     {

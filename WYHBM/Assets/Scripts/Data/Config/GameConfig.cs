@@ -18,4 +18,10 @@ public class GameConfig : ScriptableObject
     public float timeStart = 0.5f;
     public float timeSpace = 1f;
 
+    [Header ("References")]
+    public Slot slotPrefab;
+    public InteractionItem itemPrefab;
+
+    [Header ("Transform")]
+    public float samFoots = -1.39f;
 }

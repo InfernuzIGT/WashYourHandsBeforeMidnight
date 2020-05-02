@@ -1,26 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Slot : MonoBehaviour
 {
-    public Inventory inventory;
-    public int i;
+    ItemSO item;
+    public Image icon;
+    public Button removeButton;
 
-    // TODO Marco: REVISAR
-    void Update()
+    public void AddItem(ItemSO newItem)
     {
-        if (transform.childCount <= 0)
-        {
-            inventory.isFull[i] = false;
-        }
+        icon.sprite = newItem.icon;
+
+        item = newItem;
+
     }
-    public void DropItem()
+
+    public void OnRemoveButton()
     {
-        foreach (Transform child in transform)
-        {
-            GameObject.Destroy(child.gameObject);
-            
-        }
+        InteractionItem Item = Instantiate(GameData.Instance.gameConfig.itemPrefab, GameManager.Instance.GetPlayerFootPosition(), Quaternion.identity);
+
+        Debug.Log ($"<b> Vector3  </b>" + GameManager.Instance.player.gameObject.transform.position.x);
+        Item.AddInfo(item);
+
+        GameManager.Instance.worldUI.inventorySlots.RemoveItemList(item);
+        Destroy(gameObject);
+
     }
+
 }
