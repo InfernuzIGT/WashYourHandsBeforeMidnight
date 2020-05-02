@@ -44,13 +44,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     public Vector3 GetPlayerFootPosition()
     {
-        Vector3 pos = new Vector3(player.gameObject.transform.position.x, GameData.Instance.gameConfig.samFoots, player.gameObject.transform.position.z);
-        
+        Vector3 pos = new Vector3(
+            globalController.player.gameObject.transform.position.x,
+            globalController.player.gameObject.transform.position.y - GameData.Instance.gameConfig.playerBaseOffset,
+            globalController.player.gameObject.transform.position.z);
+
         return pos;
 
     }
-
-
 
     private void OnEnable()
     {

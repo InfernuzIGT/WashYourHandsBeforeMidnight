@@ -23,5 +23,5 @@ public class GameConfig : ScriptableObject
     public InteractionItem itemPrefab;
 
     [Header ("Transform")]
-    public float samFoots = -1.39f;
+    public float playerBaseOffset = 1.51f;
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Events;
+﻿using Events;
 using UnityEngine;
 
 public class InteractionItem : Interaction, IInteractable
@@ -7,13 +6,17 @@ public class InteractionItem : Interaction, IInteractable
     public ItemSO item;
     private SpriteRenderer _spriteRenderer;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-
-        SetSprite(item);
-
     }
+
+    private void Start()
+    {
+        AddInfo(item);
+    }
+
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
@@ -32,45 +35,24 @@ public class InteractionItem : Interaction, IInteractable
 
     private void OnInteractItem(InteractionEvent evt)
     {
-        if (GameManager.Instance.worldUI.inventorySlots.isAdded)
+        if (GameManager.Instance.worldUI.inventorySlots.isFull)
         {
-            EventController.RemoveListener<InteractionEvent>(OnInteractItem);
-            Destroy(gameObject);
-        }
-        else
-        {
-            if (GameManager.Instance.worldUI.inventorySlots.isFull)
-            {
-
-                return;
-            }
-            else
-            {
-                Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
-                newSlot.AddItem(item);
-                GameManager.Instance.worldUI.inventorySlots.AddItemList(item);
-
-            }
+            Debug.Log($"<b> INVENTORY FULL! </b>");
+            return;
         }
 
+        Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+        newSlot.AddItem(item);
+        GameManager.Instance.worldUI.inventorySlots.AddItemList(item);
+        EventController.RemoveListener<InteractionEvent>(OnInteractItem);
+
+        Destroy(gameObject);
     }
 
     public void AddInfo(ItemSO itemInfo)
     {
         item = itemInfo;
-        _spriteRenderer.sprite = itemInfo.icon;
-
-    }
-
-    public void SetSprite(ItemSO ItemInfo)
-    {
-        item = ItemInfo;
-        if (_spriteRenderer == null)
-        {
-            ItemInfo.icon = _spriteRenderer.sprite;
-            
-        }
-
+        _spriteRenderer.sprite = itemInfo.sprite;
     }
 
 }
