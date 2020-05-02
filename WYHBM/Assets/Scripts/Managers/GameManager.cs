@@ -132,6 +132,8 @@ public class GameManager : MonoSingleton<GameManager>
         if (!dictionaryQuest.ContainsKey(data.id))
         {
             dictionaryQuest.Add(data.id, data);
+
+            dictionaryProgress.Add(data.id, data.id);
         }
     }
 
@@ -153,6 +155,9 @@ public class GameManager : MonoSingleton<GameManager>
     {
         // TODO Mariano: Tachar titulo del diario
         worldUI.questTitleDiaryTxt.fontStyle = FontStyles.Strikethrough;
+        worldUI.questTitleDiaryTxt.color = Color.grey;
+        worldUI.questDescriptionTxt.fontStyle = FontStyles.Strikethrough;
+        worldUI.questDescriptionTxt.color = Color.grey;
 
         worldUI.questComplete.SetActive(true);
 
