@@ -39,7 +39,7 @@ public class GameManager : MonoSingleton<GameManager>
         _fadeEvent.callbackMid = SwitchAmbient;
         // _fadeEvent.callbackEnd = InitiateTurn;
 
-        SwitchAmbient();
+        // SwitchAmbient();
     }
 
     public Vector3 GetPlayerFootPosition()
