@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour
 {
+    public SlotEquipped slotEquipped;
     public ItemSO item;
     public Image icon;
     public Button removeButton;
@@ -11,6 +12,13 @@ public class Slot : MonoBehaviour
     {
         item = newItem;
         icon.sprite = newItem.sprite;
+    }
+
+    public void OnClickItem(SlotEquipped slotFree)
+    {
+        slotEquipped = slotFree;
+        
+        slotFree.EquipItem(item);
     }
 
     public void OnRemoveButton()

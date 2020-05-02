@@ -18,7 +18,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Combat")]
     public List<Player> combatCharacters;
 
-    public Dictionary<int, QuestSO> dictionaryQuest;
+    public Dictionary<int, QuestSO>     dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
     private AMBIENT _lastAmbient;
