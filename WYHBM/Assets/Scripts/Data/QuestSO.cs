@@ -12,6 +12,4 @@ public class QuestSO : ScriptableObject
     public string description;
     [Space]
     public string[] objetives;
-    [Space]
-    public int triggerIndex;
 }
