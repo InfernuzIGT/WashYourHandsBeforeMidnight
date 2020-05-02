@@ -42,6 +42,17 @@ public class GameManager : MonoSingleton<GameManager>
         SwitchAmbient();
     }
 
+    public Vector3 GetPlayerFootPosition()
+    {
+        Vector3 pos = new Vector3(
+            globalController.player.gameObject.transform.position.x,
+            globalController.player.gameObject.transform.position.y - GameData.Instance.gameConfig.playerBaseOffset,
+            globalController.player.gameObject.transform.position.z);
+
+        return pos;
+
+    }
+
     private void OnEnable()
     {
         EventController.AddListener<TriggerCombatEvent>(OnTriggerCombat);
