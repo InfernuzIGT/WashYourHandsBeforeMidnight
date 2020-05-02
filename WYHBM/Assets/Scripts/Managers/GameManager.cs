@@ -8,24 +8,21 @@ public class GameManager : MonoSingleton<GameManager>
 {
     [Header("Ambients")]
     public AMBIENT currentAmbient;
-    public GameObject currentInterior;
-    [Space]
+
+    [Header("References")]
+    public GlobalController globalController;
     public CombatManager combatManager;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
 
-    [Header("Quest")]
+    [Header("Combat")]
+    public List<Player> combatCharacters;
+
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
-    [Header("Cameras")]
-    public GameObject[] cameras;
-
-    [Header("Characters")]
-    public PlayerController player;
-
     private AMBIENT _lastAmbient;
-    private Camera _cameraMain;
+    private NPCSO _currentNPC;
 
     private WaitForSeconds _waitDeactivateUI;
 
@@ -33,16 +30,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
-        _cameraMain = Camera.main;
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
         _waitDeactivateUI = new WaitForSeconds(seconds: GameData.Instance.gameConfig.messageLifetime);
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.fadeFast = false;
-        _fadeEvent.callbackStart = SetAmbient;
+        _fadeEvent.fadeFast = true;
+        _fadeEvent.callbackStart = SwitchMovement;
+        _fadeEvent.callbackMid = SwitchAmbient;
 
-        StartGame();
+        SwitchAmbient();
     }
 
     public Vector3 GetPlayerFootPosition()
@@ -57,32 +54,12 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnEnable()
     {
-        EventController.AddListener<CreateInteriorEvent>(OnCreateInterior);
+        EventController.AddListener<TriggerCombatEvent>(OnTriggerCombat);
     }
 
     private void OnDisable()
     {
-        EventController.RemoveListener<CreateInteriorEvent>(OnCreateInterior);
-    }
-
-    private void StartGame()
-    {
-        SwitchAmbient();
-        // SwitchCamera();
-    }
-
-    public void ChangeAmbient(AMBIENT newAmbient)
-    {
-        _lastAmbient = currentAmbient;
-        currentAmbient = newAmbient;
-
-        player.ChangeMovement(false);
-    }
-
-    private void SetAmbient()
-    {
-        SwitchAmbient();
-        // SwitchCamera();
+        EventController.RemoveListener<TriggerCombatEvent>(OnTriggerCombat);
     }
 
     private void SwitchAmbient()
@@ -93,37 +70,34 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
-                player.ChangeMovement(true);
+                globalController.ChangeCamera(null);
                 break;
 
-            case AMBIENT.Interior:
-                worldUI.EnableCanvas(true);
-                combatUI.EnableCanvas(false);
+                // case AMBIENT.Interior:
+                //     worldUI.EnableCanvas(true);
+                //     combatUI.EnableCanvas(false);
 
-                player.ChangeMovement(true);
-                break;
+                //     player.ChangeMovement(true);
+                //     break;
 
-            case AMBIENT.Location:
-                worldUI.EnableCanvas(true);
-                combatUI.EnableCanvas(false);
+                // case AMBIENT.Location:
+                //     worldUI.EnableCanvas(true);
+                //     combatUI.EnableCanvas(false);
 
-                player.ChangeMovement(true);
-                break;
+                //     player.ChangeMovement(true);
+                //     break;
 
             case AMBIENT.Combat:
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
-                combatUI.selectableButton.Select(); // TODO Mariano: REMOVE
-
-                // TODO Mariano: Save Player Position
-                // TODO Mariano: Move Player to Combat Zone
-                // TODO Mariano: Spawn Enemies
-                // TODO Mariano: Wait X seconds, and StartCombat!
+                globalController.ChangeCamera(combatManager.SetCombat());
                 break;
 
             case AMBIENT.Development:
                 // Nothing
+
+                Debug.Log($"<color=yellow><b>[DEV]  </b></color> Switch Ambient!");
                 break;
 
             default:
@@ -131,24 +105,21 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    private void SwitchCamera()
+    private void SwitchMovement()
     {
-        cameras[(int) _lastAmbient].SetActive(false);
-        cameras[(int) currentAmbient].SetActive(true);
+        globalController.player.SwitchMovement();
     }
 
     #region Events
 
-    private void OnCreateInterior(CreateInteriorEvent evt)
+    public void OnTriggerCombat(TriggerCombatEvent evt)
     {
-        if (evt.isCreating)
-        {
-            currentInterior = Instantiate(evt.newInterior, GameData.Instance.gameConfig.interiorPosition, Quaternion.identity);
-        }
-        else
-        {
-            Destroy(currentInterior, 1);
-        }
+        _lastAmbient = currentAmbient;
+        currentAmbient = AMBIENT.Combat;
+
+        _currentNPC = evt.npc;
+
+        EventController.TriggerEvent(_fadeEvent);
     }
 
     #endregion
@@ -160,7 +131,6 @@ public class GameManager : MonoSingleton<GameManager>
         if (!dictionaryQuest.ContainsKey(data.id))
         {
             dictionaryQuest.Add(data.id, data);
-
         }
     }
 

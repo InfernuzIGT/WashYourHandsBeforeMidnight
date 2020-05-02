@@ -3,14 +3,15 @@ using Events;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : Character
+public class PlayerController : MonoBehaviour
 {
     private CharacterController _characterController;
-    private AnimatorController _animatorController;
+    private WorldAnimator _animatorController;
 
     private InteractionEvent _interactionEvent;
 
     FMODUnity.StudioEventEmitter footstepSound;
+    FMODUnity.StudioEventEmitter breathingSound;
 
     // Movement 
     private float _speedWalk = 7.5f;
@@ -60,7 +61,7 @@ public class PlayerController : Character
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _animatorController = GetComponent<AnimatorController>();
+        _animatorController = GetComponent<WorldAnimator>();
     }
 
     private void Start()
@@ -71,6 +72,7 @@ public class PlayerController : Character
         _interactionEvent = new InteractionEvent();
 
         footstepSound = GetComponent<FMODUnity.StudioEventEmitter>();
+        breathingSound = GameObject.Find("Breathing Sound").GetComponent<FMODUnity.StudioEventEmitter>();
     }
 
     private void OnEnable()
@@ -89,15 +91,19 @@ public class PlayerController : Character
     {
         CloseGame();
 
-        if (InCombat)return;
-
         Movement();
         Stamina();
         Interaction();
 
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
 
-
+        if (_stamina == 0f)
+        {
+            if (!breathingSound.IsPlaying())
+            {
+                breathingSound.Play();
+            }
+        }
     }
 
     private void CloseGame()
@@ -192,14 +198,12 @@ public class PlayerController : Character
             _interactionEvent.lastPlayerPosition = transform.position;
             _interactionEvent.isRunning = _isRunning;
             EventController.TriggerEvent(_interactionEvent);
-
         }
-
     }
 
-    public void ChangeMovement(bool enabled)
+    public void SwitchMovement()
     {
-        _canMove = enabled;
+        _canMove = !_canMove;
     }
 
     #region Events

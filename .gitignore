@@ -2,7 +2,7 @@
 
 ### Unity ###
 .vs/
-[Bb]uild/
+#[Bb]uild/
 [Ll]ibrary/
 [Ll]ogs
 [Oo]bj/
@@ -11,7 +11,7 @@
 [Dd]emigiant/
 [Tt]extMesh Pro/
 */.vs/
-*/[Bb]uild/
+#*/[Bb]uild/
 */[Ll]ibrary/
 */[Ll]ogs
 */[Oo]bj/
@@ -37,10 +37,13 @@ sysinfo.txt
 
 # Never ignore
 !/[Aa]ssets/**/*.meta
-!/FMOD/
-!*/FMOD/
-![Ss]treamingAssets/
-!*/StreamingAssets/
+
+# FMOD
+Assets/Plugins/FMOD/Resources/FMODStudioCache.asset
+Assets/Plugins/FMOD/Resources/FMODStudioCache.asset.meta
+Assets/StreamingAssets/**/*.bank
+Assets/StreamingAssets/**/*.bank.meta
+fmod_editor.log
 
 # Gradle cache directory
 .gradle/
