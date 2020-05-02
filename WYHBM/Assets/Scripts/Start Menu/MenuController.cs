@@ -317,6 +317,7 @@ public class MenuController : MonoBehaviour
             
             buttonSounds.Play();
             buttonSounds.EventInstance.setParameterByName("UI", 3f);
+            menuMusic.Stop();
             // Save new data in GAMEDATA
 
         }
@@ -327,6 +328,7 @@ public class MenuController : MonoBehaviour
             
             buttonSounds.Play();
             buttonSounds.EventInstance.setParameterByName("UI", 3f);
+            menuMusic.Stop();
             // Load demo scene
         }
 
