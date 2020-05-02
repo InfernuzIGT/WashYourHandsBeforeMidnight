@@ -12,7 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb2dfb3e5f946743b98dd095a3fd3fc, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  tagPlayer: Player
   interiorPosition: {x: 0, y: 100, z: 0}
   fadeFastDuration: 1.5
   fadeSlowDuration: 3
+  tagPlayer: Player
+  messageLifetime: 3
+  timeStart: 0.5
+  timeSpace: 1
+  slotPrefab: {fileID: 8000187485052463847, guid: be3d12aba6a4504449d633cd8cf654cb,
+    type: 3}
+  itemPrefab: {fileID: 3724059270590348769, guid: af431097c146237459ffaccac0575ea0,
+    type: 3}
+  playerBaseOffset: {x: 0, y: 2.08, z: 0}
+  layerNone:
+    serializedVersion: 2
+    m_Bits: 1
+  layerPlayer:
+    serializedVersion: 2
+    m_Bits: 131072
+  layerEnemy:
+    serializedVersion: 2
+    m_Bits: 262144

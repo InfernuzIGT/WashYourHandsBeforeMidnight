@@ -13,6 +13,7 @@ public class GlobalController : MonoBehaviour
 
     [Header("Settings")]
     public PlayerController player;
+    public Camera mainCamera;
     public CinemachineVirtualCamera virtualCamera;
 
     private CinemachineVirtualCamera _newVirtualCamera;

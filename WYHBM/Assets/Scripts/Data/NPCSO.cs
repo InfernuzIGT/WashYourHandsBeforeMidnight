@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "New NPC", menuName = "NPC", order = 0)]
 public class NPCSO : ScriptableObject
@@ -9,5 +10,5 @@ public class NPCSO : ScriptableObject
     public NPC_INTERACTION_TYPE interactionType;
     [Space]
     public DialogSO dialog;
-    public CombatCharacter[] combatCharacters;
+    public List<Enemy> combatCharacters;
 }

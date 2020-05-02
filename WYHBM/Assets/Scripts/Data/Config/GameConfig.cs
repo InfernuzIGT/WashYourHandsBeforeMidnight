@@ -12,10 +12,22 @@ public class GameConfig : ScriptableObject
 
     [Header("Tags")]
     [Tag] public string tagPlayer;
-    
-    [Header ("UI")]
+
+    [Header("UI")]
     public float messageLifetime = 3f;
     public float timeStart = 0.5f;
     public float timeSpace = 1f;
+
+    [Header("References")]
+    public Slot slotPrefab;
+    public InteractionItem itemPrefab;
+
+    [Header("Transform")]
+    public Vector3 playerBaseOffset = new Vector3(0, 2.08f, 0);
+
+    [Header("Layer")]
+    public LayerMask layerNone;
+    public LayerMask layerPlayer;
+    public LayerMask layerEnemy;
 
 }

@@ -22,7 +22,6 @@ public class GameManager : MonoSingleton<GameManager>
     public Dictionary<int, int> dictionaryProgress;
 
     private AMBIENT _lastAmbient;
-    private NPCSO _currentNPC;
 
     private WaitForSeconds _waitDeactivateUI;
 
@@ -38,8 +37,19 @@ public class GameManager : MonoSingleton<GameManager>
         _fadeEvent.fadeFast = true;
         _fadeEvent.callbackStart = SwitchMovement;
         _fadeEvent.callbackMid = SwitchAmbient;
+        // _fadeEvent.callbackEnd = InitiateTurn;
 
         SwitchAmbient();
+    }
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
+    }
+
+    public Ray GetRayMouse()
+    {
+        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
 
     private void OnEnable()
@@ -81,7 +91,9 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
-                globalController.ChangeCamera(combatManager.SetCombat());
+                globalController.ChangeCamera(combatManager.SetCamera());
+
+                combatManager.InitiateTurn();
                 break;
 
             case AMBIENT.Development:
@@ -100,6 +112,11 @@ public class GameManager : MonoSingleton<GameManager>
         globalController.player.SwitchMovement();
     }
 
+    private void InitiateTurn()
+    {
+        combatManager.InitiateTurn();
+    }
+
     #region Events
 
     public void OnTriggerCombat(TriggerCombatEvent evt)
@@ -107,7 +124,7 @@ public class GameManager : MonoSingleton<GameManager>
         _lastAmbient = currentAmbient;
         currentAmbient = AMBIENT.Combat;
 
-        _currentNPC = evt.npc;
+        combatManager.SetData(combatCharacters, evt.npc.combatCharacters);
 
         EventController.TriggerEvent(_fadeEvent);
     }

@@ -3,10 +3,19 @@
 
 public class Enemy : CombatCharacter
 {
+	public override void Awake()
+	{
+		base.Awake();
+	}
+
+	public override void Start()
+	{
+		base.Start();
+	}
+
 	public override void SetCharacter()
 	{
 		base.SetCharacter();
-
 		// SpriteRenderer.flipX = true;
 	}
 
