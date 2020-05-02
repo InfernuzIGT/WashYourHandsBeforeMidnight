@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class NPCController : Character, IInteractable
+public class NPCController : MonoBehaviour, IInteractable
 {
     [Header("Movement")]
     public bool canMove = true;
@@ -13,7 +13,7 @@ public class NPCController : Character, IInteractable
     [Range(0f, 10f)]
     public float waitTime = 5;
 
-    private AnimatorController _animatorController;
+    private WorldAnimator _animatorController;
     private InteractionNPC _interactionNPC;
 
     private NavMeshAgent _agent;
@@ -23,7 +23,7 @@ public class NPCController : Character, IInteractable
 
     private void Awake()
     {
-        _animatorController = GetComponent<AnimatorController>();
+        _animatorController = GetComponent<WorldAnimator>();
         _interactionNPC = GetComponentInChildren<InteractionNPC>();
         _agent = GetComponent<NavMeshAgent>();
     }

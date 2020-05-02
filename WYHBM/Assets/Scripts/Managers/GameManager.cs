@@ -15,6 +15,9 @@ public class GameManager : MonoSingleton<GameManager>
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
 
+    [Header("Combat")]
+    public List<Player> combatCharacters;
+
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
@@ -32,10 +35,22 @@ public class GameManager : MonoSingleton<GameManager>
         _waitDeactivateUI = new WaitForSeconds(seconds: GameData.Instance.gameConfig.messageLifetime);
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.fadeFast = false;
-        _fadeEvent.callbackStart = SwitchAmbient;
+        _fadeEvent.fadeFast = true;
+        _fadeEvent.callbackStart = SwitchMovement;
+        _fadeEvent.callbackMid = SwitchAmbient;
 
         SwitchAmbient();
+    }
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        Vector3 pos = new Vector3(
+            globalController.player.gameObject.transform.position.x,
+            globalController.player.gameObject.transform.position.y - GameData.Instance.gameConfig.playerBaseOffset,
+            globalController.player.gameObject.transform.position.z);
+
+        return pos;
+
     }
 
     private void OnEnable()
@@ -56,8 +71,7 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(true);
                 combatUI.EnableCanvas(false);
 
-                globalController.player.ChangeMovement(true);
-                // TODO Mariano: Change camera
+                globalController.ChangeCamera(null);
                 break;
 
                 // case AMBIENT.Interior:
@@ -78,10 +92,7 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
-                globalController.player.ChangeMovement(false);
-                // TODO Mariano: Change camera
-
-                combatManager.SetCombat();
+                globalController.ChangeCamera(combatManager.SetCombat());
                 break;
 
             case AMBIENT.Development:
@@ -95,11 +106,10 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    // private void SwitchCamera()
-    // {
-    //     cameras[(int)_lastAmbient].SetActive(false);
-    //     cameras[(int)currentAmbient].SetActive(true);
-    // }
+    private void SwitchMovement()
+    {
+        globalController.player.SwitchMovement();
+    }
 
     #region Events
 
@@ -122,7 +132,6 @@ public class GameManager : MonoSingleton<GameManager>
         if (!dictionaryQuest.ContainsKey(data.id))
         {
             dictionaryQuest.Add(data.id, data);
-
         }
     }
 

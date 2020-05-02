@@ -11,8 +11,6 @@ namespace GameMode.World
     {
         [Header("Panels")]
         public GameObject panelDialog;
-        // TODO Mariano: Revisar; tira error
-        // public GameObject panelQuest; 
 
         [Header("Player")]
         public Image staminaImg;
@@ -20,7 +18,6 @@ namespace GameMode.World
         [Header("Dialogues")]
         public TextMeshProUGUI dialogTxt;
         public TextMeshProUGUI continueTxt;
-        // public float dialogSpeed;
         public DialogSO currentDialog;
         private char _charSpace = '*';
         private bool _isReading;
@@ -40,6 +37,10 @@ namespace GameMode.World
         public TextMeshProUGUI questCompleteTxt;
         public GameObject questComplete;
         public GameObject questPopup;
+
+        [Header ("Items")]
+        public Transform itemParents;
+        public Inventory inventorySlots;
         private QuestSO _currentQuest;
 
         private Tween _txtAnimation;
@@ -47,13 +48,10 @@ namespace GameMode.World
         private EnableMovementEvent _enableMovementEvent;
 
         // Dialogues
-        // private bool _isSentenceComplete;
         private string _currentSentence;
         private int _dialogIndex;
         private int _objectivesIndex;
         private bool _isWriting;
-
-        // Quests
 
         private Canvas _canvas;
 
@@ -68,7 +66,6 @@ namespace GameMode.World
             continueTxt.enabled = false;
 
             panelDialog.SetActive(false);
-            // panelQuest.SetActive (false);
 
             _waitStart = new WaitForSeconds(GameData.Instance.gameConfig.timeStart);
             _waitSpace = new WaitForSeconds(GameData.Instance.gameConfig.timeSpace);
@@ -112,14 +109,6 @@ namespace GameMode.World
                 Debug.Log($"Dialog EMPTY");
                 return;
             }
-
-            // if (_isSentenceComplete)
-            // {
-            //     CompleteText();
-            //     return;
-            // }
-
-            //Quest
 
             // Dialogues
             if (_dialogIndex == currentDialog.sentences.Length)
@@ -173,24 +162,8 @@ namespace GameMode.World
                     _coroutineWrite = StartCoroutine(WriteText());
 
                 }
-                // ExecuteText();
             }
         }
-
-        // private void ExecuteText()
-        // {
-        //     _isSentenceComplete = true;
-
-        // _txtAnimation = dialogTxt.DOText(_currentSentence, dialogSpeed);
-
-        //     if (_isSentenceComplete)
-        //     {
-        //         TurnOffTxt();
-        //     }
-
-        //     _dialogIndex++;
-
-        // }
 
         private IEnumerator WriteText()
         {
@@ -305,6 +278,10 @@ namespace GameMode.World
 
         #endregion
 
+        #region Inventory
+        
+
+        #endregion
         public void EnableCanvas(bool enabled)
         {
             _canvas.enabled = enabled;
