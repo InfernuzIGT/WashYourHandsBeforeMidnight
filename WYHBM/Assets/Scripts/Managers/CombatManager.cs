@@ -46,6 +46,8 @@ public class CombatManager : MonoBehaviour
 
     public CinemachineVirtualCamera SetCombat()
     {
+        
+        
         Debug.Log($"<b> SPAWN ENEMIES! </b>");
 
         // TODO Mariano: Spawn Enemies usign _currentNPC

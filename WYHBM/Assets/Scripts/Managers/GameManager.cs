@@ -15,6 +15,9 @@ public class GameManager : MonoSingleton<GameManager>
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
 
+    [Header("Combat")]
+    public List<Player> combatCharacters;
+
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
