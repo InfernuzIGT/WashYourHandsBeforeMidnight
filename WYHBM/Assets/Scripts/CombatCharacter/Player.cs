@@ -7,25 +7,30 @@ public class Player : CombatCharacter
     private List<EquipmentSO> equipment;
     public List<EquipmentSO> Equipment { get { return equipment; } set { equipment = value; } }
 
+    public override void Awake()
+    {
+        base.Awake();
+    }
+    
     public override void Start()
     {
         base.Start();
 
-        CreateEquipmentList();
+        // CreateEquipmentList();
     }
 
-    private void CreateEquipmentList()
-    {
-        equipment = new List<EquipmentSO>();
+    // private void CreateEquipmentList()
+    // {
+    //     equipment = new List<EquipmentSO>();
 
-        equipment.AddRange(character.equipmentWeapon);
-        equipment.AddRange(character.equipmentItem);
-        equipment.AddRange(character.equipmentArmor);
+    //     equipment.AddRange(character.equipmentWeapon);
+    //     equipment.AddRange(character.equipmentItem);
+    //     equipment.AddRange(character.equipmentArmor);
 
-        equipment.Sort((e1, e2) => e1.order.CompareTo(e2.order));
+    //     equipment.Sort((e1, e2) => e1.order.CompareTo(e2.order));
 
-        // CombatManager.Instance.uIController.CreateActionObjects(equipment);
-    }
+    //     // CombatManager.Instance.uIController.CreateActionObjects(equipment);
+    // }
     
     public override void ActionStartCombat()
     {

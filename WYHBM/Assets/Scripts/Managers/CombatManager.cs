@@ -1,15 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
-using Events;
+using System.Linq;
 using Cinemachine;
+using DG.Tweening;
 using GameMode.Combat;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
     [Header("Mariano")]
+    public LayerMask currentLayer;
+    public COMBAT_STATE combatState;
     public CombatArea[] combatAreas;
+    public int currentArea;
+    public bool canSelect;
 
     [Header("Controllers")]
     public UIController uIController;
@@ -27,9 +31,13 @@ public class CombatManager : MonoBehaviour
     public List<Enemy> listEnemies = new List<Enemy>();
 
     private bool _isActionEnable;
+    private int _combatIndex;
     private WaitForSeconds combatTransition;
     private WaitForSeconds combatWaitTime;
     private WaitForSeconds evaluationDuration;
+
+    private RaycastHit _hit;
+    private Ray _ray;
 
     //-----------------------------------------------------------
     //-----------------------------------------------------------
@@ -44,19 +52,75 @@ public class CombatManager : MonoBehaviour
     private List<CombatCharacter> waitingForAction;
     private bool endOfCombat = false;
 
-    public CinemachineVirtualCamera SetCombat()
+    private void Start()
     {
-        
-        
-        Debug.Log($"<b> SPAWN ENEMIES! </b>");
+        combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
+        combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
+        evaluationDuration = new WaitForSeconds(GameData.Instance.combatConfig.evaluationDuration);
 
-        // TODO Mariano: Spawn Enemies usign _currentNPC
-        // TODO Mariano: Wait X seconds, and StartCombat!
-        
-        int random = Random.Range(0, combatAreas.Length);
-        
-        return combatAreas[random].virtualCamera;
+        listCharacter = new List<CombatCharacter>();
+        waitingForAction = new List<CombatCharacter>();
     }
+
+    public void SetData(List<Player> players, List<Enemy> enemies)
+    {
+        listPlayers.Clear();
+        listEnemies.Clear();
+        listCharacter.Clear();
+        _combatIndex = 0;
+        canSelect = false;
+
+        currentArea = Random.Range(0, combatAreas.Length);
+
+        for (int i = 0; i < players.Count; i++)
+        {
+            Player player = Instantiate(
+                players[i],
+                combatAreas[currentArea].playerPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                Quaternion.identity);
+
+            player.gameObject.SetActive(false);
+
+            player.CombatIndex = _combatIndex;
+            _combatIndex++;
+
+            listPlayers.Add(player);
+            listCharacter.Add(player);
+        }
+
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            Enemy enemy = Instantiate(
+                enemies[i],
+                combatAreas[currentArea].enemyPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                Quaternion.identity);
+
+            enemy.gameObject.SetActive(false);
+
+            enemy.CombatIndex = _combatIndex;
+            _combatIndex++;
+
+            listEnemies.Add(enemy);
+            listCharacter.Add(enemy);
+        }
+    }
+
+    public CinemachineVirtualCamera SetCamera()
+    {
+        for (int i = 0; i < listPlayers.Count; i++)
+        {
+            listPlayers[i].gameObject.SetActive(true);
+        }
+
+        for (int i = 0; i < listEnemies.Count; i++)
+        {
+            listEnemies[i].gameObject.SetActive(true);
+        }
+
+        return combatAreas[currentArea].virtualCamera;
+    }
+
+    #region Turn System
 
     // Start Combat
     public void InitiateTurn()
@@ -68,37 +132,17 @@ public class CombatManager : MonoBehaviour
         UnleashRace();
     }
 
-    private IEnumerator TurnsLoop()
-    {
-        while (!endOfCombat)
-        {
-            // Waiting for the current character to do his action.
-            yield return currentCharacter.StartWaitingForAction();
-
-            SendBottom();
-
-            turnCount++;
-
-            // The Action Was done. Now should be the Next Characters Action.
-
-            yield return null;
-        }
-    }
-
     public List<CombatCharacter> InitialSort()
     {
         List<CombatCharacter> sortedCharacters = new List<CombatCharacter>();
         sortedCharacters.AddRange(listCharacter);
 
-        // CombatCharacter[] sortedCharacters = new CombatCharacter[characters.Length];
-        // sortedCharacters = characters;
-
         CombatCharacter fastestCharacter;
         fastestCharacter = sortedCharacters[0];
 
-        for (int i = 0; i < sortedCharacters.Count; i++) // ONE MINUS
+        for (int i = 0; i < sortedCharacters.Count - 1; i++) // ONE MINUS
         {
-            for (int j = 0; j < sortedCharacters.Count; j++) // ONE MINUS
+            for (int j = 0; j < sortedCharacters.Count - 1; j++) // ONE MINUS
             {
                 if (sortedCharacters[j].StatsReaction < sortedCharacters[j + 1].StatsReaction)
                 {
@@ -118,7 +162,26 @@ public class CombatManager : MonoBehaviour
     public void AddToWaiting(List<CombatCharacter> charactersToAdd)
     {
         for (int i = 0; i < charactersToAdd.Count; i++)
+        {
             waitingForAction.Add(charactersToAdd[i]);
+        }
+    }
+
+    private IEnumerator TurnsLoop()
+    {
+        while (!endOfCombat)
+        {
+            // Waiting for the current character to do his action.
+            yield return currentCharacter.StartWaitingForAction();
+
+            SendBottom();
+
+            turnCount++;
+
+            // The Action Was done. Now should be the Next Characters Action.
+
+            yield return null;
+        }
     }
 
     public void SetInitialCharactersTurn()
@@ -172,35 +235,74 @@ public class CombatManager : MonoBehaviour
         waitingForAction[index].StartGettingAhead();
     }
 
+    #endregion
+
     //-----------------------------------------------------------
     //-----------------------------------------------------------
     //-----------------------------------------------------------
 
-    private void Start()
+    public void ActionAttack()
     {
-        GetCharacters();
-
-        combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
-        combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
-        evaluationDuration = new WaitForSeconds(GameData.Instance.combatConfig.evaluationDuration);
+        combatState = COMBAT_STATE.Attack;
+        EnableAction();
     }
 
-    private void GetCharacters()
+    public void ActionDefense()
     {
-        // TODO Mariano: Spawn Players and Enemies
+        combatState = COMBAT_STATE.Defense;
+        EnableAction();
     }
 
-    public void StartCombat()
+    public void ActionItem()
     {
-        _isActionEnable = isTurnPlayer;
-
-        if (!_isActionEnable)
-            return;
-
-        isTurnPlayer = false;
-
-        StartCoroutine(Combat(listPlayers));
+        combatState = COMBAT_STATE.Item;
+        EnableAction();
     }
+
+    private void EnableAction()
+    {
+        switch (combatState)
+        {
+            case COMBAT_STATE.Attack:
+            case COMBAT_STATE.Item:
+                currentLayer = GameData.Instance.gameConfig.layerEnemy;
+                GameManager.Instance.combatUI.actionTxt.text = "Select enemy";
+                break;
+
+            case COMBAT_STATE.Defense:
+                currentLayer = GameData.Instance.gameConfig.layerPlayer;
+                GameManager.Instance.combatUI.actionTxt.text = "Select player";
+                break;
+
+            default:
+                currentLayer = GameData.Instance.gameConfig.layerNone;
+                GameManager.Instance.combatUI.actionTxt.text = "";
+                break;
+        }
+
+        canSelect = true;
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && canSelect)
+        {
+            _ray = GameManager.Instance.GetRayMouse();
+
+            if (Physics.Raycast(_ray, out _hit, 2000, currentLayer))
+            {
+                if (_hit.collider != null)
+                {
+                    _hit.collider.gameObject.GetComponent<CombatCharacter>().Select(combatState, currentCharacter);
+                    canSelect = false;
+                }
+            }
+        }
+    }
+
+    //-----------------------------------------------------------
+    //-----------------------------------------------------------
+    //-----------------------------------------------------------
 
     private IEnumerator Combat(List<Player> players)
     {
