@@ -180,6 +180,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{a262d78e-9e63-4a8b-b03c-7179ac7e9266}">
+		<property name="volume">
+			<value>2.5</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{aaa68571-d762-4d44-96e0-ea3a04887801}</destination>
 		</relationship>
@@ -1112,7 +1115,11 @@
 			<destination>{c1141b86-bb84-41ca-885a-6670749367f7}</destination>
 		</relationship>
 	</object>
-	<object class="GainEffect" id="{d343e3f0-ada9-4e6d-a836-89d6b93126d3}" />
+	<object class="GainEffect" id="{d343e3f0-ada9-4e6d-a836-89d6b93126d3}">
+		<property name="gain">
+			<value>3</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{f867b698-548e-4158-afc1-3334b1624fe8}" />
 	<object class="AutomationCurve" id="{99574629-0abf-4b75-a318-be86b1af3372}">
 		<relationship name="parameter">
@@ -1136,7 +1143,7 @@
 	</object>
 	<object class="GainEffect" id="{d8331cc6-cb36-41a5-9948-ea17f816ebc3}">
 		<property name="gain">
-			<value>-4</value>
+			<value>-2</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{d6b05dbf-586b-4d1f-b0ca-c14de765f56f}" />
@@ -1184,7 +1191,7 @@
 	</object>
 	<object class="GainEffect" id="{a2f373aa-d457-4403-bcbb-2fde8ddc6e54}">
 		<property name="gain">
-			<value>3</value>
+			<value>5</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{a5b38b2f-cb16-4da1-a965-2e3f3da48573}" />
@@ -1264,7 +1271,7 @@
 	</object>
 	<object class="GainEffect" id="{b7c9cb00-4b6f-44f3-8e04-c206762a504a}">
 		<property name="gain">
-			<value>3</value>
+			<value>4</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{1c063fe4-1f4f-489f-9915-e62041b603e6}" />
@@ -1294,7 +1301,7 @@
 	<object class="MixerBusFader" id="{cf8e9112-6b32-4e53-b62d-50a7bd2e23f5}" />
 	<object class="GainEffect" id="{451af074-5b39-4c71-9172-b8adbcd511bf}">
 		<property name="gain">
-			<value>3</value>
+			<value>4</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{de91da33-aff3-4298-ac7e-6c35e0bc6598}">

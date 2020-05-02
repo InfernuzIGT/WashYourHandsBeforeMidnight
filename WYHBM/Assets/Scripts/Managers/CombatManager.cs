@@ -37,6 +37,7 @@ public class CombatManager : MonoBehaviour
 
     [Header("NEW COMBAT")]
     public CombatCharacter currentCharacter;
+    FMODUnity.StudioEventEmitter battleMusic;
     [Space]
     public List<CombatCharacter> listCharacter;
     public int turnCount;
@@ -44,15 +45,18 @@ public class CombatManager : MonoBehaviour
     private List<CombatCharacter> waitingForAction;
     private bool endOfCombat = false;
 
+
     public CinemachineVirtualCamera SetCombat()
     {
         
         
         Debug.Log($"<b> SPAWN ENEMIES! </b>");
 
+        battleMusic.Play();
+
         // TODO Mariano: Spawn Enemies usign _currentNPC
         // TODO Mariano: Wait X seconds, and StartCombat!
-        
+
         int random = Random.Range(0, combatAreas.Length);
         
         return combatAreas[random].virtualCamera;
@@ -183,6 +187,8 @@ public class CombatManager : MonoBehaviour
         combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
         combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
         evaluationDuration = new WaitForSeconds(GameData.Instance.combatConfig.evaluationDuration);
+
+        battleMusic = GetComponent<FMODUnity.StudioEventEmitter>();
     }
 
     private void GetCharacters()
@@ -262,6 +268,7 @@ public class CombatManager : MonoBehaviour
             // TODO Mariano: Fade de los personajes involucrados
             listPlayers[0].ActionStopCombat();
             listEnemies[0].ActionStopCombat();
+            battleMusic.Stop();
 
             yield return combatTransition;
 
@@ -276,6 +283,9 @@ public class CombatManager : MonoBehaviour
                 yield return evaluationDuration;
 
                 EndGame(false);
+
+                Debug.Log("Musica de Game Over?");
+                FMODUnity.RuntimeManager.PlayOneShot("event:/Game Over");
             }
 
         }
@@ -284,6 +294,9 @@ public class CombatManager : MonoBehaviour
             yield return evaluationDuration;
 
             EndGame(true);
+
+            Debug.Log("Musica de Victoria?");
+            FMODUnity.RuntimeManager.PlayOneShot("event:/Victory");
         }
     }
 
