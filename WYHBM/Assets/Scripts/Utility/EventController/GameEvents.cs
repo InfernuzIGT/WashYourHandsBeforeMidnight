@@ -10,6 +10,7 @@ namespace Events
     public class InteractionEvent : GameEvent
     {
         public Vector3 lastPlayerPosition;
+        public bool isRunning;
     }
 
     public class EnableDialogEvent : GameEvent
@@ -29,10 +30,9 @@ namespace Events
         public Vector3 newPosition;
     }
 
-    public class CreateInteriorEvent : GameEvent
+    public class TriggerCombatEvent : GameEvent
     {
-        public bool isCreating;
-        public GameObject newInterior;
+        public NPCSO npc;
     }
 
     #endregion

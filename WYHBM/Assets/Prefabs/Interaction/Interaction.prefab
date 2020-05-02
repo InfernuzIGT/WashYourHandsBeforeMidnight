@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1977825115676512154}
   - component: {fileID: 8786005716968127326}
+  - component: {fileID: 8660160627863103612}
   m_Layer: 13
   m_Name: Interaction
   m_TagString: Interaction
@@ -45,6 +46,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 2.5, z: 2.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8660160627863103612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6336170719119332957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 113c9f3e01f61df4799cc0447879c861, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebug: 0
+  boxColor: {r: 0, g: 1, b: 0, a: 0.5}
 --- !u!1 &6729691960558892156
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,7 +73,7 @@ GameObject:
   - component: {fileID: 212643904017522734}
   - component: {fileID: 6190711591321381025}
   - component: {fileID: 7080958430365454043}
-  - component: {fileID: 2041273761208300320}
+  - component: {fileID: 7419833218850277309}
   m_Layer: 0
   m_Name: PopupTxt
   m_TagString: Untagged
@@ -250,7 +265,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
---- !u!114 &2041273761208300320
+--- !u!114 &7419833218850277309
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -259,11 +274,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6729691960558892156}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9337f0551d73f14d86341c9919571fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d0390bd8b8ffd640b34fe25065ff1df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   updateType: 0
-  isSpeedBased: 0
+  isSpeedBased: 1
   hasOnStart: 0
   hasOnPlay: 0
   hasOnUpdate: 0
@@ -297,7 +312,7 @@ MonoBehaviour:
   tweenTargetIsTargetGO: 1
   delay: 0
   duration: 0.5
-  easeType: 3
+  easeType: 4
   easeCurve:
     serializedVersion: 2
     m_Curve:

@@ -8,7 +8,7 @@ public class CombatCharacter : MonoBehaviour
 {
     [Header("Character")]
     public CharacterSO character;
-
+    
     [Header("Interface")]
     [SerializeField] private CharacterUI characterUI = null; // TODO Mariano: Instancia el prefab como hijo
 

@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Events;
+using Cinemachine;
 using GameMode.Combat;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
+    [Header("Mariano")]
+    public CombatArea[] combatAreas;
+
     [Header("Controllers")]
     public UIController uIController;
     public ActionController actionController;
@@ -27,7 +31,6 @@ public class CombatManager : MonoBehaviour
     private WaitForSeconds combatWaitTime;
     private WaitForSeconds evaluationDuration;
 
-
     //-----------------------------------------------------------
     //-----------------------------------------------------------
     //-----------------------------------------------------------
@@ -40,6 +43,20 @@ public class CombatManager : MonoBehaviour
 
     private List<CombatCharacter> waitingForAction;
     private bool endOfCombat = false;
+
+    public CinemachineVirtualCamera SetCombat()
+    {
+        
+        
+        Debug.Log($"<b> SPAWN ENEMIES! </b>");
+
+        // TODO Mariano: Spawn Enemies usign _currentNPC
+        // TODO Mariano: Wait X seconds, and StartCombat!
+        
+        int random = Random.Range(0, combatAreas.Length);
+        
+        return combatAreas[random].virtualCamera;
+    }
 
     // Start Combat
     public void InitiateTurn()
@@ -275,7 +292,7 @@ public class CombatManager : MonoBehaviour
     public void EndGame(bool isWin)
     {
         // TODO Mariano: FADE
-        
+
         uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
 
         uIController.endTxt.gameObject.SetActive(true);

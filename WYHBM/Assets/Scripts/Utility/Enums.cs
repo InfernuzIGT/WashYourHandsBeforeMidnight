@@ -16,6 +16,28 @@ public enum CHARACTER_BEHAVIOUR
 
 #endregion
 
+#region Animator
+
+public enum COMBAT_STATE
+{
+    Idle = 0,
+    Hit = 1,
+    Death = 2,
+    Attack = 3,
+    Defense = 4,
+    Item = 5    
+}
+
+public enum MOVEMENT_STATE
+{
+    Idle = 0,
+    Walk = 1,
+    Run = 2,
+    Jump = 3,
+}
+
+#endregion
+
 public enum AMBIENT
 {
     World = 0,
@@ -85,3 +107,21 @@ public enum ARMOR_TYPE
 }
 
 #endregion
+
+public enum GROUND_TYPE
+{
+    none = 0,
+    Grass = 1,
+    Dirt = 2,
+    Wood = 3,
+    Cement = 4,
+    Ceramic = 5
+}
+
+public enum NPC_INTERACTION_TYPE
+{
+    none = 0,
+    dialog = 1,
+    fight = 2,
+    dialogAndFight = 3
+}
