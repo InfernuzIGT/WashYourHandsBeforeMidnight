@@ -63,7 +63,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ef8665e47c8897142a053e5076e65cce, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -479,11 +479,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8000187485052463847}
-        m_MethodName: OnRemoveButton
+        m_MethodName: OnClickItem
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: ItemSO, Assembly-CSharp
+          m_ObjectArgument: {fileID: 7287788694833045171, guid: 21df966bea5057848ab44fd3c020ac61,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: SlotEquipped, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -501,5 +502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f66ccb445f4bb944697806c5013bbce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotEquipped: {fileID: 0}
+  item: {fileID: 0}
   icon: {fileID: 6216460330346896161}
   removeButton: {fileID: 8980304464706847323}

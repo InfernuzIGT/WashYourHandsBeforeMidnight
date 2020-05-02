@@ -9,6 +9,23 @@ namespace GameMode.World
 {
     public class UIManager : MonoBehaviour
     {
+        [Header("Pause Menu")]
+        public static bool isGamePaused = false;
+
+        [Header("GameObjects")]
+        public GameObject pauseMenuUI;
+        public GameObject pauseMenuSprite;
+        public GameObject systemUI;
+        public GameObject optionsUI;
+        public GameObject inventoryUI;
+        public GameObject diaryUI;
+        public GameObject arrow;
+
+        //bool
+        private bool _isInDiary;
+        private bool _isInInventory;
+        private bool _isInSystem;
+
         [Header("Panels")]
         public GameObject panelDialog;
 
@@ -38,7 +55,7 @@ namespace GameMode.World
         public GameObject questComplete;
         public GameObject questPopup;
 
-        [Header ("Items")]
+        [Header("Items")]
         public Transform itemParents;
         public Inventory inventorySlots;
         private QuestSO _currentQuest;
@@ -69,6 +86,9 @@ namespace GameMode.World
 
             _waitStart = new WaitForSeconds(GameData.Instance.gameConfig.timeStart);
             _waitSpace = new WaitForSeconds(GameData.Instance.gameConfig.timeSpace);
+
+            Resume();
+
         }
 
         private void OnEnable()
@@ -189,8 +209,6 @@ namespace GameMode.World
             // Limpia el texto de la UI
             dialogTxt.text = "";
 
-            
-
             _isReading = false;
 
             yield return _waitStart; // 0.5f
@@ -240,8 +258,6 @@ namespace GameMode.World
         {
             data = _currentQuest;
 
-            questPopupTxt.text = questObjectives[_objectivesIndex].text;
-
             GameManager.Instance.StartCoroutine(GameManager.Instance.DeactivateWorldUI());
 
             // PopUp quest
@@ -251,9 +267,6 @@ namespace GameMode.World
             questTitleDiaryTxt.text = data.title;
             questTitleTxt.text = data.title;
             questDescriptionTxt.text = data.description;
-
-            questPopup.SetActive(true);
-            questPopupTxt.text = questObjectives[_objectivesIndex].text;
 
             SetQuestLog(data);
         }
@@ -265,9 +278,13 @@ namespace GameMode.World
 
         public void UpdateObjectives(string objetive, int index)
         {
+            questPopup.SetActive(true);
+
+            questPopupTxt.text = questObjectives[index].text;
 
             questObjectives[index - 1].fontStyle = FontStyles.Strikethrough;
 
+            questPopupTxt.text = questObjectives[index].text;
             questObjectives[index].text = objetive;
 
             questPopup.SetActive(true);
@@ -279,12 +296,108 @@ namespace GameMode.World
         #endregion
 
         #region Inventory
-        
 
         #endregion
         public void EnableCanvas(bool enabled)
         {
             _canvas.enabled = enabled;
         }
+
+        #region Pause Menu
+        private void Update() //Move to PlayerController
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!isGamePaused)
+                {
+                    Pause();
+
+                }
+                else
+                {
+                    Resume();
+                }
+
+            }
+        }
+
+        public void Resume()
+        {
+            pauseMenuUI.SetActive(false);
+            Time.timeScale = 1f;
+            isGamePaused = false;
+
+        }
+
+        public void Pause()
+        {
+            pauseMenuUI.SetActive(true);
+            Time.timeScale = 0f;
+            isGamePaused = true;
+
+        }
+        #region Diary
+
+        public void OnDiaryButton()
+        {
+
+            systemUI.SetActive(false);
+            optionsUI.SetActive(false);
+            inventoryUI.SetActive(false);
+
+            pauseMenuSprite.SetActive(true);
+            diaryUI.SetActive(true);
+
+            _isInDiary = true;
+
+        }
+
+        #endregion
+
+        #region Inventory
+        public void OnInventoryButton()
+        {
+            pauseMenuSprite.SetActive(false);
+            systemUI.SetActive(false);
+            optionsUI.SetActive(false);
+            diaryUI.SetActive(false);
+
+            inventoryUI.SetActive(true);
+
+            _isInInventory = true;
+
+        }
+
+        #endregion
+
+        #region System
+        public void OnSystemButton()
+        {
+            diaryUI.SetActive(false);
+            optionsUI.SetActive(false);
+            inventoryUI.SetActive(false);
+
+            pauseMenuSprite.SetActive(true);
+            systemUI.SetActive(true);
+
+            _isInSystem = true;
+        }
+
+        public void OnOptionsButton()
+        {
+            optionsUI.SetActive(true);
+
+            _isInSystem = true;
+        }
+
+        public void OnQuitButton()
+        {
+            Application.Quit();
+
+        }
+
+        #endregion
+
+        #endregion
     }
 }
