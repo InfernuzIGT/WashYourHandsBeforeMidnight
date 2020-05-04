@@ -125,3 +125,9 @@ public enum NPC_INTERACTION_TYPE
     fight = 2,
     dialogAndFight = 3
 }
+
+public enum SCENE_INDEX
+{
+    MainMenu = 0,
+    Master = 1,
+}

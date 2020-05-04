@@ -43,8 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a15a6f101258a384486d5151c16e7da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showPopup: 1
-  quest: {fileID: 0}
+  showPopup: 0
   onEnter:
     m_PersistentCalls:
       m_Calls:
@@ -86,6 +85,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Interaction Door Left[A]
+      objectReference: {fileID: 0}
+    - target: {fileID: 8660160627863103612, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: showDebug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
@@ -141,31 +165,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8660160627863103612, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: showDebug
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8786005716968127326, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 212643904017522734, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}

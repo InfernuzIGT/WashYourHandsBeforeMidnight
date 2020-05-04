@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,21 @@ public class GameData : MonoSingleton<GameData>
 	public TextConfig textConfig;
 
 	private static GameData GAME_DATA;
+
+	public void LoadScene(SCENE_INDEX sceneIndex)
+	{
+		StartCoroutine(LoadYourAsyncScene(sceneIndex));
+	}
+
+	private IEnumerator LoadYourAsyncScene(SCENE_INDEX index)
+	{
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int)index);
+
+		while (!asyncLoad.isDone)
+		{
+			yield return null;
+		}
+	}
 
 	private static bool LoadData()
 	{
@@ -68,6 +84,7 @@ public class GameData : MonoSingleton<GameData>
 	}
 
 }
+
 //EXAMPLES//
 
 // [Serializable]
