@@ -31,8 +31,8 @@ public class PlayerController : MonoBehaviour
     // Stamina
     private float _stamina = 100;
     private float _staminaMax = 100;
-    private float _staminaIncrease = 2.5f;
-    private float _staminaDecrease = 20;
+    private float _staminaIncrease = 5f;
+    private float _staminaDecrease = 15;
     private float _staminaRegenTimer = 0;
     private float _staminaTimeToRegen = 3;
 
