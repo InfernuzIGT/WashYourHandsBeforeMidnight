@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour
 {
-    public SlotEquipped slotEquipped;
     public ItemSO item;
     public Image icon;
     public Button removeButton;
@@ -11,14 +10,32 @@ public class Slot : MonoBehaviour
     public void AddItem(ItemSO newItem)
     {
         item = newItem;
-        icon.sprite = newItem.sprite;
+        icon.sprite = newItem.previewSprite;
     }
 
-    public void OnClickItem(SlotEquipped slotFree)
+    public void OnClickItem()
     {
-        slotEquipped = slotFree;
-        
-        slotFree.EquipItem(item);
+        if (GameManager.Instance.worldUI.inventorySlots.isFullEquipment)
+        {
+            Debug.Log($"<b> EQUIPMENT FULL! </b>");
+            return;
+            
+        }
+
+        SlotEquipped newSlotEquipped = Instantiate(GameData.Instance.gameConfig.slotEquippedPrefab, GameManager.Instance.worldUI.itemEquippedParents);
+
+        newSlotEquipped.EquipItem(item);
+
+        GameManager.Instance.worldUI.inventorySlots.AddItemEquippedList(item);
+
+        GameManager.Instance.worldUI.inventorySlots.RemoveItemList(item);
+
+        Destroy(gameObject);
+    }
+
+    public void OnInspectButton()
+    {
+        GameManager.Instance.worldUI.SetItemInformation(item);
     }
 
     public void OnRemoveButton()
@@ -28,6 +45,9 @@ public class Slot : MonoBehaviour
         newItem.AddInfo(item);
 
         GameManager.Instance.worldUI.inventorySlots.RemoveItemList(item);
+
+        GameManager.Instance.worldUI.inventorySlots.isFull = false;
+        GameManager.Instance.worldUI.TakeOffItemInformation();
 
         Destroy(gameObject);
     }

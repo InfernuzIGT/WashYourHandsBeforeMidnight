@@ -174,7 +174,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: adasdasd
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 329de158a4ca8de4d89f00696e740910, type: 2}
   m_sharedMaterial: {fileID: 27016861506678099, guid: 329de158a4ca8de4d89f00696e740910,
@@ -203,10 +203,10 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 90
-  m_fontSizeBase: 90
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 90
   m_fontStyle: 0
@@ -244,13 +244,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 5524929369695872668}
-    characterCount: 0
+    characterCount: 8
     spriteCount: 0
     spaceCount: 0
-    wordCount: 0
+    wordCount: 1
     linkCount: 0
-    lineCount: 0
-    pageCount: 0
+    lineCount: 1
+    pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -402,13 +402,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 5524929369813625553}
-    characterCount: 0
+    characterCount: 12
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 0
+    spaceCount: 2
+    wordCount: 1
     linkCount: 0
-    lineCount: 0
-    pageCount: 0
+    lineCount: 1
+    pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -520,6 +520,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f2afb601e1857f4ebe3eb3f45e673c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenuUI: {fileID: 0}
+  pauseMenuSprite: {fileID: 0}
+  systemUI: {fileID: 0}
+  optionsUI: {fileID: 0}
+  inventoryUI: {fileID: 0}
+  diaryUI: {fileID: 0}
+  arrow: {fileID: 0}
   panelDialog: {fileID: 5524929370167895652}
   staminaImg: {fileID: 1461294883665537916}
   dialogTxt: {fileID: 5524929369695872668}
@@ -528,11 +535,17 @@ MonoBehaviour:
   questTitleDiaryTxt: {fileID: 0}
   questTitleTxt: {fileID: 0}
   questDescriptionTxt: {fileID: 0}
+  objectivesPanel: {fileID: 0}
+  questObjectivesPanel: {fileID: 0}
+  questObjectivesPanelTxt: {fileID: 0}
   questObjectives: []
   questPopupTxt: {fileID: 0}
   questCompleteTxt: {fileID: 0}
   questComplete: {fileID: 0}
   questPopup: {fileID: 0}
+  itemParents: {fileID: 0}
+  itemEquippedParents: {fileID: 0}
+  inventorySlots: {fileID: 0}
 --- !u!1 &5524929370167895652
 GameObject:
   m_ObjectHideFlags: 0

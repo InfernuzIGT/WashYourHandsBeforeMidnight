@@ -118,13 +118,16 @@ public class MenuController : MonoBehaviour
 
     #region Main Menu
 
-    public void OnContinueButton ()
+    public void OnContinueButton () //Borrar
     {
         _lastCam = mainCam;
         _lastPanel = mainPanel;
 
         _lastCam.SetActive (false);
         _lastPanel.SetActive (false);
+
+        
+
         
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 1f);
@@ -181,6 +184,8 @@ public class MenuController : MonoBehaviour
 
         _lastCam.SetActive (false);
         _lastPanel.SetActive (false);
+
+        SceneManager.LoadScene(1);
         
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 1f);
