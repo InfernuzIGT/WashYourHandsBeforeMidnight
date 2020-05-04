@@ -52,7 +52,7 @@ public class InteractionItem : Interaction, IInteractable
     public void AddInfo(ItemSO itemInfo)
     {
         item = itemInfo;
-        _spriteRenderer.sprite = itemInfo.sprite;
+        _spriteRenderer.sprite = itemInfo.Sprite;
     }
 
 }

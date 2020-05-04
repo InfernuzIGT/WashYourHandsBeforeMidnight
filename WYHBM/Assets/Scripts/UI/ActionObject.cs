@@ -28,7 +28,7 @@ public class ActionObject : MonoBehaviour
 
     private void SetAction()
     {
-        actionImg.sprite = equipment.sprite;
+        actionImg.sprite = equipment.previewSprite;
         shortcutTxt.text = equipment.actionKey.ToString().Replace("Alpha", "");
 
         if (_toggle.isOn)SelectAction();

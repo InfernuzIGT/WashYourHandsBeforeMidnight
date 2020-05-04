@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e769e2a7fe3364d855031d6ed24bac, type: 3}
   m_Name: Knife
   m_EditorClassIdentifier: 
-  name: 
+  name: Knife
   effectValueMin: 0
   effectValueMax: 0
-  description: 
-  sprite: {fileID: 0}
-  tier: 0
-  price: 0
-  valueMin: 0
-  valueMax: 0
-  order: 0
-  actionType: 0
+  description: It works for cut something but it doesn't have a sharp edge.
+  previewSprite: {fileID: 21300000, guid: 9ce74e987a2a6f9459f81810bc098490, type: 3}
+  Sprite: {fileID: 21300000, guid: b3fd46eb020f9494981f8f870a0d4a3b, type: 3}
+  tier: 1
+  price: 150
+  valueMin: 10
+  valueMax: 15
+  order: 1
+  actionType: 1
   actionKey: 0
-  actionDescription: 
-  isEquippable: 0
+  actionDescription: Deals 10-15 damage
+  isEquippable: 1
   itemType: 0
   level: 0

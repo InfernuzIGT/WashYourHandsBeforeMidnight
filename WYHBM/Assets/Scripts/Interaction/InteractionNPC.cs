@@ -9,15 +9,21 @@ public class InteractionNPC : Interaction
     private EnableDialogEvent _interactionDialogEvent;
     private TriggerCombatEvent _interactionCombatEvent;
 
+    private bool _canInteraction;
     private void Start()
     {
         _interactionDialogEvent = new EnableDialogEvent();
         _interactionCombatEvent = new TriggerCombatEvent();
+        _canInteraction = true;
     }
 
     public override void Execute(bool enable)
     {
         base.Execute();
+        if (!_canInteraction)
+        {
+            return;
+        }
 
         switch (npc.interactionType)
         {
@@ -26,6 +32,7 @@ public class InteractionNPC : Interaction
                 break;
 
             case NPC_INTERACTION_TYPE.dialog:
+                _canInteraction = false;
                 _interactionDialogEvent.dialog = npc.dialog;
                 _interactionDialogEvent.enable = enable;
                 EventController.TriggerEvent(_interactionDialogEvent);

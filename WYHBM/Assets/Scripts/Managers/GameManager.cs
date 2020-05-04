@@ -18,7 +18,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Combat")]
     public List<Player> combatCharacters;
 
-    public Dictionary<int, QuestSO>     dictionaryQuest;
+    public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
     private AMBIENT _lastAmbient;
@@ -135,17 +135,25 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
+
         if (!dictionaryQuest.ContainsKey(data.id))
         {
             dictionaryQuest.Add(data.id, data);
 
-            dictionaryProgress.Add(data.id, data.id);
+            dictionaryProgress.Add(data.id, 0);
         }
     }
 
     public void ProgressQuest(QuestSO quest)
     {
+        if (dictionaryProgress[quest.id] >= dictionaryQuest[quest.id].objetives.Length)
+        {
+            return;
+
+        }
+
         dictionaryProgress[quest.id]++;
+        Debug.Log($"<b> Progress {dictionaryProgress[quest.id]} - quest{dictionaryQuest[quest.id].objetives.Length} </b> ");
 
         if (dictionaryProgress[quest.id] == dictionaryQuest[quest.id].objetives.Length)
         {
@@ -159,7 +167,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void Complete()
     {
-        // TODO Mariano: Tachar titulo del diario
         worldUI.questTitleDiaryTxt.fontStyle = FontStyles.Strikethrough;
         worldUI.questTitleDiaryTxt.color = Color.grey;
         worldUI.questDescriptionTxt.fontStyle = FontStyles.Strikethrough;

@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e769e2a7fe3364d855031d6ed24bac, type: 3}
   m_Name: Shotgun
   m_EditorClassIdentifier: 
-  name: 
+  name: Shotgun
   effectValueMin: 0
   effectValueMax: 0
-  description: 
-  sprite: {fileID: 0}
-  tier: 0
-  price: 0
-  valueMin: 0
-  valueMax: 0
+  description: Sometimes it gets stuck, but it works.
+  previewSprite: {fileID: 21300000, guid: df3574a5eacb36d4eb0cc9f82560ced2, type: 3}
+  Sprite: {fileID: 21300000, guid: 27613d5ad24c7254b8b561f42b26a285, type: 3}
+  tier: 1
+  price: 100
+  valueMin: 30
+  valueMax: 35
   order: 0
-  actionType: 0
+  actionType: 1
   actionKey: 0
-  actionDescription: 
-  isEquippable: 0
+  actionDescription: Deals 30-35 damage
+  isEquippable: 1
   itemType: 0
   level: 0
