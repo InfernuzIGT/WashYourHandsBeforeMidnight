@@ -20,6 +20,7 @@ public class GameConfig : ScriptableObject
 
     [Header("References")]
     public Slot slotPrefab;
+    public SlotEquipped slotEquippedPrefab;
     public InteractionItem itemPrefab;
 
     [Header("Transform")]

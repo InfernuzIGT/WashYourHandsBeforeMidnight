@@ -24,6 +24,9 @@ public class InteractionQuest : Interaction, IInteractable
     private void OnInteractQuest(InteractionEvent evt)
     {
         GameManager.Instance.ProgressQuest(quest);
+
+        EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
+
     }
 
 }
