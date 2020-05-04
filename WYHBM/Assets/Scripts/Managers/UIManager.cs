@@ -96,7 +96,7 @@ namespace GameMode.World
             _waitStart = new WaitForSeconds(GameData.Instance.gameConfig.timeStart);
             _waitSpace = new WaitForSeconds(GameData.Instance.gameConfig.timeSpace);
 
-            // Resume();
+            Resume();
 
         }
 
@@ -419,8 +419,7 @@ namespace GameMode.World
 
         public void OnQuitButton()
         {
-            Application.Quit();
-
+            GameData.Instance.LoadScene(SCENE_INDEX.MainMenu);
         }
 
         #endregion
