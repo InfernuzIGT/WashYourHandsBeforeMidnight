@@ -12,6 +12,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("References")]
     public GlobalController globalController;
     public CombatManager combatManager;
+    public Inventory inventoryManager; // TODO Mariano: Add
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
 

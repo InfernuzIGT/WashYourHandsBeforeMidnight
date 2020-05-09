@@ -10,6 +10,7 @@ public class GlobalController : MonoBehaviour
 
     [Header("Cheats")]
     public bool infiniteStamina;
+    public ItemSO[] items;
 
     [Header("Settings")]
     public PlayerController player;
@@ -24,12 +25,13 @@ public class GlobalController : MonoBehaviour
     {
         SpawnPlayer();
         SetCamera();
+        AddItems();
     }
 
     private void SpawnPlayer()
     {
         RaycastHit hit;
-        
+
 #if UNITY_EDITOR
 
         if (customSpawn)
@@ -101,6 +103,15 @@ public class GlobalController : MonoBehaviour
             newCamera.gameObject.SetActive(true);
             virtualCamera.gameObject.SetActive(false);
         }
+    }
+
+    private void AddItems()
+    {
+        // TODO Mariano: Add items to Inventory
+        // if (items != null)
+        // {
+        //     // GameManager.Instance.inventoryManager.AddItemList();
+        // }
     }
 
     private void Update()
