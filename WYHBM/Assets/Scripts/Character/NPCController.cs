@@ -103,7 +103,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     public void OnInteractionEnter(Collider other)
     {
-        if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
+        if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
 
@@ -113,7 +113,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     public void OnInteractionExit(Collider other)
     {
-        if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
+        if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
 

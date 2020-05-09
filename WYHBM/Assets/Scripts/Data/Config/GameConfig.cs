@@ -10,9 +10,6 @@ public class GameConfig : ScriptableObject
     public float fadeFastDuration = 1.5f;
     public float fadeSlowDuration = 3;
 
-    [Header("Tags")]
-    [Tag] public string tagPlayer;
-
     [Header("UI")]
     public float messageLifetime = 3f;
     public float timeStart = 0.5f;
