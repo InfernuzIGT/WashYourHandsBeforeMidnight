@@ -30,9 +30,15 @@ namespace Events
         public Vector3 newPosition;
     }
 
-    public class TriggerCombatEvent : GameEvent
+    public class EnterCombatEvent : GameEvent
     {
         public NPCSO npc;
+        public NPCController currentNPC;
+    }
+
+    public class ExitCombatEvent : GameEvent
+    {
+        public bool isWin;
     }
 
     #endregion

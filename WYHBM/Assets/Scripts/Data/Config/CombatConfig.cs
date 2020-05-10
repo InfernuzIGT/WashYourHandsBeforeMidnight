@@ -9,6 +9,11 @@ public class CombatConfig : ScriptableObject
     public float canvasFadeDuration = .35f;
     public float fadeOutEndDuration = .75f;
 
+    [Header("Layer")]
+    public LayerMask layerNone;
+    public LayerMask layerPlayer;
+    public LayerMask layerEnemy;
+
     [Header("Action")]
     public ActionObject actionObjectPrefab;
     public float actionTimeThresholdMultiplier = 1f;
@@ -21,8 +26,8 @@ public class CombatConfig : ScriptableObject
     [Space]
     public Vector3 positionCombat = new Vector3(-3.5f, 0, 0);
     public float positionXCharacter = -4;
-    
-    [Header ("Info Text")]
+
+    [Header("Info Text")]
     public float infoTextMoveDuration = 1;
     public float infoTextFadeDuration = .35f;
     public float infoTextFadeDelay = .65f;

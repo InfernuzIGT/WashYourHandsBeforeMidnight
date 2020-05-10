@@ -7,17 +7,17 @@ public class InteractionNPC : Interaction
     public NPCSO npc;
 
     private EnableDialogEvent _interactionDialogEvent;
-    private TriggerCombatEvent _interactionCombatEvent;
+    private EnterCombatEvent _interactionCombatEvent;
 
     private bool _canInteraction;
     private void Start()
     {
         _interactionDialogEvent = new EnableDialogEvent();
-        _interactionCombatEvent = new TriggerCombatEvent();
+        _interactionCombatEvent = new EnterCombatEvent();
         _canInteraction = true;
     }
 
-    public override void Execute(bool enable)
+    public override void Execute(bool enable, NPCController currentNPC)
     {
         base.Execute();
         if (!_canInteraction)
@@ -40,6 +40,7 @@ public class InteractionNPC : Interaction
 
             case NPC_INTERACTION_TYPE.fight:
                 _interactionCombatEvent.npc = npc;
+                _interactionCombatEvent.currentNPC = currentNPC;
                 EventController.TriggerEvent(_interactionCombatEvent);
                 break;
 

@@ -17,10 +17,16 @@ public class GameManager : MonoSingleton<GameManager>
     public GameMode.Combat.UIManager combatUI;
 
     [Header("Combat")]
+    public CombatArea[] combatAreas;
+    [Space]
     public List<Player> combatCharacters;
 
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
+
+    // Combat
+    private CombatArea _currentCombatArea;
+    private NPCController currentNPC;
 
     private AMBIENT _lastAmbient;
 
@@ -36,8 +42,9 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
-        _fadeEvent.callbackStart = SwitchMovement;
-        _fadeEvent.callbackMid = SwitchAmbient;
+
+        // _fadeEvent.callbackStart = SwitchMovement;
+        // _fadeEvent.callbackMid = SwitchAmbient;
         // _fadeEvent.callbackEnd = InitiateTurn;
 
         // SwitchAmbient();
@@ -55,12 +62,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnEnable()
     {
-        EventController.AddListener<TriggerCombatEvent>(OnTriggerCombat);
+        EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
+        EventController.AddListener<ExitCombatEvent>(OnExitCombat);
     }
 
     private void OnDisable()
     {
-        EventController.RemoveListener<TriggerCombatEvent>(OnTriggerCombat);
+        EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
+        EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
     }
 
     private void SwitchAmbient()
@@ -72,6 +81,8 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(false);
 
                 globalController.ChangeCamera(null);
+
+                combatManager.CloseCombatArea();
                 break;
 
                 // case AMBIENT.Interior:
@@ -92,7 +103,7 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
-                globalController.ChangeCamera(combatManager.SetCamera());
+                globalController.ChangeCamera(_currentCombatArea.virtualCamera);
 
                 combatManager.InitiateTurn();
                 break;
@@ -120,12 +131,38 @@ public class GameManager : MonoSingleton<GameManager>
 
     #region Events
 
-    public void OnTriggerCombat(TriggerCombatEvent evt)
+    public void OnEnterCombat(EnterCombatEvent evt)
     {
         _lastAmbient = currentAmbient;
         currentAmbient = AMBIENT.Combat;
+        currentNPC = evt.currentNPC;
 
-        combatManager.SetData(combatCharacters, evt.npc.combatCharacters);
+        int indexArea = Random.Range(0, combatAreas.Length);
+        _currentCombatArea = combatAreas[indexArea];
+        combatManager.SetData(_currentCombatArea, combatCharacters, evt.npc.combatCharacters);
+
+        _fadeEvent.callbackStart = SwitchMovement;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = DestroyNPC;
+
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
+    private void DestroyNPC()
+    {
+        currentNPC.Kill();
+    }
+
+    public void OnExitCombat(ExitCombatEvent evt)
+    {
+        _lastAmbient = currentAmbient;
+        currentAmbient = AMBIENT.World;
+
+        // combatManager.SetData(combatCharacters, evt.npc.combatCharacters);
+
+        _fadeEvent.callbackStart = null;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = SwitchMovement;
 
         EventController.TriggerEvent(_fadeEvent);
     }

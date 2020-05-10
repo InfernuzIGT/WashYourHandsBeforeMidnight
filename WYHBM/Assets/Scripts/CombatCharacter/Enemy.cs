@@ -1,5 +1,6 @@
-﻿using DG.Tweening;
-// using UnityEngine;
+﻿using System.Collections;
+using DG.Tweening;
+using UnityEngine;
 
 public class Enemy : CombatCharacter
 {
@@ -11,6 +12,57 @@ public class Enemy : CombatCharacter
 	public override void Start()
 	{
 		base.Start();
+	}
+
+	/// <summary>
+	/// Espera la accion
+	/// </summary>
+	public override IEnumerator WaitingForAction()
+	{
+		base.WaitingForAction();
+
+		_isActionDone = false;
+
+		Select();
+
+		while (!_isActionDone)
+		{
+			yield return null;
+		}
+
+		Debug.Log($"<b> Action DONE </b>");
+	}
+
+	public void Select()
+	{
+		GameManager.Instance.combatManager.listPlayers[0].ActionReceiveDamage(StatsDamage);
+
+		DoAction();
+	}
+
+	public void Select(COMBAT_STATE combatState, CombatCharacter currentCharacter)
+	{
+		Debug.Log($"<b> HIT </b>");
+
+		switch (combatState)
+		{
+			case COMBAT_STATE.Attack:
+				ActionReceiveDamage(currentCharacter.StatsDamage);
+				break;
+
+			case COMBAT_STATE.Item:
+				// TODO Mariano: Damage with items
+				break;
+
+			case COMBAT_STATE.Defense:
+				// TODO Mariano: Add defense per 1 turn
+				break;
+
+			default:
+				break;
+		}
+
+		currentCharacter.DoAction();
 	}
 
 	public override void SetCharacter()
@@ -40,6 +92,13 @@ public class Enemy : CombatCharacter
 		transform.
 		DOMove(StartPosition, GameData.Instance.combatConfig.transitionDuration).
 		SetEase(Ease.OutQuad);
+	}
+
+	public override void CheckGame()
+	{
+		base.CheckGame();
+
+		GameManager.Instance.combatManager.CheckGame(this);
 	}
 
 }

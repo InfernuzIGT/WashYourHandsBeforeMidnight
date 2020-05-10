@@ -15,10 +15,11 @@ MonoBehaviour:
   interiorPosition: {x: 0, y: 100, z: 0}
   fadeFastDuration: 1.5
   fadeSlowDuration: 3
-  tagPlayer: Player
   messageLifetime: 3
   timeStart: 0.5
   timeSpace: 1
+  emptyObject: {fileID: 4281418211614180838, guid: 21b8249da18f444489e2c95af043943a,
+    type: 3}
   slotPrefab: {fileID: 8000187485052463847, guid: be3d12aba6a4504449d633cd8cf654cb,
     type: 3}
   slotEquippedPrefab: {fileID: 7287788694833045171, guid: 21df966bea5057848ab44fd3c020ac61,
@@ -26,12 +27,3 @@ MonoBehaviour:
   itemPrefab: {fileID: 3724059270590348769, guid: af431097c146237459ffaccac0575ea0,
     type: 3}
   playerBaseOffset: {x: 0, y: 2.08, z: 0}
-  layerNone:
-    serializedVersion: 2
-    m_Bits: 1
-  layerPlayer:
-    serializedVersion: 2
-    m_Bits: 131072
-  layerEnemy:
-    serializedVersion: 2
-    m_Bits: 262144

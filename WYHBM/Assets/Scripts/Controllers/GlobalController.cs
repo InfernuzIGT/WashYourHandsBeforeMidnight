@@ -94,14 +94,15 @@ public class GlobalController : MonoBehaviour
     {
         if (newCamera == null)
         {
-            newCamera.gameObject.SetActive(false);
+            _newVirtualCamera.gameObject.SetActive(false);
             virtualCamera.gameObject.SetActive(true);
+            _newVirtualCamera = null;
         }
         else
         {
-            _newVirtualCamera = newCamera;
             newCamera.gameObject.SetActive(true);
             virtualCamera.gameObject.SetActive(false);
+            _newVirtualCamera = newCamera;
         }
     }
 

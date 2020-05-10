@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
-// using UnityEngine;
+using UnityEngine;
 
 public class Player : CombatCharacter
 {
@@ -11,12 +12,31 @@ public class Player : CombatCharacter
     {
         base.Awake();
     }
-    
+
     public override void Start()
     {
         base.Start();
 
         // CreateEquipmentList();
+    }
+
+    /// <summary>
+    /// Espera la accion
+    /// </summary>
+    public override IEnumerator WaitingForAction()
+    {
+        base.WaitingForAction();
+
+        _isActionDone = false;
+
+        // TODO Mariano: Can Select
+
+        while (!_isActionDone)
+        {
+            yield return null;
+        }
+
+        Debug.Log($"<b> Action DONE </b>");
     }
 
     // private void CreateEquipmentList()
@@ -31,7 +51,7 @@ public class Player : CombatCharacter
 
     //     // CombatManager.Instance.uIController.CreateActionObjects(equipment);
     // }
-    
+
     public override void ActionStartCombat()
     {
         base.ActionStartCombat();
@@ -53,6 +73,13 @@ public class Player : CombatCharacter
         transform.
         DOMove(StartPosition, GameData.Instance.combatConfig.transitionDuration).
         SetEase(Ease.OutQuad);
+    }
+
+    public override void CheckGame()
+    {
+        base.CheckGame();
+        
+        GameManager.Instance.combatManager.CheckGame(this);
     }
 
 }

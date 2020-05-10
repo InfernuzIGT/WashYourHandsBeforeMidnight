@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InteractionDialog : Interaction
 {
-    [Header ("Dialog")]
+    [Header("Dialog")]
     public DialogSO dialog;
 
     private EnableDialogEvent _interactionDialogEvent;
@@ -13,11 +13,11 @@ public class InteractionDialog : Interaction
         _interactionDialogEvent = new EnableDialogEvent();
         _interactionDialogEvent.dialog = dialog;
     }
-    
-    public override void Execute(bool enable)
+
+    public override void Execute(bool enable, NPCController currentNPC)
     {
         base.Execute();
-        
+
         _interactionDialogEvent.enable = enable;
         EventController.TriggerEvent(_interactionDialogEvent);
     }

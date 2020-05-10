@@ -1827,7 +1827,7 @@ PrefabInstance:
         type: 3}
       propertyPath: npc
       value: 
-      objectReference: {fileID: 11400000, guid: 0ebd506e5fbc17742a87698dafcf2597,
+      objectReference: {fileID: 11400000, guid: e5d11df100494ba45b7750effd7d9101,
         type: 2}
     - target: {fileID: 8589552706869594558, guid: a0552d3302c1a2a469aa044b3f73cbc3,
         type: 3}
@@ -6447,8 +6447,11 @@ MonoBehaviour:
   currentAmbient: 4
   globalController: {fileID: 1379338001}
   combatManager: {fileID: 1474080104}
+  inventoryManager: {fileID: 0}
   worldUI: {fileID: 1546642656}
   combatUI: {fileID: 231573832}
+  combatAreas:
+  - {fileID: 1270698190}
   combatCharacters:
   - {fileID: 5662450056060739064, guid: 87fe42735fd1968409b345cf3ac6b988, type: 3}
 --- !u!43 &1109610679
@@ -8001,23 +8004,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f0d88ae95056d844892eb88b63a1b6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canSelect: 0
+  combatState: 0
   currentLayer:
     serializedVersion: 2
     m_Bits: 0
-  combatState: 0
-  combatAreas:
-  - {fileID: 1270698190}
-  currentArea: 0
-  uIController: {fileID: 0}
-  actionController: {fileID: 0}
-  isTurnPlayer: 1
-  groupPlayers: {fileID: 0}
-  groupEnemies: {fileID: 0}
   listPlayers: []
   listEnemies: []
-  currentCharacter: {fileID: 0}
-  listCharacter: []
-  turnCount: 0
 --- !u!4 &1474080105
 Transform:
   m_ObjectHideFlags: 0
@@ -9822,7 +9815,7 @@ PrefabInstance:
     - target: {fileID: 5524929369813625554, guid: ebe2453115239114da0bde694a1753f4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -40.05005
+      value: -40.050293
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebe2453115239114da0bde694a1753f4, type: 3}
@@ -11627,6 +11620,11 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 1413204741}
+    - target: {fileID: 3409396407064783239, guid: 78b64f82a91cbe64e93bc7ac437d612e,
+        type: 3}
+      propertyPath: infiniteStamina
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3895262929768338340, guid: 78b64f82a91cbe64e93bc7ac437d612e,
         type: 3}
       propertyPath: m_LocalPosition.x

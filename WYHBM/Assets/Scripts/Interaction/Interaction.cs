@@ -46,7 +46,7 @@ public class Interaction : MonoBehaviour
     #region Execution
 
     public virtual void Execute() { }
-    public virtual void Execute(bool enable) { }
+    public virtual void Execute(bool enable, NPCController currentNPC) { }
 
     #endregion
 }

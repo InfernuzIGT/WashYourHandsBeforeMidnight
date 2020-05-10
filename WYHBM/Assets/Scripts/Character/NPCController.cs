@@ -107,7 +107,7 @@ public class NPCController : MonoBehaviour, IInteractable
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
 
-            _interactionNPC.Execute(true);
+            _interactionNPC.Execute(true, this);
         }
     }
 
@@ -117,7 +117,7 @@ public class NPCController : MonoBehaviour, IInteractable
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
 
-            _interactionNPC.Execute(false);
+            _interactionNPC.Execute(false, this);
         }
     }
 
@@ -126,5 +126,11 @@ public class NPCController : MonoBehaviour, IInteractable
         if (canMove)_agent.isStopped = !evt.canMove;
 
         _animatorController?.Movement(Vector3.zero);
+    }
+
+    public void Kill()
+    {
+        EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
+        Destroy(gameObject);
     }
 }

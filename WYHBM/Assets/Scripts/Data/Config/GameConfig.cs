@@ -16,16 +16,11 @@ public class GameConfig : ScriptableObject
     public float timeSpace = 1f;
 
     [Header("References")]
+    public GameObject emptyObject;
     public Slot slotPrefab;
     public SlotEquipped slotEquippedPrefab;
     public InteractionItem itemPrefab;
 
     [Header("Transform")]
     public Vector3 playerBaseOffset = new Vector3(0, 2.08f, 0);
-
-    [Header("Layer")]
-    public LayerMask layerNone;
-    public LayerMask layerPlayer;
-    public LayerMask layerEnemy;
-
 }
