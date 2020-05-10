@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using Events;
-using GameMode.Combat; // TODO Mariano: REVIEW
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
@@ -27,22 +25,20 @@ public class CombatManager : MonoBehaviour
     private bool _isEndOfCombat;
     private int _turnCount;
 
-    private WaitForSeconds combatTransition;
-    private WaitForSeconds combatWaitTime;
-    private WaitForSeconds evaluationDuration;
+    private WaitForSeconds _waitStart;
+    private WaitForSeconds _waitBetweenTurns;
 
     private ExitCombatEvent _interactionCombatEvent;
 
     private void Start()
     {
-        combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
-        combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
-        evaluationDuration = new WaitForSeconds(GameData.Instance.combatConfig.evaluationDuration);
-
         listPlayers = new List<Player>();
         listEnemies = new List<Enemy>();
         _listAllCharacters = new List<CombatCharacter>();
         _listWaitingCharacters = new List<CombatCharacter>();
+
+        _waitStart = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeToStart);
+        _waitBetweenTurns = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeBetweenTurns);
 
         _interactionCombatEvent = new ExitCombatEvent();
     }
@@ -65,8 +61,6 @@ public class CombatManager : MonoBehaviour
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            player.gameObject.SetActive(false);
-
             player.CombatIndex = indexCombat;
             indexCombat++;
 
@@ -81,8 +75,6 @@ public class CombatManager : MonoBehaviour
                 combatArea.enemyPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
-
-            enemy.gameObject.SetActive(false);
 
             enemy.CombatIndex = indexCombat;
             indexCombat++;
@@ -99,15 +91,7 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     public void InitiateTurn()
     {
-        for (int i = 0; i < listPlayers.Count; i++)
-        {
-            listPlayers[i].gameObject.SetActive(true);
-        }
-
-        for (int i = 0; i < listEnemies.Count; i++)
-        {
-            listEnemies[i].gameObject.SetActive(true);
-        }
+        Debug.Log($"<b> [COMBAT] </b> Initiate Turn");
 
         _isEndOfCombat = false;
 
@@ -164,6 +148,10 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     private IEnumerator TurnsLoop()
     {
+        yield return _waitStart;
+
+        Debug.Log($"<b> [COMBAT] </b> Start COMBAT!");
+
         while (!_isEndOfCombat)
         {
             // Waiting for the current character to do his action.
@@ -175,7 +163,8 @@ public class CombatManager : MonoBehaviour
 
             // The Action Was done. Now should be the Next Characters Action.
 
-            yield return null;
+            Debug.Log($"<b> [COMBAT] </b> Preparing NEXT Turn..");
+            yield return _waitBetweenTurns;
         }
     }
 
@@ -186,8 +175,6 @@ public class CombatManager : MonoBehaviour
     {
         _currentCharacter = _listWaitingCharacters[0];
         _currentCharacter.IsMyTurn = true;
-
-        Debug.Log($"<b> First Turn: </b> {_currentCharacter.name}");
     }
 
     /// <summary>
@@ -201,7 +188,7 @@ public class CombatManager : MonoBehaviour
         _listWaitingCharacters.Add(_currentCharacter);
         _currentCharacter = _listWaitingCharacters[0];
 
-        Debug.Log($"<b> New Turn:  </b> {_currentCharacter.name}");
+        Debug.Log($"<b> [COMBAT] </b> Current turn: {_currentCharacter.name}");
 
         _currentCharacter.IsMyTurn = true;
     }
@@ -277,17 +264,17 @@ public class CombatManager : MonoBehaviour
             case COMBAT_STATE.Attack:
             case COMBAT_STATE.Item:
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
-                GameManager.Instance.combatUI.actionTxt.text = "Select enemy";
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 break;
 
             case COMBAT_STATE.Defense:
                 currentLayer = GameData.Instance.combatConfig.layerPlayer;
-                GameManager.Instance.combatUI.actionTxt.text = "Select player";
+                GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 break;
 
             default:
                 currentLayer = GameData.Instance.combatConfig.layerNone;
-                GameManager.Instance.combatUI.actionTxt.text = "";
+                GameManager.Instance.combatUI.messageTxt.text = "";
                 break;
         }
 
@@ -300,7 +287,7 @@ public class CombatManager : MonoBehaviour
         {
             _ray = GameManager.Instance.GetRayMouse();
 
-            if (Physics.Raycast(_ray, out _hit, 2000, currentLayer))
+            if (Physics.Raycast(_ray, out _hit, 100, currentLayer))
             {
                 if (_hit.collider != null)
                 {
@@ -315,33 +302,35 @@ public class CombatManager : MonoBehaviour
 
     public void CheckGame(Player character)
     {
-        // TODO Mariano: Remover de todas las listas
+        _listAllCharacters.Remove(character);
+        _listWaitingCharacters.Remove(character);
 
         listPlayers.Remove(character);
 
         if (listPlayers.Count == 0)
         {
-            EndGame(false);
+            FinishGame(false);
         }
     }
 
     public void CheckGame(Enemy character)
     {
-        // TODO Mariano: Remover de todas las listas
+        _listAllCharacters.Remove(character);
+        _listWaitingCharacters.Remove(character);
 
         listEnemies.Remove(character);
 
         if (listEnemies.Count == 0)
         {
-            EndGame(true);
+            FinishGame(true);
         }
     }
 
-    private void EndGame(bool isWin)
+    private void FinishGame(bool isWin)
     {
         _isEndOfCombat = true;
 
-        Debug.Log($"<b> GAME STATE: </b> {isWin}");
+        Debug.Log($"<color=blue><b> [COMBAT] </b></color> Win: {isWin}");
 
         // uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
 

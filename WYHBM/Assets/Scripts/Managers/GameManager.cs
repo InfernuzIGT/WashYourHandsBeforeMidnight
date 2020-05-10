@@ -32,6 +32,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private WaitForSeconds _waitDeactivateUI;
 
+    // Events
     private FadeEvent _fadeEvent;
 
     private void Start()
@@ -42,22 +43,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
-
-        // _fadeEvent.callbackStart = SwitchMovement;
-        // _fadeEvent.callbackMid = SwitchAmbient;
-        // _fadeEvent.callbackEnd = InitiateTurn;
-
-        // SwitchAmbient();
-    }
-
-    public Vector3 GetPlayerFootPosition()
-    {
-        return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
-    }
-
-    public Ray GetRayMouse()
-    {
-        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
 
     private void OnEnable()
@@ -81,7 +66,6 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(false);
 
                 globalController.ChangeCamera(null);
-
                 combatManager.CloseCombatArea();
                 break;
 
@@ -104,8 +88,6 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(true);
 
                 globalController.ChangeCamera(_currentCombatArea.virtualCamera);
-
-                combatManager.InitiateTurn();
                 break;
 
             case AMBIENT.Development:
@@ -143,14 +125,9 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent.callbackStart = SwitchMovement;
         _fadeEvent.callbackMid = SwitchAmbient;
-        _fadeEvent.callbackEnd = DestroyNPC;
+        _fadeEvent.callbackEnd = StartCombat;
 
         EventController.TriggerEvent(_fadeEvent);
-    }
-
-    private void DestroyNPC()
-    {
-        currentNPC.Kill();
     }
 
     public void OnExitCombat(ExitCombatEvent evt)
@@ -158,13 +135,17 @@ public class GameManager : MonoSingleton<GameManager>
         _lastAmbient = currentAmbient;
         currentAmbient = AMBIENT.World;
 
-        // combatManager.SetData(combatCharacters, evt.npc.combatCharacters);
-
         _fadeEvent.callbackStart = null;
         _fadeEvent.callbackMid = SwitchAmbient;
         _fadeEvent.callbackEnd = SwitchMovement;
 
         EventController.TriggerEvent(_fadeEvent);
+    }
+
+    private void StartCombat()
+    {
+        currentNPC.Kill();
+        combatManager.InitiateTurn();
     }
 
     #endregion
@@ -230,6 +211,20 @@ public class GameManager : MonoSingleton<GameManager>
 
         worldUI.questComplete.SetActive(false);
         worldUI.questPopup.SetActive(false);
+    }
+
+    #endregion
+
+    #region Other
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
+    }
+
+    public Ray GetRayMouse()
+    {
+        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
 
     #endregion

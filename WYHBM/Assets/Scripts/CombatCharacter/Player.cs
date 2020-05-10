@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
+[RequireComponent(typeof(CombatAnimator))]
 public class Player : CombatCharacter
 {
     private List<EquipmentSO> equipment;
@@ -27,16 +28,20 @@ public class Player : CombatCharacter
     {
         base.WaitingForAction();
 
-        _isActionDone = false;
+        GameManager.Instance.combatUI.ShowPlayerPanel(true);
 
-        // TODO Mariano: Can Select
+        _isActionDone = false;
 
         while (!_isActionDone)
         {
             yield return null;
         }
 
-        Debug.Log($"<b> Action DONE </b>");
+        Debug.Log($"<color=green><b> [COMBAT] </b></color> Action by {gameObject.name}");
+
+        yield return _waitPerAction;
+
+        AnimationAction(COMBAT_STATE.Idle);
     }
 
     // private void CreateEquipmentList()
@@ -75,10 +80,10 @@ public class Player : CombatCharacter
         SetEase(Ease.OutQuad);
     }
 
-    public override void CheckGame()
+    public override void CheckCharacters()
     {
-        base.CheckGame();
-        
+        base.CheckCharacters();
+
         GameManager.Instance.combatManager.CheckGame(this);
     }
 

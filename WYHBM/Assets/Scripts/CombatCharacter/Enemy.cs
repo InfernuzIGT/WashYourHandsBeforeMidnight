@@ -2,6 +2,7 @@
 using DG.Tweening;
 using UnityEngine;
 
+[RequireComponent(typeof(CombatAnimator))]
 public class Enemy : CombatCharacter
 {
 	public override void Awake()
@@ -20,6 +21,8 @@ public class Enemy : CombatCharacter
 	public override IEnumerator WaitingForAction()
 	{
 		base.WaitingForAction();
+		
+		GameManager.Instance.combatUI.ShowPlayerPanel(false);
 
 		_isActionDone = false;
 
@@ -30,11 +33,16 @@ public class Enemy : CombatCharacter
 			yield return null;
 		}
 
-		Debug.Log($"<b> Action DONE </b>");
+		Debug.Log($"<color=red><b> [COMBAT] </b></color> Action by {gameObject.name}");
+
+		yield return _waitPerAction;
+
+		AnimationAction(COMBAT_STATE.Idle);
 	}
 
 	public void Select()
 	{
+		// TODO Mariano: Seleccionar Jugadores
 		GameManager.Instance.combatManager.listPlayers[0].ActionReceiveDamage(StatsDamage);
 
 		DoAction();
@@ -42,12 +50,11 @@ public class Enemy : CombatCharacter
 
 	public void Select(COMBAT_STATE combatState, CombatCharacter currentCharacter)
 	{
-		Debug.Log($"<b> HIT </b>");
-
 		switch (combatState)
 		{
 			case COMBAT_STATE.Attack:
 				ActionReceiveDamage(currentCharacter.StatsDamage);
+				currentCharacter.AnimationAction(combatState);
 				break;
 
 			case COMBAT_STATE.Item:
@@ -94,9 +101,9 @@ public class Enemy : CombatCharacter
 		SetEase(Ease.OutQuad);
 	}
 
-	public override void CheckGame()
+	public override void CheckCharacters()
 	{
-		base.CheckGame();
+		base.CheckCharacters();
 
 		GameManager.Instance.combatManager.CheckGame(this);
 	}

@@ -12,11 +12,13 @@ public class CombatCharacter : MonoBehaviour
     [Header("Interface")]
     [SerializeField] private CharacterUI characterUI = null; // TODO Mariano: Instancia el prefab como hijo
 
-    private string _name;
-
-    private float _healthActual;
+    // Protected
     protected bool _isActionDone;
-    
+    protected WaitForSeconds _waitPerAction;
+
+    private CombatAnimator _combatAnimator;
+    private string _name;
+    private float _healthActual;
     private Vector3 _scaleNormal;
     private Vector2 _infoTextPosition;
 
@@ -63,6 +65,7 @@ public class CombatCharacter : MonoBehaviour
     {
         // _boxCollider = GetComponent<BoxCollider>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _combatAnimator = GetComponent<CombatAnimator>();
 
         SetCharacter();
     }
@@ -70,6 +73,8 @@ public class CombatCharacter : MonoBehaviour
     public virtual void Start()
     {
         _items = new List<ItemSO>();
+
+        _waitPerAction = new WaitForSeconds(GameData.Instance.combatConfig.waitTimePerAction);
 
         _scaleNormal = transform.localScale;
         _startPosition = transform.position;
@@ -126,16 +131,6 @@ public class CombatCharacter : MonoBehaviour
     /// </summary>
     public virtual IEnumerator WaitingForAction()
     {
-        // _isActionDone = false;
-
-        // Select();
-
-        // while (!_isActionDone)
-        // {
-        //     yield return null;
-        // }
-
-        // Debug.Log($"<b> Action DONE </b>");
         yield return null;
     }
 
@@ -229,6 +224,12 @@ public class CombatCharacter : MonoBehaviour
         // ShowInfoText(totalDamage, GameData.Instance.textConfig.colorMsgDamage);
     }
 
+    public void AnimationAction(COMBAT_STATE combatState)
+    {
+        _combatAnimator.Action(combatState);
+    }
+
+    // TODO Mariano: Review
     private void ShowInfoText(float value, Color color)
     {
         infoTextEvent.text = value.ToString("F0");
@@ -247,15 +248,13 @@ public class CombatCharacter : MonoBehaviour
 
             _spriteRenderer.
             DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
-            SetEase(Ease.OutQuad).OnComplete(CheckGame);
+            SetEase(Ease.OutQuad).OnComplete(CheckCharacters);
         }
     }
 
-    public virtual void CheckGame()
+    public virtual void CheckCharacters()
     {
-        // TODO Mariano: ADD EVENT TO CHECK THE LIST OF ENEMIES
         gameObject.SetActive(false);
-        
     }
 
 }
