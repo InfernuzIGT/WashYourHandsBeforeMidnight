@@ -4,9 +4,14 @@ using UnityEngine.UI;
 
 namespace GameMode.Combat
 {
+    [RequireComponent(typeof(Canvas))]
     public class UIManager : MonoBehaviour
     {
-        public TextMeshProUGUI actionTxt;
+        public TextMeshProUGUI messageTxt;
+
+        [Header("Panel")]
+        public GameObject panelPlayer;
+        public GameObject panelEnemy;
 
         [Header("Character")]
         public Image currentCharacter;
@@ -19,10 +24,20 @@ namespace GameMode.Combat
         {
             _canvas = GetComponent<Canvas>();
         }
+
         public void EnableCanvas(bool enabled)
         {
             _canvas.enabled = enabled;
         }
+
+        public void ShowPlayerPanel(bool isPlayer)
+        {
+            panelPlayer.SetActive(isPlayer);
+            panelEnemy.SetActive(!isPlayer);
+
+            messageTxt.text = isPlayer ? "Select Action" : "Enemy Turn";
+        }
+
     }
 
 }

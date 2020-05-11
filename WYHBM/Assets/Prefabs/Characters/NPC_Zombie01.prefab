@@ -22,6 +22,18 @@ PrefabInstance:
       propertyPath: isEnemy
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633473, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 6381efe13c0b82c4883ad18a9daf7c09,
+        type: 2}
+    - target: {fileID: 7882800319852633502, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1866467886445710819, guid: a2990d71cc931cf4db95c553c483029c,
+        type: 3}
     - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -82,6 +94,21 @@ PrefabInstance:
       propertyPath: m_AgentTypeID
       value: -1372625422
       objectReference: {fileID: 0}
+    - target: {fileID: 2203801389680832686, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: textureIdle
+      value: 
+      objectReference: {fileID: 2800000, guid: 7dd7d285169604949ab52172e69bb260, type: 3}
+    - target: {fileID: 2203801389680832686, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: textureWalk
+      value: 
+      objectReference: {fileID: 2800000, guid: a2990d71cc931cf4db95c553c483029c, type: 3}
+    - target: {fileID: 5757332508381093149, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: showPopup
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 958533953738157936, guid: b39e516f6a2ba1b4fa87e04d066189f9,
         type: 3}
       propertyPath: m_Mesh
@@ -96,33 +123,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2203801389680832686, guid: b39e516f6a2ba1b4fa87e04d066189f9,
-        type: 3}
-      propertyPath: textureIdle
-      value: 
-      objectReference: {fileID: 2800000, guid: 7dd7d285169604949ab52172e69bb260, type: 3}
-    - target: {fileID: 2203801389680832686, guid: b39e516f6a2ba1b4fa87e04d066189f9,
-        type: 3}
-      propertyPath: textureWalk
-      value: 
-      objectReference: {fileID: 2800000, guid: a2990d71cc931cf4db95c553c483029c, type: 3}
-    - target: {fileID: 7882800319852633502, guid: b39e516f6a2ba1b4fa87e04d066189f9,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 1866467886445710819, guid: a2990d71cc931cf4db95c553c483029c,
-        type: 3}
-    - target: {fileID: 7882800319852633473, guid: b39e516f6a2ba1b4fa87e04d066189f9,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 22100000, guid: 6381efe13c0b82c4883ad18a9daf7c09,
-        type: 2}
-    - target: {fileID: 5757332508381093149, guid: b39e516f6a2ba1b4fa87e04d066189f9,
-        type: 3}
-      propertyPath: showPopup
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b39e516f6a2ba1b4fa87e04d066189f9, type: 3}

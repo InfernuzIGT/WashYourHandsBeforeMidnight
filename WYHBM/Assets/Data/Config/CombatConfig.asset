@@ -16,8 +16,21 @@ MonoBehaviour:
   fillDuration: 0.25
   canvasFadeDuration: 0.35
   fadeOutEndDuration: 0.75
+  layerNone:
+    serializedVersion: 2
+    m_Bits: 1
+  layerPlayer:
+    serializedVersion: 2
+    m_Bits: 131072
+  layerEnemy:
+    serializedVersion: 2
+    m_Bits: 262144
   actionObjectPrefab: {fileID: 2867091352469623503, guid: b958cb889a88ff84a9fb0dc87cf919de,
     type: 3}
+  actionTimeThresholdMultiplier: 1
+  waitTimeToStart: 1.5
+  waitTimePerAction: 3
+  waitTimeBetweenTurns: 1
   transitionDuration: 0.05
   waitCombatDuration: 1
   evaluationDuration: 1

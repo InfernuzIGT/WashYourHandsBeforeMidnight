@@ -9,18 +9,11 @@ public class FootstepController : MonoBehaviour
     private RaycastHit _hit;
     private PlayerController _player;
 
-    FMODUnity.StudioEventEmitter footstepSound;
-
-
     private void Awake()
     {
         _player = GetComponent<PlayerController>();
     }
 
-    private void Start()
-    {
-        footstepSound = GetComponent<FMODUnity.StudioEventEmitter>();
-    }
     private void Update()
     {
         if (_player.CanPlayFootstep)
@@ -35,74 +28,37 @@ public class FootstepController : MonoBehaviour
         {
             switch (_hit.collider.gameObject.tag)
             {
-                case "Ground/Grass":
+                case Tags.Ground_Grass:
                     groundType = GROUND_TYPE.Grass;
-                    footstepSound.EventInstance.setParameterByName("Ground Type", 2);
+                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 2);
                     break;
 
-                case "Ground/Dirt":
+                case Tags.Ground_Dirt:
                     groundType = GROUND_TYPE.Dirt;
-                    footstepSound.EventInstance.setParameterByName("Ground Type", 1);
+                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
                     break;
 
-                case "Ground/Wood":
+                case Tags.Ground_Wood:
                     groundType = GROUND_TYPE.Wood;
-                    footstepSound.EventInstance.setParameterByName("Ground Type", 3);
+                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
                     break;
 
-                case "Ground/Cement":
+                case Tags.Ground_Cement:
                     groundType = GROUND_TYPE.Cement;
-                    footstepSound.EventInstance.setParameterByName("Ground Type", 0);
+                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
                     break;
 
-                case "Ground/Ceramic":
+                case Tags.Ground_Ceramic:
                     groundType = GROUND_TYPE.Ceramic;
-                    footstepSound.EventInstance.setParameterByName("Ground Type", 3);
+                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
                     break;
 
                 default:
                     groundType = GROUND_TYPE.none;
-                    footstepSound.EventInstance.setParameterByName("Ground Type", 0);
+                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
                     break;
             }
         }
 
-       
     }
-
-
-    
-
-
-
-
-    /*public void Play()
-    {
-        switch (groundType)
-        {
-            case GROUND_TYPE.Grass:
-                // Sound Grass
-                break;
-
-            case GROUND_TYPE.Dirt:
-                // Sound Dirt
-                break;
-
-            case GROUND_TYPE.Wood:
-                // Sound Wood
-                break;
-
-            case GROUND_TYPE.Cement:
-                // Sound Cement
-                break;
-
-            case GROUND_TYPE.Ceramic:
-                // Sound Ceramic
-                break;
-
-            default:
-                // Sound Default
-                break;
-        }
-    }*/
 }
