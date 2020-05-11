@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 5441447954450045000}
   - component: {fileID: 1255290931}
   - component: {fileID: 4533948557061250270}
-  m_Layer: 9
+  m_Layer: 19
   m_Name: Sam
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -173,11 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeeeef2c0388c594da3760e2a124bd16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureIdle: {fileID: 2800000, guid: eb3df72836f4e9f41b9f76ab27060deb, type: 3}
-  textureWalk: {fileID: 2800000, guid: 0de1b18bd00de1e46a1ad2fe21b99aa0, type: 3}
-  textureRun: {fileID: 2800000, guid: 3646375e5053f4b40abc701909e4eb8a, type: 3}
-  textureJump: {fileID: 0}
-  dither: {fileID: 2100000, guid: 331e95016a01a644b8a72a427732936a, type: 2}
 --- !u!114 &5441447954450045000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3854770815955887605}
   - component: {fileID: 1859904522748835540}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: FMOD_Breathing
   m_TagString: Untagged
   m_Icon: {fileID: 0}

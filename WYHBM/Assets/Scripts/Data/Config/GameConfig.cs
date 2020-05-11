@@ -15,6 +15,10 @@ public class GameConfig : ScriptableObject
     public float timeStart = 0.5f;
     public float timeSpace = 1f;
 
+    [Header("Layer")]
+    public LayerMask targetMask;
+    public LayerMask obstacleMask;
+
     [Header("References")]
     public GameObject emptyObject;
     public Slot slotPrefab;

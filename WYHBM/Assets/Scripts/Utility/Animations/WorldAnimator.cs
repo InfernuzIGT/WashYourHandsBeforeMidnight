@@ -2,6 +2,8 @@
 
 public class WorldAnimator : AnimatorController
 {
+    public bool flipSprite;
+
     private bool _isFlipped;
 
     private void Start()
@@ -23,11 +25,11 @@ public class WorldAnimator : AnimatorController
     {
         if (valueX < 0)
         {
-            _isFlipped = true;
+            _isFlipped = flipSprite ? false : true;
         }
         else if (valueX > 0)
         {
-            _isFlipped = false;
+            _isFlipped = flipSprite ? true : false;
         }
 
         _spriteRenderer.flipX = _isFlipped;

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Events;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,13 +14,36 @@ public class NPCController : MonoBehaviour, IInteractable
     [Range(0f, 10f)]
     public float waitTime = 5;
 
+    [Header("Field of View")]
+    public bool canDetectPlayer;
+    [Range(0f, 50f)]
+    public float viewRadius = 10;
+
     private WorldAnimator _animatorController;
     private InteractionNPC _interactionNPC;
-
     private NavMeshAgent _agent;
-    private WaitForSeconds _waitForSeconds;
     private bool _isMoving;
     private int _positionIndex = 0;
+
+    // Field of View
+    private bool _targetVisible;
+    private bool _targetDetected;
+    private Collider[] _targetsInViewRadius;
+    private Transform _target;
+    private Vector3 _targetLastPosition;
+    private Vector3 _directionToTarget;
+    private float _distanceToTarget;
+    private Vector3 _dirFromAngle;
+
+    private Coroutine _coroutinePatrol;
+    private WaitForSeconds _waitForSeconds;
+    private WaitForSeconds _delay;
+
+    private List<Transform> _visibleTargets;
+    public List<Transform> VisibleTargets { get { return _visibleTargets; } }
+
+    private float _viewAngle = 360;
+    public float ViewAngle { get { return _viewAngle; } }
 
     private void Awake()
     {
@@ -41,10 +65,19 @@ public class NPCController : MonoBehaviour, IInteractable
             return;
         }
 
+        _waitForSeconds = new WaitForSeconds(waitTime);
+
+        _visibleTargets = new List<Transform>();
+
         _agent.updateRotation = false;
 
-        _waitForSeconds = new WaitForSeconds(waitTime);
-        StartCoroutine(MovementAgent());
+        _coroutinePatrol = StartCoroutine(MovementAgent());
+
+        if (canDetectPlayer)
+        {
+            _delay = new WaitForSeconds(0.25f);
+            StartCoroutine(FindTargetsWithDelay());
+        }
     }
 
     private void Update()
@@ -64,6 +97,7 @@ public class NPCController : MonoBehaviour, IInteractable
         else
         {
             _animatorController.Movement(Vector3.zero);
+            _agent.ResetPath();
             _isMoving = false;
         }
     }
@@ -85,7 +119,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private void ChangeDestination()
     {
-        if (!_agent.isStopped)
+        if (!_agent.isStopped && !_agent.hasPath)
         {
             if (useRandomPosition)
             {
@@ -100,6 +134,63 @@ public class NPCController : MonoBehaviour, IInteractable
             _isMoving = true;
         }
     }
+
+    #region Field of View
+
+    private IEnumerator FindTargetsWithDelay()
+    {
+        while (canMove)
+        {
+            yield return _delay;
+            FindVisibleTargets();
+        }
+    }
+
+    private void FindVisibleTargets()
+    {
+        _visibleTargets.Clear();
+        _targetVisible = false;
+
+        _targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, GameData.Instance.gameConfig.targetMask);
+
+        for (int i = 0; i < _targetsInViewRadius.Length; i++)
+        {
+            _target = _targetsInViewRadius[i].transform;
+            _directionToTarget = (_target.position - transform.position).normalized;
+
+            if (Vector3.Angle(transform.forward, _directionToTarget) < _viewAngle / 2)
+            {
+                _distanceToTarget = Vector3.Distance(transform.position, _target.position);
+
+                if (!Physics.Raycast(transform.position, _directionToTarget, _distanceToTarget, GameData.Instance.gameConfig.obstacleMask))
+                {
+                    _visibleTargets.Add(_target);
+                    _targetLastPosition = _target.transform.position;
+                    _targetVisible = true;
+                    _targetDetected = true;
+
+                    StopCoroutine(_coroutinePatrol);
+                    _agent.SetDestination(_targetLastPosition);
+                }
+            }
+        }
+
+        if (_targetDetected && !_targetVisible)
+        {
+            _targetDetected = false;
+            _agent.SetDestination(_targetLastPosition);
+            _coroutinePatrol = StartCoroutine(MovementAgent());
+        }
+    }
+
+    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
+    {
+        if (!angleIsGlobal)angleInDegrees += transform.eulerAngles.y;
+        _dirFromAngle = new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+        return _dirFromAngle;
+    }
+
+    #endregion
 
     public void OnInteractionEnter(Collider other)
     {

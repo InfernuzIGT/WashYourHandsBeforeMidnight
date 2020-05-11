@@ -5,7 +5,7 @@ public class TargetBehind : MonoBehaviour
     public Material materialDetected;
     
     [SerializeField]
-    private int layerValue = 12; // Occlusion Mask
+    private int _layerValue = 15; // Occlusion Mask
 
     private MeshRenderer _meshRenderer;
     private Material _materialNormal;
@@ -14,7 +14,7 @@ public class TargetBehind : MonoBehaviour
     {
         _meshRenderer = GetComponent<MeshRenderer>();
         _materialNormal = _meshRenderer.material;
-        gameObject.layer = LayerMask.NameToLayer(LayerMask.LayerToName(layerValue));
+        gameObject.layer = LayerMask.NameToLayer(LayerMask.LayerToName(_layerValue));
     }
 
     public void Detected(bool isDetected)
