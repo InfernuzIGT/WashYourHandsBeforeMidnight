@@ -14,7 +14,7 @@ public class InteractionDoor : Interaction, IInteractable
 
     public void OnInteractionEnter(Collider other)
     {
-        if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
+        if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<InteractionEvent>(OnTriggerAnimation);
         }
@@ -22,7 +22,7 @@ public class InteractionDoor : Interaction, IInteractable
 
     public void OnInteractionExit(Collider other)
     {
-        if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
+        if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<InteractionEvent>(OnTriggerAnimation);
         }

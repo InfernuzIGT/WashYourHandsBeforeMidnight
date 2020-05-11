@@ -6,10 +6,6 @@ public class AnimatorController : MonoBehaviour
     protected Animator _animator;
     protected SpriteRenderer _spriteRenderer;
 
-    protected Material _material;
-    protected string _textureBase = "_MainTex";
-    // protected string _textureNormal = "_BumpMap";
-
     protected AnimationCommandBool _animIsAlive = new AnimIsAlive();
     protected AnimationCommandBool _animIsRunning = new AnimIsRunning();
     protected AnimationCommandBool _animIsGrounded = new AnimIsGrounded();
@@ -22,8 +18,5 @@ public class AnimatorController : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _material = _spriteRenderer.material;
     }
-
-    public virtual void SetTexture() { }
 }
