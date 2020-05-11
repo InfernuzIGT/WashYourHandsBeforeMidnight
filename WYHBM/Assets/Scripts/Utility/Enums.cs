@@ -28,14 +28,6 @@ public enum COMBAT_STATE
     Item = 5    
 }
 
-public enum MOVEMENT_STATE
-{
-    Idle = 0,
-    Walk = 1,
-    Run = 2,
-    Jump = 3,
-}
-
 #endregion
 
 public enum AMBIENT
