@@ -330,7 +330,7 @@ public class MenuController : MonoBehaviour
 
             buttonSounds.Play();
             buttonSounds.EventInstance.setParameterByName("UI", 3f);
-            menuMusic.Stop();
+            menuMusic.Stop();   
             // Load demo scene
         }
 

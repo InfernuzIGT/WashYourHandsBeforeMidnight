@@ -53,7 +53,7 @@
 			<destination>{9d7342ba-cac3-474d-958c-0843bcf35ac8}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{56052abc-d491-4318-8b69-59a3c129aaf3}</destination>
+			<destination>{6a257add-d7f0-407d-bb57-f918227a060d}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{d1e393c6-db2e-4b77-9c2c-49cefd6ee31f}">
@@ -113,9 +113,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{99034bd8-585c-4af8-b6b3-a350099b99c0}">
-		<property name="volume">
-			<value>-6</value>
-		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -213,8 +210,14 @@
 		<property name="lowGain">
 			<value>-5</value>
 		</property>
+		<property name="midGain">
+			<value>-5</value>
+		</property>
 		<property name="lowCrossover">
-			<value>440</value>
+			<value>1800</value>
+		</property>
+		<property name="crossoverSlope">
+			<value>0</value>
 		</property>
 	</object>
 </objects>

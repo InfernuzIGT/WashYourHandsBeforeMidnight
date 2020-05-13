@@ -205,6 +205,15 @@ public class PlayerController : MonoBehaviour
         _canMove = !_canMove;
     }
 
+    #region FMOD
+
+    public void FMODPlayFootstep()
+    {
+        footstepSound.Play();
+    }
+
+    #endregion
+
     #region Events
 
     private void OnStopMovement(EnableMovementEvent evt)
