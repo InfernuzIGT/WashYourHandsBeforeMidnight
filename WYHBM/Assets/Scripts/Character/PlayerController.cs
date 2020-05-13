@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using Events;
+using FMODUnity;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    public QuestSO quest; // TODO Mariano: Review
+
+    [Header("FMOD")]
+    public StudioEventEmitter footstepSound;
+    public StudioEventEmitter breathingSound;
+
     private CharacterController _characterController;
     private WorldAnimator _animatorController;
 
     private InteractionEvent _interactionEvent;
-
-    FMODUnity.StudioEventEmitter footstepSound;
-    FMODUnity.StudioEventEmitter breathingSound;
 
     // Movement 
     private float _speedWalk = 7.5f;
@@ -31,8 +35,8 @@ public class PlayerController : MonoBehaviour
     // Stamina
     private float _stamina = 100;
     private float _staminaMax = 100;
-    private float _staminaIncrease = 2.5f;
-    private float _staminaDecrease = 20;
+    private float _staminaIncrease = 5f;
+    private float _staminaDecrease = 15;
     private float _staminaRegenTimer = 0;
     private float _staminaTimeToRegen = 3;
 
@@ -54,8 +58,6 @@ public class PlayerController : MonoBehaviour
     private bool _infiniteStamina;
     public bool InfiniteStamina { set { _infiniteStamina = value; } }
 
-    public QuestSO quest;
-
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
@@ -70,9 +72,6 @@ public class PlayerController : MonoBehaviour
         // Cursor.lockState = CursorLockMode.Locked;
 
         _interactionEvent = new InteractionEvent();
-
-        footstepSound = GetComponent<FMODUnity.StudioEventEmitter>();
-        breathingSound = GameObject.Find("Breathing Sound").GetComponent<FMODUnity.StudioEventEmitter>();
     }
 
     private void OnEnable()
@@ -133,13 +132,13 @@ public class PlayerController : MonoBehaviour
         {
             _isRunning = _moveHorizontal == 0 && _moveVertical == 0 || !_characterController.isGrounded ? false : true;
             _speedHorizontal = _speedRun;
-            footstepSound.EventInstance.setParameterByName("Sprint", 1);
+            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
         }
         else
         {
             _isRunning = false;
             _speedHorizontal = _speedWalk;
-            footstepSound.EventInstance.setParameterByName("Sprint", 0);
+            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
         }
 
         // Add movement

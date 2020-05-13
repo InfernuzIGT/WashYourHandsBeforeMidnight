@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e769e2a7fe3364d855031d6ed24bac, type: 3}
   m_Name: Heal Potion
   m_EditorClassIdentifier: 
-  name: Medkit
+  name: Heal Potion
   effectValueMin: 0
   effectValueMax: 0
-  description: A nice medkit
-  sprite: {fileID: 21300000, guid: 7f8892629cb2b8c418fc71f7cd0c1a51, type: 3}
+  description: It's a jar that contains thick and foul-tasting water. Was made by
+    THE WITCH.
+  previewSprite: {fileID: 21300000, guid: 6f47bde6be918054194b2861602442a8, type: 3}
+  Sprite: {fileID: 21300000, guid: b562c57867b966147b002ec6bd05108d, type: 3}
   tier: 1
-  price: 0
-  valueMin: 19
-  valueMax: 28
+  price: 30
+  valueMin: 20
+  valueMax: 30
   order: 1
   actionType: 3
   actionKey: 50
-  actionDescription: Heal player with this medkit
-  name: Medkit
-  icon: {fileID: 21300000, guid: ede9ab6f050275d4ca07ec5be109b4eb, type: 3}
-  isDefaultItem: 0
+  actionDescription: Restaurates 20-30 of your health.
+  isEquippable: 1
   itemType: 1
-  level: 0
+  level: 5

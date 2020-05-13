@@ -28,14 +28,6 @@ public enum COMBAT_STATE
     Item = 5    
 }
 
-public enum MOVEMENT_STATE
-{
-    Idle = 0,
-    Walk = 1,
-    Run = 2,
-    Jump = 3,
-}
-
 #endregion
 
 public enum AMBIENT
@@ -124,4 +116,10 @@ public enum NPC_INTERACTION_TYPE
     dialog = 1,
     fight = 2,
     dialogAndFight = 3
+}
+
+public enum SCENE_INDEX
+{
+    MainMenu = 0,
+    Master = 1,
 }

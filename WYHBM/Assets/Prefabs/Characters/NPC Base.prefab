@@ -117,11 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeeeef2c0388c594da3760e2a124bd16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureIdle: {fileID: 0}
-  textureWalk: {fileID: 0}
-  textureRun: {fileID: 0}
-  textureJump: {fileID: 0}
-  dither: {fileID: 2100000, guid: 331e95016a01a644b8a72a427732936a, type: 2}
+  flipSprite: 0
 --- !u!114 &8781508375878358936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,6 +134,8 @@ MonoBehaviour:
   waypoints: {fileID: 0}
   useRandomPosition: 1
   waitTime: 5
+  canDetectPlayer: 0
+  viewRadius: 10
 --- !u!195 &3609575662864725218
 NavMeshAgent:
   m_ObjectHideFlags: 0

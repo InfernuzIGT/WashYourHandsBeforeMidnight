@@ -12,20 +12,27 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("References")]
     public GlobalController globalController;
     public CombatManager combatManager;
+    public Inventory inventoryManager; // TODO Mariano: Add
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
 
     [Header("Combat")]
+    public CombatArea[] combatAreas;
+    [Space]
     public List<Player> combatCharacters;
 
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
+    // Combat
+    private CombatArea _currentCombatArea;
+    private NPCController currentNPC;
+
     private AMBIENT _lastAmbient;
-    private NPCSO _currentNPC;
 
     private WaitForSeconds _waitDeactivateUI;
 
+    // Events
     private FadeEvent _fadeEvent;
 
     private void Start()
@@ -36,31 +43,18 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
-        _fadeEvent.callbackStart = SwitchMovement;
-        _fadeEvent.callbackMid = SwitchAmbient;
-
-        SwitchAmbient();
-    }
-
-    public Vector3 GetPlayerFootPosition()
-    {
-        Vector3 pos = new Vector3(
-            globalController.player.gameObject.transform.position.x,
-            globalController.player.gameObject.transform.position.y - GameData.Instance.gameConfig.playerBaseOffset,
-            globalController.player.gameObject.transform.position.z);
-
-        return pos;
-
     }
 
     private void OnEnable()
     {
-        EventController.AddListener<TriggerCombatEvent>(OnTriggerCombat);
+        EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
+        EventController.AddListener<ExitCombatEvent>(OnExitCombat);
     }
 
     private void OnDisable()
     {
-        EventController.RemoveListener<TriggerCombatEvent>(OnTriggerCombat);
+        EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
+        EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
     }
 
     private void SwitchAmbient()
@@ -72,6 +66,7 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(false);
 
                 globalController.ChangeCamera(null);
+                combatManager.CloseCombatArea();
                 break;
 
                 // case AMBIENT.Interior:
@@ -92,7 +87,7 @@ public class GameManager : MonoSingleton<GameManager>
                 worldUI.EnableCanvas(false);
                 combatUI.EnableCanvas(true);
 
-                globalController.ChangeCamera(combatManager.SetCombat());
+                globalController.ChangeCamera(_currentCombatArea.virtualCamera);
                 break;
 
             case AMBIENT.Development:
@@ -111,16 +106,46 @@ public class GameManager : MonoSingleton<GameManager>
         globalController.player.SwitchMovement();
     }
 
+    private void InitiateTurn()
+    {
+        combatManager.InitiateTurn();
+    }
+
     #region Events
 
-    public void OnTriggerCombat(TriggerCombatEvent evt)
+    public void OnEnterCombat(EnterCombatEvent evt)
     {
         _lastAmbient = currentAmbient;
         currentAmbient = AMBIENT.Combat;
+        currentNPC = evt.currentNPC;
 
-        _currentNPC = evt.npc;
+        int indexArea = Random.Range(0, combatAreas.Length);
+        _currentCombatArea = combatAreas[indexArea];
+        combatManager.SetData(_currentCombatArea, combatCharacters, evt.npc.combatCharacters);
+
+        _fadeEvent.callbackStart = SwitchMovement;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = StartCombat;
 
         EventController.TriggerEvent(_fadeEvent);
+    }
+
+    public void OnExitCombat(ExitCombatEvent evt)
+    {
+        _lastAmbient = currentAmbient;
+        currentAmbient = AMBIENT.World;
+
+        _fadeEvent.callbackStart = null;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = SwitchMovement;
+
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
+    private void StartCombat()
+    {
+        currentNPC.Kill();
+        combatManager.InitiateTurn();
     }
 
     #endregion
@@ -129,15 +154,25 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
+
         if (!dictionaryQuest.ContainsKey(data.id))
         {
             dictionaryQuest.Add(data.id, data);
+
+            dictionaryProgress.Add(data.id, 0);
         }
     }
 
     public void ProgressQuest(QuestSO quest)
     {
+        if (dictionaryProgress[quest.id] >= dictionaryQuest[quest.id].objetives.Length)
+        {
+            return;
+
+        }
+
         dictionaryProgress[quest.id]++;
+        Debug.Log($"<b> Progress {dictionaryProgress[quest.id]} - quest{dictionaryQuest[quest.id].objetives.Length} </b> ");
 
         if (dictionaryProgress[quest.id] == dictionaryQuest[quest.id].objetives.Length)
         {
@@ -151,8 +186,10 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void Complete()
     {
-        // TODO Mariano: Tachar titulo del diario
         worldUI.questTitleDiaryTxt.fontStyle = FontStyles.Strikethrough;
+        worldUI.questTitleDiaryTxt.color = Color.grey;
+        worldUI.questDescriptionTxt.fontStyle = FontStyles.Strikethrough;
+        worldUI.questDescriptionTxt.color = Color.grey;
 
         worldUI.questComplete.SetActive(true);
 
@@ -174,6 +211,20 @@ public class GameManager : MonoSingleton<GameManager>
 
         worldUI.questComplete.SetActive(false);
         worldUI.questPopup.SetActive(false);
+    }
+
+    #endregion
+
+    #region Other
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
+    }
+
+    public Ray GetRayMouse()
+    {
+        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
 
     #endregion

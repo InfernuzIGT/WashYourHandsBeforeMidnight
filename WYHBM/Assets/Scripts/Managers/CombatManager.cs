@@ -1,70 +1,100 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Events;
-using Cinemachine;
-using GameMode.Combat;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
-    [Header("Mariano")]
-    public CombatArea[] combatAreas;
-
-    [Header("Controllers")]
-    public UIController uIController;
-    public ActionController actionController;
-
     [Header("General")]
-    public bool isTurnPlayer = true;
+    public bool canSelect;
+    public COMBAT_STATE combatState;
+    public LayerMask currentLayer;
 
-    [Header("Characters")]
-    public Transform groupPlayers;
-    public Transform groupEnemies;
-    [Space]
-    public List<Player> listPlayers = new List<Player>();
-    [Space]
-    public List<Enemy> listEnemies = new List<Enemy>();
+    [Header("Character - Players")]
+    public List<Player> listPlayers;
 
-    private bool _isActionEnable;
-    private WaitForSeconds combatTransition;
-    private WaitForSeconds combatWaitTime;
-    private WaitForSeconds evaluationDuration;
+    [Header("Character - Enemies")]
+    public List<Enemy> listEnemies;
 
-    //-----------------------------------------------------------
-    //-----------------------------------------------------------
-    //-----------------------------------------------------------
+    private List<CombatCharacter> _listAllCharacters;
+    private List<CombatCharacter> _listWaitingCharacters;
+    private CombatCharacter _currentCharacter;
+    private RaycastHit _hit;
+    private Ray _ray;
+    private GameObject _combatAreaContainer;
+    private bool _isEndOfCombat;
+    private int _turnCount;
 
-    [Header("NEW COMBAT")]
-    public CombatCharacter currentCharacter;
-    FMODUnity.StudioEventEmitter battleMusic;
-    [Space]
-    public List<CombatCharacter> listCharacter;
-    public int turnCount;
+    private WaitForSeconds _waitStart;
+    private WaitForSeconds _waitBetweenTurns;
 
-    private List<CombatCharacter> waitingForAction;
-    private bool endOfCombat = false;
+    private ExitCombatEvent _interactionCombatEvent;
 
-
-    public CinemachineVirtualCamera SetCombat()
+    private void Start()
     {
-        
-        
-        Debug.Log($"<b> SPAWN ENEMIES! </b>");
+        listPlayers = new List<Player>();
+        listEnemies = new List<Enemy>();
+        _listAllCharacters = new List<CombatCharacter>();
+        _listWaitingCharacters = new List<CombatCharacter>();
 
-        battleMusic.Play();
+        _waitStart = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeToStart);
+        _waitBetweenTurns = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeBetweenTurns);
 
-        // TODO Mariano: Spawn Enemies usign _currentNPC
-        // TODO Mariano: Wait X seconds, and StartCombat!
-
-        int random = Random.Range(0, combatAreas.Length);
-        
-        return combatAreas[random].virtualCamera;
+        _interactionCombatEvent = new ExitCombatEvent();
     }
 
-    // Start Combat
+    public void SetData(CombatArea combatArea, List<Player> players, List<Enemy> enemies)
+    {
+        int indexCombat = 0;
+        canSelect = false;
+
+        _combatAreaContainer = Instantiate(
+            GameData.Instance.gameConfig.emptyObject,
+            combatArea.transform.position,
+            combatArea.transform.rotation);
+
+        for (int i = 0; i < players.Count; i++)
+        {
+            Player player = Instantiate(
+                players[i],
+                combatArea.playerPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                Quaternion.identity,
+                _combatAreaContainer.transform);
+
+            player.CombatIndex = indexCombat;
+            indexCombat++;
+
+            listPlayers.Add(player);
+            _listAllCharacters.Add(player);
+        }
+
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            Enemy enemy = Instantiate(
+                enemies[i],
+                combatArea.enemyPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                Quaternion.identity,
+                _combatAreaContainer.transform);
+
+            enemy.CombatIndex = indexCombat;
+            indexCombat++;
+
+            listEnemies.Add(enemy);
+            _listAllCharacters.Add(enemy);
+        }
+    }
+
+    #region Turn System
+
+    /// <summary>
+    /// Comienza el combate.
+    /// </summary>
     public void InitiateTurn()
     {
+        Debug.Log($"<b> [COMBAT] </b> Initiate Turn");
+
+        _isEndOfCombat = false;
+
         AddToWaiting(InitialSort());
         SetInitialCharactersTurn();
 
@@ -72,37 +102,20 @@ public class CombatManager : MonoBehaviour
         UnleashRace();
     }
 
-    private IEnumerator TurnsLoop()
-    {
-        while (!endOfCombat)
-        {
-            // Waiting for the current character to do his action.
-            yield return currentCharacter.StartWaitingForAction();
-
-            SendBottom();
-
-            turnCount++;
-
-            // The Action Was done. Now should be the Next Characters Action.
-
-            yield return null;
-        }
-    }
-
+    /// <summary>
+    /// Reordena la lista de Characters.
+    /// </summary>
     public List<CombatCharacter> InitialSort()
     {
         List<CombatCharacter> sortedCharacters = new List<CombatCharacter>();
-        sortedCharacters.AddRange(listCharacter);
-
-        // CombatCharacter[] sortedCharacters = new CombatCharacter[characters.Length];
-        // sortedCharacters = characters;
+        sortedCharacters.AddRange(_listAllCharacters);
 
         CombatCharacter fastestCharacter;
         fastestCharacter = sortedCharacters[0];
 
-        for (int i = 0; i < sortedCharacters.Count; i++) // ONE MINUS
+        for (int i = 0; i < sortedCharacters.Count - 1; i++) // ONE MINUS
         {
-            for (int j = 0; j < sortedCharacters.Count; j++) // ONE MINUS
+            for (int j = 0; j < sortedCharacters.Count - 1; j++) // ONE MINUS
             {
                 if (sortedCharacters[j].StatsReaction < sortedCharacters[j + 1].StatsReaction)
                 {
@@ -119,199 +132,229 @@ public class CombatManager : MonoBehaviour
         return sortedCharacters;
     }
 
+    /// <summary>
+    /// Agrega a una lista de espera todos los Characters.
+    /// </summary>
     public void AddToWaiting(List<CombatCharacter> charactersToAdd)
     {
         for (int i = 0; i < charactersToAdd.Count; i++)
-            waitingForAction.Add(charactersToAdd[i]);
-    }
-
-    public void SetInitialCharactersTurn()
-    {
-        currentCharacter = waitingForAction[0];
-        currentCharacter.IsMyTurn = true;
-    }
-
-    public void SendBottom()
-    {
-        currentCharacter.StartGettingAhead();
-
-        waitingForAction.Remove(currentCharacter);
-        waitingForAction.Add(currentCharacter);
-        currentCharacter = waitingForAction[0];
-
-        currentCharacter.IsMyTurn = true;
-    }
-
-    public void UnleashRace()
-    {
-        for (int i = 2; i < waitingForAction.Count; i++)
         {
-            waitingForAction[i].StartGettingAhead();
+            _listWaitingCharacters.Add(charactersToAdd[i]);
         }
     }
 
+    /// <summary>
+    /// Espera la accion de un Character, y una vez cumplida lo envia al fondo y avanza al siguiente turno.
+    /// </summary>
+    private IEnumerator TurnsLoop()
+    {
+        yield return _waitStart;
+
+        Debug.Log($"<b> [COMBAT] </b> Start COMBAT!");
+
+        while (!_isEndOfCombat)
+        {
+            // Waiting for the current character to do his action.
+            yield return _currentCharacter.StartWaitingForAction();
+
+            SendBottom();
+
+            _turnCount++;
+
+            // The Action Was done. Now should be the Next Characters Action.
+
+            Debug.Log($"<b> [COMBAT] </b> Preparing NEXT Turn..");
+            yield return _waitBetweenTurns;
+        }
+    }
+
+    /// <summary>
+    /// Setea el turno al primer Character de la lista
+    /// </summary>
+    public void SetInitialCharactersTurn()
+    {
+        _currentCharacter = _listWaitingCharacters[0];
+        _currentCharacter.IsMyTurn = true;
+    }
+
+    /// <summary>
+    /// Envia al Character al final de la lista
+    /// </summary>
+    public void SendBottom()
+    {
+        _currentCharacter.StartGettingAhead();
+
+        _listWaitingCharacters.Remove(_currentCharacter);
+        _listWaitingCharacters.Add(_currentCharacter);
+        _currentCharacter = _listWaitingCharacters[0];
+
+        Debug.Log($"<b> [COMBAT] </b> Current turn: {_currentCharacter.name}");
+
+        _currentCharacter.IsMyTurn = true;
+    }
+
+    /// <summary>
+    /// Reordena las posiciones de los Characters en la lista
+    /// </summary>
+    public void UnleashRace()
+    {
+        for (int i = 2; i < _listWaitingCharacters.Count; i++)
+        {
+            _listWaitingCharacters[i].StartGettingAhead();
+        }
+    }
+
+    /// <summary>
+    /// Coloca el Character por encima de la lista
+    /// </summary>
     public void CharacterIsReadyToGoAhead(CombatCharacter characterGoingAhead)
     {
         int index;
         CombatCharacter auxCharacter;
 
-        index = waitingForAction.IndexOf(characterGoingAhead);
+        index = _listWaitingCharacters.IndexOf(characterGoingAhead);
 
         if (index <= 1)
         {
-            waitingForAction[index].StartGettingAhead();
+            _listWaitingCharacters[index].StartGettingAhead();
             return;
         }
 
-        auxCharacter = waitingForAction[index - 1];
+        auxCharacter = _listWaitingCharacters[index - 1];
 
-        waitingForAction[index - 1] = characterGoingAhead;
-        waitingForAction[index] = auxCharacter;
+        _listWaitingCharacters[index - 1] = characterGoingAhead;
+        _listWaitingCharacters[index] = auxCharacter;
 
         if ((index - 1) > 1)
         {
             characterGoingAhead.StartGettingAhead();
         }
 
-        waitingForAction[index].StartGettingAhead();
+        _listWaitingCharacters[index].StartGettingAhead();
     }
+
+    #endregion
 
     //-----------------------------------------------------------
     //-----------------------------------------------------------
     //-----------------------------------------------------------
 
-    private void Start()
+    public void ActionAttack()
     {
-        GetCharacters();
-
-        combatTransition = new WaitForSeconds(GameData.Instance.combatConfig.transitionDuration);
-        combatWaitTime = new WaitForSeconds(GameData.Instance.combatConfig.waitCombatDuration);
-        evaluationDuration = new WaitForSeconds(GameData.Instance.combatConfig.evaluationDuration);
-
-        battleMusic = GetComponent<FMODUnity.StudioEventEmitter>();
+        combatState = COMBAT_STATE.Attack;
+        EnableAction();
     }
 
-    private void GetCharacters()
+    public void ActionDefense()
     {
-        // TODO Mariano: Spawn Players and Enemies
+        combatState = COMBAT_STATE.Defense;
+        EnableAction();
     }
 
-    public void StartCombat()
+    public void ActionItem()
     {
-        _isActionEnable = isTurnPlayer;
-
-        if (!_isActionEnable)
-            return;
-
-        isTurnPlayer = false;
-
-        StartCoroutine(Combat(listPlayers));
+        combatState = COMBAT_STATE.Item;
+        EnableAction();
     }
 
-    private IEnumerator Combat(List<Player> players)
+    private void EnableAction()
     {
-        if (listPlayers[0].IsAlive) // TODO Mariano: Si hay algun PLAYER vivo
+        switch (combatState)
         {
-            // TODO Mariano: Fade IN + BLUR
+            case COMBAT_STATE.Attack:
+            case COMBAT_STATE.Item:
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
 
-            // TODO Mariano: Fade de los personajes involucrados
-            listPlayers[0].ActionStartCombat();
-            listEnemies[0].ActionStartCombat();
+            case COMBAT_STATE.Defense:
+                currentLayer = GameData.Instance.combatConfig.layerPlayer;
+                GameManager.Instance.combatUI.messageTxt.text = "Select player";
+                break;
 
-            yield return combatTransition;
-
-            actionController.PlayAction(players);
-            uIController.ChangeUI(!listEnemies[0].IsAlive); // Need FALSE
-
-            yield return combatWaitTime;
-
-            // TODO Mariano: Fade OUT + BLUR
-
-            // TODO Mariano: Fade de los personajes involucrados
-            listPlayers[0].ActionStopCombat();
-            listEnemies[0].ActionStopCombat();
-
-            yield return combatTransition;
-
-            StartCoroutine(Combat(listEnemies));
-        }
-        else
-        {
-            yield return evaluationDuration;
-
-            EndGame(false);
+            default:
+                currentLayer = GameData.Instance.combatConfig.layerNone;
+                GameManager.Instance.combatUI.messageTxt.text = "";
+                break;
         }
 
+        canSelect = true;
     }
 
-    private IEnumerator Combat(List<Enemy> enemies)
+    private void Update()
     {
-        if (listEnemies[0].IsAlive) // TODO Mariano: Si hay algun ENEMY vivo
+        if (Input.GetMouseButtonDown(0) && canSelect)
         {
-            yield return evaluationDuration;
+            _ray = GameManager.Instance.GetRayMouse();
 
-            // TODO Mariano: Fade IN + BLUR
-
-            // TODO Mariano: Fade de los personajes involucrados
-            listPlayers[0].ActionStartCombat();
-            listEnemies[0].ActionStartCombat();
-
-            yield return combatTransition;
-
-            actionController.PlayAction(enemies);
-            uIController.ChangeUI(listPlayers[0].IsAlive); // Need TRUE
-
-            yield return combatWaitTime;
-
-            // TODO Mariano: Fade OUT + BLUR
-
-            // TODO Mariano: Fade de los personajes involucrados
-            listPlayers[0].ActionStopCombat();
-            listEnemies[0].ActionStopCombat();
-            battleMusic.Stop();
-
-            yield return combatTransition;
-
-            if (listPlayers[0].IsAlive) // TODO Mariano: Si hay algun PLAYER vivo
+            if (Physics.Raycast(_ray, out _hit, 100, currentLayer))
             {
-                isTurnPlayer = true;
-                listPlayers[0].SetDefense(0); // TODO Mariano: DELETE
-
+                if (_hit.collider != null)
+                {
+                    _hit.collider.gameObject.GetComponent<Enemy>().Select(combatState, _currentCharacter);
+                    canSelect = false;
+                }
             }
-            else
-            {
-                yield return evaluationDuration;
-
-                EndGame(false);
-
-                Debug.Log("Musica de Game Over?");
-                FMODUnity.RuntimeManager.PlayOneShot("event:/Game Over");
-            }
-
-        }
-        else
-        {
-            yield return evaluationDuration;
-
-            EndGame(true);
-
-            Debug.Log("Musica de Victoria?");
-            FMODUnity.RuntimeManager.PlayOneShot("event:/Victory");
         }
     }
 
     //------------------------------------
 
-    public void EndGame(bool isWin)
+    public void CheckGame(Player character)
     {
-        // TODO Mariano: FADE
+        _listAllCharacters.Remove(character);
+        _listWaitingCharacters.Remove(character);
 
-        uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
+        listPlayers.Remove(character);
 
-        uIController.endTxt.gameObject.SetActive(true);
+        if (listPlayers.Count == 0)
+        {
+            FinishGame(false);
+        }
+    }
 
-        uIController.endTxt.transform.
-        DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 1, 5, .5f).
-        SetEase(Ease.OutQuad);
+    public void CheckGame(Enemy character)
+    {
+        _listAllCharacters.Remove(character);
+        _listWaitingCharacters.Remove(character);
+
+        listEnemies.Remove(character);
+
+        if (listEnemies.Count == 0)
+        {
+            FinishGame(true);
+        }
+    }
+
+    private void FinishGame(bool isWin)
+    {
+        _isEndOfCombat = true;
+
+        Debug.Log($"<color=blue><b> [COMBAT] </b></color> Win: {isWin}");
+
+        // uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
+
+        // uIController.endTxt.gameObject.SetActive(true);
+
+        // uIController.endTxt.transform.
+        // DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 1, 5, .5f).
+        // SetEase(Ease.OutQuad);
+
+        _interactionCombatEvent.isWin = isWin;
+        EventController.TriggerEvent(_interactionCombatEvent);
+
+    }
+
+    public void CloseCombatArea()
+    {
+        Destroy(_combatAreaContainer.gameObject);
+
+        _combatAreaContainer = null;
+        _currentCharacter = null;
+
+        listPlayers.Clear();
+        listEnemies.Clear();
+        _listAllCharacters.Clear();
+        _listWaitingCharacters.Clear();
     }
 }

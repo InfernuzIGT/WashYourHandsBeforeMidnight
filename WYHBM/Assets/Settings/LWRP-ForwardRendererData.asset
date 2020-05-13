@@ -102,10 +102,10 @@ MonoBehaviour:
     samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 77111
+    m_Bits: 470327
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 77111
+    m_Bits: 470327
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 6
@@ -132,7 +132,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 512
+        m_Bits: 524800
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -161,10 +161,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Default Occlusion
+  m_Name: Occlusion Mask
   m_EditorClassIdentifier: 
   settings:
-    passTag: Default Occlusion
+    passTag: Occlusion Mask
     Event: 250
     filterSettings:
       RenderQueueType: 0
@@ -208,7 +208,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 512
+        m_Bits: 524800
       PassNames: []
     overrideMaterial: {fileID: 2100000, guid: 331e95016a01a644b8a72a427732936a, type: 2}
     overrideMaterialPassIndex: 0

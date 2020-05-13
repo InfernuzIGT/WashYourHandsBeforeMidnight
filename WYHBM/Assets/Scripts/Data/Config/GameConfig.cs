@@ -10,18 +10,21 @@ public class GameConfig : ScriptableObject
     public float fadeFastDuration = 1.5f;
     public float fadeSlowDuration = 3;
 
-    [Header("Tags")]
-    [Tag] public string tagPlayer;
-    
-    [Header ("UI")]
+    [Header("UI")]
     public float messageLifetime = 3f;
     public float timeStart = 0.5f;
     public float timeSpace = 1f;
 
-    [Header ("References")]
+    [Header("Layer")]
+    public LayerMask targetMask;
+    public LayerMask obstacleMask;
+
+    [Header("References")]
+    public GameObject emptyObject;
     public Slot slotPrefab;
+    public SlotEquipped slotEquippedPrefab;
     public InteractionItem itemPrefab;
 
-    [Header ("Transform")]
-    public float playerBaseOffset = 1.51f;
+    [Header("Transform")]
+    public Vector3 playerBaseOffset = new Vector3(0, 2.08f, 0);
 }

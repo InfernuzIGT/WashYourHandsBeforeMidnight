@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class MenuController : MonoBehaviour
 {
 
-    [Header ("Cameras")]
+    [Header("Cameras")]
     public GameObject mainCam;
     public GameObject continueCam;
     public GameObject optionsCam;
@@ -12,23 +13,23 @@ public class MenuController : MonoBehaviour
     // public GameObject creditsCam;
     private GameObject _lastCam;
 
-    [Header ("Generals")]
+    [Header("Generals")]
     public GameObject mainPanel;
     public GameObject optionsPanel;
     public GameObject extrasPanel;
     public GameObject confirmPanel;
 
-    [Header ("Options")]
+    [Header("Options")]
     public GameObject graphicsPanel;
     public GameObject audioPanel;
     public GameObject gamePanel;
 
-    [Header ("Graphics")]
+    [Header("Graphics")]
     public GameObject DropDownPanel;
 
     // [Header ("Audio")]
 
-    [Header ("Extras")]
+    [Header("Extras")]
     public GameObject creditsPanel;
 
     // GameObjects
@@ -46,10 +47,10 @@ public class MenuController : MonoBehaviour
     FMODUnity.StudioEventEmitter buttonSounds;
     FMODUnity.StudioEventEmitter menuMusic;
 
-    private void Start ()
+    private void Start()
     {
-        mainCam.SetActive (true);
-        mainPanel.SetActive (true);
+        mainCam.SetActive(true);
+        mainPanel.SetActive(true);
 
         buttonSounds = GetComponent<FMODUnity.StudioEventEmitter>();
         menuMusic = GameObject.Find("Main Menu Music").GetComponent<FMODUnity.StudioEventEmitter>();
@@ -70,17 +71,17 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    public void OnBackButton ()
-    {        
+    public void OnBackButton()
+    {
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 0f);
 
-        _lastCam.SetActive (true);
-        _lastPanel.SetActive (true);
+        _lastCam.SetActive(true);
+        _lastPanel.SetActive(true);
 
         if (_isInOptions)
         {
-            optionsPanel.SetActive (false);
+            optionsPanel.SetActive(false);
 
             _isInOptions = false;
 
@@ -91,7 +92,7 @@ public class MenuController : MonoBehaviour
             audioPanel.SetActive(false);
             graphicsPanel.SetActive(false);
 
-            OnOptionsButton ();
+            OnOptionsButton();
 
             _isInSpecificSettings = false;
             _isInOptions = true;
@@ -99,16 +100,16 @@ public class MenuController : MonoBehaviour
 
         if (_isInExtras)
         {
-            extrasPanel.SetActive (false);
+            extrasPanel.SetActive(false);
 
             _isInExtras = false;
 
         }
         if (_isInCredits)
         {
-            creditsPanel.SetActive (false);
+            creditsPanel.SetActive(false);
 
-            OnExtrasButton ();
+            OnExtrasButton();
 
             _isInCredits = false;
             _isInExtras = true;
@@ -118,28 +119,28 @@ public class MenuController : MonoBehaviour
 
     #region Main Menu
 
-    public void OnContinueButton ()
+    public void OnContinueButton()
     {
         _lastCam = mainCam;
         _lastPanel = mainPanel;
 
-        _lastCam.SetActive (false);
-        _lastPanel.SetActive (false);
-        
+        _lastCam.SetActive(false);
+        _lastPanel.SetActive(false);
+
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 1f);
 
-        SetConfirmPanel ();
+        SetConfirmPanel();
         _isContinuing = true;
     }
 
-    public void OnExtrasButton ()
+    public void OnExtrasButton()
     {
         _lastCam = mainCam;
         _lastPanel = mainPanel;
 
-        _lastCam.SetActive (false);
-        _lastPanel.SetActive (false);
+        _lastCam.SetActive(false);
+        _lastPanel.SetActive(false);
 
         if (_lastPanel = mainPanel)
         {
@@ -147,20 +148,20 @@ public class MenuController : MonoBehaviour
             buttonSounds.EventInstance.setParameterByName("UI", 1f);
         }
 
-        extrasCam.SetActive (true);
-        extrasPanel.SetActive (true);
+        extrasCam.SetActive(true);
+        extrasPanel.SetActive(true);
 
         _isInExtras = true;
 
     }
 
-    public void OnOptionsButton ()
+    public void OnOptionsButton()
     {
         _lastCam = mainCam;
         _lastPanel = mainPanel;
 
-        optionsCam.SetActive (true);
-        optionsPanel.SetActive (true);
+        optionsCam.SetActive(true);
+        optionsPanel.SetActive(true);
 
         if (_lastPanel = mainPanel)
         {
@@ -168,28 +169,28 @@ public class MenuController : MonoBehaviour
             buttonSounds.EventInstance.setParameterByName("UI", 1f);
         }
 
-        _lastCam.SetActive (false);
-        _lastPanel.SetActive (false);
+        _lastCam.SetActive(false);
+        _lastPanel.SetActive(false);
 
         _isInOptions = true;
     }
 
-    public void OnNewGameButton ()
+    public void OnNewGameButton()
     {
         _lastCam = mainCam;
         _lastPanel = mainPanel;
 
-        _lastCam.SetActive (false);
-        _lastPanel.SetActive (false);
-        
+        _lastCam.SetActive(false);
+        _lastPanel.SetActive(false);
+
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 1f);
 
-        SetConfirmPanel ();
+        SetConfirmPanel();
         _isCreatingNew = true;
     }
 
-    public void OnQuitButton ()
+    public void OnQuitButton()
     {
         _lastCam = mainCam;
         _lastPanel = mainPanel;
@@ -197,66 +198,66 @@ public class MenuController : MonoBehaviour
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 4f);
 
-        _lastCam.SetActive (false);
-        _lastPanel.SetActive (false);
+        _lastCam.SetActive(false);
+        _lastPanel.SetActive(false);
 
-        SetConfirmPanel ();
+        SetConfirmPanel();
         _isQuitting = true;
         //Confirm text
 
     }
-    
+
     #endregion 
 
     #region Options Menu
 
-    public void OnGameButton ()
+    public void OnGameButton()
     {
 
         _lastPanel = optionsPanel;
-        
-        _lastPanel.SetActive (false);
 
-        Debug.Log ($"<b> Game settings is open </b>");
+        _lastPanel.SetActive(false);
+
+        Debug.Log($"<b> Game settings is open </b>");
 
         // gamePanel.SetActive (true);
 
-        _isInOptions =false;
+        _isInOptions = false;
         _isInSpecificSettings = true;
     }
 
-    public void OnGraphicsButton ()
+    public void OnGraphicsButton()
     {
         _lastPanel = optionsPanel;
-        
-        _lastPanel.SetActive (false);
 
-        Debug.Log ($"<b> Graphics settings is open </b>");
-        
+        _lastPanel.SetActive(false);
+
+        Debug.Log($"<b> Graphics settings is open </b>");
+
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 1f);
 
-        graphicsPanel.SetActive (true);
+        graphicsPanel.SetActive(true);
 
-        _isInOptions =false;
+        _isInOptions = false;
         _isInSpecificSettings = true;
 
     }
 
-    public void OnAudioButton ()
+    public void OnAudioButton()
     {
         _lastPanel = optionsPanel;
 
-        _lastPanel.SetActive (false);
+        _lastPanel.SetActive(false);
 
-        Debug.Log ($"<b> Audio settings is open </b>");
-        
+        Debug.Log($"<b> Audio settings is open </b>");
+
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 1f);
 
-        audioPanel.SetActive (true);
+        audioPanel.SetActive(true);
 
-        _isInOptions =false;
+        _isInOptions = false;
         _isInSpecificSettings = true;
 
     }
@@ -264,7 +265,7 @@ public class MenuController : MonoBehaviour
     #endregion
 
     #region Graphics Menu
-    
+
     public void OnDropDownButton(bool isOpening)
     {
         DropDownPanel.SetActive(isOpening);
@@ -274,15 +275,15 @@ public class MenuController : MonoBehaviour
 
     #region Extras Menu
 
-    public void OnCreditsButton ()
+    public void OnCreditsButton()
     {
         _lastCam = extrasCam;
         _lastPanel = extrasPanel;
 
-        _lastPanel.SetActive (false);
-        _lastCam.SetActive (false);
+        _lastPanel.SetActive(false);
+        _lastCam.SetActive(false);
 
-        creditsPanel.SetActive (true);
+        creditsPanel.SetActive(true);
         // creditsCam.SetActive (true);
 
         _isInCredits = true;
@@ -294,38 +295,39 @@ public class MenuController : MonoBehaviour
 
     #region Confirm Menu
 
-    public void SetConfirmPanel ()
+    public void SetConfirmPanel()
     {
-        mainPanel.SetActive (false);
-        confirmPanel.SetActive (true);
+        mainPanel.SetActive(false);
+        confirmPanel.SetActive(true);
 
     }
 
-    public void OnYesButton ()
+    public void OnYesButton()
     {
         if (_isQuitting)
         {
-            Application.Quit ();
-            
+            Application.Quit();
+
             buttonSounds.Play();
             buttonSounds.EventInstance.setParameterByName("UI", 0f);
 
         }
         if (_isCreatingNew)
         {
-            Debug.Log ($"<b> New Game is created </b>");
-            
+            Debug.Log($"<b> New Game is created </b>");
+
             buttonSounds.Play();
             buttonSounds.EventInstance.setParameterByName("UI", 3f);
             menuMusic.Stop();
             // Save new data in GAMEDATA
 
+            LoadScene(SCENE_INDEX.Master);
         }
 
         if (_isContinuing)
         {
-            Debug.Log ($"<b> Loading Game </b>");
-            
+            Debug.Log($"<b> Loading Game </b>");
+
             buttonSounds.Play();
             buttonSounds.EventInstance.setParameterByName("UI", 3f);
             menuMusic.Stop();   
@@ -334,37 +336,52 @@ public class MenuController : MonoBehaviour
 
     }
 
-    public void OnNoButton ()
-    {        
+    public void LoadScene(SCENE_INDEX sceneIndex)
+    {
+        StartCoroutine(LoadYourAsyncScene(sceneIndex));
+    }
+
+    private IEnumerator LoadYourAsyncScene(SCENE_INDEX index)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int)index);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
+    public void OnNoButton()
+    {
         buttonSounds.Play();
         buttonSounds.EventInstance.setParameterByName("UI", 2f);
 
         if (_isQuitting)
         {
-            mainCam.SetActive (true);
-            mainPanel.SetActive (true);
+            mainCam.SetActive(true);
+            mainPanel.SetActive(true);
 
-            confirmPanel.SetActive (false);
+            confirmPanel.SetActive(false);
 
             _isQuitting = false;
 
         }
         if (_isCreatingNew)
         {
-            mainCam.SetActive (true);
-            mainPanel.SetActive (true);
+            mainCam.SetActive(true);
+            mainPanel.SetActive(true);
 
-            confirmPanel.SetActive (false);
+            confirmPanel.SetActive(false);
 
             _isCreatingNew = false;
         }
 
         if (_isContinuing)
         {
-            mainCam.SetActive (true);
-            mainPanel.SetActive (true);
+            mainCam.SetActive(true);
+            mainPanel.SetActive(true);
 
-            confirmPanel.SetActive (false);
+            confirmPanel.SetActive(false);
 
             _isContinuing = false;
         }

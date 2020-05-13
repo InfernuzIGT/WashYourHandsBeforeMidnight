@@ -8,32 +8,31 @@ public class CombatCharacter : MonoBehaviour
 {
     [Header("Character")]
     public CharacterSO character;
-    
+
     [Header("Interface")]
     [SerializeField] private CharacterUI characterUI = null; // TODO Mariano: Instancia el prefab como hijo
 
+    // Protected
+    protected bool _isActionDone;
+    protected WaitForSeconds _waitPerAction;
+
+    private CombatAnimator _combatAnimator;
     private string _name;
-    private CHARACTER_TYPE _characterType = CHARACTER_TYPE.none;
-    private CHARACTER_BEHAVIOUR _characterBehaviour = CHARACTER_BEHAVIOUR.none;
-
     private float _healthActual;
-    private bool _isActionDone;
-
     private Vector3 _scaleNormal;
     private Vector2 _infoTextPosition;
-
-    private List<WeaponSO> _equipmentWeapon;
-    private List<ItemSO> _equipmentItem;
-    private List<ArmorSO> _equipmentArmor;
 
     private InfoTextEvent infoTextEvent = new InfoTextEvent();
 
     #region Properties
 
+    private List<ItemSO> _items;
+    public List<ItemSO> Items { get { return _items; } set { _items = value; } }
+
     private bool _isAlive;
     public bool IsAlive { get { return _isAlive; } }
 
-    private bool _isMyTurn;
+    protected bool _isMyTurn;
     public bool IsMyTurn { get { return _isMyTurn; } set { _isMyTurn = value; } }
 
     private Vector3 _startPosition;
@@ -45,52 +44,41 @@ public class CombatCharacter : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     // public SpriteRenderer SpriteRenderer { get { return _spriteRenderer; } }
 
+    private int _combatIndex;
+    public int CombatIndex { get { return _combatIndex; } set { _combatIndex = value; } }
+
     private int _statsHealthMax;
     public int StatsHealthMax { get { return _statsHealthMax; } }
 
-    private int _statsDamageMelee;
-    public int StatsDamageMelee { get { return _statsDamageMelee; } }
-
-    private int _statsDamageDistance;
-    public int StatsDamageDistance { get { return _statsDamageDistance; } }
-
-    private int _statsStrength;
-    public int StatsStrength { get { return _statsStrength; } }
-
-    private int _statsDexterity;
-    public int StatsDexterity { get { return _statsDexterity; } }
+    private int _statsDamage;
+    public int StatsDamage { get { return _statsDamage; } }
 
     private int _statsDefense;
     public int StatsDefense { get { return _statsDefense; } }
-
-    private int _statsAgility;
-    public int StatsAgility { get { return _statsAgility; } }
-
-    private int _statsLuck;
-    public int StatsLuck { get { return _statsLuck; } }
 
     private int _statsReaction;
     public int StatsReaction { get { return _statsReaction; } }
 
     #endregion
 
-    private void Awake()
+    public virtual void Awake()
     {
         // _boxCollider = GetComponent<BoxCollider>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _combatAnimator = GetComponent<CombatAnimator>();
+
+        SetCharacter();
     }
 
     public virtual void Start()
     {
-        _equipmentWeapon = new List<WeaponSO>();
-        _equipmentItem = new List<ItemSO>();
-        _equipmentArmor = new List<ArmorSO>();
+        _items = new List<ItemSO>();
+
+        _waitPerAction = new WaitForSeconds(GameData.Instance.combatConfig.waitTimePerAction);
 
         _scaleNormal = transform.localScale;
         _startPosition = transform.position;
         _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
-
-        SetCharacter();
 
         _healthActual = _statsHealthMax;
         characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration);
@@ -101,31 +89,26 @@ public class CombatCharacter : MonoBehaviour
         _isAlive = true;
         _isMyTurn = false;
         _name = character.name;
-        _characterType = character.characterType;
-        _characterBehaviour = character.characterBehaviour;
 
-        // Stats
         _statsHealthMax = character.statsHealthMax;
-        _statsDamageMelee = character.statsDamageMelee;
-        _statsDamageDistance = character.statsDamageDistance;
-        _statsStrength = character.statsStrength;
-        _statsDexterity = character.statsDexterity;
-        _statsDefense = character.statsDefense;
-        _statsAgility = character.statsAgility;
-        _statsLuck = character.statsLuck;
+        _statsDamage = character.statsDamage;
         _statsReaction = character.statsReaction;
 
-        _equipmentWeapon?.AddRange(character.equipmentWeapon);
-        _equipmentItem?.AddRange(character.equipmentItem);
-        _equipmentArmor?.AddRange(character.equipmentArmor);
+        // Debug.Log($"<b> SET: {gameObject.name} - REACT: {_statsReaction} </b>");
 
-        // _spriteRenderer.sprite = character.spriteCharacter;
+        // TODO Mariano: Add ITEMS
+        // _items?.AddRange(character.equipmentItem);
     }
 
     //------------------------------------------------------------------
     //------------------------------------------------------------------
     //------------------------------------------------------------------
 
+    #region Turn System
+
+    /// <summary>
+    /// Ejecuta la accion
+    /// </summary>
     public void DoAction()
     {
         if (_isMyTurn)
@@ -135,19 +118,19 @@ public class CombatCharacter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Comienza a esperar la accion
+    /// </summary>
     public Coroutine StartWaitingForAction()
     {
         return StartCoroutine(WaitingForAction());
     }
 
-    private IEnumerator WaitingForAction()
+    /// <summary>
+    /// Espera la accion
+    /// </summary>
+    public virtual IEnumerator WaitingForAction()
     {
-        _isActionDone = false;
-
-        while (!_isActionDone)
-        {
-            yield return null;
-        }
         yield return null;
     }
 
@@ -156,9 +139,14 @@ public class CombatCharacter : MonoBehaviour
         StartCoroutine(GettingAhead());
     }
 
+    /// <summary>
+    /// Luego de un lapso de tiempo, se mueve hacia la punta de la lista de Characters
+    /// </summary>
     private IEnumerator GettingAhead()
     {
         float elapsedTime = 0;
+
+        // Debug.Log($"<b> Character: {gameObject.name} - Reaction: {_statsReaction} </b>");
 
         float timeThreshold = (10 / _statsReaction) * GameData.Instance.combatConfig.actionTimeThresholdMultiplier;
 
@@ -168,9 +156,10 @@ public class CombatCharacter : MonoBehaviour
             yield return null;
         }
 
-        // TODO Mariano: Add to COMBAT MANAGER
-        // TurnsController.control.CharacterIsReadyToGoAhead(this);
+        GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
     }
+
+    #endregion 
 
     //------------------------------------------------------------------
     //------------------------------------------------------------------
@@ -179,7 +168,7 @@ public class CombatCharacter : MonoBehaviour
     public virtual void StartCombat()
     {
         SetCharacter();
-        _statsDamageMelee *= _statsStrength;
+        // _statsDamage *= _statsStrength;
     }
 
     public virtual void ActionStartCombat()
@@ -203,7 +192,7 @@ public class CombatCharacter : MonoBehaviour
     {
         _healthActual += amountHeal;
 
-        ShowInfoText(amountHeal, GameData.Instance.textConfig.colorMsgHeal);
+        // ShowInfoText(amountHeal, GameData.Instance.textConfig.colorMsgHeal);
 
         if (_healthActual > _statsHealthMax)_healthActual = _statsHealthMax;
 
@@ -214,7 +203,7 @@ public class CombatCharacter : MonoBehaviour
     {
         _statsDefense = amountDefense;
 
-        ShowInfoText(amountDefense, GameData.Instance.textConfig.colorMsgDefense);
+        // ShowInfoText(amountDefense, GameData.Instance.textConfig.colorMsgDefense);
     }
 
     public virtual void ActionReceiveDamage(int damageReceived)
@@ -232,9 +221,15 @@ public class CombatCharacter : MonoBehaviour
         DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration).
         OnComplete(Kill);
 
-        ShowInfoText(totalDamage, GameData.Instance.textConfig.colorMsgDamage);
+        // ShowInfoText(totalDamage, GameData.Instance.textConfig.colorMsgDamage);
     }
 
+    public void AnimationAction(COMBAT_STATE combatState)
+    {
+        _combatAnimator.Action(combatState);
+    }
+
+    // TODO Mariano: Review
     private void ShowInfoText(float value, Color color)
     {
         infoTextEvent.text = value.ToString("F0");
@@ -253,13 +248,12 @@ public class CombatCharacter : MonoBehaviour
 
             _spriteRenderer.
             DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
-            SetEase(Ease.OutQuad).OnComplete(CheckGame);
+            SetEase(Ease.OutQuad).OnComplete(CheckCharacters);
         }
     }
 
-    private void CheckGame()
+    public virtual void CheckCharacters()
     {
-        // TODO Mariano: ADD EVENT TO CHECK THE LIST OF ENEMIES
         gameObject.SetActive(false);
     }
 

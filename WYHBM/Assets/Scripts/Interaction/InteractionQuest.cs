@@ -7,7 +7,7 @@ public class InteractionQuest : Interaction, IInteractable
 
     public void OnInteractionEnter(Collider other)
     {
-        if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
+        if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<InteractionEvent>(OnInteractQuest);
         }
@@ -15,7 +15,7 @@ public class InteractionQuest : Interaction, IInteractable
 
     public void OnInteractionExit(Collider other)
     {
-        if (other.gameObject.CompareTag(GameData.Instance.gameConfig.tagPlayer))
+        if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
         }
@@ -24,6 +24,9 @@ public class InteractionQuest : Interaction, IInteractable
     private void OnInteractQuest(InteractionEvent evt)
     {
         GameManager.Instance.ProgressQuest(quest);
+
+        EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
+
     }
 
 }
