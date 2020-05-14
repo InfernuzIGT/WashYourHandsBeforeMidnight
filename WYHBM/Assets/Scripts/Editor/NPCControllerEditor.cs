@@ -16,7 +16,7 @@ public class NPCControllerEditor : Editor
 
     private void OnSceneGUI()
     {
-        if (_controller == null || _controller.VisibleTargets == null)return;
+        if (_controller == null || _controller.VisibleTargets == null || !_controller.canDetectPlayer)return;
 
         Handles.color = Color.white;
         Handles.DrawWireArc(_controller.transform.position, Vector3.up, Vector3.forward, 360, _controller.viewRadius);
