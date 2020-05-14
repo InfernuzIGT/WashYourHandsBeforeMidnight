@@ -19,7 +19,7 @@ public class Slot : MonoBehaviour
         {
             Debug.Log($"<b> EQUIPMENT FULL! </b>");
             return;
-            
+
         }
 
         SlotEquipped newSlotEquipped = Instantiate(GameData.Instance.gameConfig.slotEquippedPrefab, GameManager.Instance.worldUI.itemEquippedParents);
@@ -33,8 +33,14 @@ public class Slot : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void OnInspectButton()
+    public void PointerEnter()
     {
+        GameManager.Instance.worldUI.onMouseOver = true;
+        GameManager.Instance.worldUI.SetItemInformation(item);
+    }
+    public void PointerExit()
+    {
+        GameManager.Instance.worldUI.onMouseOver = false;
         GameManager.Instance.worldUI.SetItemInformation(item);
     }
 
@@ -46,7 +52,6 @@ public class Slot : MonoBehaviour
 
         GameManager.Instance.worldUI.inventorySlots.RemoveItemList(item);
 
-        GameManager.Instance.worldUI.inventorySlots.isFull = false;
         GameManager.Instance.worldUI.TakeOffItemInformation();
 
         Destroy(gameObject);

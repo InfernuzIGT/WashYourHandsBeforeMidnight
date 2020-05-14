@@ -211,6 +211,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         worldUI.questComplete.SetActive(false);
         worldUI.questPopup.SetActive(false);
+        worldUI.inventoryPopUp.SetActive(false);
     }
 
     #endregion
