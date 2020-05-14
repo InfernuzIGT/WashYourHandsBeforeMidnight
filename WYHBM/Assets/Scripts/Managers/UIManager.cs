@@ -19,12 +19,6 @@ namespace GameMode.World
         public GameObject optionsUI;
         public GameObject inventoryUI;
         public GameObject diaryUI;
-        public GameObject arrow;
-
-        //bool
-        private bool _isInDiary;
-        private bool _isInInventory;
-        private bool _isInSystem;
 
         [Header("Panels")]
         public GameObject panelDialog;
@@ -53,7 +47,6 @@ namespace GameMode.World
         public TextMeshProUGUI[] questObjectives;
         [Space]
         public TextMeshProUGUI questPopupTxt;
-
         public TextMeshProUGUI questCompleteTxt;
         public GameObject questComplete;
         public GameObject questPopup;
@@ -67,6 +60,8 @@ namespace GameMode.World
         public TextMeshProUGUI itemDescription;
         public GameObject damageTxtDescription;
         public TextMeshProUGUI damageIntTxtDescription;
+        public GameObject inventoryPopUp;
+        public bool onMouseOver;
 
         private Tween _txtAnimation;
 
@@ -78,6 +73,11 @@ namespace GameMode.World
         private int _dialogIndex;
         private int _objectivesIndex;
         private bool _isWriting;
+
+        //bool
+        private bool _isInDiary;
+        private bool _isInInventory;
+        private bool _isInSystem;
 
         private Canvas _canvas;
 
@@ -311,11 +311,28 @@ namespace GameMode.World
 
         public void SetItemInformation(ItemSO item)
         {
-            itemInfo.SetActive(true);
-            damageTxtDescription.SetActive(true);
             damageIntTxtDescription.text = item.valueMin.ToString();
             itemSprite.sprite = item.previewSprite;
             itemDescription.text = item.description;
+
+            if (onMouseOver)
+            {
+                itemInfo.SetActive(true);
+                damageTxtDescription.SetActive(true);
+            }
+
+            else
+            {
+                itemInfo.SetActive(false);
+            }
+
+        }
+
+        public void InventoryPopUp()
+        {
+            inventoryPopUp.SetActive(true);
+
+            GameManager.Instance.StartCoroutine(GameManager.Instance.DeactivateWorldUI());
 
         }
 

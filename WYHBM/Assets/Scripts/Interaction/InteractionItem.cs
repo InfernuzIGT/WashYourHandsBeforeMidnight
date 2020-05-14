@@ -37,6 +37,7 @@ public class InteractionItem : Interaction, IInteractable
     {
         if (GameManager.Instance.worldUI.inventorySlots.isFull)
         {
+            GameManager.Instance.worldUI.InventoryPopUp();
             Debug.Log($"<b> INVENTORY FULL! </b>");
             return;
         }
