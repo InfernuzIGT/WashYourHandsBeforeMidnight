@@ -36,12 +36,14 @@ public class InteractionNPC : Interaction
                 _interactionDialogEvent.dialog = npc.dialog;
                 _interactionDialogEvent.enable = enable;
                 EventController.TriggerEvent(_interactionDialogEvent);
+                Debug.Log("DIALOG!");
                 break;
 
             case NPC_INTERACTION_TYPE.fight:
                 _interactionCombatEvent.npc = npc;
                 _interactionCombatEvent.currentNPC = currentNPC;
                 EventController.TriggerEvent(_interactionCombatEvent);
+                FMODUnity.RuntimeManager.PlayOneShot("event:/Stinger");
                 break;
 
             case NPC_INTERACTION_TYPE.dialogAndFight:
