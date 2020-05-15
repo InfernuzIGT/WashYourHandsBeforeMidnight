@@ -10,6 +10,9 @@ public class Slot : MonoBehaviour
     public void AddItem(ItemSO newItem)
     {
         item = newItem;
+
+        GameManager.Instance.worldUI.inventorySlots.AddItemList(item);
+
         icon.sprite = newItem.previewSprite;
     }
 
@@ -24,11 +27,29 @@ public class Slot : MonoBehaviour
 
         SlotEquipped newSlotEquipped = Instantiate(GameData.Instance.gameConfig.slotEquippedPrefab, GameManager.Instance.worldUI.itemEquippedParents);
 
-        newSlotEquipped.EquipItem(item);
 
-        GameManager.Instance.worldUI.inventorySlots.AddItemEquippedList(item);
+        newSlotEquipped.EquipItem(item);
+        
+        GameManager.Instance.worldUI.inventorySlots.isFull = false;
 
         GameManager.Instance.worldUI.inventorySlots.RemoveItemList(item);
+
+        PointerExit();
+
+        Destroy(gameObject);
+    }
+
+    public void OnRemoveButton()
+    {
+        InteractionItem newItem = Instantiate(GameData.Instance.gameConfig.itemPrefab, GameManager.Instance.GetPlayerFootPosition(), Quaternion.identity);
+
+        GameManager.Instance.worldUI.inventorySlots.isFull = false;
+
+        newItem.AddInfo(item);
+        newItem.DetectSize();
+
+        GameManager.Instance.worldUI.inventorySlots.RemoveItemList(item);
+        GameManager.Instance.worldUI.TakeOffItemInformation();
 
         Destroy(gameObject);
     }
@@ -43,18 +64,4 @@ public class Slot : MonoBehaviour
         GameManager.Instance.worldUI.onMouseOver = false;
         GameManager.Instance.worldUI.SetItemInformation(item);
     }
-
-    public void OnRemoveButton()
-    {
-        InteractionItem newItem = Instantiate(GameData.Instance.gameConfig.itemPrefab, GameManager.Instance.GetPlayerFootPosition(), Quaternion.identity);
-
-        newItem.AddInfo(item);
-
-        GameManager.Instance.worldUI.inventorySlots.RemoveItemList(item);
-
-        GameManager.Instance.worldUI.TakeOffItemInformation();
-
-        Destroy(gameObject);
-    }
-
 }

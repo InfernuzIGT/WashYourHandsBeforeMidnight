@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
 
     private InteractionEvent _interactionEvent;
 
+    //Items
+
+    public GameObject dropZone;
+
     // Movement 
     private float _speedWalk = 7.5f;
     private float _speedRun = 15f;
