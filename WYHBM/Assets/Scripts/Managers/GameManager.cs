@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Events;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class GameManager : MonoSingleton<GameManager>
     public Inventory inventoryManager; // TODO Mariano: Add
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
+    public Vector3 dropZone;
 
     [Header("Combat")]
     public CombatArea[] combatAreas;
@@ -192,6 +194,7 @@ public class GameManager : MonoSingleton<GameManager>
         worldUI.questDescriptionTxt.color = Color.grey;
 
         worldUI.questComplete.SetActive(true);
+        worldUI.questCompleteTxt.DOFade(1, GameData.Instance.gameConfig.fadeFastDuration);
 
         worldUI.questCompleteTxt.text = worldUI.questTitleTxt.text;
         worldUI.questCompleteTxt.fontStyle = FontStyles.Strikethrough;
@@ -209,8 +212,13 @@ public class GameManager : MonoSingleton<GameManager>
     {
         yield return _waitDeactivateUI;
 
+        worldUI.FadeOutUI();
+
+        yield return _waitDeactivateUI;
+
         worldUI.questComplete.SetActive(false);
         worldUI.questPopup.SetActive(false);
+        worldUI.inventoryPopUp.SetActive(false);
     }
 
     #endregion
@@ -219,7 +227,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     public Vector3 GetPlayerFootPosition()
     {
-        return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
+        return globalController.player.dropZone.transform.position;
+        // return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
     }
 
     public Ray GetRayMouse()

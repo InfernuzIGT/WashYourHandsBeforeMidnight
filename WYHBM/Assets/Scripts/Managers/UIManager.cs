@@ -19,12 +19,6 @@ namespace GameMode.World
         public GameObject optionsUI;
         public GameObject inventoryUI;
         public GameObject diaryUI;
-        public GameObject arrow;
-
-        //bool
-        private bool _isInDiary;
-        private bool _isInInventory;
-        private bool _isInSystem;
 
         [Header("Panels")]
         public GameObject panelDialog;
@@ -53,10 +47,12 @@ namespace GameMode.World
         public TextMeshProUGUI[] questObjectives;
         [Space]
         public TextMeshProUGUI questPopupTxt;
-
         public TextMeshProUGUI questCompleteTxt;
         public GameObject questComplete;
         public GameObject questPopup;
+        public GameObject questTitles;
+        public GameObject questGroup;
+        public Transform questTitlesParent;
 
         [Header("Items")]
         public Transform itemParents;
@@ -67,6 +63,9 @@ namespace GameMode.World
         public TextMeshProUGUI itemDescription;
         public GameObject damageTxtDescription;
         public TextMeshProUGUI damageIntTxtDescription;
+        public GameObject inventoryPopUp;
+        public TextMeshProUGUI inventoryPopUpTxt;
+        public bool onMouseOver;
 
         private Tween _txtAnimation;
 
@@ -78,6 +77,11 @@ namespace GameMode.World
         private int _dialogIndex;
         private int _objectivesIndex;
         private bool _isWriting;
+
+        //bool
+        private bool _isInDiary;
+        private bool _isInInventory;
+        private bool _isInSystem;
 
         private Canvas _canvas;
 
@@ -264,6 +268,21 @@ namespace GameMode.World
 
         #region Quest
 
+        public void OnClickQuest(bool _isOpen)
+        {
+            SetQuestInformation(_currentQuest);
+        }
+
+        public void SetQuestInformation(QuestSO data)
+        {
+            // Actualiza informacion de la UI con data
+
+            // questObjectives[0].text = data.objetives[0];
+            // questTitleDiaryTxt.text = data.title;
+            // questTitleTxt.text = data.title;
+            // questDescriptionTxt.text = data.description;
+            
+        }
         public void SetQuest(QuestSO data)
         {
 
@@ -275,9 +294,14 @@ namespace GameMode.World
 
             // PopUp quest
             questPopup.SetActive(true);
+            questPopupTxt.DOFade(1, GameData.Instance.gameConfig.fadeSlowDuration);
+
+            Instantiate(questTitles, questTitlesParent);
 
             GameManager.Instance.AddQuest(data);
+
             questPopupTxt.text = data.objetives[0];
+
             questObjectives[0].text = data.objetives[0];
             questTitleDiaryTxt.text = data.title;
             questTitleTxt.text = data.title;
@@ -296,6 +320,7 @@ namespace GameMode.World
         public void UpdateObjectives(string objetive, int index)
         {
             questPopup.SetActive(true);
+            questPopupTxt.DOFade(1, GameData.Instance.gameConfig.fadeSlowDuration);
 
             questObjectives[index - 1].fontStyle = FontStyles.Strikethrough;
 
@@ -305,17 +330,43 @@ namespace GameMode.World
             GameManager.Instance.StartCoroutine(GameManager.Instance.DeactivateWorldUI());
         }
 
+        public void FadeOutUI()
+        {
+            questPopupTxt.DOFade(0, GameData.Instance.gameConfig.fadeSlowDuration);
+            questCompleteTxt.DOFade(0, GameData.Instance.gameConfig.fadeSlowDuration);
+            inventoryPopUpTxt.DOFade(0, GameData.Instance.gameConfig.fadeSlowDuration);
+
+        }
+
         #endregion
 
         #region Inventory
 
         public void SetItemInformation(ItemSO item)
         {
-            itemInfo.SetActive(true);
-            damageTxtDescription.SetActive(true);
             damageIntTxtDescription.text = item.valueMin.ToString();
             itemSprite.sprite = item.previewSprite;
             itemDescription.text = item.description;
+
+            if (onMouseOver)
+            {
+                itemInfo.SetActive(true);
+                damageTxtDescription.SetActive(true);
+            }
+
+            else
+            {
+                itemInfo.SetActive(false);
+            }
+
+        }
+
+        public void InventoryPopUp()
+        {
+            inventoryPopUp.SetActive(true);
+            inventoryPopUpTxt.DOFade(1, GameData.Instance.gameConfig.fadeFastDuration);
+
+            GameManager.Instance.StartCoroutine(GameManager.Instance.DeactivateWorldUI());
 
         }
 
