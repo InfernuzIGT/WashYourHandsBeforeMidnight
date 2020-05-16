@@ -44,7 +44,6 @@ public class InteractionItem : Interaction, IInteractable
 
         Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
-        GameManager.Instance.worldUI.inventorySlots.AddItemList(item);
         EventController.RemoveListener<InteractionEvent>(OnInteractItem);
 
         Destroy(gameObject);
@@ -56,4 +55,19 @@ public class InteractionItem : Interaction, IInteractable
         _spriteRenderer.sprite = itemInfo.Sprite;
     }
 
+    [ContextMenu("Detect Size")]
+    public void DetectSize()
+    {
+        SpriteRenderer tempSpriteRenderer= GetComponent<SpriteRenderer>();
+        BoxCollider tempBoxCollider = GetComponent<BoxCollider>();
+
+        float pixelUnit = tempSpriteRenderer.sprite.pixelsPerUnit;
+        float width = tempSpriteRenderer.sprite.texture.width /pixelUnit;
+        float height = tempSpriteRenderer.sprite.texture.height /pixelUnit;
+
+        if (width < 1) width = 1;
+        if (height < .45f) height = .45f;
+
+        tempBoxCollider.size = new Vector3 (width, height, 1.5f);
+    }
 }

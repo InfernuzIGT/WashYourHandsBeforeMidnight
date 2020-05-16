@@ -11,6 +11,8 @@ public class SlotEquipped : MonoBehaviour
     {
         item = itemEquipped;
 
+        GameManager.Instance.worldUI.inventorySlots.AddItemEquippedList(item);
+
         icon.sprite = itemEquipped.previewSprite;
 
     }
@@ -23,13 +25,8 @@ public class SlotEquipped : MonoBehaviour
             return;
         }
 
-        GameManager.Instance.worldUI.inventorySlots.isFullEquipment = false;
-        
         Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
-
         newSlot.AddItem(item);
-
-        GameManager.Instance.worldUI.inventorySlots.AddItemList(item);
 
         GameManager.Instance.worldUI.inventorySlots.RemoveItemEquippedList(item);
 
