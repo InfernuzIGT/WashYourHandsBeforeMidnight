@@ -283,6 +283,7 @@ namespace GameMode.World
         //     // questDescriptionTxt.text = data.description;
             
         // }
+        
         public void SetQuest(QuestSO data)
         {
 
@@ -470,7 +471,8 @@ namespace GameMode.World
 
         public void OnQuitButton()
         {
-            GameData.Instance.LoadScene(SCENE_INDEX.MainMenu);
+            // GameData.Instance.LoadScene(SCENE_INDEX.MainMenu);
+            Application.Quit();
         }
 
         #endregion
