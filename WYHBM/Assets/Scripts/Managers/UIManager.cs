@@ -268,21 +268,21 @@ namespace GameMode.World
 
         #region Quest
 
-        public void OnClickQuest(bool _isOpen)
-        {
-            SetQuestInformation(_currentQuest);
-        }
+        // public void OnClickQuest(bool _isOpen)
+        // {
+        //     // SetQuestInformation(_currentQuest);
+        // }
 
-        public void SetQuestInformation(QuestSO data)
-        {
-            // Actualiza informacion de la UI con data
+        // public void SetQuestInformation(QuestSO data)
+        // {
+        //     // Actualiza informacion de la UI con data
 
-            // questObjectives[0].text = data.objetives[0];
-            // questTitleDiaryTxt.text = data.title;
-            // questTitleTxt.text = data.title;
-            // questDescriptionTxt.text = data.description;
+        //     // questObjectives[0].text = data.objetives[0];
+        //     // questTitleDiaryTxt.text = data.title;
+        //     // questTitleTxt.text = data.title;
+        //     // questDescriptionTxt.text = data.description;
             
-        }
+        // }
         public void SetQuest(QuestSO data)
         {
 

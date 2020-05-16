@@ -26,4 +26,10 @@ public class WaypointControllerEditor : Editor
         }
     }
 
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        EditorUtility.SetDirty(_controller);
+    }
+
 }
