@@ -42,6 +42,7 @@ public class Enemy : CombatCharacter
 
 	public void Select()
 	{
+		Debug.Log ($"<b> Select enemy </b>");
 		// TODO Mariano: Seleccionar Jugadores
 		GameManager.Instance.combatManager.listPlayers[0].ActionReceiveDamage(StatsDamage);
 
@@ -68,6 +69,7 @@ public class Enemy : CombatCharacter
 			default:
 				break;
 		}
+		Debug.Log ($"<b> Select Player </b>");
 
 		currentCharacter.DoAction();
 	}
