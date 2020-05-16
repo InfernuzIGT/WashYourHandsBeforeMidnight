@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class InteractionCollectible : Interaction
 {
-
     private int _index;
 
-    private void Awake() 
-    {
-    }
-    public override void Execute(bool enable)
+    public override void Execute()
     {
         base.Execute();
 

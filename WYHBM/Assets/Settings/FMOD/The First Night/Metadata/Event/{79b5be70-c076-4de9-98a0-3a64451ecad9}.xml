@@ -55,7 +55,7 @@
 			<destination>{9b755811-8fb3-4b6b-8e32-3dd64be3605e}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{56052abc-d491-4318-8b69-59a3c129aaf3}</destination>
+			<destination>{cec6e22b-9d3c-4e08-ac24-0f7760a339ee}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{b2a052af-9a0f-432c-b3bb-08ccb27549ff}" />
@@ -111,6 +111,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{d89da235-7563-4452-b773-c63a60b565f7}">
+		<property name="volume">
+			<value>6</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{e084c274-395a-486b-a747-6294935df2b1}</destination>
 		</relationship>
@@ -421,6 +424,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{6090d66a-411d-4629-b5e1-866499f499ae}">
+		<property name="volume">
+			<value>-6</value>
+		</property>
 		<property name="name">
 			<value>wind</value>
 		</property>

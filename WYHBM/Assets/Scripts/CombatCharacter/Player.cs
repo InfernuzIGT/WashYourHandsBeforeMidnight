@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
-// using UnityEngine;
+using UnityEngine;
 
+[RequireComponent(typeof(CombatAnimator))]
 public class Player : CombatCharacter
 {
     private List<EquipmentSO> equipment;
@@ -11,12 +13,35 @@ public class Player : CombatCharacter
     {
         base.Awake();
     }
-    
+
     public override void Start()
     {
         base.Start();
 
         // CreateEquipmentList();
+    }
+
+    /// <summary>
+    /// Espera la accion
+    /// </summary>
+    public override IEnumerator WaitingForAction()
+    {
+        base.WaitingForAction();
+
+        GameManager.Instance.combatUI.ShowPlayerPanel(true);
+
+        _isActionDone = false;
+
+        while (!_isActionDone)
+        {
+            yield return null;
+        }
+
+        Debug.Log($"<color=green><b> [COMBAT] </b></color> Action by {gameObject.name}");
+
+        yield return _waitPerAction;
+
+        AnimationAction(COMBAT_STATE.Idle);
     }
 
     // private void CreateEquipmentList()
@@ -31,7 +56,7 @@ public class Player : CombatCharacter
 
     //     // CombatManager.Instance.uIController.CreateActionObjects(equipment);
     // }
-    
+
     public override void ActionStartCombat()
     {
         base.ActionStartCombat();
@@ -53,6 +78,13 @@ public class Player : CombatCharacter
         transform.
         DOMove(StartPosition, GameData.Instance.combatConfig.transitionDuration).
         SetEase(Ease.OutQuad);
+    }
+
+    public override void CheckCharacters()
+    {
+        base.CheckCharacters();
+
+        GameManager.Instance.combatManager.CheckGame(this);
     }
 
 }

@@ -10,6 +10,7 @@ public class GlobalController : MonoBehaviour
 
     [Header("Cheats")]
     public bool infiniteStamina;
+    public ItemSO[] items;
 
     [Header("Settings")]
     public PlayerController player;
@@ -24,11 +25,14 @@ public class GlobalController : MonoBehaviour
     {
         SpawnPlayer();
         SetCamera();
+        AddItems();
     }
 
     private void SpawnPlayer()
     {
         RaycastHit hit;
+
+#if UNITY_EDITOR
 
         if (customSpawn)
         {
@@ -61,7 +65,21 @@ public class GlobalController : MonoBehaviour
                 player = Instantiate(player, sceneCameraPosition, Quaternion.identity, this.transform);
             }
         }
+#else
 
+        if (Physics.Raycast(spawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
+        {
+            Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
+            player = Instantiate(player, spawnPosition, Quaternion.identity, this.transform);
+        }
+        else
+        {
+            Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
+
+            player = Instantiate(player, spawnPoint.position, Quaternion.identity, this.transform);
+        }
+
+#endif
         player.gameObject.name = "Sam";
     }
 
@@ -76,15 +94,25 @@ public class GlobalController : MonoBehaviour
     {
         if (newCamera == null)
         {
-            newCamera.gameObject.SetActive(false);
+            _newVirtualCamera.gameObject.SetActive(false);
             virtualCamera.gameObject.SetActive(true);
+            _newVirtualCamera = null;
         }
         else
         {
-            _newVirtualCamera = newCamera;
             newCamera.gameObject.SetActive(true);
             virtualCamera.gameObject.SetActive(false);
+            _newVirtualCamera = newCamera;
         }
+    }
+
+    private void AddItems()
+    {
+        // TODO Mariano: Add items to Inventory
+        // if (items != null)
+        // {
+        //     // GameManager.Instance.inventoryManager.AddItemList();
+        // }
     }
 
     private void Update()

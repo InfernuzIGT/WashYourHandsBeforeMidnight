@@ -4,7 +4,7 @@
 public class ItemSO : EquipmentSO
 {
     [Header("Item")]
-    public bool isDefaultItem = false;
+    public bool isEquippable = false;
     public ITEM_TYPE itemType;
     public int level;
 }

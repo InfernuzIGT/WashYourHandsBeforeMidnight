@@ -9,7 +9,9 @@ public class EquipmentSO : ScriptableObject
     [TextArea]
     public string description;
     [PreviewTexture(48)]
-    public Sprite sprite;
+    public Sprite previewSprite;
+    [PreviewTexture(48)]
+    public Sprite Sprite;
     [Space]
     public TIER tier;
     public int price;
