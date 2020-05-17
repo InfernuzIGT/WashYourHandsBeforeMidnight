@@ -100,14 +100,11 @@ public enum ARMOR_TYPE
 
 #endregion
 
-public enum GROUND_TYPE
+public enum LADDER_EXIT
 {
-    none = 0,
-    Grass = 1,
-    Dirt = 2,
-    Wood = 3,
-    Cement = 4,
-    Ceramic = 5
+    Interaction = 0,
+    Bot = 1,
+    Top = 2,
 }
 
 public enum NPC_INTERACTION_TYPE
