@@ -188,8 +188,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void Complete()
     {
+        Debug.Log ($"<b> Completed </b>");
+
         worldUI.questTitleDiaryTxt.fontStyle = FontStyles.Strikethrough;
         worldUI.questTitleDiaryTxt.color = Color.grey;
+        
         worldUI.questDescriptionTxt.fontStyle = FontStyles.Strikethrough;
         worldUI.questDescriptionTxt.color = Color.grey;
 

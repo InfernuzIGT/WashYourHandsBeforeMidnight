@@ -185,7 +185,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
-        if (!angleIsGlobal)angleInDegrees += transform.eulerAngles.y;
+        if (!angleIsGlobal) angleInDegrees += transform.eulerAngles.y;
         _dirFromAngle = new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
         return _dirFromAngle;
     }
@@ -214,7 +214,12 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private void OnStopMovement(EnableMovementEvent evt)
     {
-        if (canMove)_agent.isStopped = !evt.canMove;
+        if (!canMove || waypoints == null)
+        {
+            return;
+        }
+
+        if (canMove) _agent.isStopped = !evt.canMove;
 
         _animatorController?.Movement(Vector3.zero);
     }

@@ -36,12 +36,15 @@ public class Player : CombatCharacter
         {
             yield return null;
         }
+        
+        GameManager.Instance.combatUI.ShowPlayerPanel(false);
 
         Debug.Log($"<color=green><b> [COMBAT] </b></color> Action by {gameObject.name}");
 
         yield return _waitPerAction;
 
         AnimationAction(COMBAT_STATE.Idle);
+
     }
 
     // private void CreateEquipmentList()
