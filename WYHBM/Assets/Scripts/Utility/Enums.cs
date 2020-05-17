@@ -110,6 +110,13 @@ public enum GROUND_TYPE
     Ceramic = 5
 }
 
+public enum LADDER_EXIT
+{
+    Interaction = 0,
+    Bot = 1,
+    Top = 2,
+}
+
 public enum NPC_INTERACTION_TYPE
 {
     none = 0,

@@ -16,18 +16,16 @@ public class PlayerController : MonoBehaviour
     private WorldAnimator _animatorController;
 
     private InteractionEvent _interactionEvent;
+    private LadderEvent _ladderEvent;
 
     //Items
-
     public GameObject dropZone;
 
     // Movement 
     private float _speedWalk = 7.5f;
     private float _speedRun = 15f;
-    private float _speedLadder = 5f;
     private bool _canMove = true;
     private bool _canJump = false;
-    private bool _inLadder = false;
     private bool _isRunning;
     private float _jump = 9.81f;
     private float _gravity = 29.43f;
@@ -35,8 +33,11 @@ public class PlayerController : MonoBehaviour
     private float _speedHorizontal;
     private float _speedVertical;
 
-    private bool _canPlayFootstep;
-    public bool CanPlayFootstep { get { return _canPlayFootstep; } }
+    // Ladder
+    private float _speedLadder = 5f;
+    private bool _inLadder = false;
+    private RaycastHit _hitBot;
+    private Vector3 _botPosition;
 
     // Stamina
     private float _stamina = 100;
@@ -60,9 +61,12 @@ public class PlayerController : MonoBehaviour
     private string _inputHorizontal = "Horizontal";
     private string _inputVertical = "Vertical";
 
-    // Cheats
+    // Properties
     private bool _infiniteStamina;
     public bool InfiniteStamina { set { _infiniteStamina = value; } }
+
+    private bool _canPlayFootstep;
+    public bool CanPlayFootstep { get { return _canPlayFootstep; } }
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
@@ -78,6 +82,7 @@ public class PlayerController : MonoBehaviour
         // Cursor.lockState = CursorLockMode.Locked;
 
         _interactionEvent = new InteractionEvent();
+        _ladderEvent = new LadderEvent();
     }
 
     private void OnEnable()
@@ -171,6 +176,8 @@ public class PlayerController : MonoBehaviour
     {
         if (!_inLadder) { return; }
 
+        DetectBot();
+
         _moveVertical = Input.GetAxisRaw(_inputVertical);
 
         _movement.x = 0;
@@ -180,6 +187,21 @@ public class PlayerController : MonoBehaviour
 
         // TODO Mariano: Add Animation
         // _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
+    }
+
+    private void DetectBot()
+    {
+        _botPosition = new Vector3(
+            transform.position.x,
+            transform.position.y - _characterController.height / 2 - _characterController.center.y,
+            transform.position.z);
+
+        if (Physics.Raycast(_botPosition, Vector3.down, out _hitBot, 0.1f))
+        {
+            _inLadder = false;
+            _ladderEvent.ladderExit = LADDER_EXIT.Bot;
+            EventController.TriggerEvent(_ladderEvent);
+        }
     }
 
     private void Stamina()

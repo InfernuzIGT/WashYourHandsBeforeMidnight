@@ -11,16 +11,15 @@ public class InteractionLadder : Interaction, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<InteractionEvent>(OnInteractionLadder);
+            EventController.AddListener<LadderEvent>(OnExitLadder);
         }
     }
 
     public void OnInteractionExit(Collider other)
     {
-        if (other.gameObject.CompareTag(Tags.Player))
+        if (other.gameObject.CompareTag(Tags.Player) && inLadder)
         {
-            EventController.RemoveListener<InteractionEvent>(OnInteractionLadder);
-
-            OnExitLadder();
+            OnExitLadder(LADDER_EXIT.Top);
         }
     }
 
@@ -34,18 +33,43 @@ public class InteractionLadder : Interaction, IInteractable
         {
             GameManager.Instance.globalController.player.SetNewPosition(
                 transform.position.x,
-                GameManager.Instance.globalController.player.transform.position.y + 0.5f, // TODO Mariano: Move To Config
+                GameManager.Instance.globalController.player.transform.position.y + 1, // TODO Mariano: Move To Config (ladderOffsetY)
                 transform.position.z);
+        }
+        else
+        {
+            OnExitLadder(LADDER_EXIT.Interaction);
         }
     }
 
-    private void OnExitLadder()
+    private void OnExitLadder(LadderEvent evt)
     {
-        if (inLadder)
-        {
-            Debug.Log($"<b> EXIT LADDER </b>");
-        }
+        OnExitLadder(evt.ladderExit);
+    }
 
+    private void OnExitLadder(LADDER_EXIT ladderExit)
+    {
         inLadder = false;
+
+        EventController.RemoveListener<InteractionEvent>(OnInteractionLadder);
+        EventController.RemoveListener<LadderEvent>(OnExitLadder);
+
+        switch (ladderExit)
+        {
+            case LADDER_EXIT.Interaction:
+                // Nothing
+                break;
+
+            case LADDER_EXIT.Bot:
+                // TODO Mariano: Animation Bot
+                break;
+
+            case LADDER_EXIT.Top:
+                // TODO Mariano: Animation Top
+                break;
+
+            default:
+                break;
+        }
     }
 }
