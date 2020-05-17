@@ -24,8 +24,10 @@ public class PlayerController : MonoBehaviour
     // Movement 
     private float _speedWalk = 7.5f;
     private float _speedRun = 15f;
+    private float _speedLadder = 5f;
     private bool _canMove = true;
     private bool _canJump = false;
+    private bool _inLadder = false;
     private bool _isRunning;
     private float _jump = 9.81f;
     private float _gravity = 29.43f;
@@ -95,18 +97,11 @@ public class PlayerController : MonoBehaviour
         CloseGame();
 
         Movement();
+        LadderMovement();
         Stamina();
         Interaction();
 
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
-
-        if (_stamina == 0f)
-        {
-            if (!breathingSound.IsPlaying())
-            {
-                breathingSound.Play();
-            }
-        }
     }
 
     private void CloseGame()
@@ -126,6 +121,8 @@ public class PlayerController : MonoBehaviour
             _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
             return;
         }
+
+        if (_inLadder) { return; }
 
         // Get input
         _moveHorizontal = Input.GetAxisRaw(_inputHorizontal);
@@ -170,6 +167,21 @@ public class PlayerController : MonoBehaviour
         _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
     }
 
+    private void LadderMovement()
+    {
+        if (!_inLadder) { return; }
+
+        _moveVertical = Input.GetAxisRaw(_inputVertical);
+
+        _movement.x = 0;
+        _movement.z = 0;
+        _movement.y = _moveVertical * _speedLadder;
+        _characterController.Move(_movement * Time.deltaTime);
+
+        // TODO Mariano: Add Animation
+        // _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
+    }
+
     private void Stamina()
     {
         if (_isRunning && !_infiniteStamina || Input.GetKey(KeyCode.LeftShift) && _stamina < 1 && !_infiniteStamina)
@@ -192,6 +204,10 @@ public class PlayerController : MonoBehaviour
 
         GameManager.Instance.worldUI.UpdateStamina(_stamina / _staminaMax);
 
+        if (_stamina == 0f && !breathingSound.IsPlaying())
+        {
+            breathingSound.Play();
+        }
     }
 
     private void Interaction()
@@ -207,6 +223,16 @@ public class PlayerController : MonoBehaviour
     public void SwitchMovement()
     {
         _canMove = !_canMove;
+    }
+
+    public void SwitchLadderMovement(bool inLadder)
+    {
+        _inLadder = inLadder;
+    }
+
+    public void SetNewPosition(float x, float y, float z)
+    {
+        transform.position = new Vector3(x, y, z);
     }
 
     #region FMOD
