@@ -128,7 +128,7 @@ public class CombatManager : MonoBehaviour
                 }
             }
         }
-
+        
         return sortedCharacters;
     }
 

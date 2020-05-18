@@ -21,6 +21,7 @@ public class InteractionItem : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
+            AddListenerQuest();
             EventController.AddListener<InteractionEvent>(OnInteractItem);
         }
     }
@@ -29,16 +30,16 @@ public class InteractionItem : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
+            RemoveListenerQuest();
             EventController.RemoveListener<InteractionEvent>(OnInteractItem);
         }
     }
 
     private void OnInteractItem(InteractionEvent evt)
     {
-        if (GameManager.Instance.worldUI.inventorySlots.isFull)
+        if (GameManager.Instance.IsInventoryFull)
         {
-            GameManager.Instance.worldUI.InventoryPopUp();
-            Debug.Log($"<b> INVENTORY FULL! </b>");
+            GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull, false);
             return;
         }
 
@@ -58,16 +59,16 @@ public class InteractionItem : Interaction, IInteractable
     [ContextMenu("Detect Size")]
     public void DetectSize()
     {
-        SpriteRenderer tempSpriteRenderer= GetComponent<SpriteRenderer>();
+        SpriteRenderer tempSpriteRenderer = GetComponent<SpriteRenderer>();
         BoxCollider tempBoxCollider = GetComponent<BoxCollider>();
 
         float pixelUnit = tempSpriteRenderer.sprite.pixelsPerUnit;
-        float width = tempSpriteRenderer.sprite.texture.width /pixelUnit;
-        float height = tempSpriteRenderer.sprite.texture.height /pixelUnit;
+        float width = tempSpriteRenderer.sprite.texture.width / pixelUnit;
+        float height = tempSpriteRenderer.sprite.texture.height / pixelUnit;
 
-        if (width < 1) width = 1;
-        if (height < .45f) height = .45f;
+        if (width < 1)width = 1;
+        if (height < .45f)height = .45f;
 
-        tempBoxCollider.size = new Vector3 (width, height, 1.5f);
+        tempBoxCollider.size = new Vector3(width, height, 1.5f);
     }
 }
