@@ -1,19 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
+﻿using System.Collections.Generic;
 using Events;
-using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    [Header("Ambients")]
+    [Header("General")]
+    public bool isPaused;
     public AMBIENT currentAmbient;
 
     [Header("References")]
     public GlobalController globalController;
     public CombatManager combatManager;
-    public Inventory inventoryManager; // TODO Mariano: Add
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Vector3 dropZone;
@@ -26,22 +23,45 @@ public class GameManager : MonoSingleton<GameManager>
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
+    // Inventory
+    private int _maxSlots = 12;
+    private int _maxSlotsEquipped = 4;
+
     // Combat
     private CombatArea _currentCombatArea;
     private NPCController currentNPC;
 
     private AMBIENT _lastAmbient;
 
-    private WaitForSeconds _waitDeactivateUI;
-
     // Events
     private FadeEvent _fadeEvent;
 
+    // Properties
+    private bool _isInventoryFull;
+    public bool IsInventoryFull { get { return _isInventoryFull; } }
+
+    private bool _isEquipmentFull;
+    public bool IsEquipmentFull { get { return _isEquipmentFull; } }
+
+    private List<ItemSO> _items;
+    public List<ItemSO> Items { get { return _items; } }
+
+    private List<ItemSO> _itemsEquipped;
+    public List<ItemSO> ItemsEquipped { get { return _itemsEquipped; } }
+
+    private DialogSO _currentDialog;
+    public DialogSO CurrentDialog { get { return _currentDialog; } }
+
+    private QuestSO _currentQuest;
+    public QuestSO CurrentQuest { get { return _currentQuest; } }
+
     private void Start()
     {
+        _items = new List<ItemSO>();
+        _itemsEquipped = new List<ItemSO>();
+
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
-        _waitDeactivateUI = new WaitForSeconds(seconds: GameData.Instance.gameConfig.messageLifetime);
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
@@ -51,12 +71,36 @@ public class GameManager : MonoSingleton<GameManager>
     {
         EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
+        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
+        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+
+    }
+
+    private void Update()
+    {
+        Pause();
+    }
+
+    private void Pause()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SetPause();
+        }
+    }
+
+    public void SetPause()
+    {
+        isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0 : 1;
+        worldUI.Pause(isPaused);
     }
 
     private void SwitchAmbient()
@@ -113,6 +157,89 @@ public class GameManager : MonoSingleton<GameManager>
         combatManager.InitiateTurn();
     }
 
+    private void StartCombat()
+    {
+        currentNPC.Kill();
+        combatManager.InitiateTurn();
+    }
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        return globalController.player.dropZone.transform.position;
+        // return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
+    }
+
+    public Ray GetRayMouse()
+    {
+        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
+    }
+
+    #region Inventory
+
+    public void AddItem(ItemSO item)
+    {
+        _items.Add(item);
+        _isInventoryFull = _items.Count == _maxSlots;
+    }
+
+    public void DropItem(ItemSO item)
+    {
+        _items.Remove(item);
+        worldUI.itemDescription.Hide();
+    }
+
+    public void EquipItem(ItemSO item)
+    {
+        _itemsEquipped.Add(item);
+        _items.Remove(item);
+        
+        _isEquipmentFull = _itemsEquipped.Count == _maxSlotsEquipped;
+        worldUI.itemDescription.Hide();
+    }
+
+    public void UnequipItem(ItemSO item)
+    {
+        _items.Add(item);
+        _itemsEquipped.Remove(item);
+    }
+
+    #endregion
+
+    #region Quest
+
+    public void AddQuest(QuestSO data)
+    {
+
+        if (!dictionaryQuest.ContainsKey(data.id))
+        {
+            dictionaryQuest.Add(data.id, data);
+
+            dictionaryProgress.Add(data.id, 0);
+        }
+    }
+
+    public void ProgressQuest(QuestSO quest, int progress)
+    {
+        if (!dictionaryQuest.ContainsKey(quest.id) ||
+            dictionaryProgress[quest.id] != progress ||
+            dictionaryProgress[quest.id] >= dictionaryQuest[quest.id].objetives.Length)
+        {
+            return;
+        }
+
+        dictionaryProgress[quest.id]++;
+
+        worldUI.UpdateQuest(dictionaryQuest[quest.id], dictionaryProgress[quest.id]);
+    }
+
+    public void GiveReward()
+    {
+        // TODO Mariano: Dar recompensa del QuestSO
+        // Instantiate item in inventory
+    }
+
+    #endregion
+
     #region Events
 
     public void OnEnterCombat(EnterCombatEvent evt)
@@ -144,99 +271,21 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.TriggerEvent(_fadeEvent);
     }
 
-    private void StartCombat()
+    // Enable interaction dialog
+    private void OnEnableDialog(EnableDialogEvent evt)
     {
-        currentNPC.Kill();
-        combatManager.InitiateTurn();
-    }
-
-    #endregion
-
-    #region Quest
-
-    public void AddQuest(QuestSO data)
-    {
-
-        if (!dictionaryQuest.ContainsKey(data.id))
+        if (evt.enable)
         {
-            dictionaryQuest.Add(data.id, data);
-
-            dictionaryProgress.Add(data.id, 0);
-        }
-    }
-
-    public void ProgressQuest(QuestSO quest)
-    {
-        if (dictionaryProgress[quest.id] >= dictionaryQuest[quest.id].objetives.Length)
-        {
-            return;
-
-        }
-
-        dictionaryProgress[quest.id]++;
-        Debug.Log($"<b> Progress {dictionaryProgress[quest.id]} - quest{dictionaryQuest[quest.id].objetives.Length} </b> ");
-
-        if (dictionaryProgress[quest.id] == dictionaryQuest[quest.id].objetives.Length)
-        {
-            Complete();
+            _currentDialog = evt.dialog;
+            _currentQuest = evt.dialog.questSO;
+            EventController.AddListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
         else
         {
-            worldUI.UpdateObjectives(dictionaryQuest[quest.id].objetives[dictionaryProgress[quest.id]], dictionaryProgress[quest.id]);
+            _currentDialog = null;
+            _currentQuest = null;
+            EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
-    }
-
-    public void Complete()
-    {
-        Debug.Log ($"<b> Completed </b>");
-
-        worldUI.questTitleDiaryTxt.fontStyle = FontStyles.Strikethrough;
-        worldUI.questTitleDiaryTxt.color = Color.grey;
-        
-        worldUI.questDescriptionTxt.fontStyle = FontStyles.Strikethrough;
-        worldUI.questDescriptionTxt.color = Color.grey;
-
-        worldUI.questComplete.SetActive(true);
-        worldUI.questCompleteTxt.DOFade(1, GameData.Instance.gameConfig.fadeFastDuration);
-
-        worldUI.questCompleteTxt.text = worldUI.questTitleTxt.text;
-        worldUI.questCompleteTxt.fontStyle = FontStyles.Strikethrough;
-
-        StartCoroutine(DeactivateWorldUI());
-    }
-
-    public void GiveReward()
-    {
-        // TODO Mariano: Dar recompensa del QuestSO
-        // Instantiate item in inventory
-    }
-
-    public IEnumerator DeactivateWorldUI()
-    {
-        yield return _waitDeactivateUI;
-
-        worldUI.FadeOutUI();
-
-        yield return _waitDeactivateUI;
-
-        worldUI.questComplete.SetActive(false);
-        worldUI.questPopup.SetActive(false);
-        worldUI.inventoryPopUp.SetActive(false);
-    }
-
-    #endregion
-
-    #region Other
-
-    public Vector3 GetPlayerFootPosition()
-    {
-        return globalController.player.dropZone.transform.position;
-        // return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
-    }
-
-    public Ray GetRayMouse()
-    {
-        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
 
     #endregion
