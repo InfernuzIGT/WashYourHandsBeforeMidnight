@@ -24,6 +24,11 @@ namespace Events
         public bool canMove;
         public bool enterToInterior;
     }
+    
+    public class LadderEvent : GameEvent
+    {
+        public LADDER_EXIT ladderExit;
+    }
 
     public class ChangePlayerPositionEvent : GameEvent
     {

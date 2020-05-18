@@ -1,0 +1,293 @@
+﻿using System.Collections.Generic;
+using Events;
+using UnityEngine;
+
+public class GameManager : MonoSingleton<GameManager>
+{
+    [Header("General")]
+    public bool isPaused;
+    public AMBIENT currentAmbient;
+
+    [Header("References")]
+    public GlobalController globalController;
+    public CombatManager combatManager;
+    public GameMode.World.UIManager worldUI;
+    public GameMode.Combat.UIManager combatUI;
+    public Vector3 dropZone;
+
+    [Header("Combat")]
+    public CombatArea[] combatAreas;
+    [Space]
+    public List<Player> combatCharacters;
+
+    public Dictionary<int, QuestSO> dictionaryQuest;
+    public Dictionary<int, int> dictionaryProgress;
+
+    // Inventory
+    private int _maxSlots = 12;
+    private int _maxSlotsEquipped = 4;
+
+    // Combat
+    private CombatArea _currentCombatArea;
+    private NPCController currentNPC;
+
+    private AMBIENT _lastAmbient;
+
+    // Events
+    private FadeEvent _fadeEvent;
+
+    // Properties
+    private bool _isInventoryFull;
+    public bool IsInventoryFull { get { return _isInventoryFull; } }
+
+    private bool _isEquipmentFull;
+    public bool IsEquipmentFull { get { return _isEquipmentFull; } }
+
+    private List<ItemSO> _items;
+    public List<ItemSO> Items { get { return _items; } }
+
+    private List<ItemSO> _itemsEquipped;
+    public List<ItemSO> ItemsEquipped { get { return _itemsEquipped; } }
+
+    private DialogSO _currentDialog;
+    public DialogSO CurrentDialog { get { return _currentDialog; } }
+
+    private QuestSO _currentQuest;
+    public QuestSO CurrentQuest { get { return _currentQuest; } }
+
+    private void Start()
+    {
+        _items = new List<ItemSO>();
+        _itemsEquipped = new List<ItemSO>();
+
+        dictionaryQuest = new Dictionary<int, QuestSO>();
+        dictionaryProgress = new Dictionary<int, int>();
+
+        _fadeEvent = new FadeEvent();
+        _fadeEvent.fadeFast = true;
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
+        EventController.AddListener<ExitCombatEvent>(OnExitCombat);
+        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
+        EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
+        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+
+    }
+
+    private void Update()
+    {
+        Pause();
+    }
+
+    private void Pause()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SetPause();
+        }
+    }
+
+    public void SetPause()
+    {
+        isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0 : 1;
+        worldUI.Pause(isPaused);
+    }
+
+    private void SwitchAmbient()
+    {
+        switch (currentAmbient)
+        {
+            case AMBIENT.World:
+                worldUI.EnableCanvas(true);
+                combatUI.EnableCanvas(false);
+
+                globalController.ChangeCamera(null);
+                combatManager.CloseCombatArea();
+                break;
+
+                // case AMBIENT.Interior:
+                //     worldUI.EnableCanvas(true);
+                //     combatUI.EnableCanvas(false);
+
+                //     player.ChangeMovement(true);
+                //     break;
+
+                // case AMBIENT.Location:
+                //     worldUI.EnableCanvas(true);
+                //     combatUI.EnableCanvas(false);
+
+                //     player.ChangeMovement(true);
+                //     break;
+
+            case AMBIENT.Combat:
+                worldUI.EnableCanvas(false);
+                combatUI.EnableCanvas(true);
+
+                globalController.ChangeCamera(_currentCombatArea.virtualCamera);
+                break;
+
+            case AMBIENT.Development:
+                // Nothing
+
+                Debug.Log($"<color=yellow><b>[DEV]  </b></color> Switch Ambient!");
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void SwitchMovement()
+    {
+        globalController.player.SwitchMovement();
+    }
+
+    private void InitiateTurn()
+    {
+        combatManager.InitiateTurn();
+    }
+
+    private void StartCombat()
+    {
+        currentNPC.Kill();
+        combatManager.InitiateTurn();
+    }
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        return globalController.player.dropZone.transform.position;
+        // return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
+    }
+
+    public Ray GetRayMouse()
+    {
+        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
+    }
+
+    #region Inventory
+
+    public void AddItem(ItemSO item)
+    {
+        _items.Add(item);
+        _isInventoryFull = _items.Count == _maxSlots;
+    }
+
+    public void DropItem(ItemSO item)
+    {
+        _items.Remove(item);
+        worldUI.itemDescription.Hide();
+    }
+
+    public void EquipItem(ItemSO item)
+    {
+        _itemsEquipped.Add(item);
+        _items.Remove(item);
+        
+        _isEquipmentFull = _itemsEquipped.Count == _maxSlotsEquipped;
+        worldUI.itemDescription.Hide();
+    }
+
+    public void UnequipItem(ItemSO item)
+    {
+        _items.Add(item);
+        _itemsEquipped.Remove(item);
+    }
+
+    #endregion
+
+    #region Quest
+
+    public void AddQuest(QuestSO data)
+    {
+
+        if (!dictionaryQuest.ContainsKey(data.id))
+        {
+            dictionaryQuest.Add(data.id, data);
+
+            dictionaryProgress.Add(data.id, 0);
+        }
+    }
+
+    public void ProgressQuest(QuestSO quest, int progress)
+    {
+        if (!dictionaryQuest.ContainsKey(quest.id) ||
+            dictionaryProgress[quest.id] != progress ||
+            dictionaryProgress[quest.id] >= dictionaryQuest[quest.id].objetives.Length)
+        {
+            return;
+        }
+
+        dictionaryProgress[quest.id]++;
+
+        worldUI.UpdateQuest(dictionaryQuest[quest.id], dictionaryProgress[quest.id]);
+    }
+
+    public void GiveReward()
+    {
+        // TODO Mariano: Dar recompensa del QuestSO
+        // Instantiate item in inventory
+    }
+
+    #endregion
+
+    #region Events
+
+    public void OnEnterCombat(EnterCombatEvent evt)
+    {
+        _lastAmbient = currentAmbient;
+        currentAmbient = AMBIENT.Combat;
+        currentNPC = evt.currentNPC;
+
+        int indexArea = Random.Range(0, combatAreas.Length);
+        _currentCombatArea = combatAreas[indexArea];
+        combatManager.SetData(_currentCombatArea, combatCharacters, evt.npc.combatCharacters);
+
+        _fadeEvent.callbackStart = SwitchMovement;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = StartCombat;
+
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
+    public void OnExitCombat(ExitCombatEvent evt)
+    {
+        _lastAmbient = currentAmbient;
+        currentAmbient = AMBIENT.World;
+
+        _fadeEvent.callbackStart = null;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = SwitchMovement;
+
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
+    // Enable interaction dialog
+    private void OnEnableDialog(EnableDialogEvent evt)
+    {
+        if (evt.enable)
+        {
+            _currentDialog = evt.dialog;
+            _currentQuest = evt.dialog.questSO;
+            EventController.AddListener<InteractionEvent>(worldUI.OnInteractionDialog);
+        }
+        else
+        {
+            _currentDialog = null;
+            _currentQuest = null;
+            EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
+        }
+    }
+
+    #endregion
+
+}

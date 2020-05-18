@@ -15,6 +15,7 @@ public class InteractionAnimation : Interaction, IInteractable
 	{
 		if (other.gameObject.CompareTag(Tags.Player))
 		{
+			AddListenerQuest();
 			EventController.AddListener<InteractionEvent>(OnTriggerAnimation);
 		}
 	}
@@ -23,6 +24,7 @@ public class InteractionAnimation : Interaction, IInteractable
 	{
 		if (other.gameObject.CompareTag(Tags.Player))
 		{
+			RemoveListenerQuest();
 			EventController.RemoveListener<InteractionEvent>(OnTriggerAnimation);
 		}
 	}
