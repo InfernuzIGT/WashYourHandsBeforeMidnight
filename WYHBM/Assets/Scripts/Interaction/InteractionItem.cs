@@ -53,7 +53,7 @@ public class InteractionItem : Interaction, IInteractable
     public void AddInfo(ItemSO itemInfo)
     {
         item = itemInfo;
-        _spriteRenderer.sprite = itemInfo.Sprite;
+        _spriteRenderer.sprite = itemInfo.sprite;
     }
 
     [ContextMenu("Detect Size")]
@@ -63,12 +63,34 @@ public class InteractionItem : Interaction, IInteractable
         BoxCollider tempBoxCollider = GetComponent<BoxCollider>();
 
         float pixelUnit = tempSpriteRenderer.sprite.pixelsPerUnit;
-        float width = tempSpriteRenderer.sprite.texture.width / pixelUnit;
-        float height = tempSpriteRenderer.sprite.texture.height / pixelUnit;
+        float width = tempSpriteRenderer.sprite.rect.width / pixelUnit;
+        float height = tempSpriteRenderer.sprite.rect.height / pixelUnit;
 
         if (width < 1)width = 1;
         if (height < .45f)height = .45f;
 
         tempBoxCollider.size = new Vector3(width, height, 1.5f);
+    }
+
+    public void InstantiatePrefab(ItemSO item, QuestSO quest, int progress)
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        BoxCollider boxCollider = GetComponent<BoxCollider>();
+        
+        // Set Values
+        spriteRenderer.sprite = item.sprite;
+        this.quest = quest;
+        this.progress = progress;
+        this.item = item;
+
+        // Detect Size
+        float pixelUnit = spriteRenderer.sprite.pixelsPerUnit;
+        float width = spriteRenderer.sprite.rect.width / pixelUnit;
+        float height = spriteRenderer.sprite.rect.height / pixelUnit;
+
+        if (width < 1)width = 1;
+        if (height < .45f)height = .45f;
+
+        boxCollider.size = new Vector3(width, height, 1.5f);
     }
 }

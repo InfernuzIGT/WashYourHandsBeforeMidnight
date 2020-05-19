@@ -47,11 +47,6 @@ namespace GameMode.World
         private string _textSkip;
         private Coroutine _coroutineWrite;
 
-        // Pause
-        private bool _isInDiary;
-        private bool _isInInventory;
-        private bool _isInSystem;
-
         // Diary
         private Dictionary<QuestSO, QuestTitle> dicQuestTitle;
         private Dictionary<QuestSO, QuestDescription> dicQuestDescription;
@@ -283,8 +278,6 @@ namespace GameMode.World
                     inventory.SetActive(false);
 
                     diary.SetActive(true);
-
-                    _isInDiary = true;
                     break;
 
                 case BUTTON_TYPE.Inventory:
@@ -293,8 +286,6 @@ namespace GameMode.World
                     diary.SetActive(false);
 
                     inventory.SetActive(true);
-
-                    _isInInventory = true;
                     break;
 
                 case BUTTON_TYPE.System:
@@ -303,8 +294,6 @@ namespace GameMode.World
                     inventory.SetActive(false);
 
                     system.SetActive(true);
-
-                    _isInSystem = true;
                     break;
 
                 case BUTTON_TYPE.Resume:
@@ -313,8 +302,6 @@ namespace GameMode.World
 
                 case BUTTON_TYPE.Options:
                     systemOptions.SetActive(true);
-
-                    _isInSystem = true;
                     break;
 
                 case BUTTON_TYPE.Quit:

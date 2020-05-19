@@ -15,7 +15,6 @@ public class CombatConfig : ScriptableObject
     public LayerMask layerEnemy;
 
     [Header("Action")]
-    public ActionObject actionObjectPrefab;
     public float actionTimeThresholdMultiplier = 1f;
     public float waitTimeToStart = 3;
     public float waitTimePerAction = 1.5f;
