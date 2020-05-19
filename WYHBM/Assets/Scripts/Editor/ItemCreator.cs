@@ -21,7 +21,7 @@ public class ItemCreator : EditorWindow
     private Sprite[] _sprites;
 
     [MenuItem("Tools/Item Creator")]
-    static void CreateReplaceWithPrefab()
+    static void CreateItemCreator()
     {
         var window = EditorWindow.GetWindow<ItemCreator>();
         Texture2D iconTitle = EditorGUIUtility.Load("d_UnityEditor.ConsoleWindow")as Texture2D;
