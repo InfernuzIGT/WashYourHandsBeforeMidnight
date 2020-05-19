@@ -6,8 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(CombatAnimator))]
 public class Player : CombatCharacter
 {
-    private List<EquipmentSO> equipment;
-    public List<EquipmentSO> Equipment { get { return equipment; } set { equipment = value; } }
+    private List<ItemSO> equipment;
+    public List<ItemSO> Equipment { get { return equipment; } set { equipment = value; } }
 
     public override void Awake()
     {
