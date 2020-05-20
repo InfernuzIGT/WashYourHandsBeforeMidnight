@@ -23,15 +23,12 @@ public class GameManager : MonoSingleton<GameManager>
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
 
-    // Inventory
-    private int _maxSlots = 12;
-    private int _maxSlotsEquipped = 4;
-
     // Combat
     private CombatArea _currentCombatArea;
     private NPCController currentNPC;
 
     private AMBIENT _lastAmbient;
+    private int _inventoryMaxSlots = 12;
 
     // Events
     private FadeEvent _fadeEvent;
@@ -40,14 +37,14 @@ public class GameManager : MonoSingleton<GameManager>
     private bool _isInventoryFull;
     public bool IsInventoryFull { get { return _isInventoryFull; } }
 
-    private bool _isEquipmentFull;
-    public bool IsEquipmentFull { get { return _isEquipmentFull; } }
+    // private bool _isEquipmentFull;
+    // public bool IsEquipmentFull { get { return _isEquipmentFull; } }
 
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
 
-    private List<ItemSO> _itemsEquipped;
-    public List<ItemSO> ItemsEquipped { get { return _itemsEquipped; } }
+    // private List<ItemSO> _itemsEquipped;
+    // public List<ItemSO> ItemsEquipped { get { return _itemsEquipped; } }
 
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
@@ -58,7 +55,7 @@ public class GameManager : MonoSingleton<GameManager>
     private void Start()
     {
         _items = new List<ItemSO>();
-        _itemsEquipped = new List<ItemSO>();
+        // _itemsEquipped = new List<ItemSO>();
 
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
@@ -179,7 +176,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void AddItem(ItemSO item)
     {
         _items.Add(item);
-        _isInventoryFull = _items.Count == _maxSlots;
+        _isInventoryFull = _items.Count == _inventoryMaxSlots;
     }
 
     public void DropItem(ItemSO item)
@@ -188,19 +185,56 @@ public class GameManager : MonoSingleton<GameManager>
         worldUI.itemDescription.Hide();
     }
 
+    // TODO Mariano: REVIEW
     public void EquipItem(ItemSO item)
     {
-        _itemsEquipped.Add(item);
+        switch (item.type)
+        {
+            case ITEM_TYPE.Damage:
+                combatCharacters[0].weapon = item;
+                break;
+
+            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
+                combatCharacters[0].item = item;
+                break;
+
+            case ITEM_TYPE.Defense:
+                combatCharacters[0].defense = item;
+                break;
+
+            default:
+                break;
+        }
+
+        // _itemsEquipped.Add(item); // REMOVE
         _items.Remove(item);
-        
-        _isEquipmentFull = _itemsEquipped.Count == _maxSlotsEquipped;
+
+        // _isEquipmentFull = _itemsEquipped.Count == 4; // REMOVE
         worldUI.itemDescription.Hide();
     }
 
     public void UnequipItem(ItemSO item)
     {
+        switch (item.type)
+        {
+            case ITEM_TYPE.Damage:
+                combatCharacters[0].weapon = null;
+                break;
+
+            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
+                combatCharacters[0].item = null;
+                break;
+
+            case ITEM_TYPE.Defense:
+                combatCharacters[0].defense = null;
+                break;
+
+            default:
+                break;
+        }
+
         _items.Add(item);
-        _itemsEquipped.Remove(item);
+        // _itemsEquipped.Remove(item); // REMOVE
     }
 
     #endregion

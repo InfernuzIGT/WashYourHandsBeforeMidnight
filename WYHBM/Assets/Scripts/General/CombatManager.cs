@@ -61,7 +61,7 @@ public class CombatManager : MonoBehaviour
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            player.CombatIndex = indexCombat;
+            player.SetCharacter(indexCombat);
             indexCombat++;
 
             listPlayers.Add(player);
@@ -76,7 +76,7 @@ public class CombatManager : MonoBehaviour
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            enemy.CombatIndex = indexCombat;
+            enemy.SetCharacter(indexCombat);
             indexCombat++;
 
             listEnemies.Add(enemy);
@@ -91,8 +91,6 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     public void InitiateTurn()
     {
-        Debug.Log($"<b> [COMBAT] </b> Initiate Turn");
-
         _isEndOfCombat = false;
 
         AddToWaiting(InitialSort());
@@ -128,7 +126,7 @@ public class CombatManager : MonoBehaviour
                 }
             }
         }
-        
+
         return sortedCharacters;
     }
 

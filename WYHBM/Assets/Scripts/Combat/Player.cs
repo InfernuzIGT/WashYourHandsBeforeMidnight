@@ -1,24 +1,13 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 [RequireComponent(typeof(CombatAnimator))]
 public class Player : CombatCharacter
 {
-    private List<EquipmentSO> equipment;
-    public List<EquipmentSO> Equipment { get { return equipment; } set { equipment = value; } }
-
-    public override void Awake()
-    {
-        base.Awake();
-    }
-
     public override void Start()
     {
         base.Start();
-
-        // CreateEquipmentList();
     }
 
     /// <summary>
@@ -36,7 +25,7 @@ public class Player : CombatCharacter
         {
             yield return null;
         }
-        
+
         GameManager.Instance.combatUI.ShowPlayerPanel(false);
 
         Debug.Log($"<color=green><b> [COMBAT] </b></color> Action by {gameObject.name}");
@@ -46,19 +35,6 @@ public class Player : CombatCharacter
         AnimationAction(COMBAT_STATE.Idle);
 
     }
-
-    // private void CreateEquipmentList()
-    // {
-    //     equipment = new List<EquipmentSO>();
-
-    //     equipment.AddRange(character.equipmentWeapon);
-    //     equipment.AddRange(character.equipmentItem);
-    //     equipment.AddRange(character.equipmentArmor);
-
-    //     equipment.Sort((e1, e2) => e1.order.CompareTo(e2.order));
-
-    //     // CombatManager.Instance.uIController.CreateActionObjects(equipment);
-    // }
 
     public override void ActionStartCombat()
     {

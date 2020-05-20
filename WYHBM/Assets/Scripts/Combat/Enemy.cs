@@ -5,11 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(CombatAnimator))]
 public class Enemy : CombatCharacter
 {
-	public override void Awake()
-	{
-		base.Awake();
-	}
-
 	public override void Start()
 	{
 		base.Start();
@@ -21,7 +16,7 @@ public class Enemy : CombatCharacter
 	public override IEnumerator WaitingForAction()
 	{
 		base.WaitingForAction();
-		
+
 		GameManager.Instance.combatUI.ShowPlayerPanel(false);
 
 		_isActionDone = false;
@@ -42,42 +37,11 @@ public class Enemy : CombatCharacter
 
 	public void Select()
 	{
-		Debug.Log ($"<b> Select enemy </b>");
+		Debug.Log($"<b> Select enemy </b>");
 		// TODO Mariano: Seleccionar Jugadores
-		GameManager.Instance.combatManager.listPlayers[0].ActionReceiveDamage(StatsDamage);
+		GameManager.Instance.combatManager.listPlayers[0].ActionReceiveDamage(StatsBaseDamage);
 
 		DoAction();
-	}
-
-	public void Select(COMBAT_STATE combatState, CombatCharacter currentCharacter)
-	{
-		switch (combatState)
-		{
-			case COMBAT_STATE.Attack:
-				ActionReceiveDamage(currentCharacter.StatsDamage);
-				currentCharacter.AnimationAction(combatState);
-				break;
-
-			case COMBAT_STATE.Item:
-				// TODO Mariano: Damage with items
-				break;
-
-			case COMBAT_STATE.Defense:
-				// TODO Mariano: Add defense per 1 turn
-				break;
-
-			default:
-				break;
-		}
-		Debug.Log ($"<b> Select Player </b>");
-
-		currentCharacter.DoAction();
-	}
-
-	public override void SetCharacter()
-	{
-		base.SetCharacter();
-		// SpriteRenderer.flipX = true;
 	}
 
 	public override void ActionStartCombat()
