@@ -13,7 +13,7 @@ public class ItemDescription : MonoBehaviour
         itemImg.sprite = item.previewSprite;
         descriptionTxt.text = item.description;
 
-        switch (item.itemType)
+        switch (item.type)
         {
             case ITEM_TYPE.None:
                 valueTxt.text = "";

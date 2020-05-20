@@ -12,11 +12,6 @@ public class InteractionItem : Interaction, IInteractable
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void Start()
-    {
-        AddInfo(item);
-    }
-
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Tags.Player))
@@ -56,15 +51,14 @@ public class InteractionItem : Interaction, IInteractable
         _spriteRenderer.sprite = itemInfo.sprite;
     }
 
-    [ContextMenu("Detect Size")]
     public void DetectSize()
     {
         SpriteRenderer tempSpriteRenderer = GetComponent<SpriteRenderer>();
         BoxCollider tempBoxCollider = GetComponent<BoxCollider>();
 
         float pixelUnit = tempSpriteRenderer.sprite.pixelsPerUnit;
-        float width = tempSpriteRenderer.sprite.rect.width / pixelUnit;
-        float height = tempSpriteRenderer.sprite.rect.height / pixelUnit;
+        float width = tempSpriteRenderer.sprite.texture.width / pixelUnit;
+        float height = tempSpriteRenderer.sprite.texture.height / pixelUnit;
 
         if (width < 1)width = 1;
         if (height < .45f)height = .45f;
@@ -72,11 +66,16 @@ public class InteractionItem : Interaction, IInteractable
         tempBoxCollider.size = new Vector3(width, height, 1.5f);
     }
 
+    #region Item Creator Tool
+
+    /// <summary>
+    /// Used in Item Creator Tool
+    /// </summary>
     public void InstantiatePrefab(ItemSO item, QuestSO quest, int progress)
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         BoxCollider boxCollider = GetComponent<BoxCollider>();
-        
+
         // Set Values
         spriteRenderer.sprite = item.sprite;
         this.quest = quest;
@@ -93,4 +92,6 @@ public class InteractionItem : Interaction, IInteractable
 
         boxCollider.size = new Vector3(width, height, 1.5f);
     }
+
+    #endregion
 }

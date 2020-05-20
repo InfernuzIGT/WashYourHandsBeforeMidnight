@@ -1,103 +1,78 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using UnityEngine;
 
 public class CombatCharacter : MonoBehaviour
 {
-    [Header("Character")]
-    public CharacterSO character;
+    [Header("General")]
+    [SerializeField] private string _name;
+    [Space]
+    [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
+    [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 100;
+    [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 5;
+    [SerializeField, Range(1f, 10f)] private int _statsReaction = 1;
 
-    [Header("Interface")]
-    [SerializeField] private CharacterUI characterUI = null; // TODO Mariano: Instancia el prefab como hijo
+    [Header("Inventory")]
+    public ItemSO weapon;
+    public ItemSO item;
+    public ItemSO defense;
 
     // Protected
     protected bool _isActionDone;
     protected WaitForSeconds _waitPerAction;
 
+    private CharacterUI characterUI;
     private CombatAnimator _combatAnimator;
-    private string _name;
-    private float _healthActual;
+    private SpriteRenderer _spriteRenderer;
     private Vector3 _scaleNormal;
     private Vector2 _infoTextPosition;
+    private int _combatIndex;
 
     private InfoTextEvent infoTextEvent = new InfoTextEvent();
 
-    #region Properties
+    // Stats
+    private float _healthActual;
 
-    private List<ItemSO> _items;
-    public List<ItemSO> Items { get { return _items; } set { _items = value; } }
+    public string Name { get { return _name; } }
+    public int StatsHealthMax { get { return _statsHealthMax; } }
+    public int StatsBaseDamage { get { return _statsBaseDamage; } }
+    public int StatsBaseDefense { get { return _statsBaseDefense; } }
+    public int StatsReaction { get { return _statsReaction; } }
 
-    private bool _isAlive;
-    public bool IsAlive { get { return _isAlive; } }
-
+    // Properties
     protected bool _isMyTurn;
     public bool IsMyTurn { get { return _isMyTurn; } set { _isMyTurn = value; } }
 
     private Vector3 _startPosition;
     public Vector3 StartPosition { get { return _startPosition; } }
 
-    // private BoxCollider _boxCollider;
-    // public BoxCollider BoxCollider { get { return _boxCollider; } }
-
-    private SpriteRenderer _spriteRenderer;
-    // public SpriteRenderer SpriteRenderer { get { return _spriteRenderer; } }
-
-    private int _combatIndex;
-    public int CombatIndex { get { return _combatIndex; } set { _combatIndex = value; } }
-
-    private int _statsHealthMax;
-    public int StatsHealthMax { get { return _statsHealthMax; } }
-
-    private int _statsDamage;
-    public int StatsDamage { get { return _statsDamage; } }
-
-    private int _statsDefense;
-    public int StatsDefense { get { return _statsDefense; } }
-
-    private int _statsReaction;
-    public int StatsReaction { get { return _statsReaction; } }
-
-    #endregion
-
-    public virtual void Awake()
-    {
-        // _boxCollider = GetComponent<BoxCollider>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _combatAnimator = GetComponent<CombatAnimator>();
-
-        SetCharacter();
-    }
-
     public virtual void Start()
     {
-        _items = new List<ItemSO>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _combatAnimator = GetComponent<CombatAnimator>();
 
         _waitPerAction = new WaitForSeconds(GameData.Instance.combatConfig.waitTimePerAction);
 
         _scaleNormal = transform.localScale;
         _startPosition = transform.position;
         _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
-
-        _healthActual = _statsHealthMax;
-        characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration);
     }
 
-    public virtual void SetCharacter()
+    public void SetCharacter(int index)
     {
-        _isAlive = true;
         _isMyTurn = false;
-        _name = character.name;
 
-        _statsHealthMax = character.statsHealthMax;
-        _statsDamage = character.statsDamage;
-        _statsReaction = character.statsReaction;
+        _combatIndex = index;
+        _healthActual = _statsHealthMax;
 
-        // Debug.Log($"<b> SET: {gameObject.name} - REACT: {_statsReaction} </b>");
+        Vector3 healthBarPos = new Vector3(
+            transform.position.x,
+            transform.position.y + GameData.Instance.combatConfig.offsetHealthBar,
+            transform.position.z);
 
-        // TODO Mariano: Add ITEMS
-        // _items?.AddRange(character.equipmentItem);
+        characterUI = Instantiate(GameData.Instance.gameConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
+        characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.startFillDuration);
     }
 
     //------------------------------------------------------------------
@@ -159,17 +134,35 @@ public class CombatCharacter : MonoBehaviour
         GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
     }
 
+    public void Select(COMBAT_STATE combatState, CombatCharacter currentCharacter)
+    {
+        switch (combatState)
+        {
+            case COMBAT_STATE.Attack:
+                ActionReceiveDamage(currentCharacter.GetDamage());
+                break;
+
+            case COMBAT_STATE.Item:
+                // TODO Mariano: Damage with items
+                break;
+
+            case COMBAT_STATE.Defense:
+                // TODO Mariano: Add defense per 1 turn
+                break;
+
+            default:
+                break;
+        }
+
+        currentCharacter.AnimationAction(combatState);
+        currentCharacter.DoAction();
+    }
+
     #endregion 
 
     //------------------------------------------------------------------
     //------------------------------------------------------------------
     //------------------------------------------------------------------
-
-    public virtual void StartCombat()
-    {
-        SetCharacter();
-        // _statsDamage *= _statsStrength;
-    }
 
     public virtual void ActionStartCombat()
     {
@@ -183,11 +176,6 @@ public class CombatCharacter : MonoBehaviour
         // _defense = 0; // TODO Mariano: Use the default Defense
     }
 
-    public virtual void SetDefense(int newDefense)
-    {
-        _statsDefense = newDefense;
-    }
-
     public virtual void ActionHeal(int amountHeal)
     {
         _healthActual += amountHeal;
@@ -199,23 +187,15 @@ public class CombatCharacter : MonoBehaviour
         characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration);
     }
 
-    public virtual void ActionDefense(int amountDefense)
-    {
-        _statsDefense = amountDefense;
-
-        // ShowInfoText(amountDefense, GameData.Instance.textConfig.colorMsgDefense);
-    }
-
     public virtual void ActionReceiveDamage(int damageReceived)
     {
         if (_healthActual == 0)
             return;
 
-        int totalDamage = damageReceived - _statsDefense;
+        int totalDamage = damageReceived - _statsBaseDefense;
 
         _healthActual -= totalDamage;
         if (_healthActual < 0)_healthActual = 0;
-        _isAlive = _healthActual >= 0;
 
         characterUI.healthBar.
         DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration).
@@ -255,6 +235,16 @@ public class CombatCharacter : MonoBehaviour
     public virtual void CheckCharacters()
     {
         gameObject.SetActive(false);
+    }
+
+    public int GetDamage()
+    {
+        return weapon ? Random.Range(weapon.valueMin, weapon.valueMax) : _statsBaseDamage;
+    }
+
+    public int GetDefense()
+    {
+        return defense ? Random.Range(defense.valueMin, defense.valueMax) : _statsBaseDefense;
     }
 
 }

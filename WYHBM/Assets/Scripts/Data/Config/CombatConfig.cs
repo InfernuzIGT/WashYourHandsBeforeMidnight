@@ -5,9 +5,11 @@ public class CombatConfig : ScriptableObject
 {
     [Header("General")]
     public float fadeDuration = 3;
+    public float startFillDuration = 5;
     public float fillDuration = .25f;
     public float canvasFadeDuration = .35f;
     public float fadeOutEndDuration = .75f;
+    public float offsetHealthBar = 2;
 
     [Header("Layer")]
     public LayerMask layerNone;

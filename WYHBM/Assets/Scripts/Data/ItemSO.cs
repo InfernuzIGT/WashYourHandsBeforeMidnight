@@ -8,7 +8,7 @@ public class ItemSO : ScriptableObject
     [TextArea] public string description;
     [PreviewTexture(48)] public Sprite sprite;
     [PreviewTexture(48)] public Sprite previewSprite;
-    public ITEM_TYPE itemType;
+    public ITEM_TYPE type;
     public int valueMin;
     public int valueMax;
 }
