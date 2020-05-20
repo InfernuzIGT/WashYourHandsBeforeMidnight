@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "New GameConfig", menuName = "Config/GameConfig", order = 0)]
 public class GameConfig : ScriptableObject
@@ -22,8 +23,11 @@ public class GameConfig : ScriptableObject
     [Header("References")]
     public GameObject emptyObject;
     public Slot slotPrefab;
-    public SlotEquipped slotEquippedPrefab;
     public InteractionItem itemPrefab;
+    public QuestTitle questTitlePrefab;
+    public QuestDescription questDescriptionPrefab;
+    public TextMeshProUGUI questObjetivePrefab;
+    public CharacterUI characterUIPrefab;
 
     [Header("Transform")]
     public Vector3 playerBaseOffset = new Vector3(0, 2.08f, 0);
