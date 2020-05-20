@@ -43,15 +43,43 @@ public class Slot : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // TODO Mariano: REVIEW
     public void EquipItem()
     {
-        if (GameManager.Instance.IsEquipmentFull || _isEquipped)
+        if ( /* GameManager.Instance.IsEquipmentFull || */ _isEquipped)
         {
             return;
         }
 
-        GameManager.Instance.EquipItem(_item);
-        SetEquip(true);
+        switch (_item.type)
+        {
+            case ITEM_TYPE.Damage:
+                if (GameManager.Instance.combatCharacters[0].weapon == null)
+                {
+                    GameManager.Instance.EquipItem(_item);
+                    SetEquip(true);
+                };
+                break;
+
+            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
+                if (GameManager.Instance.combatCharacters[0].item == null)
+                {
+                    GameManager.Instance.EquipItem(_item);
+                    SetEquip(true);
+                };
+                break;
+
+            case ITEM_TYPE.Defense:
+                if (GameManager.Instance.combatCharacters[0].defense == null)
+                {
+                    GameManager.Instance.EquipItem(_item);
+                    SetEquip(true);
+                };
+                break;
+
+            default:
+                break;
+        }
     }
 
     public void UnequipItem()

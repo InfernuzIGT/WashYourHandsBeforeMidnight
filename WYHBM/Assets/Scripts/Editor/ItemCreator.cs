@@ -101,7 +101,7 @@ public class ItemCreator : EditorWindow
         _itemSO.description = description;
         _itemSO.sprite = _sprites[0];
         _itemSO.previewSprite = _sprites[1];
-        _itemSO.itemType = itemType;
+        _itemSO.type = itemType;
         _itemSO.valueMin = valueMin;
         _itemSO.valueMax = valueMax;
     }
