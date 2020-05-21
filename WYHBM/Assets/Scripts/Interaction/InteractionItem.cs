@@ -40,8 +40,10 @@ public class InteractionItem : Interaction, IInteractable
 
         Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
-        EventController.RemoveListener<InteractionEvent>(OnInteractItem);
 
+        GameManager.Instance.dictionarySlot.Add(item.GetInstanceID(), newSlot);
+
+        EventController.RemoveListener<InteractionEvent>(OnInteractItem);
         Destroy(gameObject);
     }
 
