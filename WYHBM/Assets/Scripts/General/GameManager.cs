@@ -22,6 +22,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
+    public Dictionary<int, Slot> dictionarySlot;
 
     // Combat
     private CombatArea _currentCombatArea;
@@ -37,14 +38,8 @@ public class GameManager : MonoSingleton<GameManager>
     private bool _isInventoryFull;
     public bool IsInventoryFull { get { return _isInventoryFull; } }
 
-    // private bool _isEquipmentFull;
-    // public bool IsEquipmentFull { get { return _isEquipmentFull; } }
-
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
-
-    // private List<ItemSO> _itemsEquipped;
-    // public List<ItemSO> ItemsEquipped { get { return _itemsEquipped; } }
 
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
@@ -55,10 +50,10 @@ public class GameManager : MonoSingleton<GameManager>
     private void Start()
     {
         _items = new List<ItemSO>();
-        // _itemsEquipped = new List<ItemSO>();
 
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
+        dictionarySlot = new Dictionary<int, Slot>();
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
@@ -163,7 +158,6 @@ public class GameManager : MonoSingleton<GameManager>
     public Vector3 GetPlayerFootPosition()
     {
         return globalController.player.dropZone.transform.position;
-        // return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
     }
 
     public Ray GetRayMouse()
@@ -176,12 +170,16 @@ public class GameManager : MonoSingleton<GameManager>
     public void AddItem(ItemSO item)
     {
         _items.Add(item);
+
         _isInventoryFull = _items.Count == _inventoryMaxSlots;
     }
 
     public void DropItem(ItemSO item)
     {
         _items.Remove(item);
+
+        dictionarySlot.Remove(item.GetInstanceID());
+
         worldUI.itemDescription.Hide();
     }
 
@@ -206,10 +204,8 @@ public class GameManager : MonoSingleton<GameManager>
                 break;
         }
 
-        // _itemsEquipped.Add(item); // REMOVE
         _items.Remove(item);
 
-        // _isEquipmentFull = _itemsEquipped.Count == 4; // REMOVE
         worldUI.itemDescription.Hide();
     }
 
@@ -234,7 +230,6 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
         _items.Add(item);
-        // _itemsEquipped.Remove(item); // REMOVE
     }
 
     #endregion
@@ -243,27 +238,26 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
-
-        if (!dictionaryQuest.ContainsKey(data.id))
+        if (!dictionaryQuest.ContainsKey(data.GetInstanceID()))
         {
-            dictionaryQuest.Add(data.id, data);
+            dictionaryQuest.Add(data.GetInstanceID(), data);
 
-            dictionaryProgress.Add(data.id, 0);
+            dictionaryProgress.Add(data.GetInstanceID(), 0);
         }
     }
 
     public void ProgressQuest(QuestSO quest, int progress)
     {
-        if (!dictionaryQuest.ContainsKey(quest.id) ||
-            dictionaryProgress[quest.id] != progress ||
-            dictionaryProgress[quest.id] >= dictionaryQuest[quest.id].objetives.Length)
+        if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
+            dictionaryProgress[quest.GetInstanceID()] != progress ||
+            dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
         {
             return;
         }
 
-        dictionaryProgress[quest.id]++;
+        dictionaryProgress[quest.GetInstanceID()]++;
 
-        worldUI.UpdateQuest(dictionaryQuest[quest.id], dictionaryProgress[quest.id]);
+        worldUI.UpdateQuest(dictionaryQuest[quest.GetInstanceID()], dictionaryProgress[quest.GetInstanceID()]);
     }
 
     public void GiveReward()
@@ -320,6 +314,64 @@ public class GameManager : MonoSingleton<GameManager>
             _currentQuest = null;
             EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
+    }
+
+    #endregion
+
+    #region Persistence
+
+    [ContextMenu("Load Game")]
+    public void LoadGame()
+    {
+        for (int i = 0; i < GameData.Data.items.Count; i++)
+        {
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
+
+            Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, worldUI.itemParents);
+            newSlot.AddItem(GameData.Data.items[i]);
+            dictionarySlot.Add(_items[i].GetInstanceID(), newSlot);
+        }
+
+        // foreach (var key in GameData.Data.dictionaryQuest.Keys)
+        // {
+        //     if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest)continue;
+
+        //     dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
+        //     dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
+        //     // TODO: Agregar Quest en progreso a UI
+        // }
+    }
+
+    [ContextMenu("Save Game")]
+    public void SaveGame()
+    {
+        ClearOldData();
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            GameData.Data.items.Add(_items[i]);
+        }
+
+        // for (int i = 0; i < dictionaryQuest.Count; i++)
+        // {
+        //     GameData.Data.dictionaryQuest.Add(dictionaryQuest[i].GetInstanceID(), dictionaryQuest[i]);
+        //     GameData.Data.dictionaryProgress.Add(dictionaryQuest[i].GetInstanceID(), dictionaryProgress[i]);
+        // }
+        
+        GameData.SaveData();
+    }
+
+    private void ClearOldData()
+    {
+        GameData.Data.items.Clear();
+        // GameData.Data.dictionaryQuest.Clear();
+        // GameData.Data.dictionaryProgress.Clear();
+    }
+
+    [ContextMenu("Delete Game")]
+    public void DeleteGame()
+    {
+        GameData.DeleteAllData();
     }
 
     #endregion
