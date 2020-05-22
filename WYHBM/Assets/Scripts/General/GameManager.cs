@@ -360,14 +360,14 @@ public class GameManager : MonoSingleton<GameManager>
             dictionarySlot.Add(_items[i].GetInstanceID(), newSlot);
         }
 
-        // foreach (var key in GameData.Data.dictionaryQuest.Keys)
-        // {
-        //     if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest)continue;
+        foreach (var key in GameData.Data.dictionaryQuest.Keys)
+        {
+            if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest)continue;
 
-        //     dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
-        //     dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
-        //     // TODO: Agregar Quest en progreso a UI
-        // }
+            dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
+            dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
+            // TODO: Agregar Quest en progreso a UI
+        }
     }
 
     [ContextMenu("Save Game")]
@@ -380,20 +380,20 @@ public class GameManager : MonoSingleton<GameManager>
             GameData.Data.items.Add(_items[i]);
         }
 
-        // for (int i = 0; i < dictionaryQuest.Count; i++)
-        // {
-        //     GameData.Data.dictionaryQuest.Add(dictionaryQuest[i].GetInstanceID(), dictionaryQuest[i]);
-        //     GameData.Data.dictionaryProgress.Add(dictionaryQuest[i].GetInstanceID(), dictionaryProgress[i]);
-        // }
-
+        for (int i = 0; i < dictionaryQuest.Count; i++)
+        {
+            GameData.Data.dictionaryQuest.Add(dictionaryQuest[i].GetInstanceID(), dictionaryQuest[i]);
+            GameData.Data.dictionaryProgress.Add(dictionaryQuest[i].GetInstanceID(), dictionaryProgress[i]);
+        }
+        
         GameData.SaveData();
     }
 
     private void ClearOldData()
     {
         GameData.Data.items.Clear();
-        // GameData.Data.dictionaryQuest.Clear();
-        // GameData.Data.dictionaryProgress.Clear();
+        GameData.Data.dictionaryQuest.Clear();
+        GameData.Data.dictionaryProgress.Clear();
     }
 
     [ContextMenu("Delete Game")]
