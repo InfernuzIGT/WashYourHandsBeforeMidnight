@@ -821,10 +821,10 @@ RectTransform:
   m_Father: {fileID: 8831323141305186909}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 414.3, y: -490.8}
-  m_SizeDelta: {x: 828.6, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3682815123119043016
 GameObject:
@@ -2025,11 +2025,20 @@ MonoBehaviour:
   panelDialog: {fileID: 5524929370167895652}
   dialogTxt: {fileID: 5524929369695872668}
   continueTxt: {fileID: 5524929369813625553}
+  arrowsSystem:
+  - {fileID: 8831323140902921567}
+  - {fileID: 8831323140879148081}
   system: {fileID: 5565722652994005941}
   systemOptions: {fileID: 8831323141305186908}
+  arrowsDiary:
+  - {fileID: 8831323140358381488}
+  - {fileID: 8831323141333438914}
   diary: {fileID: 3682815123119043016}
   diaryTitleContainer: {fileID: 9208660708519912198}
   diaryDescriptionContainer: {fileID: 7759510614247126080}
+  arrowsInventory:
+  - {fileID: 8831323142016852933}
+  - {fileID: 8831323141090442122}
   inventory: {fileID: 8831323141583694498}
   itemDescription: {fileID: 6278922392216656744}
   itemParents: {fileID: 8831323140863101616}
@@ -2126,7 +2135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &673163014041090225
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2417,10 +2426,10 @@ RectTransform:
   m_Father: {fileID: 8831323141305186909}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 414.3, y: -115.79999}
-  m_SizeDelta: {x: 828.6, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6860782178420681559
 GameObject:
@@ -2528,10 +2537,10 @@ RectTransform:
   m_Father: {fileID: 8831323141305186909}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 414.3, y: -240.79999}
-  m_SizeDelta: {x: 828.6, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7460639992725528057
 GameObject:
@@ -2751,10 +2760,10 @@ RectTransform:
   m_Father: {fileID: 8831323141305186909}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 414.3, y: -365.8}
-  m_SizeDelta: {x: 828.6, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8266007606062666862
 GameObject:
@@ -3529,10 +3538,10 @@ RectTransform:
   m_Father: {fileID: 8831323142043318391}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 202.7, y: -128.29999}
-  m_SizeDelta: {x: 405.4, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323140282244732
 CanvasRenderer:
@@ -3638,12 +3647,12 @@ GameObject:
   - component: {fileID: 8831323140358381489}
   - component: {fileID: 8831323140358381488}
   m_Layer: 5
-  m_Name: Arrow
+  m_Name: ArrowLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8831323140358381491
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3684,7 +3693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3734,10 +3743,10 @@ RectTransform:
   m_Father: {fileID: 8831323142043318391}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 202.7, y: -478.3}
-  m_SizeDelta: {x: 405.4, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323140442616661
 CanvasRenderer:
@@ -4867,12 +4876,12 @@ GameObject:
   - component: {fileID: 8831323140879148078}
   - component: {fileID: 8831323140879148081}
   m_Layer: 5
-  m_Name: Arrow (1)
+  m_Name: ArrowRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8831323140879148080
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4889,8 +4898,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -180.00002, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5678886}
-  m_AnchoredPosition: {x: 146.15009, y: -2.7528534}
-  m_SizeDelta: {x: 58.4, y: 54.92}
+  m_AnchoredPosition: {x: 146.6, y: -2.8}
+  m_SizeDelta: {x: 58.4, y: 53.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323140879148078
 CanvasRenderer:
@@ -4913,7 +4922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -4940,12 +4949,12 @@ GameObject:
   - component: {fileID: 8831323140902921564}
   - component: {fileID: 8831323140902921567}
   m_Layer: 5
-  m_Name: Arrow
+  m_Name: ArrowLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8831323140902921565
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4986,7 +4995,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -5014,6 +5023,7 @@ GameObject:
   - component: {fileID: 8831323140971802023}
   - component: {fileID: 8831323140971802022}
   - component: {fileID: 2449938055429793961}
+  - component: {fileID: 8732269898686457757}
   m_Layer: 5
   m_Name: SystemBtn
   m_TagString: Untagged
@@ -5038,9 +5048,9 @@ RectTransform:
   m_Father: {fileID: 7353487031638669214}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1241.85, y: -57.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 233.9, y: 81.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323140971802021
@@ -5136,6 +5146,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonType: 3
+--- !u!114 &8732269898686457757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8831323140971802024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3733784730637442484}
+          m_MethodName: PointerEnterSystem
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3733784730637442484}
+          m_MethodName: PointerExitSystem
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8831323141014536076
 GameObject:
   m_ObjectHideFlags: 0
@@ -5430,12 +5483,12 @@ GameObject:
   - component: {fileID: 8831323141090442123}
   - component: {fileID: 8831323141090442122}
   m_Layer: 5
-  m_Name: Arrow (1)
+  m_Name: ArrowRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8831323141090442125
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5476,7 +5529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -5821,7 +5874,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8831323141305186909
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5918,12 +5971,12 @@ GameObject:
   - component: {fileID: 8831323141333438915}
   - component: {fileID: 8831323141333438914}
   m_Layer: 5
-  m_Name: Arrow (1)
+  m_Name: ArrowRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8831323141333438917
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5964,7 +6017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6279,7 +6332,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8831323141583694499
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6371,7 +6424,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.303, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6446,10 +6499,10 @@ RectTransform:
   m_Father: {fileID: 8831323142043318391}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 202.7, y: -303.3}
-  m_SizeDelta: {x: 405.4, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323141606055174
 CanvasRenderer:
@@ -6560,7 +6613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8831323141735227238
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6811,7 +6864,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6937,6 +6990,7 @@ GameObject:
   - component: {fileID: 8831323141946650714}
   - component: {fileID: 8831323141946650717}
   - component: {fileID: 659714723602267894}
+  - component: {fileID: 4763569452765001578}
   m_Layer: 5
   m_Name: DiaryBtn
   m_TagString: Untagged
@@ -6961,9 +7015,9 @@ RectTransform:
   m_Father: {fileID: 7353487031638669214}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 198.95, y: -57.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 233.9, y: 81.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323141946650712
@@ -7058,6 +7112,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonType: 1
+--- !u!114 &4763569452765001578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8831323141946650716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3733784730637442484}
+          m_MethodName: PointerEnterDiary
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3733784730637442484}
+          m_MethodName: PointerExitDiary
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8831323141967687357
 GameObject:
   m_ObjectHideFlags: 0
@@ -7481,12 +7578,12 @@ GameObject:
   - component: {fileID: 8831323142016852930}
   - component: {fileID: 8831323142016852933}
   m_Layer: 5
-  m_Name: Arrow
+  m_Name: ArrowLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8831323142016852932
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7503,7 +7600,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5678886}
-  m_AnchoredPosition: {x: -158.7, y: -2.7529}
+  m_AnchoredPosition: {x: -158.7, y: -2.7528}
   m_SizeDelta: {x: 58.4, y: 54.92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323142016852930
@@ -7527,7 +7624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7657,6 +7754,7 @@ GameObject:
   - component: {fileID: 8831323142107855142}
   - component: {fileID: 8831323142107855145}
   - component: {fileID: 2125570843350630368}
+  - component: {fileID: 2783563175933738501}
   m_Layer: 5
   m_Name: InventoryBtn
   m_TagString: Untagged
@@ -7681,9 +7779,9 @@ RectTransform:
   m_Father: {fileID: 7353487031638669214}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 720.4, y: -57.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 259, y: 81.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8831323142107855143
@@ -7778,6 +7876,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonType: 2
+--- !u!114 &2783563175933738501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8831323142107855146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3733784730637442484}
+          m_MethodName: PointerEnterInventory
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3733784730637442484}
+          m_MethodName: PointerExitInventory
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8968767976092542296
 GameObject:
   m_ObjectHideFlags: 0
