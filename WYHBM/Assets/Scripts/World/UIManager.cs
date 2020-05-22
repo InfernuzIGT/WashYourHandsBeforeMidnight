@@ -240,6 +240,7 @@ namespace GameMode.World
 
         public void SelectQuest(QuestSO data)
         {
+            Debug.Log ($"<b> Selected </b>");
             _currentQuestSelected.gameObject.SetActive(false);
             _currentQuestSelected = dicQuestDescription[data].gameObject;
             _currentQuestSelected.gameObject.SetActive(true);

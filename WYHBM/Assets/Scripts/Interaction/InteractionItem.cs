@@ -5,12 +5,34 @@ public class InteractionItem : Interaction, IInteractable
 {
     public ItemSO item;
     private SpriteRenderer _spriteRenderer;
+    // public bool isPicked;
+
 
     public override void Awake()
     {
         base.Awake();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Items SO for each prefab
+
+        // if (GameManager.Instance.Items.Contains(item))
+        // {
+        //     isPicked = true;
+        //     DeleteItems();
+        // }
     }
+
+    // private void DeleteItems()
+    // {
+    //     if (!isPicked)
+    //     {
+    //         return;
+    //     }
+    //     else
+    //     {
+    //         Destroy(gameObject);
+    //     }
+    // }
 
     public void OnInteractionEnter(Collider other)
     {
@@ -41,7 +63,7 @@ public class InteractionItem : Interaction, IInteractable
         Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
 
-        GameManager.Instance.dictionarySlot.Add(item.GetInstanceID(), newSlot);
+        GameManager.Instance.listSlots.Add(newSlot);
 
         EventController.RemoveListener<InteractionEvent>(OnInteractItem);
         Destroy(gameObject);
