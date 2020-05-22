@@ -23,21 +23,15 @@ namespace GameMode.World
         public TextMeshProUGUI continueTxt;
 
         [Header("Pause - System")]
-        public Image[] arrowsSystem;
-        [Space]
         public GameObject system;
         public GameObject systemOptions;
 
         [Header("Pause - Diary")]
-        public Image[] arrowsDiary;
-        [Space]
         public GameObject diary;
         public Transform diaryTitleContainer;
         public Transform diaryDescriptionContainer;
 
         [Header("Pause - Inventory")]
-        public Image[] arrowsInventory;
-        [Space]
         public GameObject inventory;
         public ItemDescription itemDescription;
         public Transform itemParents;
@@ -141,66 +135,6 @@ namespace GameMode.World
                 _enableMovementEvent.canMove = false;
                 EventController.TriggerEvent(_enableMovementEvent);
             }
-        }
-
-        public void PointerEnterDiary()
-        {
-            _diary = true;
-            _inventory = false;
-            _system = false;
-
-            arrowsDiary[0].gameObject.SetActive(true);
-            arrowsDiary[1].gameObject.SetActive(true);
-
-        }
-
-        public void PointerEnterSystem()
-        {
-            _diary = true;
-            _inventory = false;
-            _system = false;
-
-            arrowsSystem[0].gameObject.SetActive(true);
-            arrowsSystem[1].gameObject.SetActive(true);
-
-        }
-
-        public void PointerEnterInventory()
-        {
-            _diary = false;
-            _inventory = true;
-            _system = false;
-
-            arrowsInventory[0].gameObject.SetActive(true);
-            arrowsInventory[1].gameObject.SetActive(true);
-
-        }
-
-        public void PointerExitDiary()
-        {
-            _diary = false;
-
-            arrowsDiary[0].gameObject.SetActive(false);
-            arrowsDiary[1].gameObject.SetActive(false);
-
-        }
-
-        public void PointerExitSystem()
-        {
-            _system = false;
-
-            arrowsSystem[0].gameObject.SetActive(false);
-            arrowsSystem[1].gameObject.SetActive(false);
-
-        }
-
-        public void PointerExitInventory()
-        {
-            _inventory = false;
-
-            arrowsInventory[0].gameObject.SetActive(false);
-            arrowsInventory[1].gameObject.SetActive(false);
-
         }
 
         #endregion
@@ -328,19 +262,18 @@ namespace GameMode.World
 
         // public void ShowQuest()
         // {
-            // for (int i = 0; i < GameManager.Instance.dictionaryQuest.Count; i++)
-            // {
-            //     QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
-            //     questTitle.Init(GameManager.Instance.dictionaryQuest[i]);
-            //     dicQuestTitle.Add(GameManager.Instance.dictionaryQuest[i], questTitle);
+        // for (int i = 0; i < GameManager.Instance.dictionaryQuest.Count; i++)
+        // {
+        //     QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
+        //     questTitle.Init(GameManager.Instance.dictionaryQuest[i]);
+        //     dicQuestTitle.Add(GameManager.Instance.dictionaryQuest[i], questTitle);
 
+        // }
 
-            // }
-
-            // QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
-            // questDescription.Init(GameManager.Instance.dicti);
-            // dicQuestDescription.Add(data, questDescription);
-            // SelectQuest(data);
+        // QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
+        // questDescription.Init(GameManager.Instance.dicti);
+        // dicQuestDescription.Add(data, questDescription);
+        // SelectQuest(data);
 
         // }
 
