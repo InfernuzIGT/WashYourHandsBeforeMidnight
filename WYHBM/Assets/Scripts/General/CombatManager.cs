@@ -43,6 +43,28 @@ public class CombatManager : MonoBehaviour
         _interactionCombatEvent = new ExitCombatEvent();
     }
 
+    private void Update()
+    {
+        SelectEnemy();
+    }
+
+    private void SelectEnemy()
+    {
+        if (Input.GetMouseButtonDown(0) && canSelect)
+        {
+            _ray = GameManager.Instance.GetRayMouse();
+
+            if (Physics.Raycast(_ray, out _hit, 100, currentLayer))
+            {
+                if (_hit.collider != null)
+                {
+                    _hit.collider.gameObject.GetComponent<CombatCharacter>().Select(combatState, _currentCharacter);
+                    canSelect = false;
+                }
+            }
+        }
+    }
+
     public void SetData(CombatArea combatArea, List<Player> players, List<Enemy> enemies)
     {
         int indexCombat = 0;
@@ -84,183 +106,11 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    #region Turn System
-
-    /// <summary>
-    /// Comienza el combate.
-    /// </summary>
-    public void InitiateTurn()
-    {
-        _isEndOfCombat = false;
-
-        AddToWaiting(InitialSort());
-        SetInitialCharactersTurn();
-
-        StartCoroutine(TurnsLoop());
-        UnleashRace();
-    }
-
-    /// <summary>
-    /// Reordena la lista de Characters.
-    /// </summary>
-    public List<CombatCharacter> InitialSort()
-    {
-        List<CombatCharacter> sortedCharacters = new List<CombatCharacter>();
-        sortedCharacters.AddRange(_listAllCharacters);
-
-        CombatCharacter fastestCharacter;
-        fastestCharacter = sortedCharacters[0];
-
-        for (int i = 0; i < sortedCharacters.Count - 1; i++) // ONE MINUS
-        {
-            for (int j = 0; j < sortedCharacters.Count - 1; j++) // ONE MINUS
-            {
-                if (sortedCharacters[j].StatsReaction < sortedCharacters[j + 1].StatsReaction)
-                {
-                    // Saving the Fastest one.
-                    fastestCharacter = sortedCharacters[j + 1];
-
-                    // Swaping the characters.
-                    sortedCharacters[j + 1] = sortedCharacters[j];
-                    sortedCharacters[j] = fastestCharacter;
-                }
-            }
-        }
-
-        return sortedCharacters;
-    }
-
-    /// <summary>
-    /// Agrega a una lista de espera todos los Characters.
-    /// </summary>
-    public void AddToWaiting(List<CombatCharacter> charactersToAdd)
-    {
-        for (int i = 0; i < charactersToAdd.Count; i++)
-        {
-            _listWaitingCharacters.Add(charactersToAdd[i]);
-        }
-    }
-
-    /// <summary>
-    /// Espera la accion de un Character, y una vez cumplida lo envia al fondo y avanza al siguiente turno.
-    /// </summary>
-    private IEnumerator TurnsLoop()
-    {
-        yield return _waitStart;
-
-        Debug.Log($"<b> [COMBAT] </b> Start COMBAT!");
-
-        while (!_isEndOfCombat)
-        {
-            // Waiting for the current character to do his action.
-            yield return _currentCharacter.StartWaitingForAction();
-
-            SendBottom();
-
-            _turnCount++;
-
-            // The Action Was done. Now should be the Next Characters Action.
-
-            Debug.Log($"<b> [COMBAT] </b> Preparing NEXT Turn..");
-            yield return _waitBetweenTurns;
-        }
-    }
-
-    /// <summary>
-    /// Setea el turno al primer Character de la lista
-    /// </summary>
-    public void SetInitialCharactersTurn()
-    {
-        _currentCharacter = _listWaitingCharacters[0];
-        _currentCharacter.IsMyTurn = true;
-    }
-
-    /// <summary>
-    /// Envia al Character al final de la lista
-    /// </summary>
-    public void SendBottom()
-    {
-        _currentCharacter.StartGettingAhead();
-
-        _listWaitingCharacters.Remove(_currentCharacter);
-        _listWaitingCharacters.Add(_currentCharacter);
-        _currentCharacter = _listWaitingCharacters[0];
-
-        Debug.Log($"<b> [COMBAT] </b> Current turn: {_currentCharacter.name}");
-
-        _currentCharacter.IsMyTurn = true;
-    }
-
-    /// <summary>
-    /// Reordena las posiciones de los Characters en la lista
-    /// </summary>
-    public void UnleashRace()
-    {
-        for (int i = 2; i < _listWaitingCharacters.Count; i++)
-        {
-            _listWaitingCharacters[i].StartGettingAhead();
-        }
-    }
-
-    /// <summary>
-    /// Coloca el Character por encima de la lista
-    /// </summary>
-    public void CharacterIsReadyToGoAhead(CombatCharacter characterGoingAhead)
-    {
-        int index;
-        CombatCharacter auxCharacter;
-
-        index = _listWaitingCharacters.IndexOf(characterGoingAhead);
-
-        if (index <= 1)
-        {
-            _listWaitingCharacters[index].StartGettingAhead();
-            return;
-        }
-
-        auxCharacter = _listWaitingCharacters[index - 1];
-
-        _listWaitingCharacters[index - 1] = characterGoingAhead;
-        _listWaitingCharacters[index] = auxCharacter;
-
-        if ((index - 1) > 1)
-        {
-            characterGoingAhead.StartGettingAhead();
-        }
-
-        _listWaitingCharacters[index].StartGettingAhead();
-    }
-
-    #endregion
-
-    //-----------------------------------------------------------
-    //-----------------------------------------------------------
-    //-----------------------------------------------------------
-
-    public void ActionAttack()
-    {
-        combatState = COMBAT_STATE.Attack;
-        EnableAction();
-    }
-
-    public void ActionDefense()
-    {
-        combatState = COMBAT_STATE.Defense;
-        EnableAction();
-    }
-
-    public void ActionItem()
-    {
-        combatState = COMBAT_STATE.Item;
-        EnableAction();
-    }
-
-    private void EnableAction()
+    public void DoAction(COMBAT_STATE combatState)
     {
         switch (combatState)
         {
             case COMBAT_STATE.Attack:
-            case COMBAT_STATE.Item:
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 break;
@@ -270,33 +120,46 @@ public class CombatManager : MonoBehaviour
                 GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 break;
 
+            case COMBAT_STATE.Item:
+                if (_currentCharacter.item != null)
+                {
+                    ReadItem();
+                }
+                else
+                {
+                    Debug.Log($"No items!");
+                    return;
+                }
+                break;
+
             default:
                 currentLayer = GameData.Instance.combatConfig.layerNone;
                 GameManager.Instance.combatUI.messageTxt.text = "";
                 break;
         }
 
+        this.combatState = combatState;
         canSelect = true;
     }
 
-    private void Update()
+    private void ReadItem()
     {
-        if (Input.GetMouseButtonDown(0) && canSelect)
+        switch (_currentCharacter.item.type)
         {
-            _ray = GameManager.Instance.GetRayMouse();
+            case ITEM_TYPE.Damage:
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
 
-            if (Physics.Raycast(_ray, out _hit, 100, currentLayer))
-            {
-                if (_hit.collider != null)
-                {
-                    _hit.collider.gameObject.GetComponent<Enemy>().Select(combatState, _currentCharacter);
-                    canSelect = false;
-                }
-            }
+            case ITEM_TYPE.Heal:
+                currentLayer = GameData.Instance.combatConfig.layerPlayer;
+                GameManager.Instance.combatUI.messageTxt.text = "Select Player";
+                break;
+
+            default:
+                break;
         }
     }
-
-    //------------------------------------
 
     public void CheckGame(Player character)
     {
@@ -355,4 +218,143 @@ public class CombatManager : MonoBehaviour
         _listAllCharacters.Clear();
         _listWaitingCharacters.Clear();
     }
+
+    #region Turn System
+
+    /// <summary>
+    /// Comienza el combate.
+    /// </summary>
+    public void InitiateTurn()
+    {
+        _isEndOfCombat = false;
+
+        AddToWaiting(InitialSort());
+        SetInitialCharactersTurn();
+
+        StartCoroutine(TurnsLoop());
+        UnleashRace();
+    }
+
+    /// <summary>
+    /// Reordena la lista de Characters.
+    /// </summary>
+    public List<CombatCharacter> InitialSort()
+    {
+        List<CombatCharacter> sortedCharacters = new List<CombatCharacter>();
+        sortedCharacters.AddRange(_listAllCharacters);
+
+        CombatCharacter fastestCharacter;
+        fastestCharacter = sortedCharacters[0];
+
+        for (int i = 0; i < sortedCharacters.Count - 1; i++)
+        {
+            for (int j = 0; j < sortedCharacters.Count - 1; j++)
+            {
+                if (sortedCharacters[j].StatsReaction < sortedCharacters[j + 1].StatsReaction)
+                {
+                    fastestCharacter = sortedCharacters[j + 1];
+
+                    sortedCharacters[j + 1] = sortedCharacters[j];
+                    sortedCharacters[j] = fastestCharacter;
+                }
+            }
+        }
+
+        return sortedCharacters;
+    }
+
+    /// <summary>
+    /// Agrega a una lista de espera todos los Characters.
+    /// </summary>
+    public void AddToWaiting(List<CombatCharacter> charactersToAdd)
+    {
+        for (int i = 0; i < charactersToAdd.Count; i++)
+        {
+            _listWaitingCharacters.Add(charactersToAdd[i]);
+        }
+    }
+
+    /// <summary>
+    /// Espera la accion de un Character, y una vez cumplida lo envia al fondo y avanza al siguiente turno.
+    /// </summary>
+    private IEnumerator TurnsLoop()
+    {
+        yield return _waitStart;
+
+        while (!_isEndOfCombat)
+        {
+            yield return _currentCharacter.StartWaitingForAction();
+
+            SendBottom();
+
+            _turnCount++;
+
+            yield return _waitBetweenTurns;
+        }
+    }
+
+    /// <summary>
+    /// Setea el turno al primer Character de la lista
+    /// </summary>
+    public void SetInitialCharactersTurn()
+    {
+        _currentCharacter = _listWaitingCharacters[0];
+        _currentCharacter.IsMyTurn = true;
+    }
+
+    /// <summary>
+    /// Envia al Character al final de la lista
+    /// </summary>
+    public void SendBottom()
+    {
+        _currentCharacter.StartGettingAhead();
+
+        _listWaitingCharacters.Remove(_currentCharacter);
+        _listWaitingCharacters.Add(_currentCharacter);
+        
+        _currentCharacter = _listWaitingCharacters[0];
+        _currentCharacter.IsMyTurn = true;
+    }
+
+    /// <summary>
+    /// Reordena las posiciones de los Characters en la lista
+    /// </summary>
+    public void UnleashRace()
+    {
+        for (int i = 2; i < _listWaitingCharacters.Count; i++)
+        {
+            _listWaitingCharacters[i].StartGettingAhead();
+        }
+    }
+
+    /// <summary>
+    /// Coloca el Character por encima de la lista
+    /// </summary>
+    public void CharacterIsReadyToGoAhead(CombatCharacter characterGoingAhead)
+    {
+        int index;
+        CombatCharacter auxCharacter;
+
+        index = _listWaitingCharacters.IndexOf(characterGoingAhead);
+
+        if (index <= 1)
+        {
+            _listWaitingCharacters[index].StartGettingAhead();
+            return;
+        }
+
+        auxCharacter = _listWaitingCharacters[index - 1];
+
+        _listWaitingCharacters[index - 1] = characterGoingAhead;
+        _listWaitingCharacters[index] = auxCharacter;
+
+        if ((index - 1) > 1)
+        {
+            characterGoingAhead.StartGettingAhead();
+        }
+
+        _listWaitingCharacters[index].StartGettingAhead();
+    }
+
+    #endregion
 }

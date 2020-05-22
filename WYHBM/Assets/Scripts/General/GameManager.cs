@@ -6,6 +6,7 @@ public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
     public bool isPaused;
+    public bool inCombat;
     public AMBIENT currentAmbient;
 
     [Header("References")]
@@ -77,13 +78,36 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Update()
     {
-        Pause();
+        if (!inCombat)
+        {
+            Pause();
+            OpenInventory();
+            OpenQuest();
+        }
     }
 
     private void Pause()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            SetPause();
+        }
+    }
+
+    private void OpenInventory()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            worldUI.MenuPause(BUTTON_TYPE.Inventory);
+            SetPause();
+        }
+    }
+
+    private void OpenQuest()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            worldUI.MenuPause(BUTTON_TYPE.Diary);
             SetPause();
         }
     }
@@ -105,6 +129,8 @@ public class GameManager : MonoSingleton<GameManager>
 
                 globalController.ChangeCamera(null);
                 combatManager.CloseCombatArea();
+
+                inCombat = false;
                 break;
 
                 // case AMBIENT.Interior:
@@ -126,6 +152,8 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(true);
 
                 globalController.ChangeCamera(_currentCombatArea.virtualCamera);
+                
+                inCombat = true;
                 break;
 
             case AMBIENT.Development:
@@ -183,16 +211,16 @@ public class GameManager : MonoSingleton<GameManager>
         worldUI.itemDescription.Hide();
     }
 
-    // TODO Mariano: REVIEW
     public void EquipItem(ItemSO item)
     {
         switch (item.type)
         {
-            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Weapon:
                 combatCharacters[0].weapon = item;
                 break;
 
-            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
+            case ITEM_TYPE.Damage: 
+            case ITEM_TYPE.Heal: 
                 combatCharacters[0].item = item;
                 break;
 

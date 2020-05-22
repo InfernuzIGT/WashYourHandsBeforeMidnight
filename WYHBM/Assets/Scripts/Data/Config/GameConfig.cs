@@ -28,6 +28,7 @@ public class GameConfig : ScriptableObject
     public QuestDescription questDescriptionPrefab;
     public TextMeshProUGUI questObjetivePrefab;
     public CharacterUI characterUIPrefab;
+    public Sprite spriteEmptyUI;
 
     [Header("Transform")]
     public Vector3 playerBaseOffset = new Vector3(0, 2.08f, 0);
