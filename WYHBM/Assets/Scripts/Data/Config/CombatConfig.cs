@@ -5,9 +5,11 @@ public class CombatConfig : ScriptableObject
 {
     [Header("General")]
     public float fadeDuration = 3;
+    public float startFillDuration = 5;
     public float fillDuration = .25f;
     public float canvasFadeDuration = .35f;
     public float fadeOutEndDuration = .75f;
+    public float offsetHealthBar = 2;
 
     [Header("Layer")]
     public LayerMask layerNone;
@@ -15,20 +17,19 @@ public class CombatConfig : ScriptableObject
     public LayerMask layerEnemy;
 
     [Header("Action")]
-    public ActionObject actionObjectPrefab;
     public float actionTimeThresholdMultiplier = 1f;
     public float waitTimeToStart = 3;
     public float waitTimePerAction = 1.5f;
     public float waitTimeBetweenTurns = 1;
 
     [Header("Animation - Combat")]
-    public float transitionDuration = .35f; // TODO Mariano: Review
-    public float waitCombatDuration = 1.65f; // TODO Mariano: Review
-    public float evaluationDuration = 1.25f; // TODO Mariano: Review
-    public float scaleCombat = 17.5f;
-    [Space]
-    public Vector3 positionCombat = new Vector3(-3.5f, 0, 0);
-    public float positionXCharacter = -4;
+    public float animationDuration = .35f;
+    public Vector3 positionAction = new Vector3(-2, 0, 0);
+    // public float positionActionX = -2;
+    // public float waitCombatDuration = 1.65f; 
+    // public float evaluationDuration = 1.25f; 
+    // public float scaleCombat = 17.5f;
+    // public float positionXCharacter = -4;
 
     [Header("Info Text")]
     public float infoTextMoveDuration = 1;

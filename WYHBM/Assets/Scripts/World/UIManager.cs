@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using TMPro;
@@ -9,81 +10,60 @@ namespace GameMode.World
 {
     public class UIManager : MonoBehaviour
     {
-        [Header("Pause Menu")]
-        public static bool isGamePaused = false;
-
-        [Header("GameObjects")]
-        public GameObject pauseMenuUI;
-        public GameObject pauseMenuSprite;
-        public GameObject systemUI;
-        public GameObject optionsUI;
-        public GameObject inventoryUI;
-        public GameObject diaryUI;
-
-        [Header("Panels")]
+        [Header("General")]
+        public Image staminaImg;
+        public Popup popup;
+        [Space]
+        public GameObject panelPlayer;
+        public GameObject panelPause;
         public GameObject panelDialog;
 
-        [Header("Player")]
-        public Image staminaImg;
-
-        [Header("Dialogues")]
+        [Header("Dialog")]
         public TextMeshProUGUI dialogTxt;
         public TextMeshProUGUI continueTxt;
-        public DialogSO currentDialog;
-        private char _charSpace = '*';
-        private bool _isReading;
-        private string _textSkip;
-        private Coroutine _coroutineWrite;
-        private WaitForSeconds _waitStart;
-        private WaitForSeconds _waitSpace;
 
-        [Header("Quest")]
-        public TextMeshProUGUI questTitleDiaryTxt;
-        public TextMeshProUGUI questTitleTxt;
-        public TextMeshProUGUI questDescriptionTxt;
-        public Transform objectivesPanel;
-        public GameObject questObjectivesPanel;
-        public TextMeshProUGUI questObjectivesPanelTxt;
-        public TextMeshProUGUI[] questObjectives;
-        [Space]
-        public TextMeshProUGUI questPopupTxt;
-        public TextMeshProUGUI questCompleteTxt;
-        public GameObject questComplete;
-        public GameObject questPopup;
-        public GameObject questTitles;
-        public GameObject questGroup;
-        public Transform questTitlesParent;
+        [Header("Pause - System")]
+        public GameObject system;
+        public GameObject systemOptions;
 
-        [Header("Items")]
+        [Header("Pause - Diary")]
+        public GameObject diary;
+        public Transform diaryTitleContainer;
+        public Transform diaryDescriptionContainer;
+
+        [Header("Pause - Inventory")]
+        public GameObject inventory;
+        public ItemDescription itemDescription;
         public Transform itemParents;
         public Transform itemEquippedParents;
-        public Inventory inventorySlots;
-        public GameObject itemInfo;
-        public Image itemSprite;
-        public TextMeshProUGUI itemDescription;
-        public GameObject damageTxtDescription;
-        public TextMeshProUGUI damageIntTxtDescription;
-        public GameObject inventoryPopUp;
-        public TextMeshProUGUI inventoryPopUpTxt;
-        public bool onMouseOver;
-
-        private Tween _txtAnimation;
-
-        private EnableMovementEvent _enableMovementEvent;
-        private QuestSO _currentQuest;
+        public TextMeshProUGUI damageTxt;
+        public TextMeshProUGUI defenseTxt;
 
         // Dialogues
-        private string _currentSentence;
+        private char _charSpace = '*';
         private int _dialogIndex;
         private int _objectivesIndex;
         private bool _isWriting;
+        private bool _isReading;
+        private string _currentSentence;
+        private string _textSkip;
+        private Coroutine _coroutineWrite;
 
-        //bool
-        private bool _isInDiary;
-        private bool _isInInventory;
-        private bool _isInSystem;
+        // Diary
+        private Dictionary<QuestSO, QuestTitle> dicQuestTitle;
+        private Dictionary<QuestSO, QuestDescription> dicQuestDescription;
+        private GameObject _currentQuestSelected;
+        private bool _system;
+        private bool _inventory;
+        private bool _diary;
 
+        private Tween _txtAnimation;
         private Canvas _canvas;
+        private WaitForSeconds _waitStart;
+        private WaitForSeconds _waitSpace;
+        private WaitForSeconds _waitDeactivateUI;
+
+        private EnableMovementEvent _enableMovementEvent;
 
         private void Awake()
         {
@@ -92,73 +72,64 @@ namespace GameMode.World
 
         private void Start()
         {
+            dicQuestTitle = new Dictionary<QuestSO, QuestTitle>();
+            dicQuestDescription = new Dictionary<QuestSO, QuestDescription>();
+
             _enableMovementEvent = new EnableMovementEvent();
             continueTxt.enabled = false;
+
+            _currentQuestSelected = new GameObject();
 
             panelDialog.SetActive(false);
 
             _waitStart = new WaitForSeconds(GameData.Instance.gameConfig.timeStart);
             _waitSpace = new WaitForSeconds(GameData.Instance.gameConfig.timeSpace);
-
-            Resume();
-
+            _waitDeactivateUI = new WaitForSeconds(GameData.Instance.gameConfig.messageLifetime);
         }
 
-        private void OnEnable()
+        public void UpdateStamina(float value)
         {
-            EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+            staminaImg.fillAmount = value;
         }
 
-        private void OnDisable()
+        public void EnableCanvas(bool isEnabled)
         {
-            EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+            _canvas.enabled = isEnabled;
+        }
+
+        public void Pause(bool isPaused)
+        {
+            panelPause.gameObject.SetActive(isPaused);;
         }
 
         #region Events
 
-        // Enable interaction dialog
-        private void OnEnableDialog(EnableDialogEvent evt)
+        public void OnInteractionDialog(InteractionEvent evt)
         {
-            if (evt.enable)
+            if (GameManager.Instance.CurrentDialog.sentences.Length == 0)
             {
-                currentDialog = evt.dialog;
-                _currentQuest = evt.dialog.questSO;
-
-                EventController.AddListener<InteractionEvent>(OnInteractionDialog);
-            }
-            else
-            {
-                currentDialog = null;
-                _currentQuest = null;
-                EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-            }
-        }
-
-        // Execute dialog
-        private void OnInteractionDialog(InteractionEvent evt)
-        {
-            if (currentDialog.sentences.Length == 0)
-            {
-                Debug.Log($"Dialog EMPTY");
+                Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Dialog empty!");
                 return;
             }
 
             // Dialogues
-            if (_dialogIndex == currentDialog.sentences.Length)
+            if (_dialogIndex == GameManager.Instance.CurrentDialog.sentences.Length)
             {
-                SetQuest(_currentQuest);
+                SetQuest(GameManager.Instance.CurrentQuest);
 
                 _dialogIndex = 0;
                 panelDialog.SetActive(false);
 
                 _enableMovementEvent.canMove = true;
                 EventController.TriggerEvent(_enableMovementEvent);
-                EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
 
+                EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
             }
+
             else
             {
-                SetText();
+                PlayText();
+
                 panelDialog.SetActive(true);
 
                 _enableMovementEvent.canMove = false;
@@ -168,71 +139,49 @@ namespace GameMode.World
 
         #endregion
 
-        #region Player
-
-        public void UpdateStamina(float value)
-        {
-            staminaImg.fillAmount = value;
-        }
-
-        #endregion
-
         #region  Dialogues
 
-        private void SetText()
+        public void PlayText()
         {
-            if (_dialogIndex < currentDialog.sentences.Length)
+            if (_dialogIndex < GameManager.Instance.CurrentDialog.sentences.Length)
             {
                 if (_isWriting)
                 {
                     CompleteText();
-
                 }
                 else
                 {
-
                     _isWriting = true;
-
                     _coroutineWrite = StartCoroutine(WriteText());
-
                 }
             }
         }
 
         private IEnumerator WriteText()
         {
-
             _isReading = true;
 
-            _currentSentence = currentDialog.sentences[_dialogIndex];
+            _currentSentence = GameManager.Instance.CurrentDialog.sentences[_dialogIndex];
 
-            _textSkip = ""; // String
+            _textSkip = "";
 
-            foreach (char c in _currentSentence) // o String
+            foreach (char c in _currentSentence)
             {
-                if (c == _charSpace)
-                {
-                    _textSkip += ' ';
-                }
-                else
-                {
-                    _textSkip += c;
-                }
+                _textSkip += c == _charSpace ? ' ' : c;
             }
 
-            // Limpia el texto de la UI
             dialogTxt.text = "";
 
             _isReading = false;
 
-            yield return _waitStart; // 0.5f
+            yield return _waitStart;
 
-            foreach (char c in _currentSentence) // o String
+            foreach (char c in _currentSentence)
             {
                 if (c == _charSpace)
                 {
-                    dialogTxt.text += ' '; // en la UI
-                    yield return _waitSpace; // 1f
+                    dialogTxt.text += ' ';
+                    yield return _waitSpace;
                 }
                 else
                 {
@@ -261,222 +210,133 @@ namespace GameMode.World
             continueTxt.enabled = true;
 
             _dialogIndex++;
-
         }
 
         #endregion
 
         #region Quest
 
-        // public void OnClickQuest(bool _isOpen)
-        // {
-        //     // SetQuestInformation(_currentQuest);
-        // }
-
-        // public void SetQuestInformation(QuestSO data)
-        // {
-        //     // Actualiza informacion de la UI con data
-
-        //     // questObjectives[0].text = data.objetives[0];
-        //     // questTitleDiaryTxt.text = data.title;
-        //     // questTitleTxt.text = data.title;
-        //     // questDescriptionTxt.text = data.description;
-            
-        // }
-        
         public void SetQuest(QuestSO data)
         {
-
             if (data == null)
             {
-                Debug.Log($"<b> QUEST EMPTY </b>");
                 return;
             }
 
-            // PopUp quest
-            questPopup.SetActive(true);
-            questPopupTxt.DOFade(1, GameData.Instance.gameConfig.fadeSlowDuration);
-
-            Instantiate(questTitles, questTitlesParent);
-
             GameManager.Instance.AddQuest(data);
+            ShowPopup(string.Format(GameData.Instance.textConfig.popupNewQuest, data.title));
 
-            questPopupTxt.text = data.objetives[0];
+            // Create Quest Title
+            QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
+            questTitle.Init(data);
+            dicQuestTitle.Add(data, questTitle);
 
-            questObjectives[0].text = data.objetives[0];
-            questTitleDiaryTxt.text = data.title;
-            questTitleTxt.text = data.title;
-            questDescriptionTxt.text = data.description;
-
-            GameManager.Instance.StartCoroutine(GameManager.Instance.DeactivateWorldUI());
-
-            SetQuestLog(data);
+            // Create Quest Description
+            QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
+            questDescription.Init(data);
+            dicQuestDescription.Add(data, questDescription);
+            SelectQuest(data);
         }
 
-        public void SetQuestLog(QuestSO data)
+        public void SelectQuest(QuestSO data)
         {
-            questTitleDiaryTxt.text = data.title;
+            _currentQuestSelected.gameObject.SetActive(false);
+            _currentQuestSelected = dicQuestDescription[data].gameObject;
+            _currentQuestSelected.gameObject.SetActive(true);
         }
 
-        public void UpdateObjectives(string objetive, int index)
+        public void UpdateQuest(QuestSO data, int progress)
         {
-            questPopup.SetActive(true);
-            questPopupTxt.DOFade(1, GameData.Instance.gameConfig.fadeSlowDuration);
+            dicQuestDescription[data].UpdateObjetives();
 
-            questObjectives[index - 1].fontStyle = FontStyles.Strikethrough;
-
-            questObjectives[index].text = objetive;
-            questPopupTxt.text = objetive;
-
-            GameManager.Instance.StartCoroutine(GameManager.Instance.DeactivateWorldUI());
-        }
-
-        public void FadeOutUI()
-        {
-            questPopupTxt.DOFade(0, GameData.Instance.gameConfig.fadeSlowDuration);
-            questCompleteTxt.DOFade(0, GameData.Instance.gameConfig.fadeSlowDuration);
-            inventoryPopUpTxt.DOFade(0, GameData.Instance.gameConfig.fadeSlowDuration);
-
-        }
-
-        #endregion
-
-        #region Inventory
-
-        public void SetItemInformation(ItemSO item)
-        {
-            damageIntTxtDescription.text = item.valueMin.ToString();
-            itemSprite.sprite = item.previewSprite;
-            itemDescription.text = item.description;
-
-            if (onMouseOver)
+            if (progress == data.objetives.Length)
             {
-                itemInfo.SetActive(true);
-                damageTxtDescription.SetActive(true);
+                ShowPopup(string.Format(GameData.Instance.textConfig.popupCompleted, data.title));
+                dicQuestTitle[data].Complete();
             }
-
             else
             {
-                itemInfo.SetActive(false);
+                ShowPopup(string.Format(GameData.Instance.textConfig.popupNewObjetive, data.objetives[progress]));
             }
-
         }
 
-        public void InventoryPopUp()
-        {
-            inventoryPopUp.SetActive(true);
-            inventoryPopUpTxt.DOFade(1, GameData.Instance.gameConfig.fadeFastDuration);
+        // public void ShowQuest()
+        // {
+        // for (int i = 0; i < GameManager.Instance.dictionaryQuest.Count; i++)
+        // {
+        //     QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
+        //     questTitle.Init(GameManager.Instance.dictionaryQuest[i]);
+        //     dicQuestTitle.Add(GameManager.Instance.dictionaryQuest[i], questTitle);
 
-            GameManager.Instance.StartCoroutine(GameManager.Instance.DeactivateWorldUI());
+        // }
 
-        }
+        // QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
+        // questDescription.Init(GameManager.Instance.dicti);
+        // dicQuestDescription.Add(data, questDescription);
+        // SelectQuest(data);
 
-        public void TakeOffItemInformation()
-        {
-            itemInfo.SetActive(false);
-        }
+        // }
 
         #endregion
-        public void EnableCanvas(bool enabled)
-        {
-            _canvas.enabled = enabled;
-        }
 
-        #region Pause Menu
-        private void Update() //Move to PlayerController
+        public void ShowPopup(string text, bool canRepeat = true)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (!canRepeat && popup.gameObject.activeSelf)
             {
-                if (!isGamePaused)
-                {
-                    Pause();
+                return;
+            }
 
-                }
-                else
-                {
-                    Resume();
-                }
+            popup.gameObject.SetActive(false);
+            popup.SetTitle(text);
+            popup.gameObject.SetActive(true);
+        }
 
+        public void MenuPause(BUTTON_TYPE buttonType)
+        {
+
+            switch (buttonType)
+            {
+                case BUTTON_TYPE.Diary:
+                    system.SetActive(false);
+                    systemOptions.SetActive(false);
+                    inventory.SetActive(false);
+
+                    diary.SetActive(true);
+                    break;
+
+                case BUTTON_TYPE.Inventory:
+                    system.SetActive(false);
+                    systemOptions.SetActive(false);
+                    diary.SetActive(false);
+
+                    inventory.SetActive(true);
+                    break;
+
+                case BUTTON_TYPE.System:
+                    diary.SetActive(false);
+                    systemOptions.SetActive(false);
+                    inventory.SetActive(false);
+
+                    system.SetActive(true);
+                    break;
+
+                case BUTTON_TYPE.Resume:
+                    GameManager.Instance.SetPause();
+                    break;
+
+                case BUTTON_TYPE.Options:
+                    systemOptions.SetActive(true);
+                    break;
+
+                case BUTTON_TYPE.Quit:
+                    // GameData.Instance.LoadScene(SCENE_INDEX.MainMenu);
+                    Application.Quit();
+                    break;
+
+                default:
+                    break;
             }
         }
 
-        public void Resume()
-        {
-            pauseMenuUI.SetActive(false);
-            Time.timeScale = 1f;
-            isGamePaused = false;
-
-        }
-
-        public void Pause()
-        {
-            pauseMenuUI.SetActive(true);
-            Time.timeScale = 0f;
-            isGamePaused = true;
-
-        }
-        #region Diary
-
-        public void OnDiaryButton()
-        {
-
-            systemUI.SetActive(false);
-            optionsUI.SetActive(false);
-            inventoryUI.SetActive(false);
-
-            pauseMenuSprite.SetActive(true);
-            diaryUI.SetActive(true);
-
-            _isInDiary = true;
-
-        }
-
-        #endregion
-
-        #region Inventory
-        public void OnInventoryButton()
-        {
-            pauseMenuSprite.SetActive(false);
-            systemUI.SetActive(false);
-            optionsUI.SetActive(false);
-            diaryUI.SetActive(false);
-
-            inventoryUI.SetActive(true);
-
-            _isInInventory = true;
-
-        }
-
-        #endregion
-
-        #region System
-        public void OnSystemButton()
-        {
-            diaryUI.SetActive(false);
-            optionsUI.SetActive(false);
-            inventoryUI.SetActive(false);
-
-            pauseMenuSprite.SetActive(true);
-            systemUI.SetActive(true);
-
-            _isInSystem = true;
-        }
-
-        public void OnOptionsButton()
-        {
-            optionsUI.SetActive(true);
-
-            _isInSystem = true;
-        }
-
-        public void OnQuitButton()
-        {
-            // GameData.Instance.LoadScene(SCENE_INDEX.MainMenu);
-            Application.Quit();
-        }
-
-        #endregion
-
-        #endregion
     }
 }

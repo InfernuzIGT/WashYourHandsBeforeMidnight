@@ -108,11 +108,25 @@ public class GlobalController : MonoBehaviour
 
     private void AddItems()
     {
-        // TODO Mariano: Add items to Inventory
-        // if (items != null)
-        // {
-        //     // GameManager.Instance.inventoryManager.AddItemList();
-        // }
+        if (items.Length != 0)
+        {
+            for (int i = 0; i < items.Length; i++)
+            {
+                AddItem(i);
+            }
+        }
+    }
+
+    private void AddItem(int index)
+    {
+        if (GameManager.Instance.IsInventoryFull)
+        {
+            GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull);
+            return;
+        }
+
+        Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+        newSlot.AddItem(items[index]);
     }
 
     private void Update()

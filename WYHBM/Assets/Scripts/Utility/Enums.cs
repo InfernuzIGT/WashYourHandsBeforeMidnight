@@ -25,37 +25,7 @@ public enum COMBAT_STATE
     Death = 2,
     Attack = 3,
     Defense = 4,
-    Item = 5    
-}
-
-#endregion
-
-public enum AMBIENT
-{
-    World = 0,
-    Interior = 1,
-    Location = 2,
-    Combat = 3,
-    Development = 4
-}
-
-#region Actions
-
-public enum ACTION_TYPE
-{
-    none = 0,
-    weapon = 1,
-    defense = 2,
-    itemPlayer = 3,
-    itemEnemy = 4,
-}
-
-public enum OPTION_TYPE
-{
-    none = 0,
-    option1 = 1,
-    option2 = 2,
-    option3 = 3,
+    Item = 5
 }
 
 #endregion
@@ -74,10 +44,11 @@ public enum TIER
 
 public enum ITEM_TYPE
 {
-    none = 0,
-    heal = 1,
-    poison = 2,
-    grenade = 3,
+    None = 0,
+    Weapon = 1,
+    Defense = 2,
+    Heal = 3,
+    Damage = 4
 }
 
 public enum WEAPON_TYPE
@@ -100,6 +71,15 @@ public enum ARMOR_TYPE
 
 #endregion
 
+public enum AMBIENT
+{
+    World = 0,
+    Interior = 1,
+    Location = 2,
+    Combat = 3,
+    Development = 4
+}
+
 public enum LADDER_EXIT
 {
     Interaction = 0,
@@ -113,6 +93,17 @@ public enum NPC_INTERACTION_TYPE
     dialog = 1,
     fight = 2,
     dialogAndFight = 3
+}
+
+public enum BUTTON_TYPE
+{
+    None = 0,
+    Diary = 1,
+    Inventory = 2,
+    System = 3,
+    Resume = 4,
+    Options = 5,
+    Quit = 6,
 }
 
 public enum SCENE_INDEX
