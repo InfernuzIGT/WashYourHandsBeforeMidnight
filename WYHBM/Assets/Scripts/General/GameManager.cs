@@ -211,16 +211,16 @@ public class GameManager : MonoSingleton<GameManager>
         worldUI.itemDescription.Hide();
     }
 
-    // TODO Mariano: REVIEW
     public void EquipItem(ItemSO item)
     {
         switch (item.type)
         {
-            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Weapon:
                 combatCharacters[0].weapon = item;
                 break;
 
-            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
+            case ITEM_TYPE.Damage: 
+            case ITEM_TYPE.Heal: 
                 combatCharacters[0].item = item;
                 break;
 
