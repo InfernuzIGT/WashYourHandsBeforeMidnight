@@ -25,5 +25,19 @@ public class TextConfig : ScriptableObject
     public Color colorMsgHeal;
     public Color colorMsgDamage;
     public Color colorMsgDefense;
+    
+    [Header ("Inventory")]
+    public string itemDrop = "DROP";
+    public string itemUnequip = "UNEQUIP";
+    
+    public string itemHeal = "HP = {0}-{1}";
+    public string itemDamage = "DMG = {0}-{1}";
+    public string itemDefense = "DEF = {0}";
+
+    [Header("Popup")]
+    public string popupNewQuest = "New Quest: {0}";
+    public string popupNewObjetive = "New Objective: {0}";
+    public string popupCompleted = "Completed: {0}";
+    public string popupInventoryFull = "Inventory full";
 
 }

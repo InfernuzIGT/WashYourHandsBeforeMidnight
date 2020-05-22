@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Events;
+using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider))]
@@ -8,7 +9,13 @@ public class Interaction : MonoBehaviour
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     public bool showPopup = true;
+
+    [Header("Quest")]
+    public QuestSO quest;
+    public int progress;
+    
     [Space]
+    
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
@@ -16,7 +23,7 @@ public class Interaction : MonoBehaviour
 
     public virtual void Awake()
     {
-        _popupGO = transform.GetChild(0).gameObject; // TODO Mariano: Review
+        _popupGO = transform.GetChild(0).gameObject;
         _popupGO.SetActive(false);
     }
 
@@ -39,6 +46,27 @@ public class Interaction : MonoBehaviour
         if (!showPopup)return;
 
         _popupGO.SetActive(show);
+    }
+
+    protected void AddListenerQuest()
+    {
+        if (quest == null)return;
+
+        EventController.AddListener<InteractionEvent>(OnInteractQuest);
+    }
+
+    protected void RemoveListenerQuest()
+    {
+        if (quest == null)return;
+
+        EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
+    }
+
+    private void OnInteractQuest(InteractionEvent evt)
+    {
+        GameManager.Instance.ProgressQuest(quest, progress);
+
+        EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
     }
 
     #endregion
