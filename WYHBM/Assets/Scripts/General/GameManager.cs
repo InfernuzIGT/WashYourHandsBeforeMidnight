@@ -30,7 +30,7 @@ public class GameManager : MonoSingleton<GameManager>
     private NPCController currentNPC;
 
     private AMBIENT _lastAmbient;
-    private int _inventoryMaxSlots = 12;
+    private int _inventoryMaxSlots = 6;
 
     // Events
     private FadeEvent _fadeEvent;
