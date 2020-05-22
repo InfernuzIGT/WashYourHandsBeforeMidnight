@@ -6,6 +6,9 @@ public class Slot : MonoBehaviour
 {
     public Image iconImg;
     public TextMeshProUGUI buttonTxt;
+    [Space]
+    public TextMeshProUGUI nameTxt;
+    public GameObject slotButton;
 
     private ItemSO _item;
     private bool _isEquipped;
@@ -30,6 +33,7 @@ public class Slot : MonoBehaviour
 
         iconImg.sprite = newItem.previewSprite;
         buttonTxt.text = GameData.Instance.textConfig.itemDrop;
+        nameTxt.text = newItem.name;
     }
 
     public void DropItem()
@@ -43,30 +47,27 @@ public class Slot : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // TODO Mariano: REVIEW
     public void EquipItem()
     {
-        if ( /* GameManager.Instance.IsEquipmentFull || */ _isEquipped)
-        {
-            return;
-        }
+        if (_isEquipped)return;
 
         switch (_item.type)
         {
-            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Weapon:
                 if (GameManager.Instance.combatCharacters[0].weapon == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
-                };
+                }
                 break;
 
-            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
+            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Heal:
                 if (GameManager.Instance.combatCharacters[0].item == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
-                };
+                }
                 break;
 
             case ITEM_TYPE.Defense:
@@ -74,7 +75,7 @@ public class Slot : MonoBehaviour
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
-                };
+                }
                 break;
 
             default:
@@ -102,6 +103,9 @@ public class Slot : MonoBehaviour
 
     public void PointerEnter()
     {
+        nameTxt.gameObject.SetActive(false);
+        slotButton.SetActive(true);
+
         if (!_isEquipped)
         {
             GameManager.Instance.worldUI.itemDescription.Show(_item);
@@ -110,6 +114,9 @@ public class Slot : MonoBehaviour
 
     public void PointerExit()
     {
+        nameTxt.gameObject.SetActive(true);
+        slotButton.SetActive(false);
+
         if (!_isEquipped)
         {
             GameManager.Instance.worldUI.itemDescription.Hide();

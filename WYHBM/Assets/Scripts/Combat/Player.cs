@@ -10,6 +10,42 @@ public class Player : CombatCharacter
         base.Start();
     }
 
+    public override void CheckCharacters()
+    {
+        base.CheckCharacters();
+
+        GameManager.Instance.combatManager.CheckGame(this);
+    }
+
+    #region Animation
+
+    public override void AnimationActionStart()
+    {
+        base.AnimationActionStart();
+
+        transform.
+        DOMove(transform.position - GameData.Instance.combatConfig.positionAction, GameData.Instance.combatConfig.animationDuration).
+        SetEase(Ease.OutQuad);
+
+        // transform.
+        // DOMoveX(GameData.Instance.combatConfig.positionXCharacter, GameData.Instance.combatConfig.waitCombatDuration).
+        // SetEase(Ease.OutQuad).
+        // SetDelay(GameData.Instance.combatConfig.transitionDuration);
+    }
+
+    public override void AnimationActionEnd()
+    {
+        base.AnimationActionEnd();
+
+        transform.
+        DOMove(StartPosition, GameData.Instance.combatConfig.animationDuration).
+        SetEase(Ease.OutQuad);
+    }
+
+    #endregion
+
+    #region Turn System
+
     /// <summary>
     /// Espera la accion
     /// </summary>
@@ -26,44 +62,13 @@ public class Player : CombatCharacter
             yield return null;
         }
 
-        GameManager.Instance.combatUI.ShowPlayerPanel(false);
-
-        Debug.Log($"<color=green><b> [COMBAT] </b></color> Action by {gameObject.name}");
-
         yield return _waitPerAction;
 
+        GameManager.Instance.combatUI.ShowPlayerPanel(false);
+        
         AnimationAction(COMBAT_STATE.Idle);
-
     }
 
-    public override void ActionStartCombat()
-    {
-        base.ActionStartCombat();
-
-        transform.
-        DOMove(GameData.Instance.combatConfig.positionCombat, GameData.Instance.combatConfig.transitionDuration).
-        SetEase(Ease.OutQuad);
-
-        transform.
-        DOMoveX(GameData.Instance.combatConfig.positionXCharacter, GameData.Instance.combatConfig.waitCombatDuration).
-        SetEase(Ease.OutQuad).
-        SetDelay(GameData.Instance.combatConfig.transitionDuration);
-    }
-
-    public override void ActionStopCombat()
-    {
-        base.ActionStopCombat();
-
-        transform.
-        DOMove(StartPosition, GameData.Instance.combatConfig.transitionDuration).
-        SetEase(Ease.OutQuad);
-    }
-
-    public override void CheckCharacters()
-    {
-        base.CheckCharacters();
-
-        GameManager.Instance.combatManager.CheckGame(this);
-    }
+    #endregion
 
 }
