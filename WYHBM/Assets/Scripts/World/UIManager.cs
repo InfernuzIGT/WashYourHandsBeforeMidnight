@@ -36,6 +36,8 @@ namespace GameMode.World
         public ItemDescription itemDescription;
         public Transform itemParents;
         public Transform itemEquippedParents;
+        public TextMeshProUGUI damageTxt;
+        public TextMeshProUGUI defenseTxt;
 
         // Dialogues
         private char _charSpace = '*';

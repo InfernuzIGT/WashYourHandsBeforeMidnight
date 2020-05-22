@@ -6,6 +6,7 @@ public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
     public bool isPaused;
+    public bool inCombat;
     public AMBIENT currentAmbient;
 
     [Header("References")]
@@ -77,13 +78,36 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Update()
     {
-        Pause();
+        if (!inCombat)
+        {
+            Pause();
+            OpenInventory();
+            OpenQuest();
+        }
     }
 
     private void Pause()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            SetPause();
+        }
+    }
+
+    private void OpenInventory()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            worldUI.MenuPause(BUTTON_TYPE.Inventory);
+            SetPause();
+        }
+    }
+
+    private void OpenQuest()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            worldUI.MenuPause(BUTTON_TYPE.Diary);
             SetPause();
         }
     }
@@ -105,6 +129,8 @@ public class GameManager : MonoSingleton<GameManager>
 
                 globalController.ChangeCamera(null);
                 combatManager.CloseCombatArea();
+
+                inCombat = false;
                 break;
 
                 // case AMBIENT.Interior:
@@ -126,6 +152,8 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(true);
 
                 globalController.ChangeCamera(_currentCombatArea.virtualCamera);
+                
+                inCombat = true;
                 break;
 
             case AMBIENT.Development:
@@ -357,7 +385,7 @@ public class GameManager : MonoSingleton<GameManager>
         //     GameData.Data.dictionaryQuest.Add(dictionaryQuest[i].GetInstanceID(), dictionaryQuest[i]);
         //     GameData.Data.dictionaryProgress.Add(dictionaryQuest[i].GetInstanceID(), dictionaryProgress[i]);
         // }
-        
+
         GameData.SaveData();
     }
 
