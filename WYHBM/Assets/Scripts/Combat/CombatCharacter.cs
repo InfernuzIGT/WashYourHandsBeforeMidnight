@@ -142,6 +142,7 @@ public class CombatCharacter : MonoBehaviour
             _inDefense = false;
 
             _totalDefense = GetDefense();
+            if (_totalDefense > damageReceived)_totalDefense = damageReceived;
 
             AnimationAction(COMBAT_STATE.Defense);
         }
