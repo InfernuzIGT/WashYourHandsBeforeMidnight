@@ -6,9 +6,13 @@ public class Slot : MonoBehaviour
 {
     public Image iconImg;
     public TextMeshProUGUI buttonTxt;
+    [Space]
+    public TextMeshProUGUI nameTxt;
+    public GameObject slotButton;
 
-    private ItemSO _item;
     private bool _isEquipped;
+    private ItemSO _item;
+    public ItemSO Item { get { return _item; } }
 
     public void SlotButton()
     {
@@ -30,6 +34,7 @@ public class Slot : MonoBehaviour
 
         iconImg.sprite = newItem.previewSprite;
         buttonTxt.text = GameData.Instance.textConfig.itemDrop;
+        nameTxt.text = newItem.name;
     }
 
     public void DropItem()
@@ -38,43 +43,40 @@ public class Slot : MonoBehaviour
         newItem.AddInfo(_item);
         newItem.DetectSize();
 
-        GameManager.Instance.DropItem(_item);
+        GameManager.Instance.DropItem(this);
 
         Destroy(gameObject);
     }
 
-    // TODO Mariano: REVIEW
     public void EquipItem()
     {
-        if ( /* GameManager.Instance.IsEquipmentFull || */ _isEquipped)
-        {
-            return;
-        }
+        if (_isEquipped) return;
 
         switch (_item.type)
         {
-            case ITEM_TYPE.Damage:
-                if (GameManager.Instance.combatCharacters[0].weapon == null)
+            case ITEM_TYPE.Weapon:
+                if (GameManager.Instance.combatPlayers[0].inventory.weapon == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
-                };
+                }
                 break;
 
-            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
-                if (GameManager.Instance.combatCharacters[0].item == null)
+            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Heal:
+                if (GameManager.Instance.combatPlayers[0].inventory.item == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
-                };
+                }
                 break;
 
             case ITEM_TYPE.Defense:
-                if (GameManager.Instance.combatCharacters[0].defense == null)
+                if (GameManager.Instance.combatPlayers[0].inventory.defense == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
-                };
+                }
                 break;
 
             default:
@@ -102,6 +104,9 @@ public class Slot : MonoBehaviour
 
     public void PointerEnter()
     {
+        nameTxt.gameObject.SetActive(false);
+        slotButton.SetActive(true);
+
         if (!_isEquipped)
         {
             GameManager.Instance.worldUI.itemDescription.Show(_item);
@@ -110,6 +115,9 @@ public class Slot : MonoBehaviour
 
     public void PointerExit()
     {
+        nameTxt.gameObject.SetActive(true);
+        slotButton.SetActive(false);
+
         if (!_isEquipped)
         {
             GameManager.Instance.worldUI.itemDescription.Hide();

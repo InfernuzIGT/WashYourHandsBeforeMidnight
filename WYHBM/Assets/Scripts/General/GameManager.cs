@@ -2,10 +2,25 @@
 using Events;
 using UnityEngine;
 
+[System.Serializable]
+public class CombatPlayer
+{
+    public Player character = new Player();
+    public InventoryCombat inventory = new InventoryCombat();
+}
+
+[System.Serializable]
+public class CombatEnemy
+{
+    public Enemy character = new Enemy();
+    public InventoryCombat inventory = new InventoryCombat();
+}
+
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
     public bool isPaused;
+    public bool inCombat;
     public AMBIENT currentAmbient;
 
     [Header("References")]
@@ -18,17 +33,18 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Combat")]
     public CombatArea[] combatAreas;
     [Space]
-    public List<Player> combatCharacters;
+    public List<CombatPlayer> combatPlayers;
 
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
+    public List<Slot> listSlots;
 
     // Combat
     private CombatArea _currentCombatArea;
     private NPCController currentNPC;
 
     private AMBIENT _lastAmbient;
-    private int _inventoryMaxSlots = 12;
+    private int _inventoryMaxSlots = 8;
 
     // Events
     private FadeEvent _fadeEvent;
@@ -37,14 +53,8 @@ public class GameManager : MonoSingleton<GameManager>
     private bool _isInventoryFull;
     public bool IsInventoryFull { get { return _isInventoryFull; } }
 
-    // private bool _isEquipmentFull;
-    // public bool IsEquipmentFull { get { return _isEquipmentFull; } }
-
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
-
-    // private List<ItemSO> _itemsEquipped;
-    // public List<ItemSO> ItemsEquipped { get { return _itemsEquipped; } }
 
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
@@ -55,13 +65,14 @@ public class GameManager : MonoSingleton<GameManager>
     private void Start()
     {
         _items = new List<ItemSO>();
-        // _itemsEquipped = new List<ItemSO>();
 
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
+        listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
+
     }
 
     private void OnEnable()
@@ -82,13 +93,36 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Update()
     {
-        Pause();
+        if (!inCombat)
+        {
+            Pause();
+            OpenInventory();
+            OpenQuest();
+        }
     }
 
     private void Pause()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            SetPause();
+        }
+    }
+
+    private void OpenInventory()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            worldUI.MenuPause(BUTTON_TYPE.Inventory);
+            SetPause();
+        }
+    }
+
+    private void OpenQuest()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            worldUI.MenuPause(BUTTON_TYPE.Diary);
             SetPause();
         }
     }
@@ -110,6 +144,8 @@ public class GameManager : MonoSingleton<GameManager>
 
                 globalController.ChangeCamera(null);
                 combatManager.CloseCombatArea();
+
+                inCombat = false;
                 break;
 
                 // case AMBIENT.Interior:
@@ -131,6 +167,8 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(true);
 
                 globalController.ChangeCamera(_currentCombatArea.virtualCamera);
+
+                inCombat = true;
                 break;
 
             case AMBIENT.Development:
@@ -163,7 +201,6 @@ public class GameManager : MonoSingleton<GameManager>
     public Vector3 GetPlayerFootPosition()
     {
         return globalController.player.dropZone.transform.position;
-        // return globalController.player.gameObject.transform.position - GameData.Instance.gameConfig.playerBaseOffset;
     }
 
     public Ray GetRayMouse()
@@ -176,40 +213,42 @@ public class GameManager : MonoSingleton<GameManager>
     public void AddItem(ItemSO item)
     {
         _items.Add(item);
+
         _isInventoryFull = _items.Count == _inventoryMaxSlots;
     }
 
-    public void DropItem(ItemSO item)
+    public void DropItem(Slot slot)
     {
-        _items.Remove(item);
+        _items.Remove(slot.Item);
+
+        listSlots.Remove(slot);
+
         worldUI.itemDescription.Hide();
     }
 
-    // TODO Mariano: REVIEW
     public void EquipItem(ItemSO item)
     {
         switch (item.type)
         {
-            case ITEM_TYPE.Damage:
-                combatCharacters[0].weapon = item;
+            case ITEM_TYPE.Weapon:
+                combatPlayers[0].inventory.weapon = item;
                 break;
 
-            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
-                combatCharacters[0].item = item;
+            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Heal:
+                combatPlayers[0].inventory.item = item;
                 break;
 
             case ITEM_TYPE.Defense:
-                combatCharacters[0].defense = item;
+                combatPlayers[0].inventory.defense = item;
                 break;
 
             default:
                 break;
         }
 
-        // _itemsEquipped.Add(item); // REMOVE
         _items.Remove(item);
 
-        // _isEquipmentFull = _itemsEquipped.Count == 4; // REMOVE
         worldUI.itemDescription.Hide();
     }
 
@@ -217,16 +256,17 @@ public class GameManager : MonoSingleton<GameManager>
     {
         switch (item.type)
         {
-            case ITEM_TYPE.Damage:
-                combatCharacters[0].weapon = null;
+            case ITEM_TYPE.Weapon:
+                combatPlayers[0].inventory.weapon = null;
                 break;
 
-            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
-                combatCharacters[0].item = null;
+            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Heal:
+                combatPlayers[0].inventory.item = null;
                 break;
 
             case ITEM_TYPE.Defense:
-                combatCharacters[0].defense = null;
+                combatPlayers[0].inventory.defense = null;
                 break;
 
             default:
@@ -234,7 +274,6 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
         _items.Add(item);
-        // _itemsEquipped.Remove(item); // REMOVE
     }
 
     #endregion
@@ -243,27 +282,26 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
-
-        if (!dictionaryQuest.ContainsKey(data.id))
+        if (!dictionaryQuest.ContainsKey(data.GetInstanceID()))
         {
-            dictionaryQuest.Add(data.id, data);
+            dictionaryQuest.Add(data.GetInstanceID(), data);
 
-            dictionaryProgress.Add(data.id, 0);
+            dictionaryProgress.Add(data.GetInstanceID(), 0);
         }
     }
 
     public void ProgressQuest(QuestSO quest, int progress)
     {
-        if (!dictionaryQuest.ContainsKey(quest.id) ||
-            dictionaryProgress[quest.id] != progress ||
-            dictionaryProgress[quest.id] >= dictionaryQuest[quest.id].objetives.Length)
+        if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
+            dictionaryProgress[quest.GetInstanceID()] != progress ||
+            dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
         {
             return;
         }
 
-        dictionaryProgress[quest.id]++;
+        dictionaryProgress[quest.GetInstanceID()]++;
 
-        worldUI.UpdateQuest(dictionaryQuest[quest.id], dictionaryProgress[quest.id]);
+        worldUI.UpdateQuest(dictionaryQuest[quest.GetInstanceID()], dictionaryProgress[quest.GetInstanceID()]);
     }
 
     public void GiveReward()
@@ -284,7 +322,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         int indexArea = Random.Range(0, combatAreas.Length);
         _currentCombatArea = combatAreas[indexArea];
-        combatManager.SetData(_currentCombatArea, combatCharacters, evt.npc.combatCharacters);
+        combatManager.SetData(_currentCombatArea, combatPlayers, evt.npc.combatEnemies);
 
         _fadeEvent.callbackStart = SwitchMovement;
         _fadeEvent.callbackMid = SwitchAmbient;
@@ -320,6 +358,67 @@ public class GameManager : MonoSingleton<GameManager>
             _currentQuest = null;
             EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
+    }
+
+    #endregion
+
+    #region Persistence
+    
+    [ContextMenu("Load Game")]
+    public void LoadGame()
+    {
+
+        for (int i = 0; i < GameData.Data.items.Count; i++)
+        {
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
+
+            Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, worldUI.itemParents);
+            newSlot.AddItem(GameData.Data.items[i]);
+            listSlots.Add(newSlot);
+        }
+
+        foreach (var key in GameData.Data.dictionaryQuest.Keys)
+        {
+            if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest)continue;
+
+            dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
+            dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
+            GameManager.Instance.worldUI.SetQuest(GameData.Data.dictionaryQuest[key]);
+            // TODO: Agregar Quest en progreso a UI
+        }
+    }
+
+    public void SaveGame()
+    {
+        ClearOldData();
+
+        Debug.Log ($"<b> Save Game </b>");
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            GameData.Data.items.Add(_items[i]);
+        }
+
+        for (int i = 0; i < dictionaryQuest.Count; i++)
+        {
+            GameData.Data.dictionaryQuest.Add(dictionaryQuest[i].GetInstanceID(), dictionaryQuest[i]);
+            GameData.Data.dictionaryProgress.Add(dictionaryQuest[i].GetInstanceID(), dictionaryProgress[i]);
+        }
+
+        GameData.SaveData();
+    }
+
+    private void ClearOldData()
+    {
+        GameData.Data.items.Clear();
+        GameData.Data.dictionaryQuest.Clear();
+        GameData.Data.dictionaryProgress.Clear();
+    }
+
+    [ContextMenu("Delete Game")]
+    public void DeleteGame()
+    {
+        GameData.DeleteAllData();
     }
 
     #endregion

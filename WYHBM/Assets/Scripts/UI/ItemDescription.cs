@@ -22,11 +22,11 @@ public class ItemDescription : MonoBehaviour
             case ITEM_TYPE.Heal:
                 valueTxt.text = string.Format(GameData.Instance.textConfig.itemHeal, item.valueMin, item.valueMax);
                 break;
-                
+
             case ITEM_TYPE.Damage:
                 valueTxt.text = string.Format(GameData.Instance.textConfig.itemDamage, item.valueMin, item.valueMax);
                 break;
-                
+
             case ITEM_TYPE.Defense:
                 valueTxt.text = string.Format(GameData.Instance.textConfig.itemDefense, item.valueMin);
                 break;
@@ -34,20 +34,13 @@ public class ItemDescription : MonoBehaviour
             default:
                 break;
         }
-
-        Show(true);
     }
 
     public void Hide()
     {
-        Show(false);
-    }
-
-    private void Show(bool isEnable)
-    {
-        itemImg.enabled = isEnable;
-        descriptionTxt.enabled = isEnable;
-        valueTxt.enabled = isEnable;
+        itemImg.sprite = GameData.Instance.gameConfig.spriteEmptyUI;;
+        descriptionTxt.text = "";
+        valueTxt.text = "";
     }
 
 }

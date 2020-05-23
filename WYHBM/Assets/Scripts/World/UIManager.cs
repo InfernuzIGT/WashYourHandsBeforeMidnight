@@ -36,6 +36,8 @@ namespace GameMode.World
         public ItemDescription itemDescription;
         public Transform itemParents;
         public Transform itemEquippedParents;
+        public TextMeshProUGUI damageTxt;
+        public TextMeshProUGUI defenseTxt;
 
         // Dialogues
         private char _charSpace = '*';
@@ -51,6 +53,9 @@ namespace GameMode.World
         private Dictionary<QuestSO, QuestTitle> dicQuestTitle;
         private Dictionary<QuestSO, QuestDescription> dicQuestDescription;
         private GameObject _currentQuestSelected;
+        private bool _system;
+        private bool _inventory;
+        private bool _diary;
 
         private Tween _txtAnimation;
         private Canvas _canvas;
@@ -120,6 +125,7 @@ namespace GameMode.World
 
                 EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
             }
+
             else
             {
                 PlayText();
@@ -234,6 +240,7 @@ namespace GameMode.World
 
         public void SelectQuest(QuestSO data)
         {
+            Debug.Log ($"<b> Selected </b>");
             _currentQuestSelected.gameObject.SetActive(false);
             _currentQuestSelected = dicQuestDescription[data].gameObject;
             _currentQuestSelected.gameObject.SetActive(true);
@@ -254,6 +261,23 @@ namespace GameMode.World
             }
         }
 
+        // public void ShowQuest()
+        // {
+        // for (int i = 0; i < GameManager.Instance.dictionaryQuest.Count; i++)
+        // {
+        //     QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
+        //     questTitle.Init(GameManager.Instance.dictionaryQuest[i]);
+        //     dicQuestTitle.Add(GameManager.Instance.dictionaryQuest[i], questTitle);
+
+        // }
+
+        // QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
+        // questDescription.Init(GameManager.Instance.dicti);
+        // dicQuestDescription.Add(data, questDescription);
+        // SelectQuest(data);
+
+        // }
+
         #endregion
 
         public void ShowPopup(string text, bool canRepeat = true)
@@ -262,7 +286,7 @@ namespace GameMode.World
             {
                 return;
             }
-            
+
             popup.gameObject.SetActive(false);
             popup.SetTitle(text);
             popup.gameObject.SetActive(true);
@@ -270,6 +294,7 @@ namespace GameMode.World
 
         public void MenuPause(BUTTON_TYPE buttonType)
         {
+
             switch (buttonType)
             {
                 case BUTTON_TYPE.Diary:
@@ -313,5 +338,6 @@ namespace GameMode.World
                     break;
             }
         }
+
     }
 }

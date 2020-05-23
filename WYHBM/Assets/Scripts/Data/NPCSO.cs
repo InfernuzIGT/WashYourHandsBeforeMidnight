@@ -10,5 +10,5 @@ public class NPCSO : ScriptableObject
     public NPC_INTERACTION_TYPE interactionType;
     [Space]
     public DialogSO dialog;
-    public List<Enemy> combatCharacters;
+    public List<CombatEnemy> combatEnemies;
 }

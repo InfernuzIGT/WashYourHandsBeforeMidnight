@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameData : MonoSingleton<GameData>
 {
+	[Header("Config")]
 	public GameConfig gameConfig;
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
 
-	private static GameData GAME_DATA;
+	[Header("Persistence")]
+	public ItemSO persistenceItem;
+	public QuestSO persistenceQuest;
+
+	#region Load Scene
 
 	public void LoadScene(SCENE_INDEX sceneIndex)
 	{
@@ -26,29 +32,41 @@ public class GameData : MonoSingleton<GameData>
 		}
 	}
 
+	#endregion
+
+	#region Persistence
+
+	private static SessionData _data;
+	public static SessionData Data
+	{
+		get
+		{
+			if (_data == null)LoadData();
+			return _data;
+		}
+	}
+
 	private static bool LoadData()
 	{
-		var valid = false;
+		bool valid = false;
 
-		var data = PlayerPrefs.GetString("data", "");
+		string data = PlayerPrefs.GetString("data", "");
 		if (data != "")
 		{
-			var success = DESEncryption.TryDecrypt(data, out var original);
+			bool success = DESEncryption.TryDecrypt(data, out string original);
 			if (success)
 			{
-				GAME_DATA = JsonUtility.FromJson<GameData>(original);
-				// GAME_DATA.LoadData ();
+				_data = JsonUtility.FromJson<SessionData>(original);
 				valid = true;
 			}
 			else
 			{
-				GAME_DATA = new GameData();
+				_data = new SessionData();
 			}
-
 		}
 		else
 		{
-			GAME_DATA = new GameData();
+			_data = new SessionData();
 		}
 
 		return valid;
@@ -56,58 +74,55 @@ public class GameData : MonoSingleton<GameData>
 
 	public static bool SaveData()
 	{
-		const bool valid = false;
+		bool valid = false;
 
 		try
 		{
-			// GAME_DATA.SaveData ();
-			var result = DESEncryption.Encrypt(JsonUtility.ToJson(GameData.GAME_DATA));
+			string result = DESEncryption.Encrypt(JsonUtility.ToJson(_data));
 			PlayerPrefs.SetString("data", result);
 			PlayerPrefs.Save();
+			valid = true;
 		}
 		catch (Exception ex)
 		{
-			Debug.LogError(ex.ToString());
+			Debug.LogError($"<color=red><b>[ERROR]</b></color> Save Data: {ex}");
 		}
 
 		return valid;
 	}
 
-	public static GameData Data
+	public static bool DeleteAllData()
 	{
-		get
+		bool valid = false;
+
+		try
 		{
-			if (GAME_DATA == null)
-				LoadData();
-			return GAME_DATA;
+			PlayerPrefs.DeleteAll();
+			valid = true;
 		}
+		catch (Exception ex)
+		{
+			Debug.LogError($"<color=red><b>[ERROR]</b></color> Save Data: {ex}");
+		}
+
+		return valid;
 	}
+
+	#endregion
 
 }
 
-//EXAMPLES//
+[Serializable]
+public class SessionData
+{
+	public List<ItemSO> items = new List<ItemSO>();
+	public Dictionary<int, QuestSO> dictionaryQuest = new Dictionary<int, QuestSO>();
+	public Dictionary<int, int> dictionaryProgress = new Dictionary<int, int>();
 
-// [Serializable]
-// public class GameData
-// {
-// 	//Put attributes that you want to save during your game.
-// 	public int currentCharacterLevel = 0;
-// 	public int[] abilitiesLevel = { 0, 0, 0 };
-
-// 	public GameData ()
-// 	{
-// 		currentCharacterLevel = -1;
-// 		abilitiesLevel[0] = -1;
-// 		abilitiesLevel[1] = -1;
-// 	}
-
-// 	public void SaveData ()
-// 	{
-
-// 	}
-
-// 	public void LoadData ()
-// 	{
-
-// 	}
-// }
+	public SessionData()
+	{
+		items.Add(GameData.Instance.persistenceItem);
+		dictionaryQuest.Add(GameData.Instance.persistenceQuest.GetInstanceID(), GameData.Instance.persistenceQuest);
+		dictionaryProgress.Add(GameData.Instance.persistenceQuest.GetInstanceID(), 0);
+	}
+}

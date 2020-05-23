@@ -30,27 +30,6 @@ public enum COMBAT_STATE
 
 #endregion
 
-#region Actions
-
-public enum ACTION_TYPE
-{
-    none = 0,
-    weapon = 1,
-    defense = 2,
-    itemPlayer = 3,
-    itemEnemy = 4,
-}
-
-public enum OPTION_TYPE
-{
-    none = 0,
-    option1 = 1,
-    option2 = 2,
-    option3 = 3,
-}
-
-#endregion
-
 #region Equipment
 
 public enum TIER
@@ -66,9 +45,10 @@ public enum TIER
 public enum ITEM_TYPE
 {
     None = 0,
-    Heal = 1,
-    Damage = 2,
-    Defense = 3,
+    Weapon = 1,
+    Defense = 2,
+    Heal = 3,
+    Damage = 4
 }
 
 public enum WEAPON_TYPE

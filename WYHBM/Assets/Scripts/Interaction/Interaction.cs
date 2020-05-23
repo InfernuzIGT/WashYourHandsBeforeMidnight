@@ -23,7 +23,7 @@ public class Interaction : MonoBehaviour
 
     public virtual void Awake()
     {
-        _popupGO = transform.GetChild(0).gameObject; // TODO Mariano: Review
+        _popupGO = transform.GetChild(0).gameObject;
         _popupGO.SetActive(false);
     }
 
