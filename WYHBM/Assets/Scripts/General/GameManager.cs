@@ -45,6 +45,10 @@ public class GameManager : MonoSingleton<GameManager>
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
 
+    private bool _hasPostDialogs;
+    public bool hasPostDialogs { get { return _hasPostDialogs; } }
+
+
     private QuestSO _currentQuest;
     public QuestSO CurrentQuest { get { return _currentQuest; } }
 
