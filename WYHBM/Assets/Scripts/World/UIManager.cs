@@ -124,12 +124,11 @@ namespace GameMode.World
                     _enableMovementEvent.canMove = true;
                     EventController.TriggerEvent(_enableMovementEvent);
 
-                    _isComplete = true;
-
                     EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-                    
+
                     return;
                 }
+
 
                 SetQuest(GameManager.Instance.CurrentQuest);
 
@@ -266,6 +265,21 @@ namespace GameMode.World
             SelectQuest(data);
         }
 
+        public void ReloadQuest(QuestSO data)
+        {
+            // Create Quest Title
+            QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
+            questTitle.Init(data);
+            dicQuestTitle.Add(data, questTitle);
+
+            // Create Quest Description
+            QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
+            questDescription.Init(data);
+            dicQuestDescription.Add(data, questDescription);
+
+            Debug.Log ($"<b> Quest: {data.title} </b>");
+        }
+
         public void SelectQuest(QuestSO data)
         {
             Debug.Log($"<b> Selected </b>");
@@ -288,23 +302,6 @@ namespace GameMode.World
                 ShowPopup(string.Format(GameData.Instance.textConfig.popupNewObjetive, data.objetives[progress]));
             }
         }
-
-        // public void ShowQuest()
-        // {
-        // for (int i = 0; i < GameManager.Instance.dictionaryQuest.Count; i++)
-        // {
-        //     QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
-        //     questTitle.Init(GameManager.Instance.dictionaryQuest[i]);
-        //     dicQuestTitle.Add(GameManager.Instance.dictionaryQuest[i], questTitle);
-
-        // }
-
-        // QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
-        // questDescription.Init(GameManager.Instance.dicti);
-        // dicQuestDescription.Add(data, questDescription);
-        // SelectQuest(data);
-
-        // }
 
         #endregion
 
@@ -366,6 +363,5 @@ namespace GameMode.World
                     break;
             }
         }
-
     }
 }

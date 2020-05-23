@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using Events;
 using UnityEngine;
 
@@ -61,7 +62,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     private bool _hasPostDialogs;
     public bool hasPostDialogs { get { return _hasPostDialogs; } }
-
 
     private QuestSO _currentQuest;
     public QuestSO CurrentQuest { get { return _currentQuest; } }
@@ -367,28 +367,29 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion
 
     #region Persistence
-    
-    [ContextMenu("Load Game")]
+
     public void LoadGame()
     {
-
         for (int i = 0; i < GameData.Data.items.Count; i++)
         {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
             Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, worldUI.itemParents);
             newSlot.AddItem(GameData.Data.items[i]);
             listSlots.Add(newSlot);
         }
 
+
         foreach (var key in GameData.Data.dictionaryQuest.Keys)
         {
-            if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest)continue;
+            Debug.Log ($"<b> {GameData.Data.dictionaryQuest[key].title} </b>");
+            
+            if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest) continue;
 
             dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
             dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
-            GameManager.Instance.worldUI.SetQuest(GameData.Data.dictionaryQuest[key]);
-            // TODO: Agregar Quest en progreso a UI
+
+            worldUI.ReloadQuest(GameData.Data.dictionaryQuest[key]);
         }
     }
 
@@ -396,20 +397,21 @@ public class GameManager : MonoSingleton<GameManager>
     {
         ClearOldData();
 
-        Debug.Log ($"<b> Save Game </b>");
-
         for (int i = 0; i < _items.Count; i++)
         {
             GameData.Data.items.Add(_items[i]);
         }
-
-        for (int i = 0; i < dictionaryQuest.Count; i++)
+        foreach (var key in dictionaryQuest.Keys)
         {
-            GameData.Data.dictionaryQuest.Add(dictionaryQuest[i].GetInstanceID(), dictionaryQuest[i]);
-            GameData.Data.dictionaryProgress.Add(dictionaryQuest[i].GetInstanceID(), dictionaryProgress[i]);
+            GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
+            GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
+
         }
 
+
+
         GameData.SaveData();
+
     }
 
     private void ClearOldData()

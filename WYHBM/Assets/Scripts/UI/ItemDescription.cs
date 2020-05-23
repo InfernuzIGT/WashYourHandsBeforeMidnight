@@ -24,6 +24,7 @@ public class ItemDescription : MonoBehaviour
                 break;
 
             case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Weapon:
                 valueTxt.text = string.Format(GameData.Instance.textConfig.itemDamage, item.valueMin, item.valueMax);
                 break;
 
