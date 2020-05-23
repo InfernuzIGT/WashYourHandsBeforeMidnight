@@ -10,8 +10,9 @@ public class Slot : MonoBehaviour
     public TextMeshProUGUI nameTxt;
     public GameObject slotButton;
 
-    private ItemSO _item;
     private bool _isEquipped;
+    private ItemSO _item;
+    public ItemSO Item { get { return _item; } }
 
     public void SlotButton()
     {
@@ -42,14 +43,14 @@ public class Slot : MonoBehaviour
         newItem.AddInfo(_item);
         newItem.DetectSize();
 
-        GameManager.Instance.DropItem(_item);
+        GameManager.Instance.DropItem(this);
 
         Destroy(gameObject);
     }
 
     public void EquipItem()
     {
-        if (_isEquipped)return;
+        if (_isEquipped) return;
 
         switch (_item.type)
         {

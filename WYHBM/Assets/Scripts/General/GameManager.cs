@@ -37,7 +37,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
-    public Dictionary<int, Slot> dictionarySlot;
+    public List<Slot> listSlots;
 
     // Combat
     private CombatArea _currentCombatArea;
@@ -68,10 +68,11 @@ public class GameManager : MonoSingleton<GameManager>
 
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
-        dictionarySlot = new Dictionary<int, Slot>();
+        listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
+
     }
 
     private void OnEnable()
@@ -216,11 +217,11 @@ public class GameManager : MonoSingleton<GameManager>
         _isInventoryFull = _items.Count == _inventoryMaxSlots;
     }
 
-    public void DropItem(ItemSO item)
+    public void DropItem(Slot slot)
     {
-        _items.Remove(item);
+        _items.Remove(slot.Item);
 
-        dictionarySlot.Remove(item.GetInstanceID());
+        listSlots.Remove(slot);
 
         worldUI.itemDescription.Hide();
     }
@@ -362,17 +363,18 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion
 
     #region Persistence
-
+    
     [ContextMenu("Load Game")]
     public void LoadGame()
     {
+
         for (int i = 0; i < GameData.Data.items.Count; i++)
         {
             if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
 
             Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, worldUI.itemParents);
             newSlot.AddItem(GameData.Data.items[i]);
-            dictionarySlot.Add(_items[i].GetInstanceID(), newSlot);
+            listSlots.Add(newSlot);
         }
 
         foreach (var key in GameData.Data.dictionaryQuest.Keys)
@@ -381,14 +383,16 @@ public class GameManager : MonoSingleton<GameManager>
 
             dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
             dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
+            GameManager.Instance.worldUI.SetQuest(GameData.Data.dictionaryQuest[key]);
             // TODO: Agregar Quest en progreso a UI
         }
     }
 
-    [ContextMenu("Save Game")]
     public void SaveGame()
     {
         ClearOldData();
+
+        Debug.Log ($"<b> Save Game </b>");
 
         for (int i = 0; i < _items.Count; i++)
         {
