@@ -56,6 +56,7 @@ namespace GameMode.World
         private bool _system;
         private bool _inventory;
         private bool _diary;
+        private bool _isComplete;
 
         private Tween _txtAnimation;
         private Canvas _canvas;
@@ -106,15 +107,30 @@ namespace GameMode.World
 
         public void OnInteractionDialog(InteractionEvent evt)
         {
-            if (GameManager.Instance.CurrentDialog.sentences.Length == 0)
+            if (GameManager.Instance.CurrentDialog.questSentences.Length == 0)
             {
                 Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Dialog empty!");
                 return;
             }
 
             // Dialogues
-            if (_dialogIndex == GameManager.Instance.CurrentDialog.sentences.Length)
+            if (_dialogIndex == GameManager.Instance.CurrentDialog.questSentences.Length)
             {
+                if (_isComplete)
+                {
+                    _dialogIndex = 0;
+                    panelDialog.SetActive(false);
+
+                    _enableMovementEvent.canMove = true;
+                    EventController.TriggerEvent(_enableMovementEvent);
+
+                    _isComplete = true;
+
+                    EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+                    
+                    return;
+                }
+
                 SetQuest(GameManager.Instance.CurrentQuest);
 
                 _dialogIndex = 0;
@@ -122,6 +138,8 @@ namespace GameMode.World
 
                 _enableMovementEvent.canMove = true;
                 EventController.TriggerEvent(_enableMovementEvent);
+
+                _isComplete = true;
 
                 EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
             }
@@ -135,6 +153,7 @@ namespace GameMode.World
                 _enableMovementEvent.canMove = false;
                 EventController.TriggerEvent(_enableMovementEvent);
             }
+
         }
 
         #endregion
@@ -143,7 +162,7 @@ namespace GameMode.World
 
         public void PlayText()
         {
-            if (_dialogIndex < GameManager.Instance.CurrentDialog.sentences.Length)
+            if (_dialogIndex < GameManager.Instance.CurrentDialog.questSentences.Length)
             {
                 if (_isWriting)
                 {
@@ -161,7 +180,15 @@ namespace GameMode.World
         {
             _isReading = true;
 
-            _currentSentence = GameManager.Instance.CurrentDialog.sentences[_dialogIndex];
+            if (GameManager.Instance.CurrentDialog.postQuestSentences.Length != 0 && _isComplete)
+            {
+                _currentSentence = GameManager.Instance.CurrentDialog.postQuestSentences[_dialogIndex];
+            }
+
+            else
+            {
+                _currentSentence = GameManager.Instance.CurrentDialog.questSentences[_dialogIndex];
+            }
 
             _textSkip = "";
 
@@ -210,6 +237,7 @@ namespace GameMode.World
             continueTxt.enabled = true;
 
             _dialogIndex++;
+
         }
 
         #endregion
@@ -240,7 +268,7 @@ namespace GameMode.World
 
         public void SelectQuest(QuestSO data)
         {
-            Debug.Log ($"<b> Selected </b>");
+            Debug.Log($"<b> Selected </b>");
             _currentQuestSelected.gameObject.SetActive(false);
             _currentQuestSelected = dicQuestDescription[data].gameObject;
             _currentQuestSelected.gameObject.SetActive(true);
