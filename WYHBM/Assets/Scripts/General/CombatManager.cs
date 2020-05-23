@@ -65,7 +65,7 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void SetData(CombatArea combatArea, List<Player> players, List<Enemy> enemies)
+    public void SetData(CombatArea combatArea, List<CombatPlayer> combatPlayers, List<CombatEnemy> combatEnemies)
     {
         int indexCombat = 0;
         canSelect = false;
@@ -75,30 +75,30 @@ public class CombatManager : MonoBehaviour
             combatArea.transform.position,
             combatArea.transform.rotation);
 
-        for (int i = 0; i < players.Count; i++)
+        for (int i = 0; i < combatPlayers.Count; i++)
         {
             Player player = Instantiate(
-                players[i],
+                combatPlayers[i].character,
                 combatArea.playerPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            player.SetCharacter(indexCombat);
+            player.SetCharacter(indexCombat, combatPlayers[i].inventory);
             indexCombat++;
 
             listPlayers.Add(player);
             _listAllCharacters.Add(player);
         }
 
-        for (int i = 0; i < enemies.Count; i++)
+        for (int i = 0; i < combatEnemies.Count; i++)
         {
             Enemy enemy = Instantiate(
-                enemies[i],
+                combatEnemies[i].character,
                 combatArea.enemyPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            enemy.SetCharacter(indexCombat);
+            enemy.SetCharacter(indexCombat, combatEnemies[i].inventory);
             indexCombat++;
 
             listEnemies.Add(enemy);
@@ -121,7 +121,7 @@ public class CombatManager : MonoBehaviour
                 break;
 
             case COMBAT_STATE.Item:
-                if (_currentCharacter.item != null)
+                if (_currentCharacter.InventoryCombat.item != null)
                 {
                     ReadItem();
                 }
@@ -144,7 +144,7 @@ public class CombatManager : MonoBehaviour
 
     private void ReadItem()
     {
-        switch (_currentCharacter.item.type)
+        switch (_currentCharacter.InventoryCombat.item.type)
         {
             case ITEM_TYPE.Damage:
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
@@ -311,7 +311,7 @@ public class CombatManager : MonoBehaviour
 
         _listWaitingCharacters.Remove(_currentCharacter);
         _listWaitingCharacters.Add(_currentCharacter);
-        
+
         _currentCharacter = _listWaitingCharacters[0];
         _currentCharacter.IsMyTurn = true;
     }

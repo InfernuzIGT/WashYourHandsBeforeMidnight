@@ -2,6 +2,20 @@
 using Events;
 using UnityEngine;
 
+[System.Serializable]
+public class CombatPlayer
+{
+    public Player character = new Player();
+    public InventoryCombat inventory = new InventoryCombat();
+}
+
+[System.Serializable]
+public class CombatEnemy
+{
+    public Enemy character = new Enemy();
+    public InventoryCombat inventory = new InventoryCombat();
+}
+
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
@@ -19,7 +33,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Combat")]
     public CombatArea[] combatAreas;
     [Space]
-    public List<Player> combatCharacters;
+    public List<CombatPlayer> combatPlayers;
 
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
@@ -30,7 +44,7 @@ public class GameManager : MonoSingleton<GameManager>
     private NPCController currentNPC;
 
     private AMBIENT _lastAmbient;
-    private int _inventoryMaxSlots = 6;
+    private int _inventoryMaxSlots = 8;
 
     // Events
     private FadeEvent _fadeEvent;
@@ -157,7 +171,7 @@ public class GameManager : MonoSingleton<GameManager>
                 combatUI.EnableCanvas(true);
 
                 globalController.ChangeCamera(_currentCombatArea.virtualCamera);
-                
+
                 inCombat = true;
                 break;
 
@@ -221,16 +235,16 @@ public class GameManager : MonoSingleton<GameManager>
         switch (item.type)
         {
             case ITEM_TYPE.Weapon:
-                combatCharacters[0].weapon = item;
+                combatPlayers[0].inventory.weapon = item;
                 break;
 
-            case ITEM_TYPE.Damage: 
-            case ITEM_TYPE.Heal: 
-                combatCharacters[0].item = item;
+            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Heal:
+                combatPlayers[0].inventory.item = item;
                 break;
 
             case ITEM_TYPE.Defense:
-                combatCharacters[0].defense = item;
+                combatPlayers[0].inventory.defense = item;
                 break;
 
             default:
@@ -246,16 +260,17 @@ public class GameManager : MonoSingleton<GameManager>
     {
         switch (item.type)
         {
-            case ITEM_TYPE.Damage:
-                combatCharacters[0].weapon = null;
+            case ITEM_TYPE.Weapon:
+                combatPlayers[0].inventory.weapon = null;
                 break;
 
-            case ITEM_TYPE.Heal: // TODO Mariano: Change to Generic Item
-                combatCharacters[0].item = null;
+            case ITEM_TYPE.Damage:
+            case ITEM_TYPE.Heal:
+                combatPlayers[0].inventory.item = null;
                 break;
 
             case ITEM_TYPE.Defense:
-                combatCharacters[0].defense = null;
+                combatPlayers[0].inventory.defense = null;
                 break;
 
             default:
@@ -311,7 +326,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         int indexArea = Random.Range(0, combatAreas.Length);
         _currentCombatArea = combatAreas[indexArea];
-        combatManager.SetData(_currentCombatArea, combatCharacters, evt.npc.combatCharacters);
+        combatManager.SetData(_currentCombatArea, combatPlayers, evt.npc.combatEnemies);
 
         _fadeEvent.callbackStart = SwitchMovement;
         _fadeEvent.callbackMid = SwitchAmbient;
@@ -393,7 +408,7 @@ public class GameManager : MonoSingleton<GameManager>
             GameData.Data.dictionaryQuest.Add(dictionaryQuest[i].GetInstanceID(), dictionaryQuest[i]);
             GameData.Data.dictionaryProgress.Add(dictionaryQuest[i].GetInstanceID(), dictionaryProgress[i]);
         }
-        
+
         GameData.SaveData();
     }
 

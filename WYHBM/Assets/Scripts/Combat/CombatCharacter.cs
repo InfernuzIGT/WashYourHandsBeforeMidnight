@@ -3,20 +3,23 @@ using DG.Tweening;
 using Events;
 using UnityEngine;
 
+[System.Serializable]
+public class InventoryCombat
+{
+    public ItemSO weapon;
+    public ItemSO item;
+    public ItemSO defense;
+}
+
 public class CombatCharacter : MonoBehaviour
 {
-    [Header("General")]
-    [SerializeField] private string _name;
+    [SerializeField] private string _name = null;
+    [SerializeField] private InventoryCombat _inventoryCombat = new InventoryCombat();
     [Space]
     [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
     [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 10;
     [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 5;
     [SerializeField, Range(1f, 10f)] private int _statsReaction = 1;
-
-    [Header("Inventory")]
-    public ItemSO weapon;
-    public ItemSO item;
-    public ItemSO defense;
 
     // Protected
     protected bool _isActionDone;
@@ -40,6 +43,7 @@ public class CombatCharacter : MonoBehaviour
 
     // Combat Properties
     public string Name { get { return _name; } }
+    public InventoryCombat InventoryCombat { get { return _inventoryCombat; } }
     public int StatsHealthMax { get { return _statsHealthMax; } }
     public int StatsBaseDamage { get { return _statsBaseDamage; } }
     public int StatsBaseDefense { get { return _statsBaseDefense; } }
@@ -65,7 +69,7 @@ public class CombatCharacter : MonoBehaviour
         _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
     }
 
-    public void SetCharacter(int index)
+    public void SetCharacter(int index, InventoryCombat inventoryCombat)
     {
         // _scaleNormal = transform.localScale;
         _startPosition = transform.position;
@@ -75,6 +79,8 @@ public class CombatCharacter : MonoBehaviour
 
         _combatIndex = index;
         _healthActual = _statsHealthMax;
+        
+        _inventoryCombat = inventoryCombat;
 
         Vector3 healthBarPos = new Vector3(
             transform.position.x,
@@ -96,7 +102,7 @@ public class CombatCharacter : MonoBehaviour
                 break;
 
             case COMBAT_STATE.Item:
-                ActionUseItem(currentCharacter);
+                ActionUseItem(currentCharacter.InventoryCombat);
                 break;
 
             case COMBAT_STATE.Defense:
@@ -113,11 +119,11 @@ public class CombatCharacter : MonoBehaviour
         AnimationRecovery();
     }
 
-    public virtual void ActionUseItem(CombatCharacter currentCharacter)
+    public virtual void ActionUseItem(InventoryCombat inventory)
     {
-        _totalValue = Random.Range(currentCharacter.item.valueMin, currentCharacter.item.valueMax);
+        _totalValue = Random.Range(inventory.item.valueMin, inventory.item.valueMax);
 
-        switch (currentCharacter.item.type)
+        switch (inventory.item.type)
         {
             case ITEM_TYPE.Damage:
                 ActionReceiveDamage(_totalValue);
@@ -249,12 +255,12 @@ public class CombatCharacter : MonoBehaviour
 
     public int GetDamage()
     {
-        return weapon ? Random.Range(weapon.valueMin, weapon.valueMax) : _statsBaseDamage;
+        return _inventoryCombat.weapon ? Random.Range(_inventoryCombat.weapon.valueMin, _inventoryCombat.weapon.valueMax) : _statsBaseDamage;
     }
 
     public int GetDefense()
     {
-        return defense ? Random.Range(defense.valueMin, defense.valueMax) : _statsBaseDefense;
+        return _inventoryCombat.defense ? Random.Range(_inventoryCombat.defense.valueMin, _inventoryCombat.defense.valueMax) : _statsBaseDefense;
     }
 
     #region Turn System

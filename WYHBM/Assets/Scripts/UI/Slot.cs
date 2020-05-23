@@ -55,7 +55,7 @@ public class Slot : MonoBehaviour
         switch (_item.type)
         {
             case ITEM_TYPE.Weapon:
-                if (GameManager.Instance.combatCharacters[0].weapon == null)
+                if (GameManager.Instance.combatPlayers[0].inventory.weapon == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
@@ -64,7 +64,7 @@ public class Slot : MonoBehaviour
 
             case ITEM_TYPE.Damage:
             case ITEM_TYPE.Heal:
-                if (GameManager.Instance.combatCharacters[0].item == null)
+                if (GameManager.Instance.combatPlayers[0].inventory.item == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
@@ -72,7 +72,7 @@ public class Slot : MonoBehaviour
                 break;
 
             case ITEM_TYPE.Defense:
-                if (GameManager.Instance.combatCharacters[0].defense == null)
+                if (GameManager.Instance.combatPlayers[0].inventory.defense == null)
                 {
                     GameManager.Instance.EquipItem(_item);
                     SetEquip(true);
