@@ -113,32 +113,24 @@ namespace GameMode.World
                 return;
             }
 
+            if (_isComplete)
+            {
+                return;
+            }
+
             // Dialogues
             if (_dialogIndex == GameManager.Instance.CurrentDialog.questSentences.Length)
             {
-                if (_isComplete)
-                {
-                    _dialogIndex = 0;
-                    panelDialog.SetActive(false);
-
-                    _enableMovementEvent.canMove = true;
-                    EventController.TriggerEvent(_enableMovementEvent);
-
-                    EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-
-                    return;
-                }
-
 
                 SetQuest(GameManager.Instance.CurrentQuest);
+
+                _isComplete = true;
 
                 _dialogIndex = 0;
                 panelDialog.SetActive(false);
 
                 _enableMovementEvent.canMove = true;
                 EventController.TriggerEvent(_enableMovementEvent);
-
-                _isComplete = true;
 
                 EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
             }
@@ -179,15 +171,7 @@ namespace GameMode.World
         {
             _isReading = true;
 
-            if (GameManager.Instance.CurrentDialog.postQuestSentences.Length != 0 && _isComplete)
-            {
-                _currentSentence = GameManager.Instance.CurrentDialog.postQuestSentences[_dialogIndex];
-            }
-
-            else
-            {
-                _currentSentence = GameManager.Instance.CurrentDialog.questSentences[_dialogIndex];
-            }
+            _currentSentence = GameManager.Instance.CurrentDialog.questSentences[_dialogIndex];
 
             _textSkip = "";
 
@@ -277,7 +261,7 @@ namespace GameMode.World
             questDescription.Init(data);
             dicQuestDescription.Add(data, questDescription);
 
-            Debug.Log ($"<b> Quest: {data.title} </b>");
+            Debug.Log($"<b> Quest: {data.title} </b>");
         }
 
         public void SelectQuest(QuestSO data)
