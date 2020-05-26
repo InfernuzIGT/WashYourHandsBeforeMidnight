@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e0e2cef7fa61943bbaba6cf0a1150e, type: 3}
   m_Name: CombatConfig
   m_EditorClassIdentifier: 
-  fadeDuration: 3
+  positionAction: {x: -0.5, y: 0, z: 0}
+  animationDuration: 0.35
   startFillDuration: 5
   fillDuration: 0.25
+  offsetHealthBar: 2
+  fadeDuration: 3
   canvasFadeDuration: 0.35
   fadeOutEndDuration: 0.75
-  offsetHealthBar: 2
   layerNone:
     serializedVersion: 2
     m_Bits: 1
@@ -27,17 +29,11 @@ MonoBehaviour:
   layerEnemy:
     serializedVersion: 2
     m_Bits: 262144
+  characterUIPrefab: {fileID: 0}
   actionTimeThresholdMultiplier: 1
   waitTimeToStart: 1
   waitTimePerAction: 1.5
   waitTimeBetweenTurns: 1
-  animationDuration: 0.35
-  positionAction: {x: -1, y: 0, z: 0}
-  infoTextMoveDuration: 1
-  infoTextFadeDuration: 0.35
-  infoTextFadeDelay: 0.65
-  positionYTextStart: 1
-  positionYTextEnd: 2.5
   shakeDuration: 0.5
   shakeAmplitude: 0.25
   shakeFrequency: 25
