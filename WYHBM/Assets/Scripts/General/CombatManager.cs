@@ -7,7 +7,8 @@ public class CombatManager : MonoBehaviour
 {
     [Header("General")]
     public bool canSelect;
-    public COMBAT_STATE combatState;
+    public ANIM_STATE animState;
+    public ItemSO currentItem;
     public LayerMask currentLayer;
 
     [Header("Character - Players")]
@@ -58,7 +59,11 @@ public class CombatManager : MonoBehaviour
             {
                 if (_hit.collider != null)
                 {
-                    _hit.collider.gameObject.GetComponent<CombatCharacter>().Select(combatState, _currentCharacter);
+                    _hit.collider.gameObject.GetComponent<CombatCharacter>().Select(currentItem);
+
+                    _currentCharacter.AnimationAction(animState);
+                    _currentCharacter.DoAction();
+
                     canSelect = false;
                 }
             }
@@ -71,7 +76,7 @@ public class CombatManager : MonoBehaviour
         canSelect = false;
 
         _combatAreaContainer = Instantiate(
-            GameData.Instance.gameConfig.emptyObject,
+            GameData.Instance.worldConfig.emptyObject,
             combatArea.transform.position,
             combatArea.transform.rotation);
 
@@ -79,26 +84,28 @@ public class CombatManager : MonoBehaviour
         {
             Player player = Instantiate(
                 combatPlayers[i].character,
-                combatArea.playerPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                combatArea.playerPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            player.SetCharacter(indexCombat, combatPlayers[i].inventory);
+            player.SetCharacter(indexCombat, combatPlayers[i].equipment);
             indexCombat++;
+
+            GameManager.Instance.combatUI.CreateActions(combatPlayers[i].equipment);
 
             listPlayers.Add(player);
             _listAllCharacters.Add(player);
         }
-
+        
         for (int i = 0; i < combatEnemies.Count; i++)
         {
             Enemy enemy = Instantiate(
                 combatEnemies[i].character,
-                combatArea.enemyPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                combatArea.enemyPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            enemy.SetCharacter(indexCombat, combatEnemies[i].inventory);
+            enemy.SetCharacter(indexCombat, combatEnemies[i].equipment);
             indexCombat++;
 
             listEnemies.Add(enemy);
@@ -106,30 +113,54 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void DoAction(COMBAT_STATE combatState)
+    public void DoAction(ItemSO item)
     {
-        switch (combatState)
+        if (item == null)
         {
-            case COMBAT_STATE.Attack:
+            animState = ANIM_STATE.AttackMelee;
+            currentLayer = GameData.Instance.combatConfig.layerEnemy;
+            GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+            currentItem = null;
+            canSelect = true;
+            return;
+        }
+
+        switch (item.type)
+        {
+            case ITEM_TYPE.WeaponMelee:
+                animState = ANIM_STATE.AttackMelee;
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 break;
 
-            case COMBAT_STATE.Defense:
+            case ITEM_TYPE.WeaponOneHand:
+                animState = ANIM_STATE.AttackOneHand;
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
+
+            case ITEM_TYPE.WeaponTwoHands:
+                animState = ANIM_STATE.AttackTwoHands;
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
+
+            case ITEM_TYPE.ItemHeal:
+                animState = ANIM_STATE.ItemHeal;
                 currentLayer = GameData.Instance.combatConfig.layerPlayer;
                 GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 break;
 
-            case COMBAT_STATE.Item:
-                if (_currentCharacter.InventoryCombat.item != null)
-                {
-                    ReadItem();
-                }
-                else
-                {
-                    Debug.Log($"No items!");
-                    return;
-                }
+            case ITEM_TYPE.ItemGrenade:
+                animState = ANIM_STATE.ItemGrenade;
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
+
+            case ITEM_TYPE.ItemDefense:
+                animState = ANIM_STATE.ItemDefense;
+                currentLayer = GameData.Instance.combatConfig.layerPlayer;
+                GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 break;
 
             default:
@@ -138,27 +169,8 @@ public class CombatManager : MonoBehaviour
                 break;
         }
 
-        this.combatState = combatState;
+        currentItem = item;
         canSelect = true;
-    }
-
-    private void ReadItem()
-    {
-        switch (_currentCharacter.InventoryCombat.item.type)
-        {
-            case ITEM_TYPE.Damage:
-                currentLayer = GameData.Instance.combatConfig.layerEnemy;
-                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
-                break;
-
-            case ITEM_TYPE.Heal:
-                currentLayer = GameData.Instance.combatConfig.layerPlayer;
-                GameManager.Instance.combatUI.messageTxt.text = "Select Player";
-                break;
-
-            default:
-                break;
-        }
     }
 
     public void CheckGame(Player character)

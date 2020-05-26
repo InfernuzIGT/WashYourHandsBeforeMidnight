@@ -30,19 +30,19 @@ public class InfoText : MonoBehaviour
 
     private void InitInfoText(InfoTextEvent evt)
     {
-        transform.position = evt.position;
-        infoTxt.text = evt.text;
-        infoTxt.color = evt.color;
+        // transform.position = evt.position;
+        // infoTxt.text = evt.text;
+        // infoTxt.color = evt.color;
 
-        _canvasGroup.alpha = 1;
+        // _canvasGroup.alpha = 1;
 
-        transform.
-        DOMoveY(GameData.Instance.combatConfig.positionYTextEnd, GameData.Instance.combatConfig.infoTextMoveDuration).
-        SetEase(Ease.OutQuad);
+        // transform.
+        // DOMoveY(GameData.Instance.combatConfig.positionYTextEnd, GameData.Instance.combatConfig.infoTextMoveDuration).
+        // SetEase(Ease.OutQuad);
 
-        _canvasGroup.
-        DOFade(0, GameData.Instance.combatConfig.infoTextFadeDuration).
-        SetEase(Ease.OutQuad).
-        SetDelay(GameData.Instance.combatConfig.infoTextFadeDelay);
+        // _canvasGroup.
+        // DOFade(0, GameData.Instance.combatConfig.infoTextFadeDuration).
+        // SetEase(Ease.OutQuad).
+        // SetDelay(GameData.Instance.combatConfig.infoTextFadeDelay);
     }
 }

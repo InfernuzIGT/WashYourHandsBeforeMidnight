@@ -35,9 +35,15 @@ namespace GameMode.World
         public GameObject inventory;
         public ItemDescription itemDescription;
         public Transform itemParents;
-        public Transform itemEquippedParents;
-        public TextMeshProUGUI damageTxt;
-        public TextMeshProUGUI defenseTxt;
+        public Button buttonLeft;
+        public Button buttonRight;
+        [Space]
+        public TextMeshProUGUI characterNameTxt;
+        public Image characterImg;
+        public Transform[] characterSlot = new Transform[4];
+
+        // Inventory
+        private int _lastSlot = 0;
 
         // Dialogues
         private char _charSpace = '*';
@@ -83,9 +89,12 @@ namespace GameMode.World
 
             panelDialog.SetActive(false);
 
-            _waitStart = new WaitForSeconds(GameData.Instance.gameConfig.timeStart);
-            _waitSpace = new WaitForSeconds(GameData.Instance.gameConfig.timeSpace);
-            _waitDeactivateUI = new WaitForSeconds(GameData.Instance.gameConfig.messageLifetime);
+            buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
+            buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
+
+            _waitStart = new WaitForSeconds(GameData.Instance.worldConfig.timeStart);
+            _waitSpace = new WaitForSeconds(GameData.Instance.worldConfig.timeSpace);
+            _waitDeactivateUI = new WaitForSeconds(GameData.Instance.worldConfig.messageLifetime);
         }
 
         public void UpdateStamina(float value)
@@ -101,6 +110,25 @@ namespace GameMode.World
         public void Pause(bool isPaused)
         {
             panelPause.gameObject.SetActive(isPaused);;
+        }
+
+        public void ChangeCharacter(CombatPlayer combatPlayer, int index, bool inLeftLimit = false, bool inRightLimit = false)
+        {
+            characterNameTxt.text = combatPlayer.character.Name;
+            characterImg.sprite = combatPlayer.character.PreviewSprite;
+
+            characterSlot[_lastSlot].gameObject.SetActive(false);
+            characterSlot[index].gameObject.SetActive(true);
+
+            _lastSlot = index;
+
+            buttonLeft.interactable = !inLeftLimit;
+            buttonRight.interactable = !inRightLimit;
+        }
+
+        public Transform GetSlot()
+        {
+            return characterSlot[_lastSlot];
         }
 
         #region Events
@@ -149,7 +177,7 @@ namespace GameMode.World
 
         #endregion
 
-        #region  Dialogues
+        #region Dialogues
 
         public void PlayText()
         {
@@ -238,12 +266,12 @@ namespace GameMode.World
             ShowPopup(string.Format(GameData.Instance.textConfig.popupNewQuest, data.title));
 
             // Create Quest Title
-            QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
+            QuestTitle questTitle = Instantiate(GameData.Instance.worldConfig.questTitlePrefab, diaryTitleContainer);
             questTitle.Init(data);
             dicQuestTitle.Add(data, questTitle);
 
             // Create Quest Description
-            QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
+            QuestDescription questDescription = Instantiate(GameData.Instance.worldConfig.questDescriptionPrefab, diaryDescriptionContainer);
             questDescription.Init(data);
             dicQuestDescription.Add(data, questDescription);
             SelectQuest(data);
@@ -252,12 +280,12 @@ namespace GameMode.World
         public void ReloadQuest(QuestSO data)
         {
             // Create Quest Title
-            QuestTitle questTitle = Instantiate(GameData.Instance.gameConfig.questTitlePrefab, diaryTitleContainer);
+            QuestTitle questTitle = Instantiate(GameData.Instance.worldConfig.questTitlePrefab, diaryTitleContainer);
             questTitle.Init(data);
             dicQuestTitle.Add(data, questTitle);
 
             // Create Quest Description
-            QuestDescription questDescription = Instantiate(GameData.Instance.gameConfig.questDescriptionPrefab, diaryDescriptionContainer);
+            QuestDescription questDescription = Instantiate(GameData.Instance.worldConfig.questDescriptionPrefab, diaryDescriptionContainer);
             questDescription.Init(data);
             dicQuestDescription.Add(data, questDescription);
 
@@ -303,7 +331,6 @@ namespace GameMode.World
 
         public void MenuPause(BUTTON_TYPE buttonType)
         {
-
             switch (buttonType)
             {
                 case BUTTON_TYPE.Diary:

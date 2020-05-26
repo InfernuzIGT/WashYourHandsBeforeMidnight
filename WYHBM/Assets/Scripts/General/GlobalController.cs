@@ -125,7 +125,7 @@ public class GlobalController : MonoBehaviour
             return;
         }
 
-        Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+        Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(items[index]);
     }
 
