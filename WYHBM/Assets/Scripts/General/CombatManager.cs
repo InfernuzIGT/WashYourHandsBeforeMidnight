@@ -203,8 +203,6 @@ public class CombatManager : MonoBehaviour
     {
         _isEndOfCombat = true;
 
-        Debug.Log($"<color=blue><b> [COMBAT] </b></color> Win: {isWin}");
-
         // uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
 
         // uIController.endTxt.gameObject.SetActive(true);

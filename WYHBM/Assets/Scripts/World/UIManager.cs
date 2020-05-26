@@ -92,6 +92,9 @@ namespace GameMode.World
             buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
             buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
 
+            buttonLeft.interactable = false;
+            buttonRight.interactable = false;
+
             _waitStart = new WaitForSeconds(GameData.Instance.worldConfig.timeStart);
             _waitSpace = new WaitForSeconds(GameData.Instance.worldConfig.timeSpace);
             _waitDeactivateUI = new WaitForSeconds(GameData.Instance.worldConfig.messageLifetime);

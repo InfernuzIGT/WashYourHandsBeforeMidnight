@@ -1,4 +1,5 @@
-﻿using FMODUnity;
+﻿using Events;
+using FMODUnity;
 using UnityEngine;
 
 public class MenuController : MonoBehaviour
@@ -42,15 +43,25 @@ public class MenuController : MonoBehaviour
         _menuMusic.Play();
     }
 
+    private void OnEnable()
+    {
+        EventController.AddListener<MainMenuEvent>(MainMenu);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<MainMenuEvent>(MainMenu);
+    }
+
     private void PlayButtonSound(float parameter)
     {
         _buttonSounds.Play();
         _buttonSounds.EventInstance.setParameterByName(FMODParameters.UI, parameter);
     }
 
-    public void MainMenu(MENU_TYPE menuType)
+    public void MainMenu(MainMenuEvent evt)
     {
-        switch (menuType)
+        switch (evt.menuType)
         {
             case MENU_TYPE.Continue:
                 // GameData.Instance.LoadScene(SCENE_INDEX.Master);
