@@ -29,6 +29,7 @@ public class GameManager : MonoSingleton<GameManager>
     public CombatManager combatManager;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
+    public MenuController menuController;
     public Vector3 dropZone;
 
     [Header("Combat")]
