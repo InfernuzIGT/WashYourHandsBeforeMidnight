@@ -26,7 +26,7 @@ public class QuestDescription : MonoBehaviour
 
         for (int i = 0; i < quest.objetives.Length; i++)
         {
-            TextMeshProUGUI questObjetive = Instantiate(GameData.Instance.gameConfig.questObjetivePrefab, container);
+            TextMeshProUGUI questObjetive = Instantiate(GameData.Instance.worldConfig.questObjetivePrefab, container);
             questObjetive.text = quest.objetives[i];
             questObjetive.gameObject.SetActive(false);
             _listObjectives.Add(questObjetive);

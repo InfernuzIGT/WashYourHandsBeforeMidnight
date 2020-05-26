@@ -12,11 +12,13 @@ public class Enemy : CombatCharacter
 
 	public void Select()
 	{
-		// TODO Mariano: Seleccionar Jugadores
-		GameManager.Instance.combatManager.listPlayers[0].ActionReceiveDamage(StatsBaseDamage);
-		GameManager.Instance.combatManager.listPlayers[0].AnimationRecovery();
+		int randomPlayer = Random.Range(0, GameManager.Instance.combatPlayers.Count - 1);
 
-		AnimationAction(COMBAT_STATE.Attack);
+		GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();
+		GameManager.Instance.combatManager.listPlayers[randomPlayer].AnimationRecovery();
+
+		// TODO Mariano: Agregar animacion correspondiente
+		AnimationAction(ANIM_STATE.AttackMelee);
 
 		DoAction();
 	}
@@ -75,9 +77,11 @@ public class Enemy : CombatCharacter
 			yield return null;
 		}
 
+		Shake();
+
 		yield return _waitPerAction;
 
-		AnimationAction(COMBAT_STATE.Idle);
+		AnimationAction(ANIM_STATE.Idle);
 	}
 
 	#endregion

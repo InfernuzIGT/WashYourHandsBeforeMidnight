@@ -24,7 +24,7 @@ namespace Events
         public bool canMove;
         public bool enterToInterior;
     }
-    
+
     public class LadderEvent : GameEvent
     {
         public LADDER_EXIT ladderExit;
@@ -56,6 +56,11 @@ namespace Events
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
+    }
+
+    public class MainMenuEvent : GameEvent
+    {
+        public MENU_TYPE menuType;
     }
 
     public class InfoTextEvent : GameEvent
