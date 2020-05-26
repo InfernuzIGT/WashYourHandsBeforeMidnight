@@ -62,6 +62,8 @@ public class Player : CombatCharacter
         {
             yield return null;
         }
+        
+        Shake();
 
         yield return _waitPerAction;
 

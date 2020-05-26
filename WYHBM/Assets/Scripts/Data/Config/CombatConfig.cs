@@ -40,7 +40,7 @@ public class CombatConfig : ScriptableObject
     // public float positionYTextEnd = 2.5f;
 
     [Header("Shake")]
-    public float shakeDuration = .5f;
-    public float shakeAmplitude = .25f;
+    public float shakeDuration = .25f;
+    public float shakeAmplitude = .75f;
     public float shakeFrequency = 25;
 }

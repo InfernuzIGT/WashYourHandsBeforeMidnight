@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-// using Events;
+using Events;
 
 public class CombatCharacter : MonoBehaviour
 {
@@ -31,6 +31,7 @@ public class CombatCharacter : MonoBehaviour
     private bool _inDefense;
 
     // private InfoTextEvent infoTextEvent;
+    private ShakeEvent _shakeEvent;
 
     // Combat variables
     private float _healthActual;
@@ -67,6 +68,7 @@ public class CombatCharacter : MonoBehaviour
         _combatAnimator = GetComponent<CombatAnimator>();
 
         // infoTextEvent = new InfoTextEvent();
+        _shakeEvent = new ShakeEvent();
 
         _waitPerAction = new WaitForSeconds(GameData.Instance.combatConfig.waitTimePerAction);
 
@@ -228,6 +230,11 @@ public class CombatCharacter : MonoBehaviour
     // }
 
     #endregion
+
+    public void Shake()
+    {
+        EventController.TriggerEvent(_shakeEvent);
+    }
 
     private void Kill()
     {

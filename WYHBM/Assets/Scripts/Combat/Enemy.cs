@@ -76,6 +76,9 @@ public class Enemy : CombatCharacter
 		{
 			yield return null;
 		}
+
+		Shake();
+
 		yield return _waitPerAction;
 
 		AnimationAction(ANIM_STATE.Idle);
