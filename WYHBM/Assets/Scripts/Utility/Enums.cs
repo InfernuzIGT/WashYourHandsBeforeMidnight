@@ -58,6 +58,19 @@ public enum BUTTON_TYPE
     Quit = 6,
 }
 
+public enum MENU_TYPE
+{
+    None = 0,
+    Continue = 1,
+    NewGame = 2,
+    Options = 3,
+    Credits = 4,
+    Audio = 5,
+    Back = 6,
+    Exit = 7,
+    YesPopup = 8
+}
+
 public enum SCENE_INDEX
 {
     MainMenu = 0,
