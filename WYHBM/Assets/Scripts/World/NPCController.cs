@@ -151,7 +151,7 @@ public class NPCController : MonoBehaviour, IInteractable
         _visibleTargets.Clear();
         _targetVisible = false;
 
-        _targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, GameData.Instance.gameConfig.targetMask);
+        _targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, GameData.Instance.worldConfig.layerEnemyTarget);
 
         for (int i = 0; i < _targetsInViewRadius.Length; i++)
         {
@@ -162,7 +162,7 @@ public class NPCController : MonoBehaviour, IInteractable
             {
                 _distanceToTarget = Vector3.Distance(transform.position, _target.position);
 
-                if (!Physics.Raycast(transform.position, _directionToTarget, _distanceToTarget, GameData.Instance.gameConfig.obstacleMask))
+                if (!Physics.Raycast(transform.position, _directionToTarget, _distanceToTarget, GameData.Instance.worldConfig.layerEnemyObstacle))
                 {
                     _visibleTargets.Add(_target);
                     _targetLastPosition = _target.transform.position;

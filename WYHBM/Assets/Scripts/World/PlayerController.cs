@@ -134,7 +134,8 @@ public class PlayerController : MonoBehaviour
         _moveVertical = Input.GetAxisRaw(_inputVertical);
 
         // Speed movement
-        if (Input.GetKey(KeyCode.LeftShift) && _stamina > 1)
+        if (Input.GetKey(KeyCode.LeftShift) && _stamina > 1 ||
+            Input.GetKey(KeyCode.RightShift) && _stamina > 1)
         {
             _isRunning = _moveHorizontal == 0 && _moveVertical == 0 || !_characterController.isGrounded ? false : true;
             _speedHorizontal = _speedRun;

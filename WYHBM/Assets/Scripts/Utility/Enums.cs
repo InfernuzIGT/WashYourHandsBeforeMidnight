@@ -1,83 +1,35 @@
-﻿#region Character
-
-public enum CHARACTER_TYPE
-{
-    none = 0,
-    human = 1,
-    infected = 2
-}
-
-public enum CHARACTER_BEHAVIOUR
-{
-    none = 0,
-    aggressive = 1,
-    defensive = 2
-}
-
-#endregion
-
-#region Animator
-
-public enum COMBAT_STATE
+﻿public enum ANIM_STATE
 {
     Idle = 0,
     Hit = 1,
     Death = 2,
-    Attack = 3,
-    Defense = 4,
-    Item = 5
+    AttackMelee = 3,
+    AttackOneHand = 4,
+    AttackTwoHands = 5,
+    ItemHeal = 6,
+    ItemDefense = 7,
+    ItemGrenade = 8
 }
 
-#endregion
-
-#region Equipment
-
-public enum TIER
-{
-    none = 0,
-    common = 1,
-    uncommon = 2,
-    rare = 3,
-    epic = 4,
-    legendary = 5,
-}
+// public enum TIER
+// {
+//     none = 0,
+//     common = 1,
+//     uncommon = 2,
+//     rare = 3,
+//     epic = 4,
+//     legendary = 5,
+// }
 
 public enum ITEM_TYPE
 {
     None = 0,
-    Weapon = 1,
-    Defense = 2,
-    Heal = 3,
-    Damage = 4
-}
-
-public enum WEAPON_TYPE
-{
-    none = 0,
-    melee = 1,
-    pistol = 2,
-    rifle = 3,
-    shotgun = 3,
-}
-
-public enum ARMOR_TYPE
-{
-    none = 0,
-    head = 1,
-    chest = 2,
-    legs = 3,
-    ring = 4,
-}
-
-#endregion
-
-public enum AMBIENT
-{
-    World = 0,
-    Interior = 1,
-    Location = 2,
-    Combat = 3,
-    Development = 4
+    WeaponMelee = 1,
+    WeaponOneHand = 2,
+    WeaponTwoHands = 3,
+    ItemHeal = 4,
+    ItemDefense = 5,
+    ItemGrenade = 6
 }
 
 public enum LADDER_EXIT

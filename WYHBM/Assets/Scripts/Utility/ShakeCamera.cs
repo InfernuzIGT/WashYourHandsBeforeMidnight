@@ -27,6 +27,12 @@ namespace GameMode.Combat
 			EventController.RemoveListener<ShakeEvent>(Shake);
 		}
 
+		[ContextMenu("Shake")]
+		public void Shake()
+		{
+			StartCoroutine(cShake());
+		}
+
 		private void Shake(ShakeEvent evt)
 		{
 			StartCoroutine(cShake());

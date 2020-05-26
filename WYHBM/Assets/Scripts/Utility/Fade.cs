@@ -38,7 +38,7 @@ public class Fade : MonoBehaviour
 
         _fadeImg.DOFade(
                 1,
-                _fadeFast ? GameData.Instance.gameConfig.fadeFastDuration : GameData.Instance.gameConfig.fadeSlowDuration)
+                _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
             .OnKill(FadeIn);
     }
 
@@ -48,7 +48,7 @@ public class Fade : MonoBehaviour
 
         _fadeImg.DOFade(
                 0,
-                _fadeFast ? GameData.Instance.gameConfig.fadeFastDuration : GameData.Instance.gameConfig.fadeSlowDuration)
+                _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
             .OnKill(FadeOut);
     }
 

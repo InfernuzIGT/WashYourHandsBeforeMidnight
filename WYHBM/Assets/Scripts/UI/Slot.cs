@@ -39,7 +39,7 @@ public class Slot : MonoBehaviour
 
     public void DropItem()
     {
-        InteractionItem newItem = Instantiate(GameData.Instance.gameConfig.itemPrefab, GameManager.Instance.GetPlayerFootPosition(), Quaternion.identity);
+        InteractionItem newItem = Instantiate(GameData.Instance.worldConfig.itemPrefab, GameManager.Instance.GetPlayerFootPosition(), Quaternion.identity);
         newItem.AddInfo(_item);
         newItem.DetectSize();
 
@@ -50,46 +50,15 @@ public class Slot : MonoBehaviour
 
     public void EquipItem()
     {
-        if (_isEquipped) return;
+        if (_isEquipped || GameManager.Instance.IsEquipmentFull)return;
 
-        switch (_item.type)
-        {
-            case ITEM_TYPE.Weapon:
-                if (GameManager.Instance.combatPlayers[0].inventory.weapon == null)
-                {
-                    GameManager.Instance.EquipItem(_item);
-                    SetEquip(true);
-                }
-                break;
-
-            case ITEM_TYPE.Damage:
-            case ITEM_TYPE.Heal:
-                if (GameManager.Instance.combatPlayers[0].inventory.item == null)
-                {
-                    GameManager.Instance.EquipItem(_item);
-                    SetEquip(true);
-                }
-                break;
-
-            case ITEM_TYPE.Defense:
-                if (GameManager.Instance.combatPlayers[0].inventory.defense == null)
-                {
-                    GameManager.Instance.EquipItem(_item);
-                    SetEquip(true);
-                }
-                break;
-
-            default:
-                break;
-        }
+        GameManager.Instance.EquipItem(_item);
+        SetEquip(true);
     }
 
     public void UnequipItem()
     {
-        if (GameManager.Instance.IsInventoryFull)
-        {
-            return;
-        }
+        if (GameManager.Instance.IsInventoryFull)return;
 
         GameManager.Instance.UnequipItem(_item);
         SetEquip(false);
@@ -98,7 +67,7 @@ public class Slot : MonoBehaviour
     private void SetEquip(bool isEquipped)
     {
         _isEquipped = isEquipped;
-        transform.SetParent(isEquipped ? GameManager.Instance.worldUI.itemEquippedParents : GameManager.Instance.worldUI.itemParents);
+        transform.SetParent(isEquipped ? GameManager.Instance.worldUI.GetSlot() : GameManager.Instance.worldUI.itemParents);
         buttonTxt.text = isEquipped ? GameData.Instance.textConfig.itemUnequip : GameData.Instance.textConfig.itemDrop;
     }
 

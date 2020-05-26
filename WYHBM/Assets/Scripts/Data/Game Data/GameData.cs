@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Config")]
-	public GameConfig gameConfig;
+	public WorldConfig worldConfig;
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
 
