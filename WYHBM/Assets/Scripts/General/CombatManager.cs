@@ -18,7 +18,6 @@ public class CombatManager : MonoBehaviour
     public List<Enemy> listEnemies;
 
     private List<CombatCharacter> _listAllCharacters;
-    private List<CombatCharacter> _listWaitingCharacters;
     private CombatCharacter _currentCharacter;
     private RaycastHit _hit;
     private Ray _ray;
@@ -30,6 +29,10 @@ public class CombatManager : MonoBehaviour
     private WaitForSeconds _waitBetweenTurns;
 
     private ExitCombatEvent _interactionCombatEvent;
+
+    // Properties
+    private List<CombatCharacter> _listWaitingCharacters;
+    public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
 
     private void Start()
     {
@@ -96,7 +99,7 @@ public class CombatManager : MonoBehaviour
             listPlayers.Add(player);
             _listAllCharacters.Add(player);
         }
-        
+
         for (int i = 0; i < combatEnemies.Count; i++)
         {
             Enemy enemy = Instantiate(
@@ -111,6 +114,8 @@ public class CombatManager : MonoBehaviour
             listEnemies.Add(enemy);
             _listAllCharacters.Add(enemy);
         }
+
+        GameManager.Instance.combatUI.CreateTurn(_listAllCharacters);
     }
 
     public void DoAction(ItemSO item)
@@ -324,6 +329,8 @@ public class CombatManager : MonoBehaviour
 
         _currentCharacter = _listWaitingCharacters[0];
         _currentCharacter.IsMyTurn = true;
+        
+        GameManager.Instance.ReorderTurn();
     }
 
     /// <summary>
