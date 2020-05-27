@@ -28,7 +28,6 @@ public class GameManager : MonoSingleton<GameManager>
     public CombatManager combatManager;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
-    public MenuController menuController;
     public Vector3 dropZone;
 
     [Header("Combat")]
@@ -36,8 +35,10 @@ public class GameManager : MonoSingleton<GameManager>
     [Space]
     public List<CombatPlayer> combatPlayers;
 
-    public List<QuestSO> listQuest;
-    public List<int> listProgress;
+    // public List<QuestSO> listQuest;
+    // public List<int> listProgress;
+    public Dictionary<int, QuestSO> dictionaryQuest; 
+    public Dictionary<int, int> dictionaryProgress; 
     public List<Slot> listSlots;
 
     // Combat
@@ -72,8 +73,11 @@ public class GameManager : MonoSingleton<GameManager>
     {
         _items = new List<ItemSO>();
 
-        listQuest = new List<QuestSO>();
-        listProgress = new List<int>();
+        // listQuest = new List<QuestSO>();
+        // listProgress = new List<int>();
+        dictionaryQuest = new Dictionary<int, QuestSO>();
+        dictionaryProgress = new Dictionary<int, int>();
+
         listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
@@ -258,11 +262,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
-        if (!listQuest.Contains(data))
+        if (!dictionaryQuest.ContainsKey(data.GetInstanceID()))
         {
-            listQuest.Add(data);
+            dictionaryQuest.Add(data.GetInstanceID(), data);
 
-            listProgress.Add(0);
+            dictionaryProgress.Add(data.GetInstanceID(), 0);
         }
 
         // if (!listQuest.ContainsKey(data.GetInstanceID()))
@@ -275,16 +279,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void ProgressQuest(QuestSO quest, int progress)
     {
-        if (!listQuest.Contains(quest) ||
-            listProgress[quest.GetInstanceID()] != progress ||
-            listProgress[quest.GetInstanceID()] >= listQuest[quest.GetInstanceID()].objetives.Length)
+        if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
+            dictionaryProgress[quest.GetInstanceID()] != progress ||
+            dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
         {
             return;
         }
 
-        listProgress[quest.GetInstanceID()]++;
+        dictionaryProgress[quest.GetInstanceID()]++;
 
-        worldUI.UpdateQuest(listQuest[quest.GetInstanceID()], listProgress[quest.GetInstanceID()]);
+        worldUI.UpdateQuest(dictionaryQuest[quest.GetInstanceID()], dictionaryProgress[quest.GetInstanceID()]);
     }
 
     public void GiveReward()
