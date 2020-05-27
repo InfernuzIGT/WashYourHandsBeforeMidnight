@@ -2,21 +2,17 @@
 
 public class TargetBehind : MonoBehaviour
 {
-    public Material materialDetected;
-    
-    private MeshRenderer _meshRenderer;
-    private Material _materialNormal;
+    private Material _material;
 
     private void Start()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
-        _materialNormal = _meshRenderer.material;
-        gameObject.layer = LayerMask.NameToLayer(LayerMask.LayerToName(GameData.Instance.worldConfig.layerOcclusionMask));
+        _material = GetComponent<MeshRenderer>().material;
+        // gameObject.layer = LayerMask.NameToLayer(LayerMask.LayerToName(GameData.Instance.worldConfig.layerOcclusionMask));
     }
 
     public void Detected(bool isDetected)
     {
-        _meshRenderer.material = isDetected ? materialDetected : _materialNormal;
+        _material.SetFloat("_isDetected", isDetected ? 1 : 0);
     }
 
 }
