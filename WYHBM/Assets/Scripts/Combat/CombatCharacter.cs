@@ -1,19 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using UnityEngine;
 using Events;
+using UnityEngine;
 
 public class CombatCharacter : MonoBehaviour
 {
     [SerializeField] private string _name = null;
     [SerializeField] private List<ItemSO> _equipment = new List<ItemSO>(); // TODO Mariano: Used by Enemy
-    
-    [Header ("Sprites")]
+
+    [Header("Sprites")]
     [SerializeField] private Sprite _previewSprite = null;
     [SerializeField] private Sprite _turnSprite = null;
-    
-    [Header ("Stats")]
+
+    [Header("Stats")]
     [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
     [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 10;
     [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 5;
@@ -23,7 +23,6 @@ public class CombatCharacter : MonoBehaviour
     protected SpriteRenderer _spriteRenderer;
     protected bool _isActionDone;
     protected WaitForSeconds _waitPerAction;
-    protected int _combatIndex;
 
     private CharacterUI _characterUI;
     private CombatAnimator _combatAnimator;
@@ -53,6 +52,9 @@ public class CombatCharacter : MonoBehaviour
     public int StatsReaction { get { return _statsReaction; } }
 
     // Properties
+    protected int _combatIndex;
+    public int CombatIndex { get { return _combatIndex; } }
+
     protected bool _isMyTurn;
     public bool IsMyTurn { get { return _isMyTurn; } set { _isMyTurn = value; } }
 

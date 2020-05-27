@@ -62,13 +62,13 @@ public class Player : CombatCharacter
         {
             yield return null;
         }
-        
+
         Shake();
+
+        // GameManager.Instance.ReorderTurn();
 
         yield return _waitPerAction;
 
-        // GameManager.Instance.combatUI.ShowPlayerPanel(false);
-        
         AnimationAction(ANIM_STATE.Idle);
     }
 

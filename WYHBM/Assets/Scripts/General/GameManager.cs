@@ -22,7 +22,7 @@ public class GameManager : MonoSingleton<GameManager>
     public bool isPaused;
     public bool inCombat;
     public bool inWorld;
-    
+
     [Header("References")]
     public GlobalController globalController;
     public CombatManager combatManager;
@@ -80,7 +80,7 @@ public class GameManager : MonoSingleton<GameManager>
         _fadeEvent.fadeFast = true;
 
         _characterIndex = 0;
-        worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit: true);
+        worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
 
         inWorld = true;
     }
@@ -154,6 +154,7 @@ public class GameManager : MonoSingleton<GameManager>
             globalController.ChangeCamera(null);
             combatManager.CloseCombatArea();
             combatUI.actions.Clear();
+            combatUI.ClearTurn();
 
             inCombat = false;
         }
@@ -177,11 +178,16 @@ public class GameManager : MonoSingleton<GameManager>
     {
         combatManager.InitiateTurn();
     }
-
+    
     private void StartCombat()
     {
         currentNPC.Kill();
         combatManager.InitiateTurn();
+    }
+    
+    public void ReorderTurn()
+    {
+        combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
     }
 
     public Vector3 GetPlayerFootPosition()
