@@ -156,6 +156,7 @@ public class GameManager : MonoSingleton<GameManager>
             globalController.ChangeCamera(null);
             combatManager.CloseCombatArea();
             combatUI.actions.Clear();
+            combatUI.ClearTurn();
 
             inCombat = false;
         }
@@ -179,11 +180,16 @@ public class GameManager : MonoSingleton<GameManager>
     {
         combatManager.InitiateTurn();
     }
-
+    
     private void StartCombat()
     {
         currentNPC.Kill();
         combatManager.InitiateTurn();
+    }
+    
+    public void ReorderTurn()
+    {
+        combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
     }
 
     public Vector3 GetPlayerFootPosition()
