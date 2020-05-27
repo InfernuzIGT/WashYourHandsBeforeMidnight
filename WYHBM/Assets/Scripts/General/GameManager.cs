@@ -28,7 +28,6 @@ public class GameManager : MonoSingleton<GameManager>
     public CombatManager combatManager;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
-    public MenuController menuController;
     public Vector3 dropZone;
 
     [Header("Combat")]
@@ -36,8 +35,10 @@ public class GameManager : MonoSingleton<GameManager>
     [Space]
     public List<CombatPlayer> combatPlayers;
 
-    public Dictionary<int, QuestSO> dictionaryQuest;
-    public Dictionary<int, int> dictionaryProgress;
+    // public List<QuestSO> listQuest;
+    // public List<int> listProgress;
+    public Dictionary<int, QuestSO> dictionaryQuest; 
+    public Dictionary<int, int> dictionaryProgress; 
     public List<Slot> listSlots;
 
     // Combat
@@ -72,8 +73,11 @@ public class GameManager : MonoSingleton<GameManager>
     {
         _items = new List<ItemSO>();
 
+        // listQuest = new List<QuestSO>();
+        // listProgress = new List<int>();
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
+
         listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
@@ -81,6 +85,8 @@ public class GameManager : MonoSingleton<GameManager>
 
         _characterIndex = 0;
         worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
+
+        GameManager.Instance.LoadGame();
 
         inWorld = true;
     }
@@ -236,14 +242,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0)return;
+            if (_characterIndex <= 0) return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1)return;
+            if (_characterIndex >= combatPlayers.Count - 1) return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
@@ -262,6 +268,13 @@ public class GameManager : MonoSingleton<GameManager>
 
             dictionaryProgress.Add(data.GetInstanceID(), 0);
         }
+
+        // if (!listQuest.ContainsKey(data.GetInstanceID()))
+        // {
+        //     listQuest.Add(data.GetInstanceID(), data);
+
+        //     ListProgress.Add(data.GetInstanceID(), 0);
+        // }
     }
 
     public void ProgressQuest(QuestSO quest, int progress)
@@ -340,24 +353,24 @@ public class GameManager : MonoSingleton<GameManager>
     {
         for (int i = 0; i < GameData.Data.items.Count; i++)
         {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
             Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
             newSlot.AddItem(GameData.Data.items[i]);
             listSlots.Add(newSlot);
         }
 
-        foreach (var key in GameData.Data.dictionaryQuest.Keys)
-        {
-            Debug.Log($"<b> {GameData.Data.dictionaryQuest[key].title} </b>");
+        // foreach (var key in GameData.Data.listQuest.Keys)
+        // {
+        //     Debug.Log($"<b> {GameData.Data.listQuest[key].title} </b>");
 
-            if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest)continue;
+        //     if (GameData.Data.listQuest[key] == GameData.Instance.persistenceQuest)continue;
 
-            dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
-            dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
+        //     listQuest.Add(GameData.Data.listQuest[key]);
+        //     listProgress.Add(GameData.Data.listProgress[key]);
 
-            worldUI.ReloadQuest(GameData.Data.dictionaryQuest[key]);
-        }
+        //     worldUI.ReloadQuest(GameData.Data.listQuest[key]);
+        // }
     }
 
     public void SaveGame()
@@ -368,12 +381,18 @@ public class GameManager : MonoSingleton<GameManager>
         {
             GameData.Data.items.Add(_items[i]);
         }
-        foreach (var key in dictionaryQuest.Keys)
-        {
-            GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
-            GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
 
-        }
+        // foreach (var key in listQuest.Keys)
+        // {
+        // GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
+        // GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
+
+        // }
+
+        GameData.Data.position = new Vector3(
+            globalController.player.transform.position.x,
+            globalController.player.transform.position.y,
+            globalController.player.transform.position.z);
 
         GameData.SaveData();
 
@@ -382,8 +401,9 @@ public class GameManager : MonoSingleton<GameManager>
     private void ClearOldData()
     {
         GameData.Data.items.Clear();
-        GameData.Data.dictionaryQuest.Clear();
-        GameData.Data.dictionaryProgress.Clear();
+        GameData.Data.listQuest.Clear();
+        GameData.Data.listProgress.Clear();
+        GameData.Data.position = new Vector3(0, 0, 0);
     }
 
     [ContextMenu("Delete Game")]

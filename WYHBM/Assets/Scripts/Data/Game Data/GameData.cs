@@ -24,7 +24,7 @@ public class GameData : MonoSingleton<GameData>
 
 	private IEnumerator LoadYourAsyncScene(SCENE_INDEX index)
 	{
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int)index);
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int) index);
 
 		while (!asyncLoad.isDone)
 		{
@@ -41,7 +41,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		get
 		{
-			if (_data == null)LoadData();
+			if (_data == null) LoadData();
 			return _data;
 		}
 	}
@@ -116,13 +116,22 @@ public class GameData : MonoSingleton<GameData>
 public class SessionData
 {
 	public List<ItemSO> items = new List<ItemSO>();
-	public Dictionary<int, QuestSO> dictionaryQuest = new Dictionary<int, QuestSO>();
-	public Dictionary<int, int> dictionaryProgress = new Dictionary<int, int>();
+	public List<QuestSO> listQuest = new List<QuestSO>();
+	public List<int> listProgress = new List<int>();
+	public bool _isDataLoaded;
+	public Vector3 position;
 
 	public SessionData()
 	{
 		items.Add(GameData.Instance.persistenceItem);
-		dictionaryQuest.Add(GameData.Instance.persistenceQuest.GetInstanceID(), GameData.Instance.persistenceQuest);
-		dictionaryProgress.Add(GameData.Instance.persistenceQuest.GetInstanceID(), 0);
+		listQuest.Add(GameData.Instance.persistenceQuest);
+		listProgress.Add(0);
+
+		position = new Vector3(GameManager.Instance.globalController.player.transform.position.x,
+			GameManager.Instance.globalController.player.transform.position.y,
+			GameManager.Instance.globalController.player.transform.position.z);
+
+		// bool Menu Controller
+		// _isDataLoaded = 
 	}
 }

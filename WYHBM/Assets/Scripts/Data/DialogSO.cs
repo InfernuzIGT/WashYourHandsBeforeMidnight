@@ -10,6 +10,8 @@ public class DialogSO : ScriptableObject
     [TextArea()]
     public string[] postQuestSentences;
 
+    public bool isCompleted;
+
 
     [Header("Quest")]
     public QuestSO questSO;

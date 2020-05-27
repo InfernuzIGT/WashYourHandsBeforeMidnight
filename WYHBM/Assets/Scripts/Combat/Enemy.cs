@@ -12,7 +12,8 @@ public class Enemy : CombatCharacter
 
 	public void Select()
 	{
-		int randomPlayer = Random.Range(0, GameManager.Instance.combatPlayers.Count);
+
+		int randomPlayer = Random.Range(0, GameManager.Instance.combatManager.listPlayers.Count);
 
 		GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();
 		GameManager.Instance.combatManager.listPlayers[randomPlayer].AnimationRecovery();
@@ -78,7 +79,7 @@ public class Enemy : CombatCharacter
 		}
 
 		Shake();
-		
+
 		// GameManager.Instance.ReorderTurn();
 
 		yield return _waitPerAction;

@@ -92,8 +92,8 @@ namespace GameMode.World
             buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
             buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
 
-            buttonLeft.interactable = false;
-            buttonRight.interactable = false;
+            // buttonLeft.interactable = false;
+            // buttonRight.interactable = false;
 
             _waitStart = new WaitForSeconds(GameData.Instance.worldConfig.timeStart);
             _waitSpace = new WaitForSeconds(GameData.Instance.worldConfig.timeSpace);
@@ -144,8 +144,9 @@ namespace GameMode.World
                 return;
             }
 
-            if (_isComplete)
+            if (GameManager.Instance.CurrentDialog.isCompleted)
             {
+
                 return;
             }
 
@@ -155,7 +156,7 @@ namespace GameMode.World
 
                 SetQuest(GameManager.Instance.CurrentQuest);
 
-                _isComplete = true;
+                GameManager.Instance.CurrentDialog.isCompleted = true;
 
                 _dialogIndex = 0;
                 panelDialog.SetActive(false);
