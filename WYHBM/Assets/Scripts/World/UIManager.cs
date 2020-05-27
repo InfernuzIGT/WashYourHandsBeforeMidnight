@@ -144,10 +144,21 @@ namespace GameMode.World
                 return;
             }
 
-            if (_isComplete)
-            {
-                return;
-            }
+            // if (GameManager.Instance.CurrentDialog.isCompleted)
+            // {
+            //     _dialogIndex = 0;
+
+            //     _currentSentence = GameManager.Instance.CurrentDialog.postQuestSentences[_dialogIndex];
+
+            //     PlayText();
+
+            //     panelDialog.SetActive(true);
+
+            //     _enableMovementEvent.canMove = false;
+            //     EventController.TriggerEvent(_enableMovementEvent);
+
+            //     return;
+            // }
 
             // Dialogues
             if (_dialogIndex == GameManager.Instance.CurrentDialog.questSentences.Length)
@@ -155,7 +166,7 @@ namespace GameMode.World
 
                 SetQuest(GameManager.Instance.CurrentQuest);
 
-                _isComplete = true;
+                // GameManager.Instance.CurrentDialog.isCompleted = true;
 
                 _dialogIndex = 0;
                 panelDialog.SetActive(false);

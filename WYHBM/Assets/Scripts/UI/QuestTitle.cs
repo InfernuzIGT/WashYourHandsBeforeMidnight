@@ -8,14 +8,11 @@ public class QuestTitle : MonoBehaviour
     private QuestSO _quest;
     private TextMeshProUGUI _titleTxt;
 
-    private void Start()
+    public void Init(QuestSO quest)
     {
         Button optionButton = GetComponent<Button>();
         optionButton.onClick.AddListener(() => GameManager.Instance.worldUI.SelectQuest(_quest));
-    }
 
-    public void Init(QuestSO quest)
-    {
         _titleTxt = GetComponentInChildren<TextMeshProUGUI>();
 
         _quest = quest;

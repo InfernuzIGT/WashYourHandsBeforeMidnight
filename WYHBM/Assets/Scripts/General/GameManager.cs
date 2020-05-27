@@ -22,7 +22,7 @@ public class GameManager : MonoSingleton<GameManager>
     public bool isPaused;
     public bool inCombat;
     public bool inWorld;
-    
+
     [Header("References")]
     public GlobalController globalController;
     public CombatManager combatManager;
@@ -36,8 +36,8 @@ public class GameManager : MonoSingleton<GameManager>
     [Space]
     public List<CombatPlayer> combatPlayers;
 
-    public Dictionary<int, QuestSO> dictionaryQuest;
-    public Dictionary<int, int> dictionaryProgress;
+    public List<QuestSO> listQuest;
+    public List<int> listProgress;
     public List<Slot> listSlots;
 
     // Combat
@@ -72,15 +72,17 @@ public class GameManager : MonoSingleton<GameManager>
     {
         _items = new List<ItemSO>();
 
-        dictionaryQuest = new Dictionary<int, QuestSO>();
-        dictionaryProgress = new Dictionary<int, int>();
+        listQuest = new List<QuestSO>();
+        listProgress = new List<int>();
         listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
 
         _characterIndex = 0;
-        worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit: true);
+        worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
+
+        GameManager.Instance.LoadGame();
 
         inWorld = true;
     }
@@ -230,14 +232,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0)return;
+            if (_characterIndex <= 0) return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1)return;
+            if (_characterIndex >= combatPlayers.Count - 1) return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
@@ -250,26 +252,33 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void AddQuest(QuestSO data)
     {
-        if (!dictionaryQuest.ContainsKey(data.GetInstanceID()))
+        if (!listQuest.Contains(data))
         {
-            dictionaryQuest.Add(data.GetInstanceID(), data);
+            listQuest.Add(data);
 
-            dictionaryProgress.Add(data.GetInstanceID(), 0);
+            listProgress.Add(0);
         }
+
+        // if (!listQuest.ContainsKey(data.GetInstanceID()))
+        // {
+        //     listQuest.Add(data.GetInstanceID(), data);
+
+        //     ListProgress.Add(data.GetInstanceID(), 0);
+        // }
     }
 
     public void ProgressQuest(QuestSO quest, int progress)
     {
-        if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
-            dictionaryProgress[quest.GetInstanceID()] != progress ||
-            dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
+        if (!listQuest.Contains(quest) ||
+            listProgress[quest.GetInstanceID()] != progress ||
+            listProgress[quest.GetInstanceID()] >= listQuest[quest.GetInstanceID()].objetives.Length)
         {
             return;
         }
 
-        dictionaryProgress[quest.GetInstanceID()]++;
+        listProgress[quest.GetInstanceID()]++;
 
-        worldUI.UpdateQuest(dictionaryQuest[quest.GetInstanceID()], dictionaryProgress[quest.GetInstanceID()]);
+        worldUI.UpdateQuest(listQuest[quest.GetInstanceID()], listProgress[quest.GetInstanceID()]);
     }
 
     public void GiveReward()
@@ -334,24 +343,24 @@ public class GameManager : MonoSingleton<GameManager>
     {
         for (int i = 0; i < GameData.Data.items.Count; i++)
         {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
             Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
             newSlot.AddItem(GameData.Data.items[i]);
             listSlots.Add(newSlot);
         }
 
-        foreach (var key in GameData.Data.dictionaryQuest.Keys)
-        {
-            Debug.Log($"<b> {GameData.Data.dictionaryQuest[key].title} </b>");
+        // foreach (var key in GameData.Data.listQuest.Keys)
+        // {
+        //     Debug.Log($"<b> {GameData.Data.listQuest[key].title} </b>");
 
-            if (GameData.Data.dictionaryQuest[key] == GameData.Instance.persistenceQuest)continue;
+        //     if (GameData.Data.listQuest[key] == GameData.Instance.persistenceQuest)continue;
 
-            dictionaryQuest.Add(key, GameData.Data.dictionaryQuest[key]);
-            dictionaryProgress.Add(key, GameData.Data.dictionaryProgress[key]);
+        //     listQuest.Add(GameData.Data.listQuest[key]);
+        //     listProgress.Add(GameData.Data.listProgress[key]);
 
-            worldUI.ReloadQuest(GameData.Data.dictionaryQuest[key]);
-        }
+        //     worldUI.ReloadQuest(GameData.Data.listQuest[key]);
+        // }
     }
 
     public void SaveGame()
@@ -362,12 +371,18 @@ public class GameManager : MonoSingleton<GameManager>
         {
             GameData.Data.items.Add(_items[i]);
         }
-        foreach (var key in dictionaryQuest.Keys)
-        {
-            GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
-            GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
 
-        }
+        // foreach (var key in listQuest.Keys)
+        // {
+        // GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
+        // GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
+
+        // }
+
+        GameData.Data.position = new Vector3(
+            globalController.player.transform.position.x,
+            globalController.player.transform.position.y,
+            globalController.player.transform.position.z);
 
         GameData.SaveData();
 
@@ -376,8 +391,9 @@ public class GameManager : MonoSingleton<GameManager>
     private void ClearOldData()
     {
         GameData.Data.items.Clear();
-        GameData.Data.dictionaryQuest.Clear();
-        GameData.Data.dictionaryProgress.Clear();
+        GameData.Data.listQuest.Clear();
+        GameData.Data.listProgress.Clear();
+        GameData.Data.position = new Vector3(0, 0, 0);
     }
 
     [ContextMenu("Delete Game")]

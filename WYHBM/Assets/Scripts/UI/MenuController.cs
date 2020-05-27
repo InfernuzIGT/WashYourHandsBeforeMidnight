@@ -29,6 +29,7 @@ public class MenuController : MonoBehaviour
 
     private bool _inAudio;
     private bool _isDataLoaded;
+    public bool IsDataLoaded { get { return _isDataLoaded; } }
 
     private void Start()
     {
@@ -64,17 +65,14 @@ public class MenuController : MonoBehaviour
         switch (evt.menuType)
         {
             case MENU_TYPE.Continue:
-                // GameData.Instance.LoadScene(SCENE_INDEX.Master);
-                // GameManager.Instance.LoadGame();
-                Debug.Log($"<b> Master </b>");
+                GameData.Instance.LoadScene(SCENE_INDEX.Master);
 
                 PlayButtonSound(3);
                 break;
 
             case MENU_TYPE.NewGame:
-                // GameData.Instance.LoadScene(SCENE_INDEX.Master);
-                // GameManager.Instance.LoadGame();
-                Debug.Log($"<b> Master </b>");
+                GameData.Instance.LoadScene(SCENE_INDEX.Master);
+                
                 _isDataLoaded = true;
 
                 PlayButtonSound(3);
