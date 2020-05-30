@@ -1,16 +1,14 @@
-﻿using UnityEngine;
-
-public class CombatAnimator : AnimatorController
+﻿public class CombatAnimator : AnimatorController
 {
-    private COMBAT_STATE _currentState;
+    private ANIM_STATE _currentAnimState;
 
     private void Start()
     {
         _animModeCombat.Execute(_animator, true);
     }
 
-    public void Action(COMBAT_STATE combatState)
+    public void Action(ANIM_STATE animState)
     {
-        _animActionType.Execute(_animator, (int)combatState);
+        _animActionType.Execute(_animator, (int)animState);
     }
 }

@@ -1,55 +1,60 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using UnityEngine;
 
-[System.Serializable]
-public class InventoryCombat
-{
-    public ItemSO weapon;
-    public ItemSO item;
-    public ItemSO defense;
-}
-
 public class CombatCharacter : MonoBehaviour
 {
     [SerializeField] private string _name = null;
-    [SerializeField] private InventoryCombat _inventoryCombat = new InventoryCombat();
-    [Space]
+    [SerializeField] private List<ItemSO> _equipment = new List<ItemSO>(); // TODO Mariano: Used by Enemy
+
+    [Header("Sprites")]
+    [SerializeField] private Sprite _previewSprite = null;
+    [SerializeField] private Sprite _turnSprite = null;
+
+    [Header("Stats")]
     [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
     [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 10;
     [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 5;
     [SerializeField, Range(1f, 10f)] private int _statsReaction = 1;
 
     // Protected
+    protected SpriteRenderer _spriteRenderer;
     protected bool _isActionDone;
     protected WaitForSeconds _waitPerAction;
 
     private CharacterUI _characterUI;
     private CombatAnimator _combatAnimator;
-    private SpriteRenderer _spriteRenderer;
-    // private Vector3 _scaleNormal;
-    private Vector2 _infoTextPosition;
+    // private Vector2 _infoTextPosition;
     private bool _inDefense;
 
-    private InfoTextEvent infoTextEvent = new InfoTextEvent();
+    // private InfoTextEvent infoTextEvent;
+    private ShakeEvent _shakeEvent;
 
     // Combat variables
     private float _healthActual;
     private int _totalValue;
     private int _totalDamage;
     private int _totalDefense;
-    private int _combatIndex;
+    private ItemSO _itemAttack;
+    private ItemSO _itemDefense;
+    private ItemSO _itemHeal;
 
     // Combat Properties
     public string Name { get { return _name; } }
-    public InventoryCombat InventoryCombat { get { return _inventoryCombat; } }
+    public Sprite PreviewSprite { get { return _previewSprite; } }
+    public Sprite TurnSprite { get { return _turnSprite; } }
+    public List<ItemSO> Equipment { get { return _equipment; } }
     public int StatsHealthMax { get { return _statsHealthMax; } }
     public int StatsBaseDamage { get { return _statsBaseDamage; } }
     public int StatsBaseDefense { get { return _statsBaseDefense; } }
     public int StatsReaction { get { return _statsReaction; } }
 
     // Properties
+    protected int _combatIndex;
+    public int CombatIndex { get { return _combatIndex; } }
+
     protected bool _isMyTurn;
     public bool IsMyTurn { get { return _isMyTurn; } set { _isMyTurn = value; } }
 
@@ -64,12 +69,15 @@ public class CombatCharacter : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _combatAnimator = GetComponent<CombatAnimator>();
 
+        // infoTextEvent = new InfoTextEvent();
+        _shakeEvent = new ShakeEvent();
+
         _waitPerAction = new WaitForSeconds(GameData.Instance.combatConfig.waitTimePerAction);
 
-        _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
+        // _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
     }
 
-    public void SetCharacter(int index, InventoryCombat inventoryCombat)
+    public void SetCharacter(int index, List<ItemSO> inventoryCombat)
     {
         // _scaleNormal = transform.localScale;
         _startPosition = transform.position;
@@ -79,89 +87,78 @@ public class CombatCharacter : MonoBehaviour
 
         _combatIndex = index;
         _healthActual = _statsHealthMax;
-        
-        _inventoryCombat = inventoryCombat;
+
+        _equipment.AddRange(inventoryCombat);
 
         Vector3 healthBarPos = new Vector3(
             transform.position.x,
             transform.position.y + GameData.Instance.combatConfig.offsetHealthBar,
             transform.position.z);
 
-        _characterUI = Instantiate(GameData.Instance.gameConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
+        _characterUI = Instantiate(GameData.Instance.combatConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
         _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.startFillDuration);
     }
 
     #region Actions
 
-    public void Select(COMBAT_STATE combatState, CombatCharacter currentCharacter)
+    public void Select(ItemSO item)
     {
-        switch (combatState)
+        if (item == null)
         {
-            case COMBAT_STATE.Attack:
-                ActionReceiveDamage(currentCharacter.GetDamage());
-                break;
-
-            case COMBAT_STATE.Item:
-                ActionUseItem(currentCharacter.InventoryCombat);
-                break;
-
-            case COMBAT_STATE.Defense:
-                _inDefense = true;
-                break;
-
-            default:
-                break;
+            _itemAttack = null;
+            ActionReceiveDamage();
+            AnimationRecovery();
+            return;
         }
 
-        currentCharacter.AnimationAction(combatState);
-        currentCharacter.DoAction();
+        switch (item.type)
+        {
+            case ITEM_TYPE.WeaponMelee:
+            case ITEM_TYPE.WeaponOneHand:
+            case ITEM_TYPE.WeaponTwoHands:
+            case ITEM_TYPE.ItemGrenade:
+                _itemAttack = item;
+                ActionReceiveDamage();
+                break;
+
+            case ITEM_TYPE.ItemHeal:
+                _itemHeal = item;
+                ActionHeal();
+                break;
+
+            case ITEM_TYPE.ItemDefense:
+                _itemDefense = item;
+                _inDefense = true;
+                break;
+        }
 
         AnimationRecovery();
     }
 
-    public virtual void ActionUseItem(InventoryCombat inventory)
-    {
-        _totalValue = Random.Range(inventory.item.valueMin, inventory.item.valueMax);
-
-        switch (inventory.item.type)
-        {
-            case ITEM_TYPE.Damage:
-                ActionReceiveDamage(_totalValue);
-                break;
-
-            case ITEM_TYPE.Heal:
-                ActionHeal(_totalValue);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    public virtual void ActionReceiveDamage(int damageReceived)
+    public virtual void ActionReceiveDamage()
     {
         if (_healthActual == 0)
             return;
+
+        _totalDamage = GetItemDamage();
 
         if (_inDefense)
         {
             _inDefense = false;
 
-            _totalDefense = GetDefense();
-            if (_totalDefense > damageReceived)_totalDefense = damageReceived;
+            _totalDefense = GetItemDefense();
+            if (_totalDefense > _totalDamage)_totalDefense = _totalDamage;
 
-            AnimationAction(COMBAT_STATE.Defense);
+            AnimationAction(ANIM_STATE.ItemDefense);
         }
         else
         {
             _totalDefense = 0;
 
-            AnimationAction(COMBAT_STATE.Hit);
+            AnimationAction(ANIM_STATE.Hit);
         }
 
-        _totalDamage = damageReceived - _totalDefense;
-
-        _healthActual -= _totalDamage;
+        _healthActual -= (_totalDamage - _totalDefense);
         if (_healthActual < 0)_healthActual = 0;
 
         _characterUI.healthBar.
@@ -171,11 +168,11 @@ public class CombatCharacter : MonoBehaviour
         // ShowInfoText(totalDamage, GameData.Instance.textConfig.colorMsgDamage);
     }
 
-    private void ActionHeal(int amountHeal)
+    private void ActionHeal()
     {
-        AnimationAction(COMBAT_STATE.Item);
+        AnimationAction(ANIM_STATE.ItemHeal);
 
-        _healthActual += amountHeal;
+        _healthActual += GetItemHeal();
 
         // ShowInfoText(amountHeal, GameData.Instance.textConfig.colorMsgHeal);
 
@@ -188,17 +185,19 @@ public class CombatCharacter : MonoBehaviour
 
     #region Animation
 
-    public void AnimationAction(COMBAT_STATE combatState)
+    public void AnimationAction(ANIM_STATE combatState)
     {
         _combatAnimator.Action(combatState);
 
-        if (combatState == COMBAT_STATE.Attack || combatState == COMBAT_STATE.Item)
+        if (combatState == ANIM_STATE.Idle ||
+            combatState == ANIM_STATE.Hit ||
+            combatState == ANIM_STATE.Death)
         {
-            AnimationActionStart();
+            AnimationActionEnd();
         }
         else
         {
-            AnimationActionEnd();
+            AnimationActionStart();
         }
     }
 
@@ -220,19 +219,24 @@ public class CombatCharacter : MonoBehaviour
     private IEnumerator Recovery()
     {
         yield return _waitPerAction;
-        AnimationAction(COMBAT_STATE.Idle);
+        AnimationAction(ANIM_STATE.Idle);
     }
 
-    // TODO Mariano: Review
-    private void ShowInfoText(float value, Color color)
-    {
-        infoTextEvent.text = value.ToString("F0");
-        infoTextEvent.position = _infoTextPosition;
-        infoTextEvent.color = color;
-        EventController.TriggerEvent(infoTextEvent);
-    }
+    // // TODO Mariano: Review
+    // private void ShowInfoText(float value, Color color)
+    // {
+    //     infoTextEvent.text = value.ToString("F0");
+    //     infoTextEvent.position = _infoTextPosition;
+    //     infoTextEvent.color = color;
+    //     EventController.TriggerEvent(infoTextEvent);
+    // }
 
     #endregion
+
+    public void Shake()
+    {
+        EventController.TriggerEvent(_shakeEvent);
+    }
 
     private void Kill()
     {
@@ -253,14 +257,28 @@ public class CombatCharacter : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public int GetDamage()
+    public int GetItemDamage()
     {
-        return _inventoryCombat.weapon ? Random.Range(_inventoryCombat.weapon.valueMin, _inventoryCombat.weapon.valueMax) : _statsBaseDamage;
+        if (_itemAttack != null)
+        {
+            _totalValue = Random.Range(_itemAttack.valueMin, _itemAttack.valueMax);
+        }
+        else
+        {
+            _totalValue = _statsBaseDamage;
+        }
+
+        return _totalValue;
     }
 
-    public int GetDefense()
+    public int GetItemDefense()
     {
-        return _inventoryCombat.defense ? Random.Range(_inventoryCombat.defense.valueMin, _inventoryCombat.defense.valueMax) : _statsBaseDefense;
+        return _totalValue = Random.Range(_itemDefense.valueMin, _itemDefense.valueMax);
+    }
+
+    public int GetItemHeal()
+    {
+        return _totalValue = Random.Range(_itemHeal.valueMin, _itemHeal.valueMax);
     }
 
     #region Turn System
