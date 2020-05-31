@@ -88,6 +88,9 @@ public class GlobalController : MonoBehaviour
         virtualCamera.m_Follow = player.transform;
         virtualCamera.m_LookAt = player.transform;
         virtualCamera.transform.position = player.transform.position;
+        
+        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
+        detectTargetBehind.SetTarget(player.transform);
     }
 
     public void ChangeCamera(CinemachineVirtualCamera newCamera)
