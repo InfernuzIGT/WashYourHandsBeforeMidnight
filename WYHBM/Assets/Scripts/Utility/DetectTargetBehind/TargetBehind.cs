@@ -7,7 +7,6 @@ public class TargetBehind : MonoBehaviour
     private void Start()
     {
         _material = GetComponent<MeshRenderer>().material;
-        // gameObject.layer = LayerMask.NameToLayer(LayerMask.LayerToName(GameData.Instance.worldConfig.layerOcclusionMask));
     }
 
     public void Detected(bool isDetected)

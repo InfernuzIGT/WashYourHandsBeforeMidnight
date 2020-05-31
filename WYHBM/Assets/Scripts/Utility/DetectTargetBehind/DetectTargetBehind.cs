@@ -3,14 +3,12 @@
 [RequireComponent(typeof(Camera))]
 public class DetectTargetBehind : MonoBehaviour
 {
-    private Camera _camera;
     private Transform _target;
     private TargetBehind _currentTargetBehind;
 
     private void Start()
     {
-        _camera = GetComponent<Camera>();
-        _target = GameManager.Instance.globalController.player.transform;
+        _target = transform; // Placeholder
     }
 
     private void Update()
@@ -24,19 +22,21 @@ public class DetectTargetBehind : MonoBehaviour
         {
             if (_currentTargetBehind != hit.transform.gameObject)
             {
+                _currentTargetBehind?.Detected(false);
                 _currentTargetBehind = hit.transform.gameObject.GetComponent<TargetBehind>();
                 _currentTargetBehind.Detected(true);
             }
         }
         else
         {
-            if (_currentTargetBehind != null)
-            {
-                _currentTargetBehind.Detected(false);
-            }
-
+            _currentTargetBehind?.Detected(false);
             _currentTargetBehind = null;
         }
+    }
+
+    public void SetTarget(Transform target)
+    {
+        _target = target;
     }
 
 }
