@@ -26,6 +26,8 @@ public class GlobalController : MonoBehaviour
         SpawnPlayer();
         SetCamera();
         AddItems();
+        // spawnPoint = GameData.Data.newSpawnPoint;
+
     }
 
     private void SpawnPlayer()
