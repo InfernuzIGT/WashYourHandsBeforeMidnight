@@ -26,6 +26,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("References")]
     public GlobalController globalController;
     public CombatManager combatManager;
+    public CinemachineManager cinemachineManager;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Vector3 dropZone;
