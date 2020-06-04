@@ -98,6 +98,8 @@ namespace GameMode.World
             _waitStart = new WaitForSeconds(GameData.Instance.worldConfig.timeStart);
             _waitSpace = new WaitForSeconds(GameData.Instance.worldConfig.timeSpace);
             _waitDeactivateUI = new WaitForSeconds(GameData.Instance.worldConfig.messageLifetime);
+
+            // GameData.Instance.persistenceItem
         }
 
         public void UpdateStamina(float value)

@@ -28,12 +28,12 @@ public class MenuController : MonoBehaviour
     private GameObject _lastCam;
 
     private bool _inAudio;
-    private bool _isDataLoaded;
-    public bool IsDataLoaded { get { return _isDataLoaded; } }
+    // private bool _isDataLoaded;
+    // public bool IsDataLoaded { get { return _isDataLoaded; } }
 
     private void Start()
     {
-        if (_isDataLoaded)
+        if (GameData.Data.isDataLoaded)
         {
             NewGameButton.SetActive(false);
             ContinueButton.SetActive(true);
@@ -73,7 +73,7 @@ public class MenuController : MonoBehaviour
             case MENU_TYPE.NewGame:
                 GameData.Instance.LoadScene(SCENE_INDEX.Master);
                 
-                _isDataLoaded = true;
+                GameData.Data.isDataLoaded = true;
 
                 PlayButtonSound(3);
                 break;

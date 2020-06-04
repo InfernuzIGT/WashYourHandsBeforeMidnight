@@ -14,6 +14,7 @@ public class GameData : MonoSingleton<GameData>
 	[Header("Persistence")]
 	public ItemSO persistenceItem;
 	public QuestSO persistenceQuest;
+	public Transform newSpawnPos;
 
 	#region Load Scene
 
@@ -118,8 +119,8 @@ public class SessionData
 	public List<ItemSO> items = new List<ItemSO>();
 	public List<QuestSO> listQuest = new List<QuestSO>();
 	public List<int> listProgress = new List<int>();
-	public bool _isDataLoaded;
-	public Vector3 position;
+	public bool isDataLoaded;
+	public Transform newSpawnPoint;
 
 	public SessionData()
 	{
@@ -127,11 +128,15 @@ public class SessionData
 		listQuest.Add(GameData.Instance.persistenceQuest);
 		listProgress.Add(0);
 
-		position = new Vector3(GameManager.Instance.globalController.player.transform.position.x,
-			GameManager.Instance.globalController.player.transform.position.y,
-			GameManager.Instance.globalController.player.transform.position.z);
+		isDataLoaded = true;
 
-		// bool Menu Controller
-		// _isDataLoaded = 
+		// GameData.Instance.newSpawnPos = newSpawnPoint;
+		// newSpawnPoint = GameManager.Instance.globalController.player.transform;
+
+		// newSpawnPoint.TransformPoint(
+		// 	GameManager.Instance.globalController.player.transform.position.x,
+		// 	GameManager.Instance.globalController.player.transform.position.y,
+		// 	GameManager.Instance.globalController.player.transform.position.z);
+
 	}
 }

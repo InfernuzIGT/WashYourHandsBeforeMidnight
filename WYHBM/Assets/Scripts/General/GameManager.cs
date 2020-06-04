@@ -26,6 +26,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("References")]
     public GlobalController globalController;
     public CombatManager combatManager;
+    public CinemachineManager cinemachineManager;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Vector3 dropZone;
@@ -37,8 +38,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     // public List<QuestSO> listQuest;
     // public List<int> listProgress;
-    public Dictionary<int, QuestSO> dictionaryQuest; 
-    public Dictionary<int, int> dictionaryProgress; 
+    public Dictionary<int, QuestSO> dictionaryQuest;
+    public Dictionary<int, int> dictionaryProgress;
     public List<Slot> listSlots;
 
     // Combat
@@ -86,7 +87,7 @@ public class GameManager : MonoSingleton<GameManager>
         _characterIndex = 0;
         worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
 
-        GameManager.Instance.LoadGame();
+        // GameManager.Instance.LoadGame();
 
         inWorld = true;
     }
@@ -184,13 +185,13 @@ public class GameManager : MonoSingleton<GameManager>
     {
         combatManager.InitiateTurn();
     }
-    
+
     private void StartCombat()
     {
         currentNPC.Kill();
         combatManager.InitiateTurn();
     }
-    
+
     public void ReorderTurn()
     {
         combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
@@ -358,6 +359,8 @@ public class GameManager : MonoSingleton<GameManager>
             Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
             newSlot.AddItem(GameData.Data.items[i]);
             listSlots.Add(newSlot);
+
+            GameData.Data.items.Remove(GameData.Instance.persistenceItem);
         }
 
         // foreach (var key in GameData.Data.listQuest.Keys)
@@ -371,6 +374,9 @@ public class GameManager : MonoSingleton<GameManager>
 
         //     worldUI.ReloadQuest(GameData.Data.listQuest[key]);
         // }
+
+        // GameManager.Instance.globalController.spawnPoint = GameData.Data.newSpawnPoint;
+        
     }
 
     public void SaveGame()
@@ -389,10 +395,10 @@ public class GameManager : MonoSingleton<GameManager>
 
         // }
 
-        GameData.Data.position = new Vector3(
-            globalController.player.transform.position.x,
-            globalController.player.transform.position.y,
-            globalController.player.transform.position.z);
+        // GameManager.Instance.globalController.spawnPoint.TransformPoint(
+        //     GameData.Data.newSpawnPoint.transform.position.x,
+        //     GameData.Data.newSpawnPoint.transform.position.y,
+        //     GameData.Data.newSpawnPoint.transform.position.z);
 
         GameData.SaveData();
 
@@ -403,13 +409,14 @@ public class GameManager : MonoSingleton<GameManager>
         GameData.Data.items.Clear();
         GameData.Data.listQuest.Clear();
         GameData.Data.listProgress.Clear();
-        GameData.Data.position = new Vector3(0, 0, 0);
+        // GameData.Data.position.Translate(59.1f, 0f, -49.4f);
     }
 
     [ContextMenu("Delete Game")]
     public void DeleteGame()
     {
         GameData.DeleteAllData();
+        GameData.Data.isDataLoaded = false;
     }
 
     #endregion

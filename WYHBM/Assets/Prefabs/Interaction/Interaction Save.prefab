@@ -43,6 +43,36 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &8998916886852367538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5916008569674615801}
+  m_Layer: 13
+  m_Name: NewSpawnPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5916008569674615801
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8998916886852367538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 2.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7579834614810540092}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8233246536969189286
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115,6 +145,12 @@ PrefabInstance:
 --- !u!1 &2714764200925045243 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6336170719119332957, guid: 109232e5a0434c744a00baf85d3299f2,
+    type: 3}
+  m_PrefabInstance: {fileID: 8233246536969189286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7579834614810540092 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
     type: 3}
   m_PrefabInstance: {fileID: 8233246536969189286}
   m_PrefabAsset: {fileID: 0}
