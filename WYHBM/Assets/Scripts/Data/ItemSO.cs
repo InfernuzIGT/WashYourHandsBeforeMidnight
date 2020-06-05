@@ -11,4 +11,5 @@ public class ItemSO : ScriptableObject
     public ITEM_TYPE type;
     public int valueMin;
     public int valueMax;
+    public bool isDroppeable;
 }
