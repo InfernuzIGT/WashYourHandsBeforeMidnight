@@ -10,8 +10,15 @@ public class DialogSO : ScriptableObject
     [TextArea()]
     public string[] postQuestSentences;
 
-    public bool isCompleted;
+    [Space]
 
+    // TODO Mariano: Complete
+    [TextArea()] public string[] noneSentences;
+    [TextArea()] public string[] readySentences;
+    [TextArea()] public string[] inProgressSentences;
+    [TextArea()] public string[] CompletedSentences;
+
+    public bool isCompleted; // TODO Marcos: Remove
 
     [Header("Quest")]
     public QuestSO questSO;
