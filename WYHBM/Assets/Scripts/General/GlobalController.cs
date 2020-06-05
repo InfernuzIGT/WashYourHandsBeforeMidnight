@@ -9,7 +9,7 @@ public class GlobalController : MonoBehaviour
     public Transform spawnPoint;
 
     [Header("Cheats")]
-    public bool infiniteStamina;
+    // public bool infiniteStamina;
     public ItemSO[] items;
 
     [Header("Settings")]
@@ -26,8 +26,6 @@ public class GlobalController : MonoBehaviour
         SpawnPlayer();
         SetCamera();
         AddItems();
-        // spawnPoint = GameData.Data.newSpawnPoint;
-
     }
 
     private void SpawnPlayer()
@@ -134,14 +132,14 @@ public class GlobalController : MonoBehaviour
         newSlot.AddItem(items[index]);
     }
 
-    private void Update()
-    {
-        Cheats();
-    }
+    // private void Update()
+    // {
+    //     Cheats();
+    // }
 
-    private void Cheats()
-    {
-        player.InfiniteStamina = infiniteStamina;
-    }
+    // private void Cheats()
+    // {
+    //     player.InfiniteStamina = infiniteStamina;
+    // }
 
 }
