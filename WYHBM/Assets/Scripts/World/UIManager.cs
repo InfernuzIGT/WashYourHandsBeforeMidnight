@@ -11,7 +11,7 @@ namespace GameMode.World
     public class UIManager : MonoBehaviour
     {
         [Header("General")]
-        public Image staminaImg;
+        // public Image staminaImg;
         public Popup popup;
         [Space]
         public GameObject panelPlayer;
@@ -102,10 +102,10 @@ namespace GameMode.World
             // GameData.Instance.persistenceItem
         }
 
-        public void UpdateStamina(float value)
-        {
-            staminaImg.fillAmount = value;
-        }
+        // public void UpdateStamina(float value)
+        // {
+        //     staminaImg.fillAmount = value;
+        // }
 
         public void EnableCanvas(bool isEnabled)
         {

@@ -6,16 +6,27 @@ using UnityEngine.Events;
 public class Interaction : MonoBehaviour
 {
     [System.Serializable]
+    public class QuestData
+    {
+        public QuestSO quest; 
+        public QUEST_STATE state;
+        public int progress;
+    }
+
+    [System.Serializable]
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     public bool showPopup = true;
 
-    [Header("Quest")]
-    public QuestSO quest;
-    public int progress;
-    
     [Space]
-    
+    public QuestData questData;
+
+    [Header("Quest")] // TODO Marcos: Remove
+    public QuestSO quest; // TODO Marcos: Remove
+    public int progress; // TODO Marcos: Remove
+
+    [Space]
+
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
