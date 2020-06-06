@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Events;
 using UnityEngine;
+using UnityEngine.Playables;
 
 [System.Serializable]
 public class CombatPlayer
@@ -27,6 +28,7 @@ public class GameManager : MonoSingleton<GameManager>
     public GlobalController globalController;
     public CombatManager combatManager;
     public CinemachineManager cinemachineManager;
+    public PlayableDirector playableDirector;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Vector3 dropZone;
@@ -38,6 +40,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     // public List<QuestSO> listQuest;
     // public List<int> listProgress;
+    public List<QuestData> listQuestData;
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
     public List<Slot> listSlots;
@@ -76,6 +79,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         // listQuest = new List<QuestSO>();
         // listProgress = new List<int>();
+        listQuestData = new List<QuestData>();
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
 
@@ -97,6 +101,7 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<CutsceneEvent>(OnCutscene);
 
     }
 
@@ -105,6 +110,7 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<CutsceneEvent>(OnCutscene);
 
     }
 
@@ -243,14 +249,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0) return;
+            if (_characterIndex <= 0)return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1) return;
+            if (_characterIndex >= combatPlayers.Count - 1)return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
@@ -345,6 +351,13 @@ public class GameManager : MonoSingleton<GameManager>
             EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
     }
+    
+    private void OnCutscene(CutsceneEvent evt)
+    {
+        playableDirector.playableAsset = evt.cutscene;
+        
+        playableDirector.Play();
+    }
 
     #endregion
 
@@ -354,7 +367,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         for (int i = 0; i < GameData.Data.items.Count; i++)
         {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
 
             Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
             newSlot.AddItem(GameData.Data.items[i]);
@@ -376,7 +389,7 @@ public class GameManager : MonoSingleton<GameManager>
         // }
 
         // GameManager.Instance.globalController.spawnPoint = GameData.Data.newSpawnPoint;
-        
+
     }
 
     public void SaveGame()

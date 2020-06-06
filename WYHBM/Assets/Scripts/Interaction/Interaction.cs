@@ -1,41 +1,56 @@
 ﻿using Events;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
+
+[System.Serializable]
+public class QuestData
+{
+    public QuestSO quest;
+    public QUEST_STATE state;
+    public int[] progress;
+}
 
 [RequireComponent(typeof(BoxCollider))]
 public class Interaction : MonoBehaviour
 {
     [System.Serializable]
-    public class QuestData
-    {
-        public QuestSO quest; 
-        public QUEST_STATE state;
-        public int progress;
-    }
-
-    [System.Serializable]
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
+    [Header("Popup")]
     public bool showPopup = true;
+    public bool showPopupText = true;
 
-    [Space]
+    [Header("Quest")]
     public QuestData questData;
 
-    [Header("Quest")] // TODO Marcos: Remove
     public QuestSO quest; // TODO Marcos: Remove
     public int progress; // TODO Marcos: Remove
+
+    [Header("Cutscene")]
+    public PlayableAsset cutscene;
+    public bool playInCollision;
 
     [Space]
 
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
-    private GameObject _popupGO;
+    private SpriteRenderer _popupImage;
+    private TextMeshPro _popupText;
+
+    private CutsceneEvent _cutsceneEvent;
 
     public virtual void Awake()
     {
-        _popupGO = transform.GetChild(0).gameObject;
-        _popupGO.SetActive(false);
+        _popupImage = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        _popupText = transform.GetChild(1).GetComponent<TextMeshPro>();
+
+        _popupImage.enabled = false;
+        _popupText.enabled = false;
+
+        _cutsceneEvent = new CutsceneEvent();
     }
 
     #region Interaction
@@ -56,7 +71,17 @@ public class Interaction : MonoBehaviour
     {
         if (!showPopup)return;
 
-        _popupGO.SetActive(show);
+        _popupImage.enabled = show;
+
+        if (showPopupText)
+        {
+            _popupText.enabled = show;
+        }
+    }
+
+    protected void SetPopupName(string name)
+    {
+        _popupText.text = name;
     }
 
     protected void AddListenerQuest()
@@ -78,6 +103,15 @@ public class Interaction : MonoBehaviour
         GameManager.Instance.ProgressQuest(quest, progress);
 
         EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
+    }
+
+    protected void PlayCutscene()
+    {
+        if (cutscene == null)return;
+
+        _cutsceneEvent.cutscene = cutscene;
+
+        EventController.TriggerEvent(_cutsceneEvent);
     }
 
     #endregion

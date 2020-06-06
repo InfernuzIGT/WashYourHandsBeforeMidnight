@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Events
 {
@@ -56,6 +57,11 @@ namespace Events
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
+    }
+
+    public class CutsceneEvent : GameEvent
+    {
+        public PlayableAsset cutscene;
     }
 
     public class MainMenuEvent : GameEvent
