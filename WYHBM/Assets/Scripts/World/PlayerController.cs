@@ -174,7 +174,7 @@ public class PlayerController : MonoBehaviour
         _characterController.Move(_movement * Time.deltaTime);
 
         // Animation       
-        _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded, true);
+        _animatorController.Movement(_movement, _isRunning, true);
     }
 
     private void LadderMovement()
