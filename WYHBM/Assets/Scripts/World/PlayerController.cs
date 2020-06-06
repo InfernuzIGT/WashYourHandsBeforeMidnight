@@ -40,12 +40,12 @@ public class PlayerController : MonoBehaviour
     private Vector3 _botPosition;
 
     // Stamina
-    private float _stamina = 100;
-    private float _staminaMax = 100;
-    private float _staminaIncrease = 5f;
-    private float _staminaDecrease = 15;
-    private float _staminaRegenTimer = 0;
-    private float _staminaTimeToRegen = 3;
+    // private float _stamina = 100;
+    // private float _staminaMax = 100;
+    // private float _staminaIncrease = 5f;
+    // private float _staminaDecrease = 15;
+    // private float _staminaRegenTimer = 0;
+    // private float _staminaTimeToRegen = 3;
 
     private float _moveHorizontal;
     private float _moveVertical;
@@ -62,8 +62,8 @@ public class PlayerController : MonoBehaviour
     private string _inputVertical = "Vertical";
 
     // Properties
-    private bool _infiniteStamina;
-    public bool InfiniteStamina { set { _infiniteStamina = value; } }
+    // private bool _infiniteStamina;
+    // public bool InfiniteStamina { set { _infiniteStamina = value; } }
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
 
         Movement();
         LadderMovement();
-        Stamina();
+        // Stamina();
         Interaction();
 
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
@@ -134,19 +134,23 @@ public class PlayerController : MonoBehaviour
         _moveVertical = Input.GetAxisRaw(_inputVertical);
 
         // Speed movement
-        if (Input.GetKey(KeyCode.LeftShift) && _stamina > 1 ||
-            Input.GetKey(KeyCode.RightShift) && _stamina > 1)
-        {
-            _isRunning = _moveHorizontal == 0 && _moveVertical == 0 || !_characterController.isGrounded ? false : true;
-            _speedHorizontal = _speedRun;
-            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
-        }
-        else
-        {
-            _isRunning = false;
-            _speedHorizontal = _speedWalk;
-            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
-        }
+        // if (Input.GetKey(KeyCode.LeftShift) && _stamina > 1 ||
+        //     Input.GetKey(KeyCode.RightShift) && _stamina > 1)
+        // {
+        //     _isRunning = _moveHorizontal == 0 && _moveVertical == 0 || !_characterController.isGrounded ? false : true;
+        //     _speedHorizontal = _speedRun;
+        //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+        // }
+        // else
+        // {
+        //     _isRunning = false;
+        //     _speedHorizontal = _speedWalk;
+        //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+        // }
+        
+        _isRunning = !_characterController.isGrounded ? false : true;
+        _speedHorizontal = _speedRun;
+        footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
         // Add movement
         _movement.x = _moveHorizontal * _speedHorizontal;
@@ -170,7 +174,7 @@ public class PlayerController : MonoBehaviour
         _characterController.Move(_movement * Time.deltaTime);
 
         // Animation       
-        _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
+        _animatorController.Movement(_movement, _isRunning, true);
     }
 
     private void LadderMovement()
@@ -205,33 +209,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Stamina()
-    {
-        if (_isRunning && !_infiniteStamina || Input.GetKey(KeyCode.LeftShift) && _stamina < 1 && !_infiniteStamina)
-        {
-            _stamina = Mathf.Clamp(_stamina - (_staminaDecrease * Time.deltaTime), 0, _staminaMax);
+    // private void Stamina()
+    // {
+    //     if (_isRunning && !_infiniteStamina || Input.GetKey(KeyCode.LeftShift) && _stamina < 1 && !_infiniteStamina)
+    //     {
+    //         _stamina = Mathf.Clamp(_stamina - (_staminaDecrease * Time.deltaTime), 0, _staminaMax);
 
-            _staminaRegenTimer = 0;
-        }
-        else if (_stamina < _staminaMax)
-        {
-            if (_staminaRegenTimer >= _staminaTimeToRegen)
-            {
-                _stamina = Mathf.Clamp(_stamina + (_staminaIncrease * Time.deltaTime), 0, _staminaMax);
-            }
-            else
-            {
-                _staminaRegenTimer += Time.deltaTime;
-            }
-        }
+    //         _staminaRegenTimer = 0;
+    //     }
+    //     else if (_stamina < _staminaMax)
+    //     {
+    //         if (_staminaRegenTimer >= _staminaTimeToRegen)
+    //         {
+    //             _stamina = Mathf.Clamp(_stamina + (_staminaIncrease * Time.deltaTime), 0, _staminaMax);
+    //         }
+    //         else
+    //         {
+    //             _staminaRegenTimer += Time.deltaTime;
+    //         }
+    //     }
 
-        GameManager.Instance.worldUI.UpdateStamina(_stamina / _staminaMax);
+    //     GameManager.Instance.worldUI.UpdateStamina(_stamina / _staminaMax);
 
-        if (_stamina == 0f && !breathingSound.IsPlaying())
-        {
-            breathingSound.Play();
-        }
-    }
+    //     if (_stamina == 0f && !breathingSound.IsPlaying())
+    //     {
+    //         breathingSound.Play();
+    //     }
+    // }
 
     private void Interaction()
     {
