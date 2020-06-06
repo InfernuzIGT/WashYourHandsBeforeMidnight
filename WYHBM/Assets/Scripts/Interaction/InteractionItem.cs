@@ -12,6 +12,8 @@ public class InteractionItem : Interaction, IInteractable
         base.Awake();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
+        SetPopupName(item.name);
+
         // Items SO for each prefab
 
         // if (GameManager.Instance.Items.Contains(item))
@@ -62,7 +64,7 @@ public class InteractionItem : Interaction, IInteractable
         }
 
         if (!playInCollision)PlayCutscene();
-        
+
         Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
 

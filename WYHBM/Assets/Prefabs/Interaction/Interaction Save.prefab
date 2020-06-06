@@ -13,8 +13,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showPopup: 1
+  showPopupText: 1
+  questData:
+    quest: {fileID: 0}
+    state: 0
+    progress: 
   quest: {fileID: 0}
   progress: 0
+  cutscene: {fileID: 0}
+  playInCollision: 0
   onEnter:
     m_PersistentCalls:
       m_Calls:
@@ -71,7 +78,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7579834614810540092}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8233246536969189286
 PrefabInstance:
@@ -139,6 +146,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5970980956450007375, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3214954136324276813, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 109232e5a0434c744a00baf85d3299f2, type: 3}

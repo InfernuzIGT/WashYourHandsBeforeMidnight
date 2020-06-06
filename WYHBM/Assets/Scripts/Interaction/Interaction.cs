@@ -1,4 +1,5 @@
 ﻿using Events;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
@@ -14,11 +15,12 @@ public class QuestData
 [RequireComponent(typeof(BoxCollider))]
 public class Interaction : MonoBehaviour
 {
-
     [System.Serializable]
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
+    [Header("Popup")]
     public bool showPopup = true;
+    public bool showPopupText = true;
 
     [Header("Quest")]
     public QuestData questData;
@@ -35,15 +37,19 @@ public class Interaction : MonoBehaviour
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
-    private GameObject _popupGO;
-    
+    private SpriteRenderer _popupImage;
+    private TextMeshPro _popupText;
+
     private CutsceneEvent _cutsceneEvent;
 
     public virtual void Awake()
     {
-        _popupGO = transform.GetChild(0).gameObject;
-        _popupGO.SetActive(false);
-        
+        _popupImage = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        _popupText = transform.GetChild(1).GetComponent<TextMeshPro>();
+
+        _popupImage.enabled = false;
+        _popupText.enabled = false;
+
         _cutsceneEvent = new CutsceneEvent();
     }
 
@@ -65,7 +71,17 @@ public class Interaction : MonoBehaviour
     {
         if (!showPopup)return;
 
-        _popupGO.SetActive(show);
+        _popupImage.enabled = show;
+
+        if (showPopupText)
+        {
+            _popupText.enabled = show;
+        }
+    }
+
+    protected void SetPopupName(string name)
+    {
+        _popupText.text = name;
     }
 
     protected void AddListenerQuest()
@@ -92,9 +108,9 @@ public class Interaction : MonoBehaviour
     protected void PlayCutscene()
     {
         if (cutscene == null)return;
-        
+
         _cutsceneEvent.cutscene = cutscene;
-        
+
         EventController.TriggerEvent(_cutsceneEvent);
     }
 

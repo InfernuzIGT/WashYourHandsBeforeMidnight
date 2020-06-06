@@ -15,6 +15,8 @@ public class InteractionNPC : Interaction
     {
         _interactionDialogEvent = new EnableDialogEvent();
         _interactionCombatEvent = new EnterCombatEvent();
+
+        SetPopupName(npc.name);
     }
 
     public override void Execute(bool enable, NPCController currentNPC)
