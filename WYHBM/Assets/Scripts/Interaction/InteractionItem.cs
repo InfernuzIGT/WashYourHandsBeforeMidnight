@@ -7,7 +7,6 @@ public class InteractionItem : Interaction, IInteractable
     private SpriteRenderer _spriteRenderer;
     // public bool isPicked;
 
-
     public override void Awake()
     {
         base.Awake();
@@ -38,6 +37,8 @@ public class InteractionItem : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
+            if (playInCollision)PlayCutscene();
+
             AddListenerQuest();
             EventController.AddListener<InteractionEvent>(OnInteractItem);
         }
@@ -60,6 +61,8 @@ public class InteractionItem : Interaction, IInteractable
             return;
         }
 
+        if (!playInCollision)PlayCutscene();
+        
         Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
 
