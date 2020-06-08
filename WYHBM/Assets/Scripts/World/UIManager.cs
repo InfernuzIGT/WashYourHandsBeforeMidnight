@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Events;
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,6 +42,12 @@ namespace GameMode.World
         public TextMeshProUGUI characterNameTxt;
         public Image characterImg;
         public Transform[] characterSlot = new Transform[4];
+
+        [Header("FMOD")]
+        public Slider sliderSound;
+        public Slider sliderMusic;
+        [Space]
+        //TODO Mati: Variables de FMOD
 
         // Inventory
         private int _lastSlot = 0;
@@ -92,6 +99,9 @@ namespace GameMode.World
             buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
             buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
 
+            sliderSound.onValueChanged.AddListener(VolumeSound);
+            sliderMusic.onValueChanged.AddListener(VolumeMusic);
+
             // buttonLeft.interactable = false;
             // buttonRight.interactable = false;
 
@@ -129,6 +139,16 @@ namespace GameMode.World
 
             buttonLeft.interactable = !inLeftLimit;
             buttonRight.interactable = !inRightLimit;
+        }
+
+        public void VolumeSound(float vol)
+        {
+            // TODO Mati: VOL es el valor del slider SOUND 
+        }
+        
+        public void VolumeMusic(float vol)
+        {
+            // TODO Mati: VOL es el valor del slider MUSIC 
         }
 
         public Transform GetSlot()
