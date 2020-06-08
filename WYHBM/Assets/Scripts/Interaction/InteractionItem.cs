@@ -7,11 +7,12 @@ public class InteractionItem : Interaction, IInteractable
     private SpriteRenderer _spriteRenderer;
     // public bool isPicked;
 
-
     public override void Awake()
     {
         base.Awake();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        SetPopupName(item.name);
 
         // Items SO for each prefab
 
@@ -38,6 +39,8 @@ public class InteractionItem : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
+            if (playInCollision)PlayCutscene();
+
             AddListenerQuest();
             EventController.AddListener<InteractionEvent>(OnInteractItem);
         }
@@ -59,6 +62,8 @@ public class InteractionItem : Interaction, IInteractable
             GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull, false);
             return;
         }
+
+        if (!playInCollision)PlayCutscene();
 
         Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
