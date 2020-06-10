@@ -39,7 +39,7 @@ public class InteractionItem : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            if (playInCollision)PlayCutscene();
+            if (playInCollision) PlayCutscene();
 
             AddListenerQuest();
             EventController.AddListener<InteractionEvent>(OnInteractItem);
@@ -63,7 +63,17 @@ public class InteractionItem : Interaction, IInteractable
             return;
         }
 
-        if (!playInCollision)PlayCutscene();
+        for (int i = 0; i < GameManager.Instance.CurrentQuestData.progress[item.index]; i++)
+        {
+            item.index = i;
+
+            if (i == GameManager.Instance.CurrentQuestData.progress[i])
+            {
+                this.enabled = true;
+            }
+        }
+
+        if (!playInCollision) PlayCutscene();
 
         Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
@@ -89,8 +99,8 @@ public class InteractionItem : Interaction, IInteractable
         float width = tempSpriteRenderer.sprite.texture.width / pixelUnit;
         float height = tempSpriteRenderer.sprite.texture.height / pixelUnit;
 
-        if (width < 1)width = 1;
-        if (height < .45f)height = .45f;
+        if (width < 1) width = 1;
+        if (height < .45f) height = .45f;
 
         tempBoxCollider.size = new Vector3(width, height, 1.5f);
     }
@@ -107,8 +117,8 @@ public class InteractionItem : Interaction, IInteractable
 
         // Set Values
         spriteRenderer.sprite = item.sprite;
-        this.quest = quest;
-        this.progress = progress;
+        this.questData.quest = quest;
+        this.questData.progress[0] = progress;
         this.item = item;
 
         // Detect Size
@@ -116,8 +126,8 @@ public class InteractionItem : Interaction, IInteractable
         float width = spriteRenderer.sprite.rect.width / pixelUnit;
         float height = spriteRenderer.sprite.rect.height / pixelUnit;
 
-        if (width < 1)width = 1;
-        if (height < .45f)height = .45f;
+        if (width < 1) width = 1;
+        if (height < .45f) height = .45f;
 
         boxCollider.size = new Vector3(width, height, 1.5f);
     }

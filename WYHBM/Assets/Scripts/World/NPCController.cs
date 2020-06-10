@@ -13,6 +13,8 @@ public class NPCController : MonoBehaviour, IInteractable
     public bool useRandomPosition = true;
     [Range(0f, 10f)]
     public float waitTime = 5;
+    [Range(0f, 10f)]
+    public float speed = 5;
 
     [Header("Field of View")]
     public bool canDetectPlayer;
@@ -93,6 +95,7 @@ public class NPCController : MonoBehaviour, IInteractable
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
             _animatorController.Movement(_agent.desiredVelocity);
+            _agent.speed = speed;
         }
         else
         {
@@ -197,6 +200,10 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
+            _agent.isStopped = true;
+            canMove = false;
+            
+            _animatorController?.Movement(Vector3.zero);
 
             _interactionNPC.Execute(true, this);
         }
@@ -207,6 +214,8 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
+            _agent.isStopped = false;
+            canMove = true;
 
             _interactionNPC.Execute(false, this);
         }

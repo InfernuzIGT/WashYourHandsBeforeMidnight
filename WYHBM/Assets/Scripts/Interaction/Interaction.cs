@@ -25,8 +25,8 @@ public class Interaction : MonoBehaviour
     [Header("Quest")]
     public QuestData questData;
 
-    public QuestSO quest; // TODO Marcos: Remove
-    public int progress; // TODO Marcos: Remove
+    // public QuestSO quest; // TODO Marcos: Remove
+    // public int progress; // TODO Marcos: Remove
 
     [Header("Cutscene")]
     public PlayableAsset cutscene;
@@ -86,21 +86,21 @@ public class Interaction : MonoBehaviour
 
     protected void AddListenerQuest()
     {
-        if (quest == null)return;
+        if (questData.quest == null)return;
 
         EventController.AddListener<InteractionEvent>(OnInteractQuest);
     }
 
     protected void RemoveListenerQuest()
     {
-        if (quest == null)return;
+        if (questData.quest == null)return;
 
         EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
     }
 
     private void OnInteractQuest(InteractionEvent evt)
     {
-        GameManager.Instance.ProgressQuest(quest, progress);
+        GameManager.Instance.ProgressQuest(questData.quest, questData.progress[0]);
 
         EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
     }

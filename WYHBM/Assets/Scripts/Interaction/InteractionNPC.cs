@@ -43,6 +43,8 @@ public class InteractionNPC : Interaction
             case NPC_INTERACTION_TYPE.dialog:
                 _interactionDialogEvent.dialog = npc.dialog;
                 _interactionDialogEvent.enable = enable;
+                _interactionDialogEvent.questData = questData;
+                
                 EventController.TriggerEvent(_interactionDialogEvent);
                 break;
 
