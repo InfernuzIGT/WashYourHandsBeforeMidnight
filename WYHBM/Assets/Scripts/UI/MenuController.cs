@@ -1,6 +1,7 @@
 ﻿using Events;
 using FMODUnity;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
@@ -21,6 +22,10 @@ public class MenuController : MonoBehaviour
     public GameObject audioPanel;
 
     [Header("FMOD")]
+    public Slider sliderSound;
+    public Slider sliderMusic;
+    [Space]
+    //TODO Mati: Variables de FMOD
     public StudioEventEmitter _buttonSounds;
     public StudioEventEmitter _menuMusic;
 
@@ -33,6 +38,9 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
+        sliderSound.onValueChanged.AddListener(VolumeSound);
+        sliderMusic.onValueChanged.AddListener(VolumeMusic);
+
         if (GameData.Data.isDataLoaded)
         {
             NewGameButton.SetActive(false);
@@ -72,7 +80,7 @@ public class MenuController : MonoBehaviour
 
             case MENU_TYPE.NewGame:
                 GameData.Instance.LoadScene(SCENE_INDEX.Master);
-                
+
                 GameData.Data.isDataLoaded = true;
 
                 PlayButtonSound(3);
@@ -168,6 +176,16 @@ public class MenuController : MonoBehaviour
 
         PlayButtonSound(4);
         _menuMusic.EventInstance.setParameterByName(FMODParameters.Credits, 0f);
+    }
+
+    public void VolumeSound(float vol)
+    {
+        // TODO Mati: VOL es el valor del slider SOUND 
+    }
+
+    public void VolumeMusic(float vol)
+    {
+        // TODO Mati: VOL es el valor del slider MUSIC 
     }
 
     //     public void OnYesButton()
