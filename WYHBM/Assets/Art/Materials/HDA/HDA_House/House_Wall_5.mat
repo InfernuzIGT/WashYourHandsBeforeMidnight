@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: House_Detail
+  m_Name: House_Wall_5
   m_Shader: {fileID: -6465566751694194690, guid: d000db45baf5f5c4486ceb55a13acf8b,
     type: 3}
   m_ShaderKeywords: 
@@ -34,7 +34,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 39c3dbd6b51896f4d805d54232eafdc1, type: 3}
+        m_Texture: {fileID: 2800000, guid: a6b6e2f0428082c4c8bb172dc788ef30, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -46,7 +46,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 39c3dbd6b51896f4d805d54232eafdc1, type: 3}
+        m_Texture: {fileID: 2800000, guid: a6b6e2f0428082c4c8bb172dc788ef30, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -57,15 +57,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_CC50ABB6_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 7290fe622c2a8d5429c318f1bea352d9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Boolean_15C561: 0
+    - Vector1_39E5EA5C: 0
     - Vector1_45863ACC: 1
     - Vector1_7872C3E3: 1
     - Vector1_8E38821E: 1
     - Vector1_C0EEC0EC: 1
+    - Vector1_FA074C27: 0.5
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
