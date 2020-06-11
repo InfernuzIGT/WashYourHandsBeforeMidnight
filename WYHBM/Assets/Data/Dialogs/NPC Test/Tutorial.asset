@@ -10,10 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46a0f6366c5ab0040a32e318955d6b8b, type: 3}
-  m_Name: Testeo
+  m_Name: Tutorial
   m_EditorClassIdentifier: 
-  sentences:
-  - Sigue este camino para llegar a Grand Station
-  - Pero CUIDADO!
-  - Hay peligro cerca..
-  questSO: {fileID: 11400000, guid: 260d7dab929f2ca4b8b1041f5f9acb74, type: 2}
+  questSentences: []
+  noneSentences:
+  - 'Dallas: You can pick this item and add it to your inventory pressing E.'
+  - 'Dallas: Also, pressing TAB opens your mission log.'
+  - 'Dallas: And pressing I open tour inventory.'
+  - 'Dallas: Good luck, Sam!'
+  readySentences: []
+  inProgressSentences: []
+  CompletedSentences: []
