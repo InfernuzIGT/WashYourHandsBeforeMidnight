@@ -68,7 +68,8 @@ public enum MENU_TYPE
     Audio = 5,
     Back = 6,
     Exit = 7,
-    YesPopup = 8
+    YesPopup = 8,
+    Game = 9,
 }
 
 public enum QUEST_STATE

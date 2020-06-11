@@ -20,6 +20,7 @@ public class MenuController : MonoBehaviour
 
     [Header("Options")]
     public GameObject audioPanel;
+    public GameObject gamePanel;
 
     [Header("FMOD")]
     public Slider sliderSound;
@@ -33,6 +34,7 @@ public class MenuController : MonoBehaviour
     private GameObject _lastCam;
 
     private bool _inAudio;
+    private bool _inGame;
     // private bool _isDataLoaded;
     // public bool IsDataLoaded { get { return _isDataLoaded; } }
 
@@ -124,6 +126,19 @@ public class MenuController : MonoBehaviour
                 PlayButtonSound(1);
                 break;
 
+            case MENU_TYPE.Game:
+                optionsPanel.SetActive(false);
+                _lastPanel = optionsPanel;
+
+                _inGame = true;
+
+                gamePanel.SetActive(true);
+
+                _lastCam = cams[0];
+
+                PlayButtonSound(1);
+                break;
+
             case MENU_TYPE.Back:
                 DesactivateAll();
 
@@ -133,6 +148,15 @@ public class MenuController : MonoBehaviour
                     _lastPanel = mainPanel;
 
                     _inAudio = false;
+                    return;
+                }
+
+                if (_inGame)
+                {
+                    optionsPanel.SetActive(true);
+                    _lastPanel = mainPanel;
+
+                    _inGame = false;
                     return;
                 }
 
@@ -173,6 +197,7 @@ public class MenuController : MonoBehaviour
         optionsPanel.SetActive(false);
         creditsPanel.SetActive(false);
         audioPanel.SetActive(false);
+        gamePanel.SetActive(false);
 
         PlayButtonSound(4);
         _menuMusic.EventInstance.setParameterByName(FMODParameters.Credits, 0f);

@@ -408,6 +408,9 @@ public class GameManager : MonoSingleton<GameManager>
 
         // }
 
+        // mueve el spawn point a la ultima posicion del jugador
+        // guarda la ulitma posicion para mover el spawn point
+
         // GameManager.Instance.globalController.spawnPoint.TransformPoint(
         //     GameData.Data.newSpawnPoint.transform.position.x,
         //     GameData.Data.newSpawnPoint.transform.position.y,

@@ -63,15 +63,15 @@ public class InteractionItem : Interaction, IInteractable
             return;
         }
 
-        for (int i = 0; i < GameManager.Instance.CurrentQuestData.progress[item.index]; i++)
-        {
-            item.index = i;
+        // for (int i = 0; i < GameManager.Instance.CurrentQuestData.progress[item.index]; i++)
+        // {
+        //     item.index = i;
 
-            if (i == GameManager.Instance.CurrentQuestData.progress[i])
-            {
-                this.enabled = true;
-            }
-        }
+        //     if (i == GameManager.Instance.CurrentQuestData.progress[i])
+        //     {
+        //         this.enabled = true;
+        //     }
+        // }
 
         if (!playInCollision) PlayCutscene();
 
