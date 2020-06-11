@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a0f6366c5ab0040a32e318955d6b8b, type: 3}
   m_Name: Dallas
   m_EditorClassIdentifier: 
-  questSentences:
+  questSentences: []
+  noneSentences: []
+  readySentences:
   - 'Dallas: So you are Stigma''s envoy?'
   - 'Dallas: More and more rookies.'
   - 'Sam: I''m not a rookie.'
@@ -20,5 +22,7 @@ MonoBehaviour:
   - 'Dallas: You must secure the factory, that would give us an advantage against
     the bandits.'
   - 'Dallas: When you''re done, come back to me.'
-  postQuestSentences: []
-  questSO: {fileID: 11400000, guid: c7ddb20a8fd504b43a120f182a29e005, type: 2}
+  inProgressSentences:
+  - "Come on!\r Do what I told you!"
+  CompletedSentences:
+  - Thanks for everything Sam.

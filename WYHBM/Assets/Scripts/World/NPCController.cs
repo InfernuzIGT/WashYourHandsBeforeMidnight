@@ -203,6 +203,7 @@ public class NPCController : MonoBehaviour, IInteractable
             _agent.isStopped = true;
             canMove = false;
             
+            
             _animatorController?.Movement(Vector3.zero);
 
             _interactionNPC.Execute(true, this);
