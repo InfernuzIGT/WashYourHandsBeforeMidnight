@@ -13,6 +13,8 @@ public class NPCController : MonoBehaviour, IInteractable
     public bool useRandomPosition = true;
     [Range(0f, 10f)]
     public float waitTime = 5;
+    [Range(0f, 10f)]
+    public float speed = 5;
 
     [Header("Field of View")]
     public bool canDetectPlayer;
@@ -93,6 +95,7 @@ public class NPCController : MonoBehaviour, IInteractable
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
             _animatorController.Movement(_agent.desiredVelocity);
+            _agent.speed = speed;
         }
         else
         {
@@ -151,7 +154,7 @@ public class NPCController : MonoBehaviour, IInteractable
         _visibleTargets.Clear();
         _targetVisible = false;
 
-        _targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, GameData.Instance.gameConfig.targetMask);
+        _targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, GameData.Instance.worldConfig.layerEnemyTarget);
 
         for (int i = 0; i < _targetsInViewRadius.Length; i++)
         {
@@ -162,7 +165,7 @@ public class NPCController : MonoBehaviour, IInteractable
             {
                 _distanceToTarget = Vector3.Distance(transform.position, _target.position);
 
-                if (!Physics.Raycast(transform.position, _directionToTarget, _distanceToTarget, GameData.Instance.gameConfig.obstacleMask))
+                if (!Physics.Raycast(transform.position, _directionToTarget, _distanceToTarget, GameData.Instance.worldConfig.layerEnemyObstacle))
                 {
                     _visibleTargets.Add(_target);
                     _targetLastPosition = _target.transform.position;
@@ -197,6 +200,10 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
+            _agent.isStopped = true;
+            canMove = false;
+            
+            _animatorController?.Movement(Vector3.zero);
 
             _interactionNPC.Execute(true, this);
         }
@@ -207,6 +214,8 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
+            _agent.isStopped = false;
+            canMove = true;
 
             _interactionNPC.Execute(false, this);
         }

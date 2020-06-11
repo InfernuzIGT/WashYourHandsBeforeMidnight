@@ -8,21 +8,24 @@ public class Slot : MonoBehaviour
     public TextMeshProUGUI buttonTxt;
     [Space]
     public TextMeshProUGUI nameTxt;
-    public GameObject slotButton;
-
-    private ItemSO _item;
+    public Button slotBtn;
+    SpriteState sprState = new SpriteState();
     private bool _isEquipped;
+    private bool _alreadyEquipped;
+    private ItemSO _item;
+    public ItemSO Item { get { return _item; } }
 
     public void SlotButton()
     {
-        if (_isEquipped)
+
+        if (_item.isDroppeable)
         {
-            UnequipItem();
+            slotBtn.interactable = false;
+            // slotBtn.spriteState = slotBtn.sprState.highlightedSprite;
+            return;
         }
-        else
-        {
-            DropItem();
-        }
+
+        else DropItem();
     }
 
     public void AddItem(ItemSO newItem)
@@ -38,73 +41,41 @@ public class Slot : MonoBehaviour
 
     public void DropItem()
     {
-        InteractionItem newItem = Instantiate(GameData.Instance.gameConfig.itemPrefab, GameManager.Instance.GetPlayerFootPosition(), Quaternion.identity);
-        newItem.AddInfo(_item);
-        newItem.DetectSize();
+        GameManager.Instance.DropItem(this);
 
-        GameManager.Instance.DropItem(_item);
+        GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupDestroyItem);
 
         Destroy(gameObject);
     }
 
     public void EquipItem()
     {
-        if (_isEquipped)return;
 
-        switch (_item.type)
+        if (!_isEquipped)
         {
-            case ITEM_TYPE.Weapon:
-                if (GameManager.Instance.combatCharacters[0].weapon == null)
-                {
-                    GameManager.Instance.EquipItem(_item);
-                    SetEquip(true);
-                }
-                break;
+            if (GameManager.Instance.IsEquipmentFull) return;
 
-            case ITEM_TYPE.Damage:
-            case ITEM_TYPE.Heal:
-                if (GameManager.Instance.combatCharacters[0].item == null)
-                {
-                    GameManager.Instance.EquipItem(_item);
-                    SetEquip(true);
-                }
-                break;
-
-            case ITEM_TYPE.Defense:
-                if (GameManager.Instance.combatCharacters[0].defense == null)
-                {
-                    GameManager.Instance.EquipItem(_item);
-                    SetEquip(true);
-                }
-                break;
-
-            default:
-                break;
+            GameManager.Instance.EquipItem(_item);
+            SetEquip(true);
         }
-    }
-
-    public void UnequipItem()
-    {
-        if (GameManager.Instance.IsInventoryFull)
+        else
         {
-            return;
-        }
+            if (GameManager.Instance.IsInventoryFull) return;
 
-        GameManager.Instance.UnequipItem(_item);
-        SetEquip(false);
+            GameManager.Instance.UnequipItem(_item);
+            SetEquip(false);
+        }
     }
 
     private void SetEquip(bool isEquipped)
     {
         _isEquipped = isEquipped;
-        transform.SetParent(isEquipped ? GameManager.Instance.worldUI.itemEquippedParents : GameManager.Instance.worldUI.itemParents);
-        buttonTxt.text = isEquipped ? GameData.Instance.textConfig.itemUnequip : GameData.Instance.textConfig.itemDrop;
+        transform.SetParent(isEquipped ? GameManager.Instance.worldUI.GetSlot() : GameManager.Instance.worldUI.itemParents);
     }
 
     public void PointerEnter()
     {
-        nameTxt.gameObject.SetActive(false);
-        slotButton.SetActive(true);
+        slotBtn.gameObject.SetActive(true);
 
         if (!_isEquipped)
         {
@@ -114,8 +85,7 @@ public class Slot : MonoBehaviour
 
     public void PointerExit()
     {
-        nameTxt.gameObject.SetActive(true);
-        slotButton.SetActive(false);
+        slotBtn.gameObject.SetActive(false);
 
         if (!_isEquipped)
         {

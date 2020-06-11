@@ -4,8 +4,11 @@
 public class DialogSO : ScriptableObject
 {
     [TextArea()]
-    public string[] sentences;
+    public string[] questSentences;
 
-    [Header ("Quest")]
-    public QuestSO questSO;
+    [Space]
+    [TextArea()] public string[] noneSentences;
+    [TextArea()] public string[] readySentences;
+    [TextArea()] public string[] inProgressSentences;
+    [TextArea()] public string[] CompletedSentences;
 }

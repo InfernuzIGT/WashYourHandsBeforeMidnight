@@ -15,6 +15,8 @@ public class InteractionNPC : Interaction
     {
         _interactionDialogEvent = new EnableDialogEvent();
         _interactionCombatEvent = new EnterCombatEvent();
+
+        SetPopupName(npc.name);
     }
 
     public override void Execute(bool enable, NPCController currentNPC)
@@ -41,6 +43,8 @@ public class InteractionNPC : Interaction
             case NPC_INTERACTION_TYPE.dialog:
                 _interactionDialogEvent.dialog = npc.dialog;
                 _interactionDialogEvent.enable = enable;
+                _interactionDialogEvent.questData = questData;
+                
                 EventController.TriggerEvent(_interactionDialogEvent);
                 break;
 

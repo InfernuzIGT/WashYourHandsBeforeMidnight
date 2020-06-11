@@ -7,7 +7,8 @@ public class CombatManager : MonoBehaviour
 {
     [Header("General")]
     public bool canSelect;
-    public COMBAT_STATE combatState;
+    public ANIM_STATE animState;
+    public ItemSO currentItem;
     public LayerMask currentLayer;
 
     [Header("Character - Players")]
@@ -17,7 +18,6 @@ public class CombatManager : MonoBehaviour
     public List<Enemy> listEnemies;
 
     private List<CombatCharacter> _listAllCharacters;
-    private List<CombatCharacter> _listWaitingCharacters;
     private CombatCharacter _currentCharacter;
     private RaycastHit _hit;
     private Ray _ray;
@@ -29,6 +29,10 @@ public class CombatManager : MonoBehaviour
     private WaitForSeconds _waitBetweenTurns;
 
     private ExitCombatEvent _interactionCombatEvent;
+
+    // Properties
+    private List<CombatCharacter> _listWaitingCharacters;
+    public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
 
     private void Start()
     {
@@ -58,78 +62,110 @@ public class CombatManager : MonoBehaviour
             {
                 if (_hit.collider != null)
                 {
-                    _hit.collider.gameObject.GetComponent<CombatCharacter>().Select(combatState, _currentCharacter);
+                    _hit.collider.gameObject.GetComponent<CombatCharacter>().Select(currentItem);
+
+                    _currentCharacter.AnimationAction(animState);
+                    _currentCharacter.DoAction();
+
                     canSelect = false;
                 }
             }
         }
     }
 
-    public void SetData(CombatArea combatArea, List<Player> players, List<Enemy> enemies)
+    public void SetData(CombatArea combatArea, List<CombatPlayer> combatPlayers, List<CombatEnemy> combatEnemies)
     {
         int indexCombat = 0;
         canSelect = false;
 
         _combatAreaContainer = Instantiate(
-            GameData.Instance.gameConfig.emptyObject,
+            GameData.Instance.worldConfig.emptyObject,
             combatArea.transform.position,
             combatArea.transform.rotation);
 
-        for (int i = 0; i < players.Count; i++)
+        for (int i = 0; i < combatPlayers.Count; i++)
         {
             Player player = Instantiate(
-                players[i],
-                combatArea.playerPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                combatPlayers[i].character,
+                combatArea.playerPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            player.SetCharacter(indexCombat);
+            player.SetCharacter(indexCombat, combatPlayers[i].equipment);
             indexCombat++;
+
+            GameManager.Instance.combatUI.CreateActions(combatPlayers[i].equipment);
 
             listPlayers.Add(player);
             _listAllCharacters.Add(player);
         }
 
-        for (int i = 0; i < enemies.Count; i++)
+        for (int i = 0; i < combatEnemies.Count; i++)
         {
             Enemy enemy = Instantiate(
-                enemies[i],
-                combatArea.enemyPosition[i].position + GameData.Instance.gameConfig.playerBaseOffset,
+                combatEnemies[i].character,
+                combatArea.enemyPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            enemy.SetCharacter(indexCombat);
+            enemy.SetCharacter(indexCombat, combatEnemies[i].equipment);
             indexCombat++;
 
             listEnemies.Add(enemy);
             _listAllCharacters.Add(enemy);
         }
+
+        GameManager.Instance.combatUI.CreateTurn(_listAllCharacters);
     }
 
-    public void DoAction(COMBAT_STATE combatState)
+    public void DoAction(ItemSO item)
     {
-        switch (combatState)
+        if (item == null)
         {
-            case COMBAT_STATE.Attack:
+            animState = ANIM_STATE.AttackMelee;
+            currentLayer = GameData.Instance.combatConfig.layerEnemy;
+            GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+            currentItem = null;
+            canSelect = true;
+            return;
+        }
+
+        switch (item.type)
+        {
+            case ITEM_TYPE.WeaponMelee:
+                animState = ANIM_STATE.AttackMelee;
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 break;
 
-            case COMBAT_STATE.Defense:
+            case ITEM_TYPE.WeaponOneHand:
+                animState = ANIM_STATE.AttackOneHand;
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
+
+            case ITEM_TYPE.WeaponTwoHands:
+                animState = ANIM_STATE.AttackTwoHands;
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
+
+            case ITEM_TYPE.ItemHeal:
+                animState = ANIM_STATE.ItemHeal;
                 currentLayer = GameData.Instance.combatConfig.layerPlayer;
                 GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 break;
 
-            case COMBAT_STATE.Item:
-                if (_currentCharacter.item != null)
-                {
-                    ReadItem();
-                }
-                else
-                {
-                    Debug.Log($"No items!");
-                    return;
-                }
+            case ITEM_TYPE.ItemGrenade:
+                animState = ANIM_STATE.ItemGrenade;
+                currentLayer = GameData.Instance.combatConfig.layerEnemy;
+                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                break;
+
+            case ITEM_TYPE.ItemDefense:
+                animState = ANIM_STATE.ItemDefense;
+                currentLayer = GameData.Instance.combatConfig.layerPlayer;
+                GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 break;
 
             default:
@@ -138,27 +174,8 @@ public class CombatManager : MonoBehaviour
                 break;
         }
 
-        this.combatState = combatState;
+        currentItem = item;
         canSelect = true;
-    }
-
-    private void ReadItem()
-    {
-        switch (_currentCharacter.item.type)
-        {
-            case ITEM_TYPE.Damage:
-                currentLayer = GameData.Instance.combatConfig.layerEnemy;
-                GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
-                break;
-
-            case ITEM_TYPE.Heal:
-                currentLayer = GameData.Instance.combatConfig.layerPlayer;
-                GameManager.Instance.combatUI.messageTxt.text = "Select Player";
-                break;
-
-            default:
-                break;
-        }
     }
 
     public void CheckGame(Player character)
@@ -190,8 +207,6 @@ public class CombatManager : MonoBehaviour
     private void FinishGame(bool isWin)
     {
         _isEndOfCombat = true;
-
-        Debug.Log($"<color=blue><b> [COMBAT] </b></color> Win: {isWin}");
 
         // uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
 
@@ -311,9 +326,11 @@ public class CombatManager : MonoBehaviour
 
         _listWaitingCharacters.Remove(_currentCharacter);
         _listWaitingCharacters.Add(_currentCharacter);
-        
+
         _currentCharacter = _listWaitingCharacters[0];
         _currentCharacter.IsMyTurn = true;
+        
+        GameManager.Instance.ReorderTurn();
     }
 
     /// <summary>

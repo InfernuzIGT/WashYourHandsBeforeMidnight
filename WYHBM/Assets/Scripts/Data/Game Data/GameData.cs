@@ -7,13 +7,14 @@ using UnityEngine.SceneManagement;
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Config")]
-	public GameConfig gameConfig;
+	public WorldConfig worldConfig;
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
 
 	[Header("Persistence")]
 	public ItemSO persistenceItem;
 	public QuestSO persistenceQuest;
+	public Transform newSpawnPos;
 
 	#region Load Scene
 
@@ -24,7 +25,7 @@ public class GameData : MonoSingleton<GameData>
 
 	private IEnumerator LoadYourAsyncScene(SCENE_INDEX index)
 	{
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int)index);
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int) index);
 
 		while (!asyncLoad.isDone)
 		{
@@ -41,7 +42,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		get
 		{
-			if (_data == null)LoadData();
+			if (_data == null) LoadData();
 			return _data;
 		}
 	}
@@ -116,13 +117,29 @@ public class GameData : MonoSingleton<GameData>
 public class SessionData
 {
 	public List<ItemSO> items = new List<ItemSO>();
-	public Dictionary<int, QuestSO> dictionaryQuest = new Dictionary<int, QuestSO>();
-	public Dictionary<int, int> dictionaryProgress = new Dictionary<int, int>();
+	public List<QuestSO> listQuest = new List<QuestSO>();
+	public List<int> listProgress = new List<int>();
+	public bool isDataLoaded;
+	public Transform newSpawnPoint;
 
 	public SessionData()
 	{
 		items.Add(GameData.Instance.persistenceItem);
-		dictionaryQuest.Add(GameData.Instance.persistenceQuest.GetInstanceID(), GameData.Instance.persistenceQuest);
-		dictionaryProgress.Add(GameData.Instance.persistenceQuest.GetInstanceID(), 0);
+		listQuest.Add(GameData.Instance.persistenceQuest);
+		listProgress.Add(0);
+
+		isDataLoaded = true;
+
+		// guardar variable de data cargada 
+		// crea actualiza el spawn point a la posicion guardada, moviendo el spawnpoint a esa pos
+
+		// GameData.Instance.newSpawnPos = newSpawnPoint;
+		// newSpawnPoint = GameManager.Instance.globalController.player.transform;
+
+		// newSpawnPoint.TransformPoint(
+		// 	GameManager.Instance.globalController.player.transform.position.x,
+		// 	GameManager.Instance.globalController.player.transform.position.y,
+		// 	GameManager.Instance.globalController.player.transform.position.z);
+
 	}
 }

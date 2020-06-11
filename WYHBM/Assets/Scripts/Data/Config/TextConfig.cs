@@ -27,8 +27,8 @@ public class TextConfig : ScriptableObject
     public Color colorMsgDefense;
     
     [Header ("Inventory")]
-    public string itemDrop = "DROP";
-    public string itemUnequip = "UNEQUIP";
+    public string itemDrop = "X";
+    // public string itemUnequip = "UNEQUIP";
     
     public string itemHeal = "HP = {0}-{1}";
     public string itemDamage = "DMG = {0}-{1}";
@@ -39,5 +39,6 @@ public class TextConfig : ScriptableObject
     public string popupNewObjetive = "New Objective: {0}";
     public string popupCompleted = "Completed: {0}";
     public string popupInventoryFull = "Inventory full";
+    public string popupDestroyItem = "Are you sure?";
 
 }

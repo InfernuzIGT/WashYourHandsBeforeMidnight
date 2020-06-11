@@ -3,17 +3,12 @@
 [RequireComponent(typeof(Camera))]
 public class DetectTargetBehind : MonoBehaviour
 {
-    [SerializeField]
-    public Transform _target;
-    [SerializeField]
-    public LayerMask _layerMask;
-
-    private Camera _camera;
+    private Transform _target;
     private TargetBehind _currentTargetBehind;
 
-    private void Awake()
+    private void Start()
     {
-        _camera = GetComponent<Camera>();
+        _target = transform; // Placeholder
     }
 
     private void Update()
@@ -23,23 +18,25 @@ public class DetectTargetBehind : MonoBehaviour
 
     private void DetectTarget()
     {
-        if (Physics.Linecast(transform.position, _target.position, out RaycastHit hit, _layerMask, QueryTriggerInteraction.UseGlobal))
+        if (Physics.Linecast(transform.position, _target.position, out RaycastHit hit, GameData.Instance.worldConfig.layerOcclusionMask, QueryTriggerInteraction.UseGlobal))
         {
             if (_currentTargetBehind != hit.transform.gameObject)
             {
+                _currentTargetBehind?.Detected(false);
                 _currentTargetBehind = hit.transform.gameObject.GetComponent<TargetBehind>();
                 _currentTargetBehind.Detected(true);
             }
         }
         else
         {
-            if (_currentTargetBehind != null)
-            {
-                _currentTargetBehind.Detected(false);
-            }
-
+            _currentTargetBehind?.Detected(false);
             _currentTargetBehind = null;
         }
+    }
+
+    public void SetTarget(Transform target)
+    {
+        _target = target;
     }
 
 }

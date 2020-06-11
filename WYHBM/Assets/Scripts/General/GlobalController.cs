@@ -9,7 +9,7 @@ public class GlobalController : MonoBehaviour
     public Transform spawnPoint;
 
     [Header("Cheats")]
-    public bool infiniteStamina;
+    // public bool infiniteStamina;
     public ItemSO[] items;
 
     [Header("Settings")]
@@ -88,6 +88,9 @@ public class GlobalController : MonoBehaviour
         virtualCamera.m_Follow = player.transform;
         virtualCamera.m_LookAt = player.transform;
         virtualCamera.transform.position = player.transform.position;
+        
+        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
+        detectTargetBehind.SetTarget(player.transform);
     }
 
     public void ChangeCamera(CinemachineVirtualCamera newCamera)
@@ -125,18 +128,18 @@ public class GlobalController : MonoBehaviour
             return;
         }
 
-        Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+        Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(items[index]);
     }
 
-    private void Update()
-    {
-        Cheats();
-    }
+    // private void Update()
+    // {
+    //     Cheats();
+    // }
 
-    private void Cheats()
-    {
-        player.InfiniteStamina = infiniteStamina;
-    }
+    // private void Cheats()
+    // {
+    //     player.InfiniteStamina = infiniteStamina;
+    // }
 
 }

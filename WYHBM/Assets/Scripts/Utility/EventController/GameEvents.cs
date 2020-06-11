@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Events
 {
@@ -15,6 +16,7 @@ namespace Events
 
     public class EnableDialogEvent : GameEvent
     {
+        public QuestData questData;
         public bool enable;
         public DialogSO dialog;
     }
@@ -24,7 +26,7 @@ namespace Events
         public bool canMove;
         public bool enterToInterior;
     }
-    
+
     public class LadderEvent : GameEvent
     {
         public LADDER_EXIT ladderExit;
@@ -56,6 +58,16 @@ namespace Events
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
+    }
+
+    public class CutsceneEvent : GameEvent
+    {
+        public PlayableAsset cutscene;
+    }
+
+    public class MainMenuEvent : GameEvent
+    {
+        public MENU_TYPE menuType;
     }
 
     public class InfoTextEvent : GameEvent

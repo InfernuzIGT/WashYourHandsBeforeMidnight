@@ -5,17 +5,42 @@ public class InteractionItem : Interaction, IInteractable
 {
     public ItemSO item;
     private SpriteRenderer _spriteRenderer;
+    // public bool isPicked;
 
     public override void Awake()
     {
         base.Awake();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        SetPopupName(item.name);
+
+        // Items SO for each prefab
+
+        // if (GameManager.Instance.Items.Contains(item))
+        // {
+        //     isPicked = true;
+        //     DeleteItems();
+        // }
     }
+
+    // private void DeleteItems()
+    // {
+    //     if (!isPicked)
+    //     {
+    //         return;
+    //     }
+    //     else
+    //     {
+    //         Destroy(gameObject);
+    //     }
+    // }
 
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
+            if (playInCollision) PlayCutscene();
+
             AddListenerQuest();
             EventController.AddListener<InteractionEvent>(OnInteractItem);
         }
@@ -38,10 +63,22 @@ public class InteractionItem : Interaction, IInteractable
             return;
         }
 
-        Slot newSlot = Instantiate(GameData.Instance.gameConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+        // for (int i = 0; i < GameManager.Instance.CurrentQuestData.progress[item.index]; i++)
+        // {
+        //     item.index = i;
+
+        //     if (i == GameManager.Instance.CurrentQuestData.progress[i])
+        //     {
+        //         this.enabled = true;
+        //     }
+        // }
+
+        if (!playInCollision) PlayCutscene();
+
+        Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);
 
-        GameManager.Instance.dictionarySlot.Add(item.GetInstanceID(), newSlot);
+        GameManager.Instance.listSlots.Add(newSlot);
 
         EventController.RemoveListener<InteractionEvent>(OnInteractItem);
         Destroy(gameObject);
@@ -62,8 +99,8 @@ public class InteractionItem : Interaction, IInteractable
         float width = tempSpriteRenderer.sprite.texture.width / pixelUnit;
         float height = tempSpriteRenderer.sprite.texture.height / pixelUnit;
 
-        if (width < 1)width = 1;
-        if (height < .45f)height = .45f;
+        if (width < 1) width = 1;
+        if (height < .45f) height = .45f;
 
         tempBoxCollider.size = new Vector3(width, height, 1.5f);
     }
@@ -80,8 +117,8 @@ public class InteractionItem : Interaction, IInteractable
 
         // Set Values
         spriteRenderer.sprite = item.sprite;
-        this.quest = quest;
-        this.progress = progress;
+        this.questData.quest = quest;
+        this.questData.progress[0] = progress;
         this.item = item;
 
         // Detect Size
@@ -89,8 +126,8 @@ public class InteractionItem : Interaction, IInteractable
         float width = spriteRenderer.sprite.rect.width / pixelUnit;
         float height = spriteRenderer.sprite.rect.height / pixelUnit;
 
-        if (width < 1)width = 1;
-        if (height < .45f)height = .45f;
+        if (width < 1) width = 1;
+        if (height < .45f) height = .45f;
 
         boxCollider.size = new Vector3(width, height, 1.5f);
     }
