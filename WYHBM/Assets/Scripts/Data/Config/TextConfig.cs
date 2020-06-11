@@ -39,5 +39,6 @@ public class TextConfig : ScriptableObject
     public string popupNewObjetive = "New Objective: {0}";
     public string popupCompleted = "Completed: {0}";
     public string popupInventoryFull = "Inventory full";
+    public string popupDestroyItem = "Are you sure?";
 
 }

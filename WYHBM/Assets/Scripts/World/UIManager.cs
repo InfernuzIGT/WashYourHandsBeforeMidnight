@@ -160,44 +160,139 @@ namespace GameMode.World
 
         public void OnInteractionDialog(InteractionEvent evt)
         {
-            if (GameManager.Instance.CurrentDialog.questSentences.Length == 0)
-            {
-                Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Dialog empty!");
-                return;
-            }
-
-            if (GameManager.Instance.CurrentDialog.isCompleted)
+            switch (GameManager.Instance.CurrentQuestData.state)
             {
 
-                return;
+                case QUEST_STATE.Ready:
+
+                    if (GameManager.Instance.CurrentDialog.readySentences == null)
+                    {
+                        GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Ready;
+
+                        return;
+                    }
+
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.readySentences.Length)
+                    {
+                        SetQuest(GameManager.Instance.CurrentQuestData.quest);
+
+                        panelDialog.SetActive(false);
+
+                        _dialogIndex = 0;
+                        _enableMovementEvent.canMove = true;
+
+                        EventController.TriggerEvent(_enableMovementEvent);
+                        EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+
+                        // GameManager.Instance.CurrentQuestData.state = QUEST_STATE.InProgress;
+
+                        return;
+                    }
+
+                    else
+                    {
+                        ExecuteText(GameManager.Instance.CurrentDialog.readySentences, _dialogIndex);
+                    }
+
+                    break;
+
+                case QUEST_STATE.InProgress:
+
+                    if (GameManager.Instance.CurrentDialog.inProgressSentences == null)
+                    {
+                        GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Completed;
+
+                        return;
+                    }
+
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.inProgressSentences.Length)
+                    {
+                        panelDialog.SetActive(false);
+
+                        _dialogIndex = 0;
+                        _enableMovementEvent.canMove = true;
+
+                        EventController.TriggerEvent(_enableMovementEvent);
+                        EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+
+                        return;
+                    }
+
+                    else
+                    {
+                        ExecuteText(GameManager.Instance.CurrentDialog.inProgressSentences, _dialogIndex);
+                    }
+
+                    break;
+
+                case QUEST_STATE.Completed:
+
+                    if (GameManager.Instance.CurrentDialog.CompletedSentences == null)
+                    {
+                        GameManager.Instance.CurrentQuestData.state = QUEST_STATE.None;
+
+                        return;
+                    }
+
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.CompletedSentences.Length)
+                    {
+                        panelDialog.SetActive(false);
+
+                        _dialogIndex = 0;
+                        _enableMovementEvent.canMove = true;
+
+                        EventController.TriggerEvent(_enableMovementEvent);
+                        EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+
+                        GameManager.Instance.CurrentQuestData.state = QUEST_STATE.None;
+
+                        return;
+                    }
+
+                    else
+                    {
+                        ExecuteText(GameManager.Instance.CurrentDialog.CompletedSentences, _dialogIndex);
+                    }
+
+                    break;
+
+                case QUEST_STATE.None:
+
+                    Debug.Log($"<b> QUEST NONE </b>");
+
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.noneSentences.Length)
+                    {
+                        panelDialog.SetActive(false);
+
+                        _dialogIndex = 0;
+                        _enableMovementEvent.canMove = true;
+
+                        EventController.TriggerEvent(_enableMovementEvent);
+                        EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+
+                        return;
+                    }
+
+                    else
+                    {
+                        ExecuteText(GameManager.Instance.CurrentDialog.noneSentences, _dialogIndex);
+                    }
+
+                    break;
             }
 
-            // Dialogues
-            if (_dialogIndex == GameManager.Instance.CurrentDialog.questSentences.Length)
-            {
+        }
 
-                SetQuest(GameManager.Instance.CurrentQuest);
+        public void ExecuteText(string[] sentences, int index)
+        {
+            _currentSentence = sentences[index];
 
-                GameManager.Instance.CurrentDialog.isCompleted = true;
+            PlayText(sentences, index);
 
-                _dialogIndex = 0;
-                panelDialog.SetActive(false);
+            panelDialog.SetActive(true);
 
-                _enableMovementEvent.canMove = true;
-                EventController.TriggerEvent(_enableMovementEvent);
-
-                EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-            }
-
-            else
-            {
-                PlayText();
-
-                panelDialog.SetActive(true);
-
-                _enableMovementEvent.canMove = false;
-                EventController.TriggerEvent(_enableMovementEvent);
-            }
+            _enableMovementEvent.canMove = false;
+            EventController.TriggerEvent(_enableMovementEvent);
 
         }
 
@@ -205,9 +300,9 @@ namespace GameMode.World
 
         #region Dialogues
 
-        public void PlayText()
+        public void PlayText(string[] sentence, int index)
         {
-            if (_dialogIndex < GameManager.Instance.CurrentDialog.questSentences.Length)
+            if (_dialogIndex < sentence[index].Length)
             {
                 if (_isWriting)
                 {
@@ -224,8 +319,6 @@ namespace GameMode.World
         private IEnumerator WriteText()
         {
             _isReading = true;
-
-            _currentSentence = GameManager.Instance.CurrentDialog.questSentences[_dialogIndex];
 
             _textSkip = "";
 
@@ -301,6 +394,8 @@ namespace GameMode.World
             questDescription.Init(data);
             dicQuestDescription.Add(data, questDescription);
             SelectQuest(data);
+
+            GameManager.Instance.CurrentQuestData.state = QUEST_STATE.InProgress;
         }
 
         public void ReloadQuest(QuestSO data)
@@ -334,6 +429,8 @@ namespace GameMode.World
             {
                 ShowPopup(string.Format(GameData.Instance.textConfig.popupCompleted, data.title));
                 dicQuestTitle[data].Complete();
+
+                GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Completed;
             }
             else
             {

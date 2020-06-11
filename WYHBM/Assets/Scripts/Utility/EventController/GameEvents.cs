@@ -16,6 +16,7 @@ namespace Events
 
     public class EnableDialogEvent : GameEvent
     {
+        public QuestData questData;
         public bool enable;
         public DialogSO dialog;
     }
