@@ -130,6 +130,9 @@ public class SessionData
 
 		isDataLoaded = true;
 
+		// guardar variable de data cargada 
+		// crea actualiza el spawn point a la posicion guardada, moviendo el spawnpoint a esa pos
+
 		// GameData.Instance.newSpawnPos = newSpawnPoint;
 		// newSpawnPoint = GameManager.Instance.globalController.player.transform;
 

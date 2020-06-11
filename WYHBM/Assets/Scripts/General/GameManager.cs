@@ -67,11 +67,8 @@ public class GameManager : MonoSingleton<GameManager>
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
 
-    // private bool _hasPostDialogs;
-    // public bool hasPostDialogs { get { return _hasPostDialogs; } }
-
-    private QuestSO _currentQuest;
-    public QuestSO CurrentQuest { get { return _currentQuest; } }
+    private QuestData _currentQuestData;
+    public QuestData CurrentQuestData { get { return _currentQuestData; } }
 
     private void Start()
     {
@@ -212,6 +209,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
+    
 
     #region Inventory
 
@@ -289,10 +287,12 @@ public class GameManager : MonoSingleton<GameManager>
         if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
             dictionaryProgress[quest.GetInstanceID()] != progress ||
             dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
+
         {
             return;
         }
 
+        
         dictionaryProgress[quest.GetInstanceID()]++;
 
         worldUI.UpdateQuest(dictionaryQuest[quest.GetInstanceID()], dictionaryProgress[quest.GetInstanceID()]);
@@ -341,13 +341,13 @@ public class GameManager : MonoSingleton<GameManager>
         if (evt.enable)
         {
             _currentDialog = evt.dialog;
-            _currentQuest = evt.dialog.questSO;
+            _currentQuestData = evt.questData;
             EventController.AddListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
         else
         {
             _currentDialog = null;
-            _currentQuest = null;
+            _currentQuestData = null;
             EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
     }
@@ -407,6 +407,9 @@ public class GameManager : MonoSingleton<GameManager>
         // GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
 
         // }
+
+        // mueve el spawn point a la ultima posicion del jugador
+        // guarda la ulitma posicion para mover el spawn point
 
         // GameManager.Instance.globalController.spawnPoint.TransformPoint(
         //     GameData.Data.newSpawnPoint.transform.position.x,
