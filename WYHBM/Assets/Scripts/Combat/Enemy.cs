@@ -67,7 +67,11 @@ public class Enemy : CombatCharacter
 	{
 		base.WaitingForAction();
 
-		GameManager.Instance.combatUI.ShowPlayerPanel(false);
+		MaterialShow(true);
+
+		GameManager.Instance.combatUI.ShowPlayerPanel(true, false);
+
+		yield return new WaitForSeconds(Random.Range(.25f, 1.25f));
 
 		_isActionDone = false;
 
@@ -83,6 +87,8 @@ public class Enemy : CombatCharacter
 		// GameManager.Instance.ReorderTurn();
 
 		yield return _waitPerAction;
+
+		MaterialShow(false);
 
 		AnimationAction(ANIM_STATE.Idle);
 	}

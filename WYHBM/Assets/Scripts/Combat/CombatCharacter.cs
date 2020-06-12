@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using UnityEngine;
+// using UnityEngine.EventSystems;
 
-public class CombatCharacter : MonoBehaviour
+public class CombatCharacter : MonoBehaviour/* , IPointerEnterHandler, IPointerExitHandler */
 {
     [SerializeField] private string _name = null;
     [SerializeField] private List<ItemSO> _equipment = new List<ItemSO>(); // TODO Mariano: Used by Enemy
@@ -22,12 +23,15 @@ public class CombatCharacter : MonoBehaviour
     // Protected
     protected SpriteRenderer _spriteRenderer;
     protected bool _isActionDone;
+    protected Material _material;
     protected WaitForSeconds _waitPerAction;
 
     private CharacterUI _characterUI;
     private CombatAnimator _combatAnimator;
     // private Vector2 _infoTextPosition;
     private bool _inDefense;
+    private float _varShader;
+    private float _matGlowSpeed = 2.5f;
 
     // private InfoTextEvent infoTextEvent;
     private ShakeEvent _shakeEvent;
@@ -64,10 +68,14 @@ public class CombatCharacter : MonoBehaviour
     private float _startPositionX;
     public float StartPositionX { get { return _startPositionX; } }
 
+    public bool CanHighlight { get { return _canHighlight; } set { _canHighlight = value; } }
+    protected bool _canHighlight;
+
     public virtual void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _combatAnimator = GetComponent<CombatAnimator>();
+        _material = _spriteRenderer.material;
 
         // infoTextEvent = new InfoTextEvent();
         _shakeEvent = new ShakeEvent();
@@ -98,6 +106,22 @@ public class CombatCharacter : MonoBehaviour
         _characterUI = Instantiate(GameData.Instance.combatConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
         _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.startFillDuration);
     }
+
+    // public void OnPointerEnter(PointerEventData eventData)
+    // {
+    //     if (_canHighlight && !_isMyTurn)
+    //     {
+    //         MaterialShow(true);
+    //     }
+    // }
+
+    // public void OnPointerExit(PointerEventData eventData)
+    // {
+    //     if (_canHighlight && !_isMyTurn)
+    //     {
+    //         MaterialShow(false);
+    //     }
+    // }
 
     #region Actions
 
@@ -153,6 +177,8 @@ public class CombatCharacter : MonoBehaviour
         }
         else
         {
+            MaterialDamage();
+
             _totalDefense = 0;
 
             AnimationAction(ANIM_STATE.Hit);
@@ -170,6 +196,8 @@ public class CombatCharacter : MonoBehaviour
 
     private void ActionHeal()
     {
+        MaterialHeal();
+
         AnimationAction(ANIM_STATE.ItemHeal);
 
         _healthActual += GetItemHeal();
@@ -280,6 +308,52 @@ public class CombatCharacter : MonoBehaviour
     {
         return _totalValue = Random.Range(_itemHeal.valueMin, _itemHeal.valueMax);
     }
+
+    #region Shader
+
+    protected void MaterialShow(bool show)
+    {
+        _material.SetFloat("_IsDamaged", 0);
+        _material.SetFloat("_IsHealing", 0);
+        _material.SetFloat("_Glow", show ? 1 : 0);
+    }
+
+    protected void MaterialDamage()
+    {
+        _material.SetFloat("_IsDamaged", 1);
+        _material.SetFloat("_IsHealing", 0);
+        StartCoroutine(AnimateGlow());
+    }
+
+    protected void MaterialHeal()
+    {
+        _material.SetFloat("_IsDamaged", 0);
+        _material.SetFloat("_IsHealing", 1);
+        StartCoroutine(AnimateGlow());
+    }
+
+    private IEnumerator AnimateGlow()
+    {
+        _varShader = 0;
+
+        while (_varShader < 1)
+        {
+            _varShader += _matGlowSpeed * Time.deltaTime;
+            _material.SetFloat("_Glow", _varShader);
+            yield return null;
+        }
+
+        while (_varShader > 0)
+        {
+            _varShader -= _matGlowSpeed * Time.deltaTime;
+            _material.SetFloat("_Glow", _varShader);
+            yield return null;
+        }
+
+        yield return null;
+    }
+
+    #endregion
 
     #region Turn System
 

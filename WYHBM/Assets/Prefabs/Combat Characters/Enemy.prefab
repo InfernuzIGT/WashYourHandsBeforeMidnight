@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3db4e58d88bd26646bb0f360b2df5a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 0}
-  characterUI: {fileID: 7797653766465857080}
+  _name: 
+  _equipment: []
+  _previewSprite: {fileID: 0}
+  _turnSprite: {fileID: 0}
+  _statsHealthMax: 100
+  _statsBaseDamage: 100
+  _statsBaseDefense: 5
+  _statsReaction: 1
 --- !u!1001 &37106140200944691
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31,16 +37,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 18
       objectReference: {fileID: 0}
-    - target: {fileID: 685728309549871894, guid: 9856331c2c3424f47a1133e3159424ee,
-        type: 3}
-      propertyPath: textureIdle
-      value: 
-      objectReference: {fileID: 2800000, guid: 7dd7d285169604949ab52172e69bb260, type: 3}
-    - target: {fileID: 685728309549871894, guid: 9856331c2c3424f47a1133e3159424ee,
-        type: 3}
-      propertyPath: textureAttack
-      value: 
-      objectReference: {fileID: 2800000, guid: f7e68ba410accea4ba611040b8a0043d, type: 3}
     - target: {fileID: 7882800319852633503, guid: 9856331c2c3424f47a1133e3159424ee,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -102,11 +98,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1866467886445710819, guid: 7dd7d285169604949ab52172e69bb260,
         type: 3}
+    - target: {fileID: 7882800319852633502, guid: 9856331c2c3424f47a1133e3159424ee,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e03f605128fdef4896d6035ba0bf19c, type: 2}
     - target: {fileID: 7882800319852633473, guid: 9856331c2c3424f47a1133e3159424ee,
         type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 685728309549871894, guid: 9856331c2c3424f47a1133e3159424ee,
+        type: 3}
+      propertyPath: textureIdle
+      value: 
+      objectReference: {fileID: 2800000, guid: 7dd7d285169604949ab52172e69bb260, type: 3}
+    - target: {fileID: 685728309549871894, guid: 9856331c2c3424f47a1133e3159424ee,
+        type: 3}
+      propertyPath: textureAttack
+      value: 
+      objectReference: {fileID: 2800000, guid: f7e68ba410accea4ba611040b8a0043d, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9856331c2c3424f47a1133e3159424ee, type: 3}
 --- !u!1 &7919165389212162483 stripped
@@ -115,15 +126,3 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 37106140200944691}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7797653766465857080 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7833174960599654923, guid: 9856331c2c3424f47a1133e3159424ee,
-    type: 3}
-  m_PrefabInstance: {fileID: 37106140200944691}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a359950562d6c1342b81615cff2f8973, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
