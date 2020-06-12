@@ -108,8 +108,11 @@ public class Interaction : MonoBehaviour
     protected void PlayCutscene()
     {
         if (cutscene == null)return;
+        if (_cutsceneEvent.isTriggered == true)return;
 
         _cutsceneEvent.cutscene = cutscene;
+
+        _cutsceneEvent.isTriggered = true;
 
         EventController.TriggerEvent(_cutsceneEvent);
     }

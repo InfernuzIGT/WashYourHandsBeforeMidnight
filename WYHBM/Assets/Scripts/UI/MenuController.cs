@@ -26,7 +26,7 @@ public class MenuController : MonoBehaviour
     public Slider sliderSound;
     public Slider sliderMusic;
     [Space]
-    //TODO Mati: Variables de FMOD
+    
     public StudioEventEmitter _buttonSounds;
     public StudioEventEmitter _menuMusic;
 
@@ -205,12 +205,14 @@ public class MenuController : MonoBehaviour
 
     public void VolumeSound(float vol)
     {
-        // TODO Mati: VOL es el valor del slider SOUND 
+        RuntimeManager.StudioSystem.setParameterByName("SoundsSlider", vol);
     }
+
+
 
     public void VolumeMusic(float vol)
     {
-        // TODO Mati: VOL es el valor del slider MUSIC 
+        RuntimeManager.StudioSystem.setParameterByName("MusicSlider", vol);
     }
 
     //     public void OnYesButton()

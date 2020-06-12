@@ -55,12 +55,28 @@ namespace GameMode.Combat
             _canvas.enabled = enabled;
         }
 
-        public void ShowPlayerPanel(bool isPlayer)
-        {
-            panelPlayer.SetActive(isPlayer);
-            panelEnemy.SetActive(!isPlayer);
+        // public void EnableActions(bool enabled)
+        // {
+        //     for (int i = 0; i < actions.Count; i++)
+        //     {
+        //         actions[i].SetButtonsEnable(enabled);
+        //     }
+        // }
 
-            messageTxt.text = isPlayer ? "Select Action" : "Enemy Turn";
+        public void ShowPlayerPanel(bool show, bool isPlayer)
+        {
+            if (show)
+            {
+                panelPlayer.SetActive(isPlayer);
+                panelEnemy.SetActive(!isPlayer);
+                messageTxt.text = isPlayer ? "Select Action" : "Enemy Turn";
+            }
+            else
+            {
+                panelPlayer.SetActive(false);
+                panelEnemy.SetActive(false);
+                messageTxt.text = "";
+            }
         }
 
         public void CreateTurn(List<CombatCharacter> characters)

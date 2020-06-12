@@ -23,7 +23,7 @@ public class InteractionNPC : Interaction
     {
         base.Execute();
 
-        if (!canInteract)return;
+        if (!canInteract) return;
 
         if (enable)
         {
@@ -44,7 +44,8 @@ public class InteractionNPC : Interaction
                 _interactionDialogEvent.dialog = npc.dialog;
                 _interactionDialogEvent.enable = enable;
                 _interactionDialogEvent.questData = questData;
-                
+                PlayCutscene();
+
                 EventController.TriggerEvent(_interactionDialogEvent);
                 break;
 

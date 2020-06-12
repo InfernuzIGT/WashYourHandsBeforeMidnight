@@ -8,4 +8,6 @@ public class QuestSO : ScriptableObject
     public string description;
     [Space]
     public string[] objetives;
+
+    public GameObject[] objectsToDestroy;
 }

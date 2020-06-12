@@ -53,8 +53,10 @@ public class Player : CombatCharacter
     {
         base.WaitingForAction();
 
+        MaterialShow(true);
+
         GameManager.Instance.combatUI.ShowActions(_combatIndex);
-        GameManager.Instance.combatUI.ShowPlayerPanel(true);
+        GameManager.Instance.combatUI.ShowPlayerPanel(true, true);
 
         _isActionDone = false;
 
@@ -64,12 +66,18 @@ public class Player : CombatCharacter
         }
 
         Shake();
+        
+        GameManager.Instance.combatUI.ShowPlayerPanel(false, true);
 
         // GameManager.Instance.ReorderTurn();
 
         yield return _waitPerAction;
 
+        MaterialShow(false);
+
         AnimationAction(ANIM_STATE.Idle);
+
+        // GameManager.Instance.combatUI.EnableActions(true);
     }
 
     #endregion

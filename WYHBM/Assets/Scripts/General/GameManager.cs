@@ -209,7 +209,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
-    
 
     #region Inventory
 
@@ -247,14 +246,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0)return;
+            if (_characterIndex <= 0) return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1)return;
+            if (_characterIndex >= combatPlayers.Count - 1) return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
@@ -272,6 +271,11 @@ public class GameManager : MonoSingleton<GameManager>
             dictionaryQuest.Add(data.GetInstanceID(), data);
 
             dictionaryProgress.Add(data.GetInstanceID(), 0);
+        }
+
+        for (int i = 0; i < data.objectsToDestroy.Length; i++)
+        {
+            Destroy(data.objectsToDestroy[i].gameObject);
         }
 
         // if (!listQuest.ContainsKey(data.GetInstanceID()))
@@ -292,7 +296,6 @@ public class GameManager : MonoSingleton<GameManager>
             return;
         }
 
-        
         dictionaryProgress[quest.GetInstanceID()]++;
 
         worldUI.UpdateQuest(dictionaryQuest[quest.GetInstanceID()], dictionaryProgress[quest.GetInstanceID()]);
@@ -351,11 +354,12 @@ public class GameManager : MonoSingleton<GameManager>
             EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
         }
     }
-    
+
     private void OnCutscene(CutsceneEvent evt)
     {
+        Debug.Log ($"<b> {evt.cutscene.name} </b>");
         playableDirector.playableAsset = evt.cutscene;
-        
+
         playableDirector.Play();
     }
 
@@ -367,7 +371,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         for (int i = 0; i < GameData.Data.items.Count; i++)
         {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem)continue;
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
             Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
             newSlot.AddItem(GameData.Data.items[i]);

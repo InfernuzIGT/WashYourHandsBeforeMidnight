@@ -62,7 +62,11 @@ namespace Events
 
     public class CutsceneEvent : GameEvent
     {
+        public bool isTriggered;
         public PlayableAsset cutscene;
+        
+        public int index;
+
     }
 
     public class MainMenuEvent : GameEvent
