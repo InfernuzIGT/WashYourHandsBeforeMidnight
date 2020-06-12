@@ -7,11 +7,12 @@ public class ActionButton : MonoBehaviour
     public Image itemImg;
     
     private ItemSO _item;
+    private Button _actionButton;
 
     private void Start()
     {
-        Button actionButton = GetComponent<Button>();
-        actionButton.onClick.AddListener(() => DoAction());
+        _actionButton = GetComponent<Button>();
+        _actionButton.onClick.AddListener(() => DoAction());
     }
     
     public void Init(ItemSO item)
@@ -24,5 +25,10 @@ public class ActionButton : MonoBehaviour
     {
         GameManager.Instance.combatManager.DoAction(_item);
     }
+    
+    // public void SetButtonEnable(bool isEnable)
+    // {
+    //     _actionButton.enabled = isEnable;
+    // }
 
 }

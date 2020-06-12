@@ -68,6 +68,8 @@ public class CombatManager : MonoBehaviour
                     _currentCharacter.DoAction();
 
                     canSelect = false;
+                    
+                    // GameManager.Instance.combatUI.EnableActions(false);
                 }
             }
         }
@@ -120,6 +122,8 @@ public class CombatManager : MonoBehaviour
 
     public void DoAction(ItemSO item)
     {
+        // if (canSelect)return;
+
         if (item == null)
         {
             animState = ANIM_STATE.AttackMelee;
@@ -127,6 +131,7 @@ public class CombatManager : MonoBehaviour
             GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
             currentItem = null;
             canSelect = true;
+            SetHighlight(true, false);
             return;
         }
 
@@ -136,41 +141,49 @@ public class CombatManager : MonoBehaviour
                 animState = ANIM_STATE.AttackMelee;
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                SetHighlight(true, false);
                 break;
 
             case ITEM_TYPE.WeaponOneHand:
                 animState = ANIM_STATE.AttackOneHand;
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                SetHighlight(true, false);
                 break;
 
             case ITEM_TYPE.WeaponTwoHands:
                 animState = ANIM_STATE.AttackTwoHands;
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                SetHighlight(true, false);
                 break;
 
             case ITEM_TYPE.ItemHeal:
                 animState = ANIM_STATE.ItemHeal;
                 currentLayer = GameData.Instance.combatConfig.layerPlayer;
                 GameManager.Instance.combatUI.messageTxt.text = "Select player";
+                SetHighlight(true, true);
                 break;
 
             case ITEM_TYPE.ItemGrenade:
                 animState = ANIM_STATE.ItemGrenade;
                 currentLayer = GameData.Instance.combatConfig.layerEnemy;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
+                SetHighlight(true, false);
                 break;
 
             case ITEM_TYPE.ItemDefense:
                 animState = ANIM_STATE.ItemDefense;
                 currentLayer = GameData.Instance.combatConfig.layerPlayer;
                 GameManager.Instance.combatUI.messageTxt.text = "Select player";
+                SetHighlight(true, true);
                 break;
 
             default:
                 currentLayer = GameData.Instance.combatConfig.layerNone;
                 GameManager.Instance.combatUI.messageTxt.text = "";
+                SetHighlight(false, true);
+                SetHighlight(false, false);
                 break;
         }
 
@@ -184,6 +197,8 @@ public class CombatManager : MonoBehaviour
         _listWaitingCharacters.Remove(character);
 
         listPlayers.Remove(character);
+        
+        GameManager.Instance.ReorderTurn();
 
         if (listPlayers.Count == 0)
         {
@@ -197,6 +212,8 @@ public class CombatManager : MonoBehaviour
         _listWaitingCharacters.Remove(character);
 
         listEnemies.Remove(character);
+        
+        GameManager.Instance.ReorderTurn();
 
         if (listEnemies.Count == 0)
         {
@@ -232,6 +249,24 @@ public class CombatManager : MonoBehaviour
         listEnemies.Clear();
         _listAllCharacters.Clear();
         _listWaitingCharacters.Clear();
+    }
+
+    public void SetHighlight(bool canHighlight, bool selectPlayers)
+    {
+        if (selectPlayers)
+        {
+            for (int i = 0; i < listPlayers.Count; i++)
+            {
+                listPlayers[i].CanHighlight = canHighlight;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < listEnemies.Count; i++)
+            {
+                listEnemies[i].CanHighlight = canHighlight;
+            }
+        }
     }
 
     #region Turn System
@@ -329,7 +364,7 @@ public class CombatManager : MonoBehaviour
 
         _currentCharacter = _listWaitingCharacters[0];
         _currentCharacter.IsMyTurn = true;
-        
+
         GameManager.Instance.ReorderTurn();
     }
 
