@@ -47,7 +47,7 @@ namespace GameMode.World
         public Slider sliderSound;
         public Slider sliderMusic;
         [Space]
-        //TODO Mati: Variables de FMOD
+        
 
         // Inventory
         private int _lastSlot = 0;
@@ -143,12 +143,12 @@ namespace GameMode.World
 
         public void VolumeSound(float vol)
         {
-            // TODO Mati: VOL es el valor del slider SOUND 
+            RuntimeManager.StudioSystem.setParameterByName("SoundsSlider", vol);
         }
         
         public void VolumeMusic(float vol)
         {
-            // TODO Mati: VOL es el valor del slider MUSIC 
+            RuntimeManager.StudioSystem.setParameterByName("MusicSlider", vol);
         }
 
         public Transform GetSlot()

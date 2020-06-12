@@ -1032,34 +1032,58 @@ retry:
         public static List<StudioListener> Listeners = new List<StudioListener>();
         private static int numListeners = 0;
 
-        public static void SetListenerLocation(GameObject gameObject, Rigidbody rigidBody = null)
+        public static void SetListenerLocation(GameObject gameObject, Rigidbody rigidBody = null, GameObject attenuationObject = null)
         {
-            Instance.studioSystem.setListenerAttributes(0, RuntimeUtils.To3DAttributes(gameObject, rigidBody));
+            SetListenerLocation3D(0, gameObject.transform, rigidBody, attenuationObject);
         }
         
-        public static void SetListenerLocation(GameObject gameObject, Rigidbody2D rigidBody2D)
+        public static void SetListenerLocation(GameObject gameObject, Rigidbody2D rigidBody2D, GameObject attenuationObject = null)
         {
-            Instance.studioSystem.setListenerAttributes(0, RuntimeUtils.To3DAttributes(gameObject, rigidBody2D));
+            SetListenerLocation2D(0, gameObject.transform, rigidBody2D, attenuationObject);
         }
 
-        public static void SetListenerLocation(Transform transform)
+        public static void SetListenerLocation(Transform transform, GameObject attenuationObject = null)
         {
-            Instance.studioSystem.setListenerAttributes(0, transform.To3DAttributes());
+            SetListenerLocation3D(0, transform, null, attenuationObject);
         }
 
-        public static void SetListenerLocation(int listenerIndex, GameObject gameObject, Rigidbody rigidBody = null)
+        public static void SetListenerLocation(int listenerIndex, GameObject gameObject, Rigidbody rigidBody = null, GameObject attenuationObject = null)
         {
-            Instance.studioSystem.setListenerAttributes(listenerIndex, RuntimeUtils.To3DAttributes(gameObject, rigidBody));
+            SetListenerLocation3D(listenerIndex, gameObject.transform, rigidBody, attenuationObject);
         }
         
-        public static void SetListenerLocation(int listenerIndex, GameObject gameObject, Rigidbody2D rigidBody2D)
+        public static void SetListenerLocation(int listenerIndex, GameObject gameObject, Rigidbody2D rigidBody2D, GameObject attenuationObject = null)
         {
-            Instance.studioSystem.setListenerAttributes(listenerIndex, RuntimeUtils.To3DAttributes(gameObject, rigidBody2D));
+            SetListenerLocation2D(listenerIndex, gameObject.transform, rigidBody2D, attenuationObject);
         }
 
-        public static void SetListenerLocation(int listenerIndex, Transform transform)
+        public static void SetListenerLocation(int listenerIndex, Transform transform, GameObject attenuationObject = null)
         {
-            Instance.studioSystem.setListenerAttributes(listenerIndex, transform.To3DAttributes());
+            SetListenerLocation3D(0, transform, null, attenuationObject);
+        }
+
+        private static void SetListenerLocation3D(int listenerIndex, Transform transform, Rigidbody rigidBody = null, GameObject attenuationObject = null)
+        {
+            if (attenuationObject)
+            {
+                Instance.studioSystem.setListenerAttributes(0, RuntimeUtils.To3DAttributes(transform, rigidBody), RuntimeUtils.ToFMODVector(attenuationObject.transform.position));
+            }
+            else
+            {
+                Instance.studioSystem.setListenerAttributes(0, RuntimeUtils.To3DAttributes(transform, rigidBody));
+            }
+        }
+
+        private static void SetListenerLocation2D(int listenerIndex, Transform transform, Rigidbody2D rigidBody = null, GameObject attenuationObject = null)
+        {
+            if (attenuationObject)
+            {
+                Instance.studioSystem.setListenerAttributes(0, RuntimeUtils.To3DAttributes(transform, rigidBody), RuntimeUtils.ToFMODVector(attenuationObject.transform.position));
+            }
+            else
+            {
+                Instance.studioSystem.setListenerAttributes(0, RuntimeUtils.To3DAttributes(transform, rigidBody));
+            }
         }
 
         public static FMOD.Studio.Bus GetBus(string path)

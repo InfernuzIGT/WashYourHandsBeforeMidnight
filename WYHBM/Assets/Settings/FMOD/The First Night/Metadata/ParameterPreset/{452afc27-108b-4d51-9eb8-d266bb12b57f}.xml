@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{452afc27-108b-4d51-9eb8-d266bb12b57f}">
+		<property name="name">
+			<value>SoundsSlider</value>
+		</property>
+		<relationship name="folder">
+			<destination>{6ba5e7f7-6d5c-49b4-8a4f-4d9e15c99e3e}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{e2c9a39c-3f82-4323-9c3b-20a1bf346946}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{e2c9a39c-3f82-4323-9c3b-20a1bf346946}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>
