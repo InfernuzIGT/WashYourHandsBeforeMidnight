@@ -28,7 +28,7 @@ public class GameManager : MonoSingleton<GameManager>
     public GlobalController globalController;
     public CombatManager combatManager;
     public CinemachineManager cinemachineManager;
-    public PlayableDirector[] playableDirector;
+    public PlayableDirector playableDirector;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Vector3 dropZone;
@@ -357,14 +357,10 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnCutscene(CutsceneEvent evt)
     {
-        for (int i = 0; i < playableDirector.Length; i++)
-        {
-            playableDirector[i].playableAsset = evt.cutscene;
+        Debug.Log ($"<b> {evt.cutscene.name} </b>");
+        playableDirector.playableAsset = evt.cutscene;
 
-            playableDirector[i].Play();
-
-            return;
-        }
+        playableDirector.Play();
     }
 
     #endregion
