@@ -369,16 +369,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void LoadGame()
     {
-        for (int i = 0; i < GameData.Data.items.Count; i++)
-        {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
+        // for (int i = 0; i < GameData.Data.items.Count; i++)
+        // {
+        //     if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
-            Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
-            newSlot.AddItem(GameData.Data.items[i]);
-            listSlots.Add(newSlot);
+        //     Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
+        //     newSlot.AddItem(GameData.Data.items[i]);
+        //     listSlots.Add(newSlot);
 
-            GameData.Data.items.Remove(GameData.Instance.persistenceItem);
-        }
+        //     GameData.Data.items.Remove(GameData.Instance.persistenceItem);
+        // }
 
         // foreach (var key in GameData.Data.listQuest.Keys)
         // {
@@ -400,10 +400,10 @@ public class GameManager : MonoSingleton<GameManager>
     {
         ClearOldData();
 
-        for (int i = 0; i < _items.Count; i++)
-        {
-            GameData.Data.items.Add(_items[i]);
-        }
+        // for (int i = 0; i < _items.Count; i++)
+        // {
+        //     GameData.Data.items.Add(_items[i]);
+        // }
 
         // foreach (var key in listQuest.Keys)
         // {
@@ -420,15 +420,15 @@ public class GameManager : MonoSingleton<GameManager>
         //     GameData.Data.newSpawnPoint.transform.position.y,
         //     GameData.Data.newSpawnPoint.transform.position.z);
 
-        GameData.SaveData();
+        // GameData.SaveData();
 
     }
 
     private void ClearOldData()
     {
-        GameData.Data.items.Clear();
-        GameData.Data.listQuest.Clear();
-        GameData.Data.listProgress.Clear();
+        // GameData.Data.items.Clear();
+        // GameData.Data.listQuest.Clear();
+        // GameData.Data.listProgress.Clear();
         // GameData.Data.position.Translate(59.1f, 0f, -49.4f);
     }
 

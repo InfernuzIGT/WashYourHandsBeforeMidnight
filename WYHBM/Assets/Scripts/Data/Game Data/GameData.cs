@@ -124,11 +124,11 @@ public class SessionData
 
 	public SessionData()
 	{
-		items.Add(GameData.Instance.persistenceItem);
-		listQuest.Add(GameData.Instance.persistenceQuest);
-		listProgress.Add(0);
+		// items.Add(GameData.Instance.persistenceItem);
+		// listQuest.Add(GameData.Instance.persistenceQuest);
+		// listProgress.Add(0);
 
-		isDataLoaded = true;
+		// isDataLoaded = true;
 
 		// guardar variable de data cargada 
 		// crea actualiza el spawn point a la posicion guardada, moviendo el spawnpoint a esa pos
