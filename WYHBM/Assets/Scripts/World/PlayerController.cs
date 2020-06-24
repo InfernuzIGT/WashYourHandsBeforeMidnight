@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public GameObject dropZone;
 
     // Movement 
+    private Vector2 _inputMovement;
     private float _speedWalk = 7.5f;
     private float _speedRun = 15f;
     private bool _canMove = true;
@@ -57,11 +58,10 @@ public class PlayerController : MonoBehaviour
     // Quest
     private bool _isOpenDiary;
 
-    // Input
-    private string _inputHorizontal = "Horizontal";
-    private string _inputVertical = "Vertical";
-
     // Properties
+    private InputActions _inputActions;
+    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
+
     // private bool _infiniteStamina;
     // public bool InfiniteStamina { set { _infiniteStamina = value; } }
 
@@ -72,8 +72,19 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        CreateInput();
+
         _characterController = GetComponent<CharacterController>();
         _animatorController = GetComponent<WorldAnimator>();
+    }
+
+    private void CreateInput()
+    {
+        InputActions = new InputActions();
+
+        InputActions.ActionPlayer.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        InputActions.ActionPlayer.Jump.performed += ctx => Jump();
+        InputActions.ActionPlayer.Interaction.performed += ctx => Interaction();
     }
 
     private void Start()
@@ -87,34 +98,28 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        InputActions.Enable();
+
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
     }
 
     private void OnDisable()
     {
+        InputActions.Disable();
+
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
     }
 
     private void Update()
     {
-        CloseGame();
-
         Movement();
         LadderMovement();
         // Stamina();
-        Interaction();
+        // Interaction();
 
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
-    }
-
-    private void CloseGame()
-    {
-        // if (Input.GetKeyDown(KeyCode.Escape))
-        // {
-        //     Application.Quit();
-        // }
     }
 
     private void Movement()
@@ -130,8 +135,8 @@ public class PlayerController : MonoBehaviour
         if (_inLadder) { return; }
 
         // Get input
-        _moveHorizontal = Input.GetAxisRaw(_inputHorizontal);
-        _moveVertical = Input.GetAxisRaw(_inputVertical);
+        _moveHorizontal = _inputMovement.x;
+        _moveVertical = _inputMovement.y;
 
         // Speed movement
         // if (Input.GetKey(KeyCode.LeftShift) && _stamina > 1 ||
@@ -147,7 +152,10 @@ public class PlayerController : MonoBehaviour
         //     _speedHorizontal = _speedWalk;
         //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
         // }
-        
+
+        // Jump
+        if (_characterController.isGrounded)_speedVertical = -1;
+
         _isRunning = !_characterController.isGrounded ? false : true;
         _speedHorizontal = _speedRun;
         footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
@@ -156,17 +164,6 @@ public class PlayerController : MonoBehaviour
         _movement.x = _moveHorizontal * _speedHorizontal;
         _movement.z = _moveVertical * _speedHorizontal;
         _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
-
-        // Jump
-        if (_characterController.isGrounded)
-        {
-            _speedVertical = -1;
-
-            if (Input.GetKey(KeyCode.Space) && _canJump)
-            {
-                _speedVertical = _jump;
-            }
-        }
 
         // Move
         _speedVertical -= _gravity * Time.deltaTime;
@@ -177,13 +174,29 @@ public class PlayerController : MonoBehaviour
         _animatorController.Movement(_movement, _isRunning, true);
     }
 
+    private void Jump()
+    {
+        // Stop animation
+        if (!_canMove)
+        {
+            _isRunning = false;
+            _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
+            return;
+        }
+
+        if (_inLadder) { return; }
+
+        // Jump
+        if (_canJump)_speedVertical = _jump;
+    }
+
     private void LadderMovement()
     {
         if (!_inLadder) { return; }
 
         DetectBot();
 
-        _moveVertical = Input.GetAxisRaw(_inputVertical);
+        _moveVertical = _inputMovement.y;
 
         _movement.x = 0;
         _movement.z = 0;
@@ -239,12 +252,9 @@ public class PlayerController : MonoBehaviour
 
     private void Interaction()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            _interactionEvent.lastPlayerPosition = transform.position;
-            _interactionEvent.isRunning = _isRunning;
-            EventController.TriggerEvent(_interactionEvent);
-        }
+        _interactionEvent.lastPlayerPosition = transform.position;
+        _interactionEvent.isRunning = _isRunning;
+        EventController.TriggerEvent(_interactionEvent);
     }
 
     public void SwitchMovement()
