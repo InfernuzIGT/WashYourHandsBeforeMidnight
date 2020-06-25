@@ -31,8 +31,23 @@ public class CombatManager : MonoBehaviour
     private ExitCombatEvent _interactionCombatEvent;
 
     // Properties
+    private InputActions _inputActions;
+    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
+
     private List<CombatCharacter> _listWaitingCharacters;
     public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
+
+    public void Awake()
+    {
+        CreateInput();
+    }
+
+    private void CreateInput()
+    {
+        InputActions = new InputActions();
+
+        InputActions.ActionPlayer.Click.performed += ctx => SelectEnemy();
+    }
 
     private void Start()
     {
@@ -47,14 +62,24 @@ public class CombatManager : MonoBehaviour
         _interactionCombatEvent = new ExitCombatEvent();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        SelectEnemy();
+        InputActions.Enable();
     }
+
+    private void OnDisable()
+    {
+        InputActions.Disable();
+    }
+
+    // private void Update()
+    // {
+    //     SelectEnemy();
+    // }
 
     private void SelectEnemy()
     {
-        if (Input.GetMouseButtonDown(0) && canSelect)
+        if (canSelect)
         {
             _ray = GameManager.Instance.GetRayMouse();
 
@@ -68,7 +93,7 @@ public class CombatManager : MonoBehaviour
                     _currentCharacter.DoAction();
 
                     canSelect = false;
-                    
+
                     // GameManager.Instance.combatUI.EnableActions(false);
                 }
             }
@@ -197,7 +222,7 @@ public class CombatManager : MonoBehaviour
         _listWaitingCharacters.Remove(character);
 
         listPlayers.Remove(character);
-        
+
         GameManager.Instance.ReorderTurn();
 
         if (listPlayers.Count == 0)
@@ -212,7 +237,7 @@ public class CombatManager : MonoBehaviour
         _listWaitingCharacters.Remove(character);
 
         listEnemies.Remove(character);
-        
+
         GameManager.Instance.ReorderTurn();
 
         if (listEnemies.Count == 0)
