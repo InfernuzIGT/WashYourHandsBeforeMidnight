@@ -58,6 +58,9 @@ public class GameManager : MonoSingleton<GameManager>
     private FadeEvent _fadeEvent;
 
     // Properties
+    private InputActions _inputActions;
+    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
+
     public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
     public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
 
@@ -69,6 +72,20 @@ public class GameManager : MonoSingleton<GameManager>
 
     private QuestData _currentQuestData;
     public QuestData CurrentQuestData { get { return _currentQuestData; } }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        CreateInput();
+    }
+
+    private void CreateInput()
+    {
+        InputActions = new InputActions();
+
+        InputActions.ActionPlayer.Pause.performed += ctx => Pause();
+    }
 
     private void Start()
     {
@@ -95,6 +112,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnEnable()
     {
+        InputActions.Enable();
+
         EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
@@ -104,6 +123,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnDisable()
     {
+        InputActions.Disable();
+
         EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
@@ -111,41 +132,41 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
 
-    private void Update()
-    {
-        if (!inCombat)
-        {
-            Pause();
-            OpenInventory();
-            OpenQuest();
-        }
-    }
+    // private void Update()
+    // {
+    //     if (!inCombat)
+    //     {
+    //         Pause();
+    //         OpenInventory();
+    //         OpenQuest();
+    //     }
+    // }
 
     private void Pause()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!inCombat)
         {
             SetPause();
         }
     }
 
-    private void OpenInventory()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            worldUI.MenuPause(BUTTON_TYPE.Inventory);
-            SetPause();
-        }
-    }
+    // private void OpenInventory()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.I))
+    //     {
+    //         worldUI.MenuPause(BUTTON_TYPE.Inventory);
+    //         SetPause();
+    //     }
+    // }
 
-    private void OpenQuest()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            worldUI.MenuPause(BUTTON_TYPE.Diary);
-            SetPause();
-        }
-    }
+    // private void OpenQuest()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.Tab))
+    //     {
+    //         worldUI.MenuPause(BUTTON_TYPE.Diary);
+    //         SetPause();
+    //     }
+    // }
 
     public void SetPause()
     {
@@ -246,14 +267,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0) return;
+            if (_characterIndex <= 0)return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1) return;
+            if (_characterIndex >= combatPlayers.Count - 1)return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
@@ -357,7 +378,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnCutscene(CutsceneEvent evt)
     {
-        Debug.Log ($"<b> {evt.cutscene.name} </b>");
+        Debug.Log($"<b> {evt.cutscene.name} </b>");
         playableDirector.playableAsset = evt.cutscene;
 
         playableDirector.Play();
@@ -369,16 +390,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void LoadGame()
     {
-        for (int i = 0; i < GameData.Data.items.Count; i++)
-        {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
+        // for (int i = 0; i < GameData.Data.items.Count; i++)
+        // {
+        //     if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
-            Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
-            newSlot.AddItem(GameData.Data.items[i]);
-            listSlots.Add(newSlot);
+        //     Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
+        //     newSlot.AddItem(GameData.Data.items[i]);
+        //     listSlots.Add(newSlot);
 
-            GameData.Data.items.Remove(GameData.Instance.persistenceItem);
-        }
+        //     GameData.Data.items.Remove(GameData.Instance.persistenceItem);
+        // }
 
         // foreach (var key in GameData.Data.listQuest.Keys)
         // {
@@ -400,10 +421,10 @@ public class GameManager : MonoSingleton<GameManager>
     {
         ClearOldData();
 
-        for (int i = 0; i < _items.Count; i++)
-        {
-            GameData.Data.items.Add(_items[i]);
-        }
+        // for (int i = 0; i < _items.Count; i++)
+        // {
+        //     GameData.Data.items.Add(_items[i]);
+        // }
 
         // foreach (var key in listQuest.Keys)
         // {
@@ -420,15 +441,15 @@ public class GameManager : MonoSingleton<GameManager>
         //     GameData.Data.newSpawnPoint.transform.position.y,
         //     GameData.Data.newSpawnPoint.transform.position.z);
 
-        GameData.SaveData();
+        // GameData.SaveData();
 
     }
 
     private void ClearOldData()
     {
-        GameData.Data.items.Clear();
-        GameData.Data.listQuest.Clear();
-        GameData.Data.listProgress.Clear();
+        // GameData.Data.items.Clear();
+        // GameData.Data.listQuest.Clear();
+        // GameData.Data.listProgress.Clear();
         // GameData.Data.position.Translate(59.1f, 0f, -49.4f);
     }
 
