@@ -63,7 +63,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1fa19f8f-6aed-4dd1-930f-c79783b67118"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/stick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -129,7 +129,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c2f3478d-6bad-4fc9-97e1-07e77c6fff21"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/button3"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -151,7 +151,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8fd8880c-3dea-4bfa-bab7-d470bd419e5b"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/button4"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -173,7 +173,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8cce47fb-c4e6-4bbb-ab22-6f1be92fe3fd"",
-                    ""path"": ""<Gamepad>/start"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/button10"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
