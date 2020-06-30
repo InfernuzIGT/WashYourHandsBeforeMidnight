@@ -182,7 +182,7 @@ public class GameManager : MonoSingleton<GameManager>
             worldUI.EnableCanvas(true);
             combatUI.EnableCanvas(false);
 
-            globalController.ChangeCamera(null);
+            globalController.ChangeToCombatCamera(null);
             combatManager.CloseCombatArea();
             combatUI.actions.Clear();
             combatUI.ClearTurn();
@@ -194,7 +194,7 @@ public class GameManager : MonoSingleton<GameManager>
             worldUI.EnableCanvas(false);
             combatUI.EnableCanvas(true);
 
-            globalController.ChangeCamera(_currentCombatArea.virtualCamera);
+            globalController.ChangeToCombatCamera(_currentCombatArea.virtualCamera);
 
             inCombat = true;
         }

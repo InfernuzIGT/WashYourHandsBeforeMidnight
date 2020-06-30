@@ -6,8 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public QuestSO quest; // TODO Mariano: Review
-
     [Header("FMOD")]
     public StudioEventEmitter footstepSound;
     public StudioEventEmitter breathingSound;
@@ -23,16 +21,22 @@ public class PlayerController : MonoBehaviour
 
     // Movement 
     private Vector2 _inputMovement;
-    private float _speedWalk = 7.5f;
+    private Vector2 _inputMovementAux;
+    private Vector3 _movement;
     private float _speedRun = 15f;
     private bool _canMove = true;
-    private bool _canJump = false;
     private bool _isRunning;
-    private float _jump = 9.81f;
-    private float _gravity = 29.43f;
-    private Vector3 _movement;
     private float _speedHorizontal;
     private float _speedVertical;
+
+    // Walk
+    private float _speedWalk = 7.5f;
+    private bool _isWalking;
+
+    //Jump
+    private float _jump = 9.81f;
+    private float _gravity = 39.24f;
+    private bool _isJumping;
 
     // Ladder
     private float _speedLadder = 5f;
@@ -40,20 +44,8 @@ public class PlayerController : MonoBehaviour
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
 
-    // Stamina
-    // private float _stamina = 100;
-    // private float _staminaMax = 100;
-    // private float _staminaIncrease = 5f;
-    // private float _staminaDecrease = 15;
-    // private float _staminaRegenTimer = 0;
-    // private float _staminaTimeToRegen = 3;
-
-    private float _moveHorizontal;
-    private float _moveVertical;
-    private float _posX;
-    private float _posZ;
-
     private Vector3 _lastPosition;
+    private float _axisLimit = 0.7f;
 
     // Quest
     private bool _isOpenDiary;
@@ -61,9 +53,6 @@ public class PlayerController : MonoBehaviour
     // Properties
     private InputActions _inputActions;
     public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
-
-    // private bool _infiniteStamina;
-    // public bool InfiniteStamina { set { _infiniteStamina = value; } }
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -85,6 +74,8 @@ public class PlayerController : MonoBehaviour
         InputActions.ActionPlayer.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
         InputActions.ActionPlayer.Jump.performed += ctx => Jump();
         InputActions.ActionPlayer.Interaction.performed += ctx => Interaction();
+        InputActions.ActionPlayer.Walk.started += ctx => Walk(true);
+        InputActions.ActionPlayer.Walk.canceled += ctx => Walk(false);
     }
 
     private void Start()
@@ -116,10 +107,6 @@ public class PlayerController : MonoBehaviour
     {
         Movement();
         LadderMovement();
-        // Stamina();
-        // Interaction();
-
-        _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
     }
 
     private void Movement()
@@ -132,38 +119,40 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // Ladder
         if (_inLadder) { return; }
 
-        // Get input
-        _moveHorizontal = _inputMovement.x;
-        _moveVertical = _inputMovement.y;
-
-        // Speed movement
-        // if (Input.GetKey(KeyCode.LeftShift) && _stamina > 1 ||
-        //     Input.GetKey(KeyCode.RightShift) && _stamina > 1)
-        // {
-        //     _isRunning = _moveHorizontal == 0 && _moveVertical == 0 || !_characterController.isGrounded ? false : true;
-        //     _speedHorizontal = _speedRun;
-        //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
-        // }
-        // else
-        // {
-        //     _isRunning = false;
-        //     _speedHorizontal = _speedWalk;
-        //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
-        // }
+        // Run / Walk
+        if (CheckRun())
+        {
+            _isRunning = _inputMovement.x == 0 && _inputMovement.y == 0 || !_characterController.isGrounded ? false : true;
+            _speedHorizontal = _speedRun;
+            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+        }
+        else
+        {
+            _isRunning = false;
+            _speedHorizontal = _speedWalk;
+            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+        }
 
         // Jump
-        if (_characterController.isGrounded)_speedVertical = -1;
+        if (_characterController.isGrounded)
+        {
+            _speedVertical = -1;
 
-        _isRunning = !_characterController.isGrounded ? false : true;
-        _speedHorizontal = _speedRun;
-        footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+            if (_isJumping)
+            {
+                _speedVertical = _jump;
+                _isJumping = false;
+            }
 
-        // Add movement
-        _movement.x = _moveHorizontal * _speedHorizontal;
-        _movement.z = _moveVertical * _speedHorizontal;
-        _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
+            // Add movement
+            _inputMovementAux = _inputMovement.normalized;
+            _movement.x = (_inputMovement.x != 0 ? _inputMovementAux.x : 0) * _speedHorizontal;
+            _movement.z = (_inputMovement.y != 0 ? _inputMovementAux.y : 0) * _speedHorizontal;
+            _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
+        }
 
         // Move
         _speedVertical -= _gravity * Time.deltaTime;
@@ -172,22 +161,28 @@ public class PlayerController : MonoBehaviour
 
         // Animation       
         _animatorController.Movement(_movement, _isRunning, true);
+
+        //Sound
+        _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
+        footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+    }
+
+    private bool CheckRun()
+    {
+        return !_isWalking && Mathf.Abs(_inputMovement.x) > _axisLimit || !_isWalking && Mathf.Abs(_inputMovement.y) > _axisLimit;
+    }
+
+    private void Walk(bool isWalking)
+    {
+        _isWalking = isWalking;
     }
 
     private void Jump()
     {
-        // Stop animation
-        if (!_canMove)
+        if (_characterController.isGrounded)
         {
-            _isRunning = false;
-            _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
-            return;
+            _isJumping = true;
         }
-
-        if (_inLadder) { return; }
-
-        // Jump
-        if (_canJump)_speedVertical = _jump;
     }
 
     private void LadderMovement()
@@ -196,11 +191,9 @@ public class PlayerController : MonoBehaviour
 
         DetectBot();
 
-        _moveVertical = _inputMovement.y;
-
         _movement.x = 0;
         _movement.z = 0;
-        _movement.y = _moveVertical * _speedLadder;
+        _movement.y = _inputMovement.y * _speedLadder;
         _characterController.Move(_movement * Time.deltaTime);
 
         // TODO Mariano: Add Animation
@@ -221,34 +214,6 @@ public class PlayerController : MonoBehaviour
             EventController.TriggerEvent(_ladderEvent);
         }
     }
-
-    // private void Stamina()
-    // {
-    //     if (_isRunning && !_infiniteStamina || Input.GetKey(KeyCode.LeftShift) && _stamina < 1 && !_infiniteStamina)
-    //     {
-    //         _stamina = Mathf.Clamp(_stamina - (_staminaDecrease * Time.deltaTime), 0, _staminaMax);
-
-    //         _staminaRegenTimer = 0;
-    //     }
-    //     else if (_stamina < _staminaMax)
-    //     {
-    //         if (_staminaRegenTimer >= _staminaTimeToRegen)
-    //         {
-    //             _stamina = Mathf.Clamp(_stamina + (_staminaIncrease * Time.deltaTime), 0, _staminaMax);
-    //         }
-    //         else
-    //         {
-    //             _staminaRegenTimer += Time.deltaTime;
-    //         }
-    //     }
-
-    //     GameManager.Instance.worldUI.UpdateStamina(_stamina / _staminaMax);
-
-    //     if (_stamina == 0f && !breathingSound.IsPlaying())
-    //     {
-    //         breathingSound.Play();
-    //     }
-    // }
 
     private void Interaction()
     {
@@ -286,7 +251,6 @@ public class PlayerController : MonoBehaviour
     private void OnStopMovement(EnableMovementEvent evt)
     {
         _canMove = evt.canMove;
-        _canJump = !evt.enterToInterior;
     }
 
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)
