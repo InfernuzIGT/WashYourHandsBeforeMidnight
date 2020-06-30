@@ -22,7 +22,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""name"": ""Move"",
                     ""type"": ""PassThrough"",
                     ""id"": ""a6308b3b-88f0-4626-9ab6-dfaaa9a15719"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
@@ -57,20 +57,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Walk"",
+                    ""type"": ""Button"",
+                    ""id"": ""944f967c-42b7-4db1-b8ed-61a3e61deb95"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""1fa19f8f-6aed-4dd1-930f-c79783b67118"",
-                    ""path"": ""<HID::Microntek              USB Joystick          >/stick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": ""WASD"",
                     ""id"": ""473533e6-cb34-4519-a511-fbd17754ce92"",
@@ -119,6 +116,116 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""name"": ""right"",
                     ""id"": ""f79a223b-c5c0-4c34-bb0b-308af1a2e9d2"",
                     ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Arrows"",
+                    ""id"": ""c65b17de-0041-49b0-9ae5-5f583fe51bf8"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""00875ec4-af5d-4681-a605-0ada57ddc738"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""3f757795-c021-48dd-bfde-b592c399a667"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""96ccaa57-fc38-47c3-beed-58c7ca72806d"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""4bd58e91-1e57-46ab-b287-20791566d001"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Left Analog"",
+                    ""id"": ""09aeb8e1-d7ff-435b-9b11-f9cf8363ec65"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""a5df94b9-9399-47e8-973e-2b382e4454a0"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/stick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""569b2ace-ba78-40d4-bb5e-67e5869a87aa"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/stick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""87d14744-3182-4234-ae97-044605cb36d9"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/stick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""de2a8144-a131-45aa-adc2-6c99353b0646"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/stick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -202,6 +309,28 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5bb3ca19-9e1e-4a1b-8507-a05e89d33c88"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""732a0010-6ee1-40d3-993d-5dee01770c62"",
+                    ""path"": ""<Keyboard>/rightShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -215,6 +344,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_ActionPlayer_Interaction = m_ActionPlayer.FindAction("Interaction", throwIfNotFound: true);
         m_ActionPlayer_Pause = m_ActionPlayer.FindAction("Pause", throwIfNotFound: true);
         m_ActionPlayer_Click = m_ActionPlayer.FindAction("Click", throwIfNotFound: true);
+        m_ActionPlayer_Walk = m_ActionPlayer.FindAction("Walk", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -269,6 +399,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_ActionPlayer_Interaction;
     private readonly InputAction m_ActionPlayer_Pause;
     private readonly InputAction m_ActionPlayer_Click;
+    private readonly InputAction m_ActionPlayer_Walk;
     public struct ActionPlayerActions
     {
         private @InputActions m_Wrapper;
@@ -278,6 +409,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Interaction => m_Wrapper.m_ActionPlayer_Interaction;
         public InputAction @Pause => m_Wrapper.m_ActionPlayer_Pause;
         public InputAction @Click => m_Wrapper.m_ActionPlayer_Click;
+        public InputAction @Walk => m_Wrapper.m_ActionPlayer_Walk;
         public InputActionMap Get() { return m_Wrapper.m_ActionPlayer; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -302,6 +434,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Click.started -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnClick;
                 @Click.performed -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnClick;
                 @Click.canceled -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnClick;
+                @Walk.started -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnWalk;
+                @Walk.performed -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnWalk;
+                @Walk.canceled -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnWalk;
             }
             m_Wrapper.m_ActionPlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -321,6 +456,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Click.started += instance.OnClick;
                 @Click.performed += instance.OnClick;
                 @Click.canceled += instance.OnClick;
+                @Walk.started += instance.OnWalk;
+                @Walk.performed += instance.OnWalk;
+                @Walk.canceled += instance.OnWalk;
             }
         }
     }
@@ -332,5 +470,6 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnInteraction(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+        void OnWalk(InputAction.CallbackContext context);
     }
 }
