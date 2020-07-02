@@ -6,18 +6,18 @@
 [Ll]ibrary/
 [Ll]ogs
 [Oo]bj/
-[Pp]ackages/
+#[Pp]ackages/
 [Tt]emp/
-[Dd]emigiant/
-[Tt]extMesh Pro/
+#[Dd]emigiant/
+#[Tt]extMesh Pro/
 */.vs/
 #*/[Bb]uild/
 */[Ll]ibrary/
 */[Ll]ogs
 */[Oo]bj/
-*/[Pp]ackages/
+#*/[Pp]ackages/
 */[Tt]emp/
-*/[Dd]emigiant/
+#*/[Dd]emigiant/
 */[Tt]extMesh Pro/
 
 
@@ -40,13 +40,13 @@ sysinfo.txt
 !/[Aa]ssets/**/*.meta
 
 # FMOD
+Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset
+Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset.meta
 Assets/Plugins/FMOD/Resources/FMODStudioCache.asset
 Assets/Plugins/FMOD/Resources/FMODStudioCache.asset.meta
 Assets/StreamingAssets/**/*.bank
 Assets/StreamingAssets/**/*.bank.meta
-
-# Juan prototypes
-Assets/LocuraJuan
+fmod_editor.log
 
 # Gradle cache directory
 .gradle/
@@ -89,4 +89,6 @@ Assets/LocuraJuan
 # Custom
 Assembly-CSharp.csproj
 Assembly-CSharp-vs.csproj
-WYHBM/fmod_editor.log
+Assets/LocuraJuan
+WYHBM/Assets/FBX Exporter
+WYHBM/Assets/FBX Exporter.meta

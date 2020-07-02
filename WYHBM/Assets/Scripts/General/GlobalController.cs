@@ -15,9 +15,13 @@ public class GlobalController : MonoBehaviour
     [Header("Settings")]
     public PlayerController player;
     public Camera mainCamera;
-    public CinemachineVirtualCamera virtualCamera;
+    public CinemachineVirtualCamera exteriorCamera;
+    public CinemachineVirtualCamera interiorCamera;
+    public CinemachineVirtualCamera cutscene;
 
-    private CinemachineVirtualCamera _newVirtualCamera;
+    private CinemachineVirtualCamera _worldCamera;
+    private CinemachineVirtualCamera _combatCamera;
+    private bool _isInteriorCamera;
 
     private float _offsetPlayer = 1.505f;
 
@@ -85,27 +89,41 @@ public class GlobalController : MonoBehaviour
 
     private void SetCamera()
     {
-        virtualCamera.m_Follow = player.transform;
-        virtualCamera.m_LookAt = player.transform;
-        virtualCamera.transform.position = player.transform.position;
-        
+        exteriorCamera.m_Follow = player.transform;
+        exteriorCamera.m_LookAt = player.transform;
+        // exteriorCamera.transform.position = player.transform.position;
+
+        interiorCamera.m_Follow = player.transform;
+        interiorCamera.m_LookAt = player.transform;
+        // interiorCamera.transform.position = player.transform.position;
+
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(player.transform);
     }
 
-    public void ChangeCamera(CinemachineVirtualCamera newCamera)
+    public void ChangeWorldCamera()
     {
-        if (newCamera == null)
+        _isInteriorCamera = !_isInteriorCamera;
+
+        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
+        
+        exteriorCamera.gameObject.SetActive(!_isInteriorCamera);
+        interiorCamera.gameObject.SetActive(_isInteriorCamera);
+    }
+
+    public void ChangeToCombatCamera(CinemachineVirtualCamera combatCamera)
+    {
+        if (combatCamera == null)
         {
-            _newVirtualCamera.gameObject.SetActive(false);
-            virtualCamera.gameObject.SetActive(true);
-            _newVirtualCamera = null;
+            _combatCamera.gameObject.SetActive(false);
+            _worldCamera.gameObject.SetActive(true);
+            _combatCamera = null;
         }
         else
         {
-            newCamera.gameObject.SetActive(true);
-            virtualCamera.gameObject.SetActive(false);
-            _newVirtualCamera = newCamera;
+            combatCamera.gameObject.SetActive(true);
+            _worldCamera.gameObject.SetActive(false);
+            _combatCamera = combatCamera;
         }
     }
 

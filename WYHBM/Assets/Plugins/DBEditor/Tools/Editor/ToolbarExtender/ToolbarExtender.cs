@@ -56,7 +56,7 @@ namespace UnityToolbarExtender
 			float playButtonsPosition = (screenWidth - 100) / 2;
 
 			Rect leftRect = new Rect(0, 0, screenWidth, Screen.height);
-			leftRect.xMin += 10; // Spacing left
+			leftRect.xMin += 20; // Spacing left
 			leftRect.xMin += 32 * m_toolCount; // Tool buttons
 			leftRect.xMin += 20; // Spacing between tools and pivot
 			leftRect.xMin += 64 * 2; // Pivot buttons
@@ -84,7 +84,7 @@ namespace UnityToolbarExtender
 			rightRect.xMax -= 10;
 
 			// Add top and bottom margins
-			leftRect.y = 5;
+			leftRect.y = 4.25f;
 			leftRect.height = 24;
 			rightRect.y = 5;
 			rightRect.height = 24;
