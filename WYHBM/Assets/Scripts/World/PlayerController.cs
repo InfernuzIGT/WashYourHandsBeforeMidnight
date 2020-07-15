@@ -236,6 +236,11 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = new Vector3(x, y, z);
     }
+    
+    public bool GetPlayerInMovement()
+    {
+        return _characterController.isGrounded && _canMove && !_inLadder && _movement.magnitude > 0.1f;
+    }
 
     #region FMOD
 

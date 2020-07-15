@@ -5,7 +5,7 @@ using Events;
 using UnityEngine;
 // using UnityEngine.EventSystems;
 
-public class CombatCharacter : MonoBehaviour/* , IPointerEnterHandler, IPointerExitHandler */
+public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointerExitHandler */
 {
     [SerializeField] private string _name = null;
     [SerializeField] private List<ItemSO> _equipment = new List<ItemSO>(); // TODO Mariano: Used by Enemy
@@ -159,10 +159,16 @@ public class CombatCharacter : MonoBehaviour/* , IPointerEnterHandler, IPointerE
         AnimationRecovery();
     }
 
-    public virtual void ActionReceiveDamage()
+    public void ActionReceiveDamage()
     {
-        if (_healthActual == 0)
+        if (_healthActual == 0)return;
+
+        if (!GetProbability())
+        {
+            AnimationAction(ANIM_STATE.ItemDefense);
+            Debug.Log ($"<b> DODGE! </b>");
             return;
+        }
 
         _totalDamage = GetItemDamage();
 
@@ -307,6 +313,16 @@ public class CombatCharacter : MonoBehaviour/* , IPointerEnterHandler, IPointerE
     public int GetItemHeal()
     {
         return _totalValue = Random.Range(_itemHeal.valueMin, _itemHeal.valueMax);
+    }
+
+    public bool GetProbability()
+    {
+        ProportionValue<bool>[] tempProb = new ProportionValue<bool>[2];
+
+        tempProb[0] = ProportionValue.Create(_itemAttack.probability, true);
+        tempProb[1] = ProportionValue.Create(1 - _itemAttack.probability, false);
+
+        return tempProb.ChooseByRandom();
     }
 
     #region Shader
