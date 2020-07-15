@@ -146,7 +146,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (!inCombat)
         {
-            SetPause();
+            SetPause(false);
         }
     }
 
@@ -168,11 +168,19 @@ public class GameManager : MonoSingleton<GameManager>
     //     }
     // }
 
-    public void SetPause()
+    public void SetPause(bool inNote)
     {
-        isPaused = !isPaused;
-        Time.timeScale = isPaused ? 0 : 1;
-        worldUI.Pause(isPaused);
+        if (inNote)
+        {
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0 : 1;
+        }
+        else
+        {
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0 : 1;
+            worldUI.Pause(isPaused);
+        }
     }
 
     private void SwitchAmbient()
@@ -221,11 +229,6 @@ public class GameManager : MonoSingleton<GameManager>
         combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
     }
 
-    public Vector3 GetPlayerFootPosition()
-    {
-        return globalController.player.dropZone.transform.position;
-    }
-
     public Ray GetRayMouse()
     {
         return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -267,14 +270,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0)return;
+            if (_characterIndex <= 0) return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1)return;
+            if (_characterIndex >= combatPlayers.Count - 1) return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
