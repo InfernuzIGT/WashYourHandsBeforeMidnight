@@ -17,6 +17,12 @@ public class CombatEnemy
     public List<ItemSO> equipment = new List<ItemSO>();
 }
 
+[System.Serializable]
+public class EnemyEncounter
+{
+    public List<CombatEnemy> enemies = new List<CombatEnemy>();
+}
+
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
@@ -34,10 +40,16 @@ public class GameManager : MonoSingleton<GameManager>
     public Vector3 dropZone;
 
     [Header("Combat")]
+    public bool enableCombat;
+    public float probabilityNormal = 0.4f;
+    public float probabilityDarkZone = 0.7f;
+    [Space]
     public CombatArea[] combatAreas;
     [Space]
     public List<CombatPlayer> combatPlayers;
-
+    [Space]
+    public List<EnemyEncounter> enemyEncounters;
+    [Space]
     // public List<QuestSO> listQuest;
     // public List<int> listProgress;
     public List<QuestData> listQuestData;
@@ -48,6 +60,8 @@ public class GameManager : MonoSingleton<GameManager>
     // Combat
     private CombatArea _currentCombatArea;
     private NPCController currentNPC;
+    private float _currentTimeEncounter;
+    private float _limitTimeEncounter = 10;
 
     // Inventory
     private int _inventoryMaxSlots = 8;
@@ -132,15 +146,24 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
 
-    // private void Update()
-    // {
-    //     if (!inCombat)
-    //     {
-    //         Pause();
-    //         OpenInventory();
-    //         OpenQuest();
-    //     }
-    // }
+    private void Update()
+    {
+        CheckEncounters();
+    }
+
+    private void CheckEncounters()
+    {
+        if (enableCombat && !inCombat && !isPaused && globalController.player.GetPlayerInMovement())
+        {
+            _currentTimeEncounter += Time.deltaTime;
+
+            if (_currentTimeEncounter > _limitTimeEncounter)
+            {
+                _currentTimeEncounter = 0;
+                TriggerCombat();
+            }
+        }
+    }
 
     private void Pause()
     {
@@ -220,13 +243,28 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void StartCombat()
     {
-        currentNPC.Kill();
+        currentNPC?.Kill();
         combatManager.InitiateTurn();
     }
 
     public void ReorderTurn()
     {
         combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
+    }
+
+    public bool GetProbability()
+    {
+        ProportionValue<bool>[] tempProb = new ProportionValue<bool>[2];
+
+        tempProb[0] = ProportionValue.Create(probabilityNormal, true);
+        tempProb[1] = ProportionValue.Create(1 - probabilityNormal, false);
+
+        return tempProb.ChooseByRandom();
+    }
+
+    public Vector3 GetPlayerFootPosition()
+    {
+        return globalController.player.dropZone.transform.position;
     }
 
     public Ray GetRayMouse()
@@ -343,6 +381,26 @@ public class GameManager : MonoSingleton<GameManager>
         int indexArea = Random.Range(0, combatAreas.Length);
         _currentCombatArea = combatAreas[indexArea];
         combatManager.SetData(_currentCombatArea, combatPlayers, evt.npc.combatEnemies);
+
+        _fadeEvent.callbackStart = SwitchMovement;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = StartCombat;
+
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
+    private void TriggerCombat()
+    {
+        if (!GetProbability())return;
+
+        inWorld = false;
+        currentNPC = null;
+
+        int indexArea = Random.Range(0, combatAreas.Length);
+        _currentCombatArea = combatAreas[indexArea];
+
+        int indexEncounter = Random.Range(0, enemyEncounters.Count);
+        combatManager.SetData(_currentCombatArea, combatPlayers, enemyEncounters[indexEncounter].enemies);
 
         _fadeEvent.callbackStart = SwitchMovement;
         _fadeEvent.callbackMid = SwitchAmbient;
