@@ -12,7 +12,6 @@ public class Enemy : CombatCharacter
 
 	public void Select()
 	{
-
 		int randomPlayer = Random.Range(0, GameManager.Instance.combatManager.listPlayers.Count);
 
 		GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();

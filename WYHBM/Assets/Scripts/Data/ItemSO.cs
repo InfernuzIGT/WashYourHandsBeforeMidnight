@@ -13,4 +13,5 @@ public class ItemSO : ScriptableObject
     public int valueMax;
     public bool isDroppeable;
     public int index;
+    [Range(0f, 1f)] public float probability = 1;
 }
