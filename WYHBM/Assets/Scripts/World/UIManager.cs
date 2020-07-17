@@ -18,10 +18,14 @@ namespace GameMode.World
         public GameObject panelPlayer;
         public GameObject panelPause;
         public GameObject panelDialog;
+        public GameObject panelNote;
 
         [Header("Dialog")]
         public TextMeshProUGUI dialogTxt;
         public TextMeshProUGUI continueTxt;
+
+        [Header("Note")]
+        public TextMeshProUGUI noteTxt;
 
         [Header("Pause - System")]
         public GameObject system;
@@ -47,7 +51,6 @@ namespace GameMode.World
         public Slider sliderSound;
         public Slider sliderMusic;
         [Space]
-        
 
         // Inventory
         private int _lastSlot = 0;
@@ -145,7 +148,7 @@ namespace GameMode.World
         {
             RuntimeManager.StudioSystem.setParameterByName("SoundsSlider", vol);
         }
-        
+
         public void VolumeMusic(float vol)
         {
             RuntimeManager.StudioSystem.setParameterByName("MusicSlider", vol);
@@ -294,6 +297,22 @@ namespace GameMode.World
             _enableMovementEvent.canMove = false;
             EventController.TriggerEvent(_enableMovementEvent);
 
+        }
+
+        #endregion
+
+        #region 
+        public void ActiveNote(bool _isActiveNote)
+        {
+            if (_isActiveNote)
+            {
+                panelNote.SetActive(false);
+
+            }
+            else
+            {
+                panelNote.SetActive(true);
+            }
         }
 
         #endregion
@@ -481,7 +500,7 @@ namespace GameMode.World
                     break;
 
                 case BUTTON_TYPE.Resume:
-                    GameManager.Instance.SetPause();
+                    GameManager.Instance.SetPause(false);
                     break;
 
                 case BUTTON_TYPE.Options:
