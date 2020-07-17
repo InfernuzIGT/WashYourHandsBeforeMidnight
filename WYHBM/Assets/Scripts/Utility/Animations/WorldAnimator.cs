@@ -6,6 +6,8 @@ public class WorldAnimator : AnimatorController
 
     private bool _isFlipped;
 
+    public bool isFlipped { get {return _isFlipped; } }
+
     private void Start()
     {
         _animModeCombat.Execute(_animator, false);
