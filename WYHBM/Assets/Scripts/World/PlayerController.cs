@@ -130,13 +130,16 @@ public class PlayerController : MonoBehaviour
         if (_inZipline)
         {
             _gravity = 0;
-            transform.position = Vector3.MoveTowards(transform.position, endPos, .25f);
+            transform.position = Vector3.MoveTowards(transform.position, endPos, .5f);
+            animator.SetBool("canZipline", true);
         }
 
         if (Physics.Raycast(wallCheck.transform.position, Vector3.right, out RaycastHit hitWallFront, .5f))
         {
             if (hitWallFront.collider.tag == "Zipline")
             {
+
+                animator.SetBool("canZipline", false);
                 _inZipline = false;
                 _gravity = 39.24f;
             }
@@ -145,6 +148,7 @@ public class PlayerController : MonoBehaviour
         {
             if (hitWallBack.collider.tag == "Zipline")
             {
+                animator.SetBool("canZipline", false);
                 _inZipline = false;
                 _gravity = 39.24f;
             }
@@ -152,27 +156,18 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    // variable nueva direction switch o if para cambiar la direccion
-    // si salta sam tira 4 rayos en cada direccion
-
     private IEnumerator AnimClimb()
     {
-        _characterController.enabled = false;
 
         if (_inLadder)
         {
             animator.SetBool("canClimbLadder", true);
-
-            if (_characterController.isGrounded)
-            {
-                animator.SetBool("canClimbLadder", false);
-
-                yield return new WaitForSeconds(.01f);
-            }
         }
 
         if (_inLedge)
         {
+            _characterController.enabled = false;
+
             animator.SetBool("canClimbLedge", true);
 
             yield return new WaitForSeconds(.01f);
@@ -189,7 +184,6 @@ public class PlayerController : MonoBehaviour
     private void EndClimb()
     {
         _inLedge = false;
-        _inLadder = false;
 
         _isClimbing = false;
         ledgeDetected = false;
@@ -197,6 +191,7 @@ public class PlayerController : MonoBehaviour
         transform.position = newPos;
 
         _characterController.enabled = true;
+
     }
 
     private void Movement()
@@ -234,7 +229,7 @@ public class PlayerController : MonoBehaviour
 
             if (_isJumping)
             {
-                _speedVertical = _jump;
+                // _speedVertical = _jump;
                 _isJumping = false;
             }
 
@@ -351,11 +346,13 @@ public class PlayerController : MonoBehaviour
 
     private void LadderMovement()
     {
-        if (!_inLadder) { return; }
 
-        DetectBot();
+        if (!_inLadder) { animator.SetBool("canClimbLadder", false); return; }
+        else
 
-        _movement.x = 0;
+            DetectBot();
+
+        _movement.x = _inputMovement.x * _speedLadder;
         _movement.z = 0;
         _movement.y = _inputMovement.y * _speedLadder;
         _characterController.Move(_movement * Time.deltaTime);
@@ -363,22 +360,30 @@ public class PlayerController : MonoBehaviour
         _inLadder = true;
         StartCoroutine(AnimClimb());
 
-        // TODO Mariano: Add Animation
-        // _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
+        _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
+
     }
 
     private void DetectBot()
     {
-        _botPosition = new Vector3(
-            transform.position.x,
-            transform.position.y - _characterController.height / 2 - _characterController.center.y,
-            transform.position.z);
-
-        if (Physics.Raycast(_botPosition, Vector3.down, out _hitBot, 0.1f))
+        if (_inLadder)
         {
-            _inLadder = false;
-            _ladderEvent.ladderExit = LADDER_EXIT.Bot;
-            EventController.TriggerEvent(_ladderEvent);
+
+            _botPosition = new Vector3(
+                transform.position.x,
+                transform.position.y - _characterController.height / 2 - _characterController.center.y,
+                transform.position.z);
+
+            if (Physics.Raycast(_botPosition, Vector3.down, out _hitBot, .1f))
+            {
+                if (_hitBot.collider.tag == "Interaction")
+                {
+                    _inLadder = false;
+                    _ladderEvent.ladderExit = LADDER_EXIT.Bot;
+                    EventController.TriggerEvent(_ladderEvent);
+                }
+
+            }
         }
     }
 
@@ -403,7 +408,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = new Vector3(x, y, z);
     }
-    
+
     public bool GetPlayerInMovement()
     {
         return _characterController.isGrounded && _canMove && !_inLadder && _movement.magnitude > 0.1f;

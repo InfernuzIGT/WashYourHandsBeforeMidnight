@@ -262,11 +262,6 @@ public class GameManager : MonoSingleton<GameManager>
         return tempProb.ChooseByRandom();
     }
 
-    public Vector3 GetPlayerFootPosition()
-    {
-        return globalController.player.dropZone.transform.position;
-    }
-
     public Ray GetRayMouse()
     {
         return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
