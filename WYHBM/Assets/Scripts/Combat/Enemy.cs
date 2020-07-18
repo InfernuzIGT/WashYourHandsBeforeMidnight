@@ -14,8 +14,9 @@ public class Enemy : CombatCharacter
 	{
 		int randomPlayer = Random.Range(0, GameManager.Instance.combatManager.listPlayers.Count);
 
-		GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();
-		GameManager.Instance.combatManager.listPlayers[randomPlayer].AnimationRecovery();
+		GameManager.Instance.combatManager.listPlayers[randomPlayer].Select(Equipment[0]);
+		// GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();
+		// GameManager.Instance.combatManager.listPlayers[randomPlayer].AnimationRecovery();
 
 		// TODO Mariano: Agregar animacion correspondiente
 		AnimationAction(ANIM_STATE.AttackMelee);

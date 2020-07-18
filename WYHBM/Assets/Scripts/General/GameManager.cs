@@ -264,7 +264,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public Ray GetRayMouse()
     {
-        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
+        return globalController.mainCamera.ScreenPointToRay(InputActions.ActionPlayer.MousePosition.ReadValue<Vector2>());
     }
 
     #region Inventory
@@ -303,14 +303,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0) return;
+            if (_characterIndex <= 0)return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1) return;
+            if (_characterIndex >= combatPlayers.Count - 1)return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);

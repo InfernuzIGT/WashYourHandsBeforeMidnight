@@ -16,6 +16,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     [Header("Stats")]
     [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
+    [SerializeField, Range(0f, 100f)] private int _statsHealthStart = 100;
     [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 10;
     [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 5;
     [SerializeField, Range(1f, 10f)] private int _statsReaction = 1;
@@ -94,7 +95,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         _isMyTurn = false;
 
         _combatIndex = index;
-        _healthActual = _statsHealthMax;
+        _healthActual = _statsHealthStart;
 
         _equipment.AddRange(inventoryCombat);
 
@@ -166,7 +167,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         if (!GetProbability())
         {
             AnimationAction(ANIM_STATE.ItemDefense);
-            Debug.Log ($"<b> DODGE! </b>");
+            Debug.Log($"<b> DODGE! </b>");
             return;
         }
 

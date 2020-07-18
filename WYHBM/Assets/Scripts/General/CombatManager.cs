@@ -220,6 +220,8 @@ public class CombatManager : MonoBehaviour
     {
         _listAllCharacters.Remove(character);
         _listWaitingCharacters.Remove(character);
+        
+        Debug.Log ($"<b> REMOVED PLAYER </b>");
 
         listPlayers.Remove(character);
 
@@ -236,6 +238,8 @@ public class CombatManager : MonoBehaviour
         _listAllCharacters.Remove(character);
         _listWaitingCharacters.Remove(character);
 
+        Debug.Log ($"<b> REMOVED ENEMY </b>");
+        
         listEnemies.Remove(character);
 
         GameManager.Instance.ReorderTurn();
