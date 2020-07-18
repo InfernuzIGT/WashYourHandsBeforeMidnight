@@ -65,6 +65,14 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""e64e27ee-0069-4c36-9f37-91ec8085aba3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -331,6 +339,17 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f534bfa5-3d3b-43d3-8e37-13fdf4dfac6d"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -345,6 +364,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_ActionPlayer_Pause = m_ActionPlayer.FindAction("Pause", throwIfNotFound: true);
         m_ActionPlayer_Click = m_ActionPlayer.FindAction("Click", throwIfNotFound: true);
         m_ActionPlayer_Walk = m_ActionPlayer.FindAction("Walk", throwIfNotFound: true);
+        m_ActionPlayer_MousePosition = m_ActionPlayer.FindAction("MousePosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -400,6 +420,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_ActionPlayer_Pause;
     private readonly InputAction m_ActionPlayer_Click;
     private readonly InputAction m_ActionPlayer_Walk;
+    private readonly InputAction m_ActionPlayer_MousePosition;
     public struct ActionPlayerActions
     {
         private @InputActions m_Wrapper;
@@ -410,6 +431,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Pause => m_Wrapper.m_ActionPlayer_Pause;
         public InputAction @Click => m_Wrapper.m_ActionPlayer_Click;
         public InputAction @Walk => m_Wrapper.m_ActionPlayer_Walk;
+        public InputAction @MousePosition => m_Wrapper.m_ActionPlayer_MousePosition;
         public InputActionMap Get() { return m_Wrapper.m_ActionPlayer; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -437,6 +459,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Walk.started -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnWalk;
                 @Walk.performed -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnWalk;
                 @Walk.canceled -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnWalk;
+                @MousePosition.started -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnMousePosition;
+                @MousePosition.performed -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnMousePosition;
+                @MousePosition.canceled -= m_Wrapper.m_ActionPlayerActionsCallbackInterface.OnMousePosition;
             }
             m_Wrapper.m_ActionPlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -459,6 +484,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Walk.started += instance.OnWalk;
                 @Walk.performed += instance.OnWalk;
                 @Walk.canceled += instance.OnWalk;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
             }
         }
     }
@@ -471,5 +499,6 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
+        void OnMousePosition(InputAction.CallbackContext context);
     }
 }

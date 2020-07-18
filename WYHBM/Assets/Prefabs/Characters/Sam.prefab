@@ -90,6 +90,7 @@ Transform:
   - {fileID: 1703839908996857020}
   - {fileID: 3854770815955887605}
   - {fileID: 6335019193980573163}
+  - {fileID: 7148576689432955027}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -107,6 +108,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -187,10 +189,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quest: {fileID: 0}
   footstepSound: {fileID: 4696537044046352187}
   breathingSound: {fileID: 1859904522748835540}
-  dropZone: {fileID: 8101981147479373067}
+  _inZipline: 0
+  endPos: {x: 0, y: 0, z: 0}
+  animator: {fileID: 5441447954450045011}
+  Climbable:
+    serializedVersion: 2
+    m_Bits: 4096
+  canClimbLedge: 0
+  ledgeDetected: 0
+  wallCheck: {fileID: 6335019193980573163}
+  ledgeCheck: {fileID: 7148576689432955027}
+  wallCheckDistance: 1
 --- !u!143 &1255290931
 CharacterController:
   m_ObjectHideFlags: 0
@@ -224,6 +235,36 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 65536
+--- !u!1 &7151162135838049659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7148576689432955027}
+  m_Layer: 19
+  m_Name: LedgeCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7148576689432955027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7151162135838049659}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5441447954450045005}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7271501252093673220
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +329,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6335019193980573163}
   m_Layer: 19
-  m_Name: DropZone
+  m_Name: WallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -302,7 +343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8101981147479373067}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1000001, y: -1.29, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5441447954450045005}
