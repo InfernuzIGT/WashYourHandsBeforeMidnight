@@ -8,6 +8,7 @@ public class CreateCollider : EditorWindow
     private BoxCollider _collider;
     private Bounds _bounds;
     private Vector3 _colliderSize;
+    private bool _destroyMesh = true;
 
     private GUIStyle _styleButtons;
 
@@ -18,13 +19,18 @@ public class CreateCollider : EditorWindow
         Texture2D iconTitle = EditorGUIUtility.Load("BoxCollider Icon")as Texture2D;
         GUIContent titleContent = new GUIContent("Create Collider", iconTitle);
         window.titleContent = titleContent;
-        window.minSize = new Vector2(200, 90);
+        window.minSize = new Vector2(200, 120);
         window.Show();
     }
 
     private void OnGUI()
     {
         _styleButtons = new GUIStyle(GUI.skin.button) { alignment = TextAnchor.MiddleCenter, fixedHeight = 30 };
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+        _destroyMesh = EditorGUILayout.Toggle("Destroy Mesh", _destroyMesh);
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -41,7 +47,11 @@ public class CreateCollider : EditorWindow
 
                 _collider = _transform.gameObject.GetComponent<BoxCollider>();
 
-                if (_collider == null)
+                if (_collider != null)
+                {
+                    continue;
+                }
+                else
                 {
                     _transform.gameObject.AddComponent<BoxCollider>();
                     _collider = _transform.gameObject.GetComponent<BoxCollider>();
@@ -62,6 +72,13 @@ public class CreateCollider : EditorWindow
                 _collider.size = _colliderSize;
 
                 _transform.rotation = _rotation;
+
+                if (_destroyMesh)
+                {
+                    DestroyImmediate(_transform.gameObject.GetComponent<MeshRenderer>());
+                    DestroyImmediate(_transform.gameObject.GetComponent<MeshFilter>());
+                }
+
             }
         }
 
