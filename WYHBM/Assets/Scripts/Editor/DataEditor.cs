@@ -12,6 +12,13 @@ public struct DialogData
     public string sentence;
 }
 
+[Serializable]
+public struct NoteData
+{
+    public int id;
+    public string sentence;
+}
+
 public class DataEditor : EditorWindow
 {
     public enum DataType
@@ -29,7 +36,14 @@ public class DataEditor : EditorWindow
     public NoteSO[] noteSO;
 
     private DialogData[] _dialogData;
+    private NoteData[] _noteData;
     private JSONConverter _jsonConverter = new JSONConverter();
+
+    private List<Dialog> listNone = new List<Dialog>();
+    private List<Dialog> listReady = new List<Dialog>();
+    private List<Dialog> listInProgress = new List<Dialog>();
+    private List<Dialog> listCompleted = new List<Dialog>();
+    private List<DialogData> listDialogData = new List<DialogData>();
 
     private GUIStyle _styleButtons;
     private Vector2 _scroll;
@@ -58,6 +72,7 @@ public class DataEditor : EditorWindow
         _dialogProperty = _serializedObject.FindProperty("dialogSO");
         _noteProperty = _serializedObject.FindProperty("noteSO");
         // _uiProperty = _serializedObject.FindProperty("");
+        _serializedObject.Update();
 
         _scroll = EditorGUILayout.BeginScrollView(_scroll);
 
@@ -123,36 +138,7 @@ public class DataEditor : EditorWindow
 
     private void LoadData()
     {
-        Debug.Log($"<b>[DATA EDITOR] </b> Loading Data..");
-        _dialogData = _jsonConverter.GetData<DialogData>(string.Format("{0}_{1}", dataType.ToString(), language.ToString()), SuccessData, FailData);
-    }
-
-    private void ClearData()
-    {
-        dialogSO = null;
-        noteSO = null;
-        _dialogData = null;
-    }
-
-    private void SuccessData()
-    {
-        Debug.Log($"<color=green><b>[DATA EDITOR] </b></color> Data Loaded. Wait a few seconds to Convert Data.");
-    }
-
-    private void FailData()
-    {
-        Debug.Log($"<color=red><b>[DATA EDITOR] </b></color> Error loading data.");
-    }
-
-    private void ConvertData()
-    {
-        Debug.Log($"<b>[DATA EDITOR] </b> Converting Data..");
-
-        if (_dialogData == null)
-        {
-            Debug.Log($"<color=red><b>[DATA EDITOR] </b></color> Missing data.");
-            return;
-        }
+        Debug.Log($"<b>[DATA EDITOR] </b> Loading {dataType}..");
 
         switch (dataType)
         {
@@ -160,31 +146,90 @@ public class DataEditor : EditorWindow
                 break;
 
             case DataType.DialogData:
+                _dialogData = _jsonConverter.GetData<DialogData>(string.Format("{0}_{1}", dataType.ToString(), language.ToString()), SuccessData, FailData);
+                break;
+
+            case DataType.NoteData:
+                _noteData = _jsonConverter.GetData<NoteData>(string.Format("{0}_{1}", dataType.ToString(), language.ToString()), SuccessData, FailData);
+                break;
+
+                // case DataType.UIData:
+                // break;
+        }
+    }
+
+    private void ClearData()
+    {
+        dialogSO = null;
+        noteSO = null;
+
+        _dialogData = null;
+        _noteData = null;
+    }
+
+    private void SuccessData()
+    {
+        Debug.Log($"<color=green><b>[DATA EDITOR] </b></color> {dataType} Loaded. Wait a few seconds to Convert Data.");
+    }
+
+    private void FailData()
+    {
+        Debug.Log($"<color=red><b>[DATA EDITOR] </b></color> Error loading {dataType}.");
+    }
+
+    private void ConvertData()
+    {
+        Debug.Log($"<b>[DATA EDITOR] </b> Converting data..");
+
+        switch (dataType)
+        {
+            case DataType.None:
+                break;
+
+            case DataType.DialogData:
+
+                if (_dialogData == null)
+                {
+                    Debug.Log($"<color=red><b>[DATA EDITOR] </b></color> Missing {dataType}.");
+                    return;
+                }
+
                 for (int i = 0; i < dialogSO.Length; i++)
                 {
                     ConvertData(dialogSO[i]);
                 }
-                _dialogData = null;
                 break;
 
             case DataType.NoteData:
+
+                if (_noteData == null)
+                {
+                    Debug.Log($"<color=red><b>[DATA EDITOR] </b></color> Missing {dataType}.");
+                    return;
+                }
+
+                for (int i = 0; i < noteSO.Length; i++)
+                {
+                    ConvertData(noteSO[i]);
+                }
                 break;
 
                 // case DataType.UIData:
                 // break;
         }
 
-        Debug.Log($"<color=green><b>[DATA EDITOR] </b></color> Data Converted.");
+        Debug.Log($"<color=green><b>[DATA EDITOR] </b></color> {dataType} Converted.");
     }
 
     private void ConvertData(DialogSO currentDialogSO)
     {
-        Dialog tempDialog = new Dialog();
-        List<Dialog> listNone = new List<Dialog>();
-        List<Dialog> listReady = new List<Dialog>();
-        List<Dialog> listInProgress = new List<Dialog>();
-        List<Dialog> listCompleted = new List<Dialog>();
-        List<DialogData> listDialogData = new List<DialogData>();
+        listNone.Clear();
+        listReady.Clear();
+        listInProgress.Clear();
+        listCompleted.Clear();
+        listDialogData.Clear();
+
+        Debug.Log($"<b>[DATA EDITOR] </b> Reading ID {currentDialogSO.dialogId}..");
 
         for (int i = 0; i < _dialogData.Length; i++)
         {
@@ -194,14 +239,14 @@ public class DataEditor : EditorWindow
             }
         }
 
-        Debug.Log($"<b>[DATA EDITOR] </b> Reading ID {currentDialogSO.dialogId}..");
+        Dialog tempDialog = new Dialog();
 
         for (int i = 0; i < listDialogData.Count; i++)
         {
-            tempDialog.isPlayer = _dialogData[i].isPlayer;
-            tempDialog.sentence = _dialogData[i].sentence;
+            tempDialog.isPlayer = listDialogData[i].isPlayer;
+            tempDialog.sentence = listDialogData[i].sentence;
 
-            switch (_dialogData[i].type)
+            switch (listDialogData[i].type)
             {
                 case DIALOG_TYPE.None:
                     listNone.Add(tempDialog);
@@ -222,6 +267,20 @@ public class DataEditor : EditorWindow
         currentDialogSO.dialogReady = listReady.ToArray();
         currentDialogSO.dialogInProgress = listInProgress.ToArray();
         currentDialogSO.dialogCompleted = listCompleted.ToArray();
+    }
+
+    private void ConvertData(NoteSO currentNoteSO)
+    {
+        Debug.Log($"<b>[DATA EDITOR] </b> Reading ID {currentNoteSO.noteId}..");
+
+        for (int i = 0; i < _noteData.Length; i++)
+        {
+            if (_noteData[i].id == currentNoteSO.noteId)
+            {
+                currentNoteSO.noteSentences = _noteData[i].sentence;
+                break;
+            }
+        }
     }
 
     private void DrawHorizontalLine()

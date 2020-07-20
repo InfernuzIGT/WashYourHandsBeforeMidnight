@@ -17,4 +17,13 @@ public class DialogSO : ScriptableObject
     public Dialog[] dialogReady;
     public Dialog[] dialogInProgress;
     public Dialog[] dialogCompleted;
+    
+    [ContextMenu("Clear Data")]
+    public void ClearData()
+    {
+        dialogNone = null;
+        dialogReady = null;
+        dialogInProgress = null;
+        dialogCompleted = null;
+    }
 }
