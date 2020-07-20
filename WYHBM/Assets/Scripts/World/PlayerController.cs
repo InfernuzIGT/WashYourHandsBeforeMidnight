@@ -130,30 +130,20 @@ public class PlayerController : MonoBehaviour
         if (_inZipline)
         {
             _gravity = 0;
+
+            _animatorController.MovementZipline(true);
+            // animator.SetBool("canZipline", true);
+
             transform.position = Vector3.MoveTowards(transform.position, endPos, .5f);
-            animator.SetBool("canZipline", true);
-        }
 
-        if (Physics.Raycast(wallCheck.transform.position, Vector3.right, out RaycastHit hitWallFront, .5f))
-        {
-            if (hitWallFront.collider.tag == "Zipline")
+            if (Vector3.Distance(transform.position, endPos) < 1)
             {
-
-                animator.SetBool("canZipline", false);
+                _animatorController.MovementZipline(false);
+                // animator.SetBool("canZipline", false);
                 _inZipline = false;
                 _gravity = 39.24f;
             }
         }
-        if (Physics.Raycast(wallCheck.transform.position, Vector3.left, out RaycastHit hitWallBack, .5f))
-        {
-            if (hitWallBack.collider.tag == "Zipline")
-            {
-                animator.SetBool("canZipline", false);
-                _inZipline = false;
-                _gravity = 39.24f;
-            }
-        }
-
     }
 
     private IEnumerator AnimClimb()
