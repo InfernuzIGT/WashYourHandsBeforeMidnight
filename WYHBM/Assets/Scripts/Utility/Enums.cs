@@ -80,6 +80,20 @@ public enum QUEST_STATE
     Completed = 3
 }
 
+public enum DIALOG_TYPE
+{
+    None = 0,
+    Ready = 1,
+    InProgress = 2,
+    Completed = 3
+}
+
+public enum LANGUAGE
+{
+    English = 0,
+    Spanish = 1
+}
+
 public enum SCENE_INDEX
 {
     MainMenu = 0,
