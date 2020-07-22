@@ -30,6 +30,6 @@ public class InteractionSave : Interaction, IInteractable
 
     private void OnInteractSave(InteractionEvent evt)
     {
-        GameManager.Instance.SaveGame();
+        // GameManager.Instance.SaveGame();
     }
 }

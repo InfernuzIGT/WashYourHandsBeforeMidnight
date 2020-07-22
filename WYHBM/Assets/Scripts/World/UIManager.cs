@@ -127,7 +127,7 @@ namespace GameMode.World
 
         public void Pause(bool isPaused)
         {
-            panelPause.gameObject.SetActive(isPaused);;
+            panelPause.gameObject.SetActive(isPaused);
         }
 
         public void ChangeCharacter(CombatPlayer combatPlayer, int index, bool inLeftLimit = false, bool inRightLimit = false)

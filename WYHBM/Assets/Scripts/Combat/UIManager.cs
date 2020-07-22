@@ -46,8 +46,15 @@ namespace GameMode.Combat
         {
             actions[_lastIndex].gameObject.SetActive(false);
             actions[index].gameObject.SetActive(true);
+            
+            actions[index].SelectFirstButton();
 
             _lastIndex = index;
+        }
+        
+        public void HideActions(bool isHiding)
+        {
+            actions[_lastIndex].gameObject.SetActive(!isHiding);
         }
 
         public void EnableCanvas(bool enabled)
