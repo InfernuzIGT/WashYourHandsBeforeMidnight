@@ -11,6 +11,15 @@
     ItemGrenade = 8
 }
 
+public enum COMBAT_STATE
+{
+    None = 0,
+    SelectAction = 1,
+    SelectCharacter = 2,
+    MakeAction = 3,
+    Wait = 4
+}
+
 // public enum TIER
 // {
 //     none = 0,

@@ -55,10 +55,10 @@ public class Player : CombatCharacter
 
         MaterialShow(true);
 
-        GameManager.Instance.combatUI.ShowActions(_combatIndex);
-        GameManager.Instance.combatUI.ShowPlayerPanel(true, true);
+        GameManager.Instance.PlayerCanSelect(true, _combatIndex);
 
         _isActionDone = false;
+        
 
         while (!_isActionDone)
         {
@@ -67,7 +67,7 @@ public class Player : CombatCharacter
 
         Shake();
         
-        GameManager.Instance.combatUI.ShowPlayerPanel(false, true);
+        GameManager.Instance.PlayerCanSelect(false);
 
         // GameManager.Instance.ReorderTurn();
 

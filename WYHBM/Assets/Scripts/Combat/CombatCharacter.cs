@@ -36,6 +36,12 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     // private InfoTextEvent infoTextEvent;
     private ShakeEvent _shakeEvent;
+    private Coroutine _coroutineGettingAhead;
+
+    // Shader
+    private int hash_IsDamaged = Shader.PropertyToID("_IsDamaged");
+    private int hash_IsHealing = Shader.PropertyToID("_IsHealing");
+    private int hash_Glow = Shader.PropertyToID("_Glow");
 
     // Combat variables
     private float _healthActual;
@@ -328,24 +334,29 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     #region Shader
 
+    public void ShowUI(bool show)
+    {
+        MaterialShow(show);
+    }
+
     protected void MaterialShow(bool show)
     {
-        _material.SetFloat("_IsDamaged", 0);
-        _material.SetFloat("_IsHealing", 0);
-        _material.SetFloat("_Glow", show ? 1 : 0);
+        _material.SetFloat(hash_IsDamaged, 0);
+        _material.SetFloat(hash_IsHealing, 0);
+        _material.SetFloat(hash_Glow, show ? 1 : 0);
     }
 
     protected void MaterialDamage()
     {
-        _material.SetFloat("_IsDamaged", 1);
-        _material.SetFloat("_IsHealing", 0);
+        _material.SetFloat(hash_IsDamaged, 1);
+        _material.SetFloat(hash_IsHealing, 0);
         StartCoroutine(AnimateGlow());
     }
 
     protected void MaterialHeal()
     {
-        _material.SetFloat("_IsDamaged", 0);
-        _material.SetFloat("_IsHealing", 1);
+        _material.SetFloat(hash_IsDamaged, 0);
+        _material.SetFloat(hash_IsHealing, 1);
         StartCoroutine(AnimateGlow());
     }
 
@@ -356,14 +367,14 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         while (_varShader < 1)
         {
             _varShader += _matGlowSpeed * Time.deltaTime;
-            _material.SetFloat("_Glow", _varShader);
+            _material.SetFloat(hash_Glow, _varShader);
             yield return null;
         }
 
         while (_varShader > 0)
         {
             _varShader -= _matGlowSpeed * Time.deltaTime;
-            _material.SetFloat("_Glow", _varShader);
+            _material.SetFloat(hash_Glow, _varShader);
             yield return null;
         }
 
@@ -404,7 +415,12 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     public void StartGettingAhead()
     {
-        StartCoroutine(GettingAhead());
+        _coroutineGettingAhead = StartCoroutine(GettingAhead());
+    }
+    
+    public void StopGettingAhead()
+    {
+        StopCoroutine(_coroutineGettingAhead);
     }
 
     /// <summary>

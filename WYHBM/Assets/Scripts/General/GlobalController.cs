@@ -161,5 +161,10 @@ public class GlobalController : MonoBehaviour
     // {
     //     player.InfiniteStamina = infiniteStamina;
     // }
+    
+    public void HidePlayer(bool isHiding)
+    {
+        player.gameObject.SetActive(!isHiding);
+    }
 
 }
