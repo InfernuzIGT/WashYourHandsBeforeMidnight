@@ -44,12 +44,12 @@ public class PlayerController : MonoBehaviour
 
     // Zipline
     public bool _inZipline = false;
+    // public float speedZipline; 
     public Vector3 endPos;
 
     // Ledge
     public Animator animator;
     public LayerMask Climbable;
-    public bool canClimbLedge = false;
     public bool ledgeDetected;
     private bool _isClimbing;
     private bool _inLedge;
@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour
         LadderMovement();
         MovementZipline();
     }
+
 
     private void MovementZipline()
     {
@@ -281,10 +282,13 @@ public class PlayerController : MonoBehaviour
                     {
                         _inLedge = true;
 
-                        transform.position = new Vector3(transform.position.x, hitLedgeFront.transform.position.y + 1, transform.position.z);
+                        transform.position = new Vector3(transform.position.x, hitLedgeFront.collider.bounds.size.y, transform.position.z);
 
-                        newPos = new Vector3(hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2.5f, hitLedgeFront.transform.position.y + 3f, hitLedgeFront.transform.position.z);
-                        // newPos = hitLedgeFront.collider.gameObject.transform.GetChild(0).transform.position;
+                        newPos = new Vector3(.5f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2, 
+                        hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2, 
+                        hitLedgeFront.transform.position.z);
+
+                        Debug.Log ($"<b> {newPos} </b>");
 
                         ledgeDetected = true;
 
@@ -318,7 +322,9 @@ public class PlayerController : MonoBehaviour
 
                             transform.position = new Vector3(transform.position.x, hitLedgeBack.transform.position.y + 1, transform.position.z);
 
-                            newPos = new Vector3(hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / 2.5f, hitLedgeBack.transform.position.y + 3f, hitLedgeBack.transform.position.z);
+                            newPos = new Vector3(- .5f + hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / 2, 
+                            hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / 2,
+                            hitLedgeBack.transform.position.z);
                             // newPos = hitLedgeBack.collider.gameObject.transform.GetChild(0).transform.position;
 
                             ledgeDetected = true;
