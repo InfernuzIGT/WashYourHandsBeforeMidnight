@@ -97,6 +97,8 @@ public class GlobalController : MonoBehaviour
         interiorCamera.m_LookAt = player.transform;
         // interiorCamera.transform.position = player.transform.position;
 
+        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
+
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(player.transform);
     }
@@ -106,7 +108,7 @@ public class GlobalController : MonoBehaviour
         _isInteriorCamera = !_isInteriorCamera;
 
         _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
-        
+
         exteriorCamera.gameObject.SetActive(!_isInteriorCamera);
         interiorCamera.gameObject.SetActive(_isInteriorCamera);
     }
@@ -159,5 +161,10 @@ public class GlobalController : MonoBehaviour
     // {
     //     player.InfiniteStamina = infiniteStamina;
     // }
+    
+    public void HidePlayer(bool isHiding)
+    {
+        player.gameObject.SetActive(!isHiding);
+    }
 
 }

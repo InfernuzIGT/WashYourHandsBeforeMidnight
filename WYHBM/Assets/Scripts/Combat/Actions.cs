@@ -28,6 +28,11 @@ public class Actions : MonoBehaviour
             actionButtons[0].gameObject.SetActive(true);
         }
     }
+    
+    public void SelectFirstButton()
+    {
+        actionButtons[0].SelectFirstButton();
+    }
 
     // public void SetButtonsEnable(bool isEnable)
     // {

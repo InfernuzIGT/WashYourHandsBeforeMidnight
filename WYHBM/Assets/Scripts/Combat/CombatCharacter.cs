@@ -16,6 +16,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     [Header("Stats")]
     [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
+    [SerializeField, Range(0f, 100f)] private int _statsHealthStart = 100;
     [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 10;
     [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 5;
     [SerializeField, Range(1f, 10f)] private int _statsReaction = 1;
@@ -23,6 +24,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
     // Protected
     protected SpriteRenderer _spriteRenderer;
     protected bool _isActionDone;
+    protected bool _isAlive = true;
     protected Material _material;
     protected WaitForSeconds _waitPerAction;
 
@@ -35,6 +37,12 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     // private InfoTextEvent infoTextEvent;
     private ShakeEvent _shakeEvent;
+    private Coroutine _coroutineGettingAhead;
+
+    // Shader
+    private int hash_IsDamaged = Shader.PropertyToID("_IsDamaged");
+    private int hash_IsHealing = Shader.PropertyToID("_IsHealing");
+    private int hash_Glow = Shader.PropertyToID("_Glow");
 
     // Combat variables
     private float _healthActual;
@@ -94,7 +102,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         _isMyTurn = false;
 
         _combatIndex = index;
-        _healthActual = _statsHealthMax;
+        _healthActual = _statsHealthStart;
 
         _equipment.AddRange(inventoryCombat);
 
@@ -166,7 +174,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         if (!GetProbability())
         {
             AnimationAction(ANIM_STATE.ItemDefense);
-            Debug.Log ($"<b> DODGE! </b>");
+            Debug.Log($"<b> DODGE! </b>");
             return;
         }
 
@@ -191,7 +199,13 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         }
 
         _healthActual -= (_totalDamage - _totalDefense);
-        if (_healthActual < 0)_healthActual = 0;
+
+        if (_healthActual <= 0)
+        {
+            _healthActual = 0;
+            _isAlive = false;
+            RemoveCharacter();
+        }
 
         _characterUI.healthBar.
         DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration).
@@ -274,21 +288,25 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     private void Kill()
     {
-        if (_healthActual <= 0)
+        if (!_isAlive)
         {
-            _healthActual = 0;
-
             _characterUI.Kill();
 
             _spriteRenderer.
             DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
-            SetEase(Ease.OutQuad).OnComplete(CheckCharacters);
+            SetEase(Ease.OutQuad).OnComplete(CheckGame);
         }
     }
 
-    public virtual void CheckCharacters()
+    public void CheckGame()
     {
         gameObject.SetActive(false);
+        GameManager.Instance.combatManager.CheckGame();
+    }
+    
+    public virtual void RemoveCharacter()
+    {
+        
     }
 
     public int GetItemDamage()
@@ -327,24 +345,29 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     #region Shader
 
+    public void ShowUI(bool show)
+    {
+        MaterialShow(show);
+    }
+
     protected void MaterialShow(bool show)
     {
-        _material.SetFloat("_IsDamaged", 0);
-        _material.SetFloat("_IsHealing", 0);
-        _material.SetFloat("_Glow", show ? 1 : 0);
+        _material.SetFloat(hash_IsDamaged, 0);
+        _material.SetFloat(hash_IsHealing, 0);
+        _material.SetFloat(hash_Glow, show ? 1 : 0);
     }
 
     protected void MaterialDamage()
     {
-        _material.SetFloat("_IsDamaged", 1);
-        _material.SetFloat("_IsHealing", 0);
+        _material.SetFloat(hash_IsDamaged, 1);
+        _material.SetFloat(hash_IsHealing, 0);
         StartCoroutine(AnimateGlow());
     }
 
     protected void MaterialHeal()
     {
-        _material.SetFloat("_IsDamaged", 0);
-        _material.SetFloat("_IsHealing", 1);
+        _material.SetFloat(hash_IsDamaged, 0);
+        _material.SetFloat(hash_IsHealing, 1);
         StartCoroutine(AnimateGlow());
     }
 
@@ -355,14 +378,14 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         while (_varShader < 1)
         {
             _varShader += _matGlowSpeed * Time.deltaTime;
-            _material.SetFloat("_Glow", _varShader);
+            _material.SetFloat(hash_Glow, _varShader);
             yield return null;
         }
 
         while (_varShader > 0)
         {
             _varShader -= _matGlowSpeed * Time.deltaTime;
-            _material.SetFloat("_Glow", _varShader);
+            _material.SetFloat(hash_Glow, _varShader);
             yield return null;
         }
 
@@ -403,7 +426,12 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     public void StartGettingAhead()
     {
-        StartCoroutine(GettingAhead());
+        _coroutineGettingAhead = StartCoroutine(GettingAhead());
+    }
+
+    public void StopGettingAhead()
+    {
+        StopCoroutine(_coroutineGettingAhead);
     }
 
     /// <summary>

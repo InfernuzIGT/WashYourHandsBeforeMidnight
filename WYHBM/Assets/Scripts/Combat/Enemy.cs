@@ -14,8 +14,9 @@ public class Enemy : CombatCharacter
 	{
 		int randomPlayer = Random.Range(0, GameManager.Instance.combatManager.listPlayers.Count);
 
-		GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();
-		GameManager.Instance.combatManager.listPlayers[randomPlayer].AnimationRecovery();
+		GameManager.Instance.combatManager.listPlayers[randomPlayer].Select(Equipment[0]);
+		// GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();
+		// GameManager.Instance.combatManager.listPlayers[randomPlayer].AnimationRecovery();
 
 		// TODO Mariano: Agregar animacion correspondiente
 		AnimationAction(ANIM_STATE.AttackMelee);
@@ -23,11 +24,10 @@ public class Enemy : CombatCharacter
 		DoAction();
 	}
 
-	public override void CheckCharacters()
+	public override void RemoveCharacter()
 	{
-		base.CheckCharacters();
-
-		GameManager.Instance.combatManager.CheckGame(this);
+		base.RemoveCharacter();
+		GameManager.Instance.combatManager.RemoveCharacter(this);
 	}
 
 	#region Animation

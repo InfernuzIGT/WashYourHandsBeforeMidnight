@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Events;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 
 [System.Serializable]
@@ -28,7 +30,8 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("General")]
     public bool isPaused;
     public bool inCombat;
-    public bool inWorld;
+    public bool inDarkZone;
+    public bool enableEncounters;
 
     [Header("References")]
     public GlobalController globalController;
@@ -37,13 +40,9 @@ public class GameManager : MonoSingleton<GameManager>
     public PlayableDirector playableDirector;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
-    public Vector3 dropZone;
+    public EventSystem eventSystem;
 
     [Header("Combat")]
-    public bool enableCombat;
-    public float probabilityNormal = 0.4f;
-    public float probabilityDarkZone = 0.7f;
-    [Space]
     public CombatArea[] combatAreas;
     [Space]
     public List<CombatPlayer> combatPlayers;
@@ -68,13 +67,13 @@ public class GameManager : MonoSingleton<GameManager>
     private int _equipmentMaxSlots = 3;
     private int _characterIndex;
 
+    // Coroutines
+    private Coroutine _coroutineEnconters;
+
     // Events
     private FadeEvent _fadeEvent;
 
     // Properties
-    private InputActions _inputActions;
-    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
-
     public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
     public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
 
@@ -90,15 +89,6 @@ public class GameManager : MonoSingleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-
-        CreateInput();
-    }
-
-    private void CreateInput()
-    {
-        InputActions = new InputActions();
-
-        InputActions.ActionPlayer.Pause.performed += ctx => Pause();
     }
 
     private void Start()
@@ -121,13 +111,13 @@ public class GameManager : MonoSingleton<GameManager>
 
         // GameManager.Instance.LoadGame();
 
-        inWorld = true;
+        inCombat = false;
+
+        CheckEncounters(true);
     }
 
     private void OnEnable()
     {
-        InputActions.Enable();
-
         EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
@@ -137,8 +127,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnDisable()
     {
-        InputActions.Disable();
-
         EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
@@ -146,26 +134,40 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
 
-    private void Update()
+    public void CheckEncounters(bool isEnabled)
     {
-        CheckEncounters();
-    }
-
-    private void CheckEncounters()
-    {
-        if (enableCombat && !inCombat && !isPaused && globalController.player.GetPlayerInMovement())
+        if (isEnabled)
         {
-            _currentTimeEncounter += Time.deltaTime;
-
-            if (_currentTimeEncounter > _limitTimeEncounter)
-            {
-                _currentTimeEncounter = 0;
-                TriggerCombat();
-            }
+            _coroutineEnconters = StartCoroutine(CheckEncounter());
+        }
+        else
+        {
+            StopCoroutine(_coroutineEnconters);
+            _coroutineEnconters = null;
         }
     }
 
-    private void Pause()
+    private IEnumerator CheckEncounter()
+    {
+        yield return new WaitForSeconds(3f);
+        
+        while (enableEncounters)
+        {
+            if (!inCombat && !isPaused && globalController.player.GetPlayerInMovement())
+            {
+                _currentTimeEncounter += Time.deltaTime;
+
+                if (_currentTimeEncounter > _limitTimeEncounter)
+                {
+                    _currentTimeEncounter = 0;
+                    TriggerCombat();
+                }
+            }
+            yield return null;
+        }
+    }
+
+    public void Pause()
     {
         if (!inCombat)
         {
@@ -191,6 +193,7 @@ public class GameManager : MonoSingleton<GameManager>
     //     }
     // }
 
+    // TODO Mariano: Review
     public void SetPause(bool inNote)
     {
         if (inNote)
@@ -208,26 +211,26 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void SwitchAmbient()
     {
-        if (inWorld)
-        {
-            worldUI.EnableCanvas(true);
-            combatUI.EnableCanvas(false);
+        CheckEncounters(!inCombat);
 
+        globalController.player.ToggleInputWorld(!inCombat);
+        globalController.HidePlayer(inCombat);
+
+        combatUI.EnableCanvas(inCombat);
+        worldUI.EnableCanvas(!inCombat);
+
+        combatManager.ToggleInputCombat(inCombat);
+        combatManager.SetCombatArea(inCombat);
+
+        if (!inCombat)
+        {
             globalController.ChangeToCombatCamera(null);
-            combatManager.CloseCombatArea();
             combatUI.actions.Clear();
             combatUI.ClearTurn();
-
-            inCombat = false;
         }
         else
         {
-            worldUI.EnableCanvas(false);
-            combatUI.EnableCanvas(true);
-
             globalController.ChangeToCombatCamera(_currentCombatArea.virtualCamera);
-
-            inCombat = true;
         }
     }
 
@@ -236,14 +239,9 @@ public class GameManager : MonoSingleton<GameManager>
         globalController.player.SwitchMovement();
     }
 
-    private void InitiateTurn()
-    {
-        combatManager.InitiateTurn();
-    }
-
     private void StartCombat()
     {
-        currentNPC?.Kill();
+        // currentNPC?.Kill();
         combatManager.InitiateTurn();
     }
 
@@ -252,19 +250,28 @@ public class GameManager : MonoSingleton<GameManager>
         combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
     }
 
-    public bool GetProbability()
+    public void SelectButton(GameObject button)
+    {
+        eventSystem.SetSelectedGameObject(button);
+    }
+
+    public void PlayerCanSelect(bool canSelect, int combatIndex = 0)
+    {
+        combatManager.ChangeCombatState(canSelect);
+        combatUI.ShowPlayerPanel(canSelect, true);
+        if (canSelect)combatUI.ShowActions(combatIndex);
+    }
+
+    public bool GetProbabilityEncounter()
     {
         ProportionValue<bool>[] tempProb = new ProportionValue<bool>[2];
 
-        tempProb[0] = ProportionValue.Create(probabilityNormal, true);
-        tempProb[1] = ProportionValue.Create(1 - probabilityNormal, false);
+        float probability = inDarkZone ? GameData.Instance.worldConfig.probabilityDarkZone : GameData.Instance.worldConfig.probabilityNormal;
+
+        tempProb[0] = ProportionValue.Create(probability, true);
+        tempProb[1] = ProportionValue.Create(1 - probability, false);
 
         return tempProb.ChooseByRandom();
-    }
-
-    public Ray GetRayMouse()
-    {
-        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
     }
 
     #region Inventory
@@ -303,14 +310,14 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (isLeft)
         {
-            if (_characterIndex <= 0) return;
+            if (_characterIndex <= 0)return;
 
             _characterIndex--;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1) return;
+            if (_characterIndex >= combatPlayers.Count - 1)return;
 
             _characterIndex++;
             worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
@@ -370,7 +377,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnEnterCombat(EnterCombatEvent evt)
     {
-        inWorld = false;
+        inCombat = true;
         currentNPC = evt.currentNPC;
 
         int indexArea = Random.Range(0, combatAreas.Length);
@@ -386,9 +393,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void TriggerCombat()
     {
-        if (!GetProbability())return;
+        if (!GetProbabilityEncounter())return;
 
-        inWorld = false;
+        inCombat = true;
         currentNPC = null;
 
         int indexArea = Random.Range(0, combatAreas.Length);
@@ -406,7 +413,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnExitCombat(ExitCombatEvent evt)
     {
-        inWorld = true;
+        inCombat = false;
 
         _fadeEvent.callbackStart = null;
         _fadeEvent.callbackMid = SwitchAmbient;
@@ -434,7 +441,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnCutscene(CutsceneEvent evt)
     {
-        Debug.Log($"<b> {evt.cutscene.name} </b>");
+        // Debug.Log($"<b> {evt.cutscene.name} </b>");
         playableDirector.playableAsset = evt.cutscene;
 
         playableDirector.Play();
@@ -444,32 +451,32 @@ public class GameManager : MonoSingleton<GameManager>
 
     #region Persistence
 
-    public void LoadGame()
+    /* public void LoadGame()
     {
-        // for (int i = 0; i < GameData.Data.items.Count; i++)
-        // {
-        //     if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
+        for (int i = 0; i < GameData.Data.items.Count; i++)
+        {
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
-        //     Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
-        //     newSlot.AddItem(GameData.Data.items[i]);
-        //     listSlots.Add(newSlot);
+            Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
+            newSlot.AddItem(GameData.Data.items[i]);
+            listSlots.Add(newSlot);
 
-        //     GameData.Data.items.Remove(GameData.Instance.persistenceItem);
-        // }
+            GameData.Data.items.Remove(GameData.Instance.persistenceItem);
+        }
 
-        // foreach (var key in GameData.Data.listQuest.Keys)
-        // {
-        //     Debug.Log($"<b> {GameData.Data.listQuest[key].title} </b>");
+        foreach (var key in GameData.Data.listQuest.Keys)
+        {
+            Debug.Log($"<b> {GameData.Data.listQuest[key].title} </b>");
 
-        //     if (GameData.Data.listQuest[key] == GameData.Instance.persistenceQuest)continue;
+            if (GameData.Data.listQuest[key] == GameData.Instance.persistenceQuest)continue;
 
-        //     listQuest.Add(GameData.Data.listQuest[key]);
-        //     listProgress.Add(GameData.Data.listProgress[key]);
+            listQuest.Add(GameData.Data.listQuest[key]);
+            listProgress.Add(GameData.Data.listProgress[key]);
 
-        //     worldUI.ReloadQuest(GameData.Data.listQuest[key]);
-        // }
+            worldUI.ReloadQuest(GameData.Data.listQuest[key]);
+        }
 
-        // GameManager.Instance.globalController.spawnPoint = GameData.Data.newSpawnPoint;
+        GameManager.Instance.globalController.spawnPoint = GameData.Data.newSpawnPoint;
 
     }
 
@@ -477,36 +484,36 @@ public class GameManager : MonoSingleton<GameManager>
     {
         ClearOldData();
 
-        // for (int i = 0; i < _items.Count; i++)
-        // {
-        //     GameData.Data.items.Add(_items[i]);
-        // }
+        for (int i = 0; i < _items.Count; i++)
+        {
+            GameData.Data.items.Add(_items[i]);
+        }
 
-        // foreach (var key in listQuest.Keys)
-        // {
-        // GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
-        // GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
+        foreach (var key in listQuest.Keys)
+        {
+        GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
+        GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
 
-        // }
+        }
 
-        // mueve el spawn point a la ultima posicion del jugador
-        // guarda la ulitma posicion para mover el spawn point
+        mueve el spawn point a la ultima posicion del jugador
+        guarda la ulitma posicion para mover el spawn point
 
-        // GameManager.Instance.globalController.spawnPoint.TransformPoint(
-        //     GameData.Data.newSpawnPoint.transform.position.x,
-        //     GameData.Data.newSpawnPoint.transform.position.y,
-        //     GameData.Data.newSpawnPoint.transform.position.z);
+        GameManager.Instance.globalController.spawnPoint.TransformPoint(
+            GameData.Data.newSpawnPoint.transform.position.x,
+            GameData.Data.newSpawnPoint.transform.position.y,
+            GameData.Data.newSpawnPoint.transform.position.z);
 
-        // GameData.SaveData();
+        GameData.SaveData();
 
     }
 
     private void ClearOldData()
     {
-        // GameData.Data.items.Clear();
-        // GameData.Data.listQuest.Clear();
-        // GameData.Data.listProgress.Clear();
-        // GameData.Data.position.Translate(59.1f, 0f, -49.4f);
+        GameData.Data.items.Clear();
+        GameData.Data.listQuest.Clear();
+        GameData.Data.listProgress.Clear();
+        GameData.Data.position.Translate(59.1f, 0f, -49.4f);
     }
 
     [ContextMenu("Delete Game")]
@@ -514,7 +521,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         GameData.DeleteAllData();
         GameData.Data.isDataLoaded = false;
-    }
+    } */
 
     #endregion
 

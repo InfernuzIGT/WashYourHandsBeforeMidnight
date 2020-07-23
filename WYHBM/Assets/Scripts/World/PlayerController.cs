@@ -86,36 +86,47 @@ public class PlayerController : MonoBehaviour
     {
         InputActions = new InputActions();
 
-        InputActions.ActionPlayer.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        InputActions.ActionPlayer.Jump.performed += ctx => Jump();
-        InputActions.ActionPlayer.Interaction.performed += ctx => Interaction();
-        InputActions.ActionPlayer.Walk.started += ctx => Walk(true);
-        InputActions.ActionPlayer.Walk.canceled += ctx => Walk(false);
+        InputActions.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        InputActions.Player.Jump.performed += ctx => Jump();
+        InputActions.Player.Interaction.performed += ctx => Interaction();
+        InputActions.Player.Walk.started += ctx => Walk(true);
+        InputActions.Player.Walk.canceled += ctx => Walk(false);
+        InputActions.Player.Pause.performed += ctx => GameManager.Instance.Pause();
     }
 
     private void Start()
     {
-        // Cursor.visible = false;
-        // Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
+
+        ToggleInputWorld(true);
     }
 
     private void OnEnable()
     {
-        InputActions.Enable();
-
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
     }
 
     private void OnDisable()
     {
-        InputActions.Disable();
-
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
+    }
+
+    public void ToggleInputWorld(bool isEnabled)
+    {
+        if (isEnabled)
+        {
+            InputActions.Enable();
+        }
+        else
+        {
+            InputActions.Disable();
+        }
     }
 
     private void Update()
@@ -131,35 +142,24 @@ public class PlayerController : MonoBehaviour
         if (_inZipline)
         {
             _gravity = 0;
+
+            _animatorController.MovementZipline(true);
+            // animator.SetBool("canZipline", true);
+
             transform.position = Vector3.MoveTowards(transform.position, endPos, .5f);
-            animator.SetBool("canZipline", true);
-        }
 
-        if (Physics.Raycast(wallCheck.transform.position, Vector3.right, out RaycastHit hitWallFront, .5f))
-        {
-            if (hitWallFront.collider.tag == "Zipline")
+            if (Vector3.Distance(transform.position, endPos) < 1)
             {
-
-                animator.SetBool("canZipline", false);
+                _animatorController.MovementZipline(false);
+                // animator.SetBool("canZipline", false);
                 _inZipline = false;
                 _gravity = 39.24f;
             }
         }
-        if (Physics.Raycast(wallCheck.transform.position, Vector3.left, out RaycastHit hitWallBack, .5f))
-        {
-            if (hitWallBack.collider.tag == "Zipline")
-            {
-                animator.SetBool("canZipline", false);
-                _inZipline = false;
-                _gravity = 39.24f;
-            }
-        }
-
     }
 
     private IEnumerator AnimClimb()
     {
-
         if (_inLadder)
         {
             animator.SetBool("canClimbLadder", true);
@@ -192,7 +192,6 @@ public class PlayerController : MonoBehaviour
         transform.position = newPos;
 
         _characterController.enabled = true;
-
     }
 
     private void Movement()
@@ -352,11 +351,15 @@ public class PlayerController : MonoBehaviour
 
     private void LadderMovement()
     {
-
-        if (!_inLadder) { animator.SetBool("canClimbLadder", false); return; }
+        if (!_inLadder)
+        {
+            animator.SetBool("canClimbLadder", false);
+            return;
+        }
         else
-
+        {
             DetectBot();
+        }
 
         _movement.x = _inputMovement.x * _speedLadder;
         _movement.z = 0;
@@ -374,7 +377,6 @@ public class PlayerController : MonoBehaviour
     {
         if (_inLadder)
         {
-
             _botPosition = new Vector3(
                 transform.position.x,
                 transform.position.y - _characterController.height / 2 - _characterController.center.y,
@@ -388,16 +390,18 @@ public class PlayerController : MonoBehaviour
                     _ladderEvent.ladderExit = LADDER_EXIT.Bot;
                     EventController.TriggerEvent(_ladderEvent);
                 }
-
             }
         }
     }
 
     private void Interaction()
     {
-        _interactionEvent.lastPlayerPosition = transform.position;
-        _interactionEvent.isRunning = _isRunning;
-        EventController.TriggerEvent(_interactionEvent);
+        if (!GameManager.Instance.inCombat)
+        {
+            _interactionEvent.lastPlayerPosition = transform.position;
+            _interactionEvent.isRunning = _isRunning;
+            EventController.TriggerEvent(_interactionEvent);
+        }
     }
 
     public void SwitchMovement()

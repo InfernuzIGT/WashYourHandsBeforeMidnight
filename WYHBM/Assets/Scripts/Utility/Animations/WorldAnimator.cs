@@ -36,4 +36,9 @@ public class WorldAnimator : AnimatorController
 
         _spriteRenderer.flipX = _isFlipped;
     }
+    
+    public void MovementZipline(bool canZipline)
+    {
+        _animCanZipLine.Execute(_animator, canZipline);
+    }
 }

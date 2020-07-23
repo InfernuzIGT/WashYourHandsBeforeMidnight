@@ -11,6 +11,15 @@
     ItemGrenade = 8
 }
 
+public enum COMBAT_STATE
+{
+    None = 0,
+    SelectAction = 1,
+    SelectCharacter = 2,
+    MakeAction = 3,
+    Wait = 4
+}
+
 // public enum TIER
 // {
 //     none = 0,
@@ -78,6 +87,20 @@ public enum QUEST_STATE
     Ready = 1,
     InProgress = 2,
     Completed = 3
+}
+
+public enum DIALOG_TYPE
+{
+    None = 0,
+    Ready = 1,
+    InProgress = 2,
+    Completed = 3
+}
+
+public enum LANGUAGE
+{
+    English = 0,
+    Spanish = 1
 }
 
 public enum SCENE_INDEX

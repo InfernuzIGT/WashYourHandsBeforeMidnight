@@ -4,7 +4,7 @@ using UnityEngine;
 public class InteractionCutscene : Interaction, IInteractable
 {
     private CutsceneEvent _cutsceneEvent;
-    public DialogSO dialog;
+    // public DialogSO dialog;
 
     public override void Awake()
     {

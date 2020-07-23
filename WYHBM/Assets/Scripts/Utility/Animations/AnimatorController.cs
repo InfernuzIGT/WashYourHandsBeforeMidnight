@@ -13,6 +13,7 @@ public class AnimatorController : MonoBehaviour
     protected AnimationCommandFloat _animValueX = new AnimValueX();
     protected AnimationCommandFloat _animValueY = new AnimValueY();
     protected AnimationCommandInt _animActionType = new AnimActionType();
+    protected AnimationCommandBool _animCanZipLine = new AnimCanZipline();
 
     private void Awake()
     {

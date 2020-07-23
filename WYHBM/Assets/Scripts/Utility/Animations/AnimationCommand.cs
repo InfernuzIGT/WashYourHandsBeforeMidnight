@@ -21,6 +21,10 @@ public abstract class AnimationCommand
     protected readonly int hash_DoorIsOpening = Animator.StringToHash("isOpening"); // Bool
     protected readonly int hash_DoorIsRunning = Animator.StringToHash("isRunning"); // Bool
     protected readonly int hash_DoorIsLocked = Animator.StringToHash("isLocked"); // Trigger
+
+    // Systems
+    protected readonly int hash_CanZipline = Animator.StringToHash("canZipline"); // Bool
+
 }
 
 #region Animation Command - Float
@@ -160,6 +164,18 @@ public class AnimDoorIsLocked : AnimationCommandTrigger
     public override void Execute(Animator anim)
     {
         anim.SetTrigger(hash_DoorIsLocked);
+    }
+}
+
+#endregion
+
+#region  Systems
+
+public class AnimCanZipline : AnimationCommandBool
+{
+    public override void Execute(Animator anim, bool value)
+    {
+        anim.SetBool(hash_CanZipline, value);
     }
 }
 
