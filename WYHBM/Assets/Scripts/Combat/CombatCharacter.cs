@@ -24,6 +24,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
     // Protected
     protected SpriteRenderer _spriteRenderer;
     protected bool _isActionDone;
+    protected bool _isAlive = true;
     protected Material _material;
     protected WaitForSeconds _waitPerAction;
 
@@ -198,7 +199,13 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         }
 
         _healthActual -= (_totalDamage - _totalDefense);
-        if (_healthActual < 0)_healthActual = 0;
+
+        if (_healthActual <= 0)
+        {
+            _healthActual = 0;
+            _isAlive = false;
+            RemoveCharacter();
+        }
 
         _characterUI.healthBar.
         DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration).
@@ -281,21 +288,25 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     private void Kill()
     {
-        if (_healthActual <= 0)
+        if (!_isAlive)
         {
-            _healthActual = 0;
-
             _characterUI.Kill();
 
             _spriteRenderer.
             DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
-            SetEase(Ease.OutQuad).OnComplete(CheckCharacters);
+            SetEase(Ease.OutQuad).OnComplete(CheckGame);
         }
     }
 
-    public virtual void CheckCharacters()
+    public void CheckGame()
     {
         gameObject.SetActive(false);
+        GameManager.Instance.combatManager.CheckGame();
+    }
+    
+    public virtual void RemoveCharacter()
+    {
+        
     }
 
     public int GetItemDamage()
@@ -417,7 +428,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
     {
         _coroutineGettingAhead = StartCoroutine(GettingAhead());
     }
-    
+
     public void StopGettingAhead()
     {
         StopCoroutine(_coroutineGettingAhead);

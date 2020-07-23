@@ -10,11 +10,10 @@ public class Player : CombatCharacter
         base.Start();
     }
 
-    public override void CheckCharacters()
+    public override void RemoveCharacter()
     {
-        base.CheckCharacters();
-
-        GameManager.Instance.combatManager.CheckGame(this);
+        base.RemoveCharacter();
+        GameManager.Instance.combatManager.RemoveCharacter(this);
     }
 
     #region Animation
@@ -58,7 +57,6 @@ public class Player : CombatCharacter
         GameManager.Instance.PlayerCanSelect(true, _combatIndex);
 
         _isActionDone = false;
-        
 
         while (!_isActionDone)
         {
@@ -66,7 +64,7 @@ public class Player : CombatCharacter
         }
 
         Shake();
-        
+
         GameManager.Instance.PlayerCanSelect(false);
 
         // GameManager.Instance.ReorderTurn();
