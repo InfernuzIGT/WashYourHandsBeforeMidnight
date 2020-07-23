@@ -25,7 +25,8 @@ public class CombatManager : MonoBehaviour
     private int _indexCharacter;
     private int _indexLastCharacter;
 
-    private WaitForSeconds _waitStart;
+    private Coroutine _coroutineTurnsLoop;
+    // private WaitForSeconds _waitStart;
     private WaitForSeconds _waitBetweenTurns;
 
     private ExitCombatEvent _interactionCombatEvent;
@@ -60,7 +61,7 @@ public class CombatManager : MonoBehaviour
         _listWaitingCharacters = new List<CombatCharacter>();
         _listSelectionCharacters = new List<CombatCharacter>();
 
-        _waitStart = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeToStart);
+        // _waitStart = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeToStart);
         _waitBetweenTurns = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeBetweenTurns);
 
         _interactionCombatEvent = new ExitCombatEvent();
@@ -289,7 +290,19 @@ public class CombatManager : MonoBehaviour
         _combatState = canSelect ? COMBAT_STATE.SelectAction : COMBAT_STATE.Wait;
     }
 
-    public void CheckGame(Player character)
+    public void CheckGame()
+    {
+        if (listPlayers.Count == 0)
+        {
+            FinishGame(false);
+        }
+        else if (listEnemies.Count == 0)
+        {
+            FinishGame(true);
+        }
+    }
+
+    public void RemoveCharacter(Player character)
     {
         character.StopGettingAhead();
 
@@ -299,13 +312,13 @@ public class CombatManager : MonoBehaviour
 
         GameManager.Instance.ReorderTurn();
 
-        if (listPlayers.Count == 0)
-        {
-            FinishGame(false);
-        }
+        // if (listPlayers.Count == 0)
+        // {
+        //     FinishGame(false);
+        // }
     }
 
-    public void CheckGame(Enemy character)
+    public void RemoveCharacter(Enemy character)
     {
         character.StopGettingAhead();
 
@@ -315,10 +328,10 @@ public class CombatManager : MonoBehaviour
 
         GameManager.Instance.ReorderTurn();
 
-        if (listEnemies.Count == 0)
-        {
-            FinishGame(true);
-        }
+        // if (listEnemies.Count == 0)
+        // {
+        //     FinishGame(true);
+        // }
     }
 
     private void FinishGame(bool isWin)
@@ -379,7 +392,7 @@ public class CombatManager : MonoBehaviour
         AddToWaiting(InitialSort());
         SetInitialCharactersTurn();
 
-        StartCoroutine(TurnsLoop());
+        _coroutineTurnsLoop = StartCoroutine(TurnsLoop());
         UnleashRace();
     }
 
@@ -427,7 +440,7 @@ public class CombatManager : MonoBehaviour
     /// </summary>
     private IEnumerator TurnsLoop()
     {
-        yield return _waitStart;
+        // yield return _waitStart;
 
         while (!_isEndOfCombat)
         {
