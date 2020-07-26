@@ -34,10 +34,10 @@ namespace GameMode.Combat
             _turn = new List<Turn>();
         }
 
-        public void CreateActions(List<ItemSO> items)
+        public void CreateActions(Equipment equipment)
         {
             _actions = Instantiate(GameData.Instance.combatConfig.actionsPrefab, actionsContainer);
-            _actions.Init(items);
+            _actions.Init(equipment);
             _actions.gameObject.SetActive(false);
             actions.Add(_actions);
         }
