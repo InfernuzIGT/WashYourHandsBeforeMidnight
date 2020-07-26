@@ -6,23 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 
 [System.Serializable]
-public class CombatPlayer
-{
-    public Player character;
-    public List<ItemSO> equipment = new List<ItemSO>();
-}
-
-[System.Serializable]
-public class CombatEnemy
-{
-    public Enemy character;
-    public List<ItemSO> equipment = new List<ItemSO>();
-}
-
-[System.Serializable]
 public class EnemyEncounter
 {
-    public List<CombatEnemy> enemies = new List<CombatEnemy>();
+    public List<Enemy> enemies = new List<Enemy>();
 }
 
 public class GameManager : MonoSingleton<GameManager>
@@ -31,7 +17,6 @@ public class GameManager : MonoSingleton<GameManager>
     public bool isPaused;
     public bool inCombat;
     public bool inDarkZone;
-    public bool enableEncounters;
 
     [Header("References")]
     public GlobalController globalController;
@@ -45,13 +30,13 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("Combat")]
     public CombatArea[] combatAreas;
     [Space]
-    public List<CombatPlayer> combatPlayers;
+    public List<Player> combatPlayers;
     [Space]
     public List<EnemyEncounter> enemyEncounters;
-    [Space]
+
+    public List<QuestData> listQuestData;
     // public List<QuestSO> listQuest;
     // public List<int> listProgress;
-    public List<QuestData> listQuestData;
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
     public List<Slot> listSlots;
@@ -63,22 +48,34 @@ public class GameManager : MonoSingleton<GameManager>
     private float _limitTimeEncounter = 10;
 
     // Inventory
-    private int _inventoryMaxSlots = 8;
-    private int _equipmentMaxSlots = 3;
-    private int _characterIndex;
+    // private int _inventoryMaxSlots = 8;
+    // private int _equipmentMaxSlots = 3;
+    // private int _characterIndex;
+
+    // Hold System
+    private bool _holdStarted;
+    private float _holdCurrentTime;
+    private float _holdLimitTime;
+    private System.Action _holdCallback;
+    private UnityEngine.UI.Image _holdImage;
 
     // Coroutines
     private Coroutine _coroutineEnconters;
+    private Coroutine _coroutineHoldSystem;
+    private WaitForSeconds _waitHoldEnd;
 
     // Events
     private FadeEvent _fadeEvent;
 
     // Properties
-    public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
-    public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
-
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
+
+    private float _holdFillValue;
+    public float HoldFillValue { get { return _holdFillValue; } }
+
+    // public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
+    // public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
 
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
@@ -106,8 +103,10 @@ public class GameManager : MonoSingleton<GameManager>
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
 
-        _characterIndex = 0;
-        worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
+        _waitHoldEnd = new WaitForSeconds(1f);
+
+        // _characterIndex = 0;
+        // worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
 
         // GameManager.Instance.LoadGame();
 
@@ -150,10 +149,10 @@ public class GameManager : MonoSingleton<GameManager>
     private IEnumerator CheckEncounter()
     {
         yield return new WaitForSeconds(3f);
-        
-        while (enableEncounters)
+
+        while (true)
         {
-            if (!inCombat && !isPaused && globalController.player.GetPlayerInMovement())
+            if (!inCombat && !isPaused && globalController.GetPlayerInMovement())
             {
                 _currentTimeEncounter += Time.deltaTime;
 
@@ -167,11 +166,46 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    public void Pause()
+    public void Pause(PAUSE_TYPE type)
     {
+        switch (type)
+        {
+            case PAUSE_TYPE.PauseMenu:
+                if (!inCombat)
+                {
+                    isPaused = !isPaused;
+                    Time.timeScale = isPaused ? 0 : 1;
+                    worldUI.Pause(isPaused);
+                }
+                break;
+
+            case PAUSE_TYPE.Inventory:
+                if (!inCombat)
+                {
+                    isPaused = !isPaused;
+                    Time.timeScale = isPaused ? 0 : 1;
+                    // TODO Marcos: Show Inventory 
+                }
+                break;
+
+            case PAUSE_TYPE.Note:
+                isPaused = !isPaused;
+                Time.timeScale = isPaused ? 0 : 1;
+                worldUI.ActiveNote(isPaused);
+                break;
+
+            default:
+                isPaused = !isPaused;
+                Time.timeScale = isPaused ? 0 : 1;
+                break;
+        }
+
         if (!inCombat)
         {
-            SetPause(false);
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0 : 1;
+            worldUI.Pause(isPaused);
+            // SetPause(false);
         }
     }
 
@@ -192,22 +226,6 @@ public class GameManager : MonoSingleton<GameManager>
     //         SetPause();
     //     }
     // }
-
-    // TODO Mariano: Review
-    public void SetPause(bool inNote)
-    {
-        if (inNote)
-        {
-            isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0 : 1;
-        }
-        else
-        {
-            isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0 : 1;
-            worldUI.Pause(isPaused);
-        }
-    }
 
     private void SwitchAmbient()
     {
@@ -274,55 +292,105 @@ public class GameManager : MonoSingleton<GameManager>
         return tempProb.ChooseByRandom();
     }
 
-    #region Inventory
+    #region Hold System
 
-    public void AddItem(ItemSO item)
+    public void SetHoldSystem(ref UnityEngine.UI.Image image, float limitTime, System.Action callback)
     {
-        _items.Add(item);
+        _holdImage = image;
+        _holdLimitTime = limitTime;
+        _holdCallback = callback;
     }
 
-    public void DropItem(Slot slot)
+    public void CallHoldSystem(bool isStart)
     {
-        _items.Remove(slot.Item);
+        _holdStarted = isStart;
 
-        listSlots.Remove(slot);
-
-        worldUI.itemDescription.Hide();
-    }
-
-    public void EquipItem(ItemSO item)
-    {
-        combatPlayers[_characterIndex].equipment.Add(item);
-
-        _items.Remove(item);
-
-        worldUI.itemDescription.Hide();
-    }
-
-    public void UnequipItem(ItemSO item)
-    {
-        combatPlayers[_characterIndex].equipment.Remove(item);
-
-        _items.Add(item);
-    }
-
-    public void NextCharacter(bool isLeft)
-    {
-        if (isLeft)
+        if (_holdStarted)
         {
-            if (_characterIndex <= 0)return;
-
-            _characterIndex--;
-            worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
+            _coroutineHoldSystem = StartCoroutine(Hold());
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1)return;
+            StopCoroutine(_coroutineHoldSystem);
 
-            _characterIndex++;
-            worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
+            _holdCurrentTime = 0;
+            _holdImage.fillAmount = 0;
         }
     }
+
+    private IEnumerator Hold()
+    {
+        while (_holdStarted)
+        {
+            _holdCurrentTime += Time.deltaTime;
+
+            _holdImage.fillAmount = _holdCurrentTime / _holdLimitTime;
+
+            if (_holdCurrentTime > _holdLimitTime)
+            {
+                _holdImage.fillAmount = 1;
+                _holdCallback.Invoke();
+
+                yield return _waitHoldEnd;
+
+                CallHoldSystem(false);
+            }
+
+            yield return null;
+        }
+    }
+
+    #endregion
+
+    #region Inventory
+
+    // public void AddItem(ItemSO item)
+    // {
+    //     _items.Add(item);
+    // }
+
+    // public void DropItem(Slot slot)
+    // {
+    //     _items.Remove(slot.Item);
+
+    //     listSlots.Remove(slot);
+
+    //     worldUI.itemDescription.Hide();
+    // }
+
+    // public void EquipItem(ItemSO item)
+    // {
+    //     combatPlayers[_characterIndex].equipment.Add(item);
+
+    //     _items.Remove(item);
+
+    //     worldUI.itemDescription.Hide();
+    // }
+
+    // public void UnequipItem(ItemSO item)
+    // {
+    //     combatPlayers[_characterIndex].equipment.Remove(item);
+
+    //     _items.Add(item);
+    // }
+
+    // public void NextCharacter(bool isLeft)
+    // {
+    //     if (isLeft)
+    //     {
+    //         if (_characterIndex <= 0)return;
+
+    //         _characterIndex--;
+    //         worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
+    //     }
+    //     else
+    //     {
+    //         if (_characterIndex >= combatPlayers.Count - 1)return;
+
+    //         _characterIndex++;
+    //         worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
+    //     }
+    // }
 
     #endregion
 

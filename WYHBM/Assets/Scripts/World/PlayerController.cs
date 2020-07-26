@@ -91,14 +91,12 @@ public class PlayerController : MonoBehaviour
         InputActions.Player.Interaction.performed += ctx => Interaction();
         InputActions.Player.Walk.started += ctx => Walk(true);
         InputActions.Player.Walk.canceled += ctx => Walk(false);
-        InputActions.Player.Pause.performed += ctx => GameManager.Instance.Pause();
+        InputActions.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
+        InputActions.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
     }
 
     private void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
 
@@ -415,7 +413,7 @@ public class PlayerController : MonoBehaviour
 
     public bool GetPlayerInMovement()
     {
-        return _characterController.isGrounded && _canMove && !_inLadder && _movement.magnitude > 0.1f;
+        return _characterController.isGrounded && _canMove && !_isJumping && !_inLadder && _movement.magnitude > 0.1f;
     }
 
     #region FMOD
