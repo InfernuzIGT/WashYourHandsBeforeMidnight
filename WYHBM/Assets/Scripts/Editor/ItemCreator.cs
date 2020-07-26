@@ -18,9 +18,9 @@ public class ItemCreator : EditorWindow
     private ItemSO _itemSO;
     private GUIStyle _styleButtons;
     private Vector2 _scroll;
-    private Sprite[] _sprites;
+    // private Sprite[] _sprites;
 
-    [MenuItem("Tools/Item Creator")]
+    // [MenuItem("Tools/Item Creator")]
     static void CreateItemCreator()
     {
         var window = EditorWindow.GetWindow<ItemCreator>();
@@ -92,18 +92,18 @@ public class ItemCreator : EditorWindow
 
     private void CreateItem()
     {
-        _itemSO = ScriptableObject.CreateInstance<ItemSO>();
+        // _itemSO = ScriptableObject.CreateInstance<ItemSO>();
 
-        _spritePath = AssetDatabase.GetAssetPath(texture);
-        _sprites = AssetDatabase.LoadAllAssetsAtPath(_spritePath).OfType<Sprite>().ToArray();
+        // _spritePath = AssetDatabase.GetAssetPath(texture);
+        // _sprites = AssetDatabase.LoadAllAssetsAtPath(_spritePath).OfType<Sprite>().ToArray();
 
-        _itemSO.name = name;
-        _itemSO.description = description;
-        _itemSO.sprite = _sprites[0];
-        _itemSO.previewSprite = _sprites[1];
-        _itemSO.type = itemType;
-        _itemSO.valueMin = valueMin;
-        _itemSO.valueMax = valueMax;
+        // _itemSO.title = name;
+        // _itemSO.description = description;
+        // _itemSO.icon = _sprites[0];
+        // _itemSO.previewSprite = _sprites[1];
+        // _itemSO.type = itemType;
+        // _itemSO.valueMin = valueMin;
+        // _itemSO.valueMax = valueMax;
     }
 
     private void ClearItem()
