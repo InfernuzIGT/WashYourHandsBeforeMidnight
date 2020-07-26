@@ -18,30 +18,31 @@ public class Slot : MonoBehaviour
     public void SlotButton()
     {
 
-        if (_item.isDroppeable)
-        {
-            slotBtn.interactable = false;
-            // slotBtn.spriteState = slotBtn.sprState.highlightedSprite;
-            return;
-        }
+        // if (_item.isDroppeable)
+        // {
+        //     slotBtn.interactable = false;
+        //     // slotBtn.spriteState = slotBtn.sprState.highlightedSprite;
+        //     return;
+        // }
 
-        else DropItem();
+        // else 
+        DropItem();
     }
 
     public void AddItem(ItemSO newItem)
     {
         _item = newItem;
 
-        GameManager.Instance.AddItem(_item);
+        // GameManager.Instance.AddItem(_item);
 
-        iconImg.sprite = newItem.previewSprite;
+        iconImg.sprite = newItem.icon;
         buttonTxt.text = GameData.Instance.textConfig.itemDrop;
-        nameTxt.text = newItem.name;
+        nameTxt.text = newItem.title;
     }
 
     public void DropItem()
     {
-        GameManager.Instance.DropItem(this);
+        // GameManager.Instance.DropItem(this);
 
         GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupDestroyItem);
 
@@ -50,21 +51,20 @@ public class Slot : MonoBehaviour
 
     public void EquipItem()
     {
+        // if (!_isEquipped)
+        // {
+        //     if (GameManager.Instance.IsEquipmentFull) return;
 
-        if (!_isEquipped)
-        {
-            if (GameManager.Instance.IsEquipmentFull) return;
+        //     GameManager.Instance.EquipItem(_item);
+        //     SetEquip(true);
+        // }
+        // else
+        // {
+        //     if (GameManager.Instance.IsInventoryFull) return;
 
-            GameManager.Instance.EquipItem(_item);
-            SetEquip(true);
-        }
-        else
-        {
-            if (GameManager.Instance.IsInventoryFull) return;
-
-            GameManager.Instance.UnequipItem(_item);
-            SetEquip(false);
-        }
+        //     GameManager.Instance.UnequipItem(_item);
+        //     SetEquip(false);
+        // }
     }
 
     private void SetEquip(bool isEquipped)

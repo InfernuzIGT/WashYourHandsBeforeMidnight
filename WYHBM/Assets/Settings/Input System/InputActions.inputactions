@@ -44,6 +44,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Inventory",
+                    "type": "Button",
+                    "id": "633f90f4-f7e4-453c-b8a4-07e6a44bc181",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Craft",
+                    "type": "Button",
+                    "id": "27891809-06f8-492b-84af-1f3a33b24d9f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -237,7 +253,7 @@
                 {
                     "name": "",
                     "id": "8fd8880c-3dea-4bfa-bab7-d470bd419e5b",
-                    "path": "<HID::Microntek              USB Joystick          >/button4",
+                    "path": "<HID::Microntek              USB Joystick          >/trigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -308,6 +324,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "Walk",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "458dd9be-82c2-4f1e-b649-f3bd63ba885d",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a5fc1e5-514b-43d2-bb02-dffbe02956a5",
+                    "path": "<HID::Microntek              USB Joystick          >/button9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c5f395e9-59d7-4855-aada-29d00946cb4b",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Craft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64584993-312a-448f-a5dc-d5d00a4ce5fa",
+                    "path": "<HID::Microntek              USB Joystick          >/button3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Craft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

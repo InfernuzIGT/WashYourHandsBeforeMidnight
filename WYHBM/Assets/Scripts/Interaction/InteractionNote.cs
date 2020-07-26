@@ -5,7 +5,7 @@ public class InteractionNote : Interaction
 {
     [Header("Note")]
     public NoteSO notes;
-    private bool _isActiveNote = false;
+    private bool _isActive;
 
     public void OnInteractionEnter(Collider other)
     {
@@ -20,25 +20,20 @@ public class InteractionNote : Interaction
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<InteractionEvent>(OnInteractNote);
+
+            if (_isActive)
+            {
+                _isActive = false;
+                GameManager.Instance.Pause(PAUSE_TYPE.Note);
+            }
         }
     }
 
     private void OnInteractNote(InteractionEvent evt)
     {
-        if (_isActiveNote)
-        {
-            GameManager.Instance.worldUI.ActiveNote(_isActiveNote);
-            GameManager.Instance.SetPause(true);
-            _isActiveNote = false;
-        }
-        else
-        {
-            GameManager.Instance.worldUI.ActiveNote(_isActiveNote);
-            GameManager.Instance.SetPause(true);
-            _isActiveNote = true;
-        }
+        _isActive = !_isActive;
 
-        GameManager.Instance.worldUI.noteTxt.text = notes.noteSentences;
-
+        GameManager.Instance.worldUI.SetNoteText(notes.noteSentences);
+        GameManager.Instance.Pause(PAUSE_TYPE.Note);
     }
 }

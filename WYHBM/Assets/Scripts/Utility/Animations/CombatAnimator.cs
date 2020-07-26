@@ -1,7 +1,5 @@
 ﻿public class CombatAnimator : AnimatorController
 {
-    private ANIM_STATE _currentAnimState;
-
     private void Start()
     {
         _animModeCombat.Execute(_animator, true);

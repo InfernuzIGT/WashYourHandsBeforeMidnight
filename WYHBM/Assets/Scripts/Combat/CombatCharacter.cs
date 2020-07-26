@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Events;
 using UnityEngine;
-// using UnityEngine.EventSystems;
 
-public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointerExitHandler */
+[System.Serializable]
+public class Equipment
 {
+    public ItemSO actionA;
+    public ItemSO actionB;
+    public List<ItemSO> actionItem = new List<ItemSO>();
+}
+
+public class CombatCharacter : MonoBehaviour
+{
+    [Header("General")]
     [SerializeField] private string _name = null;
-    [SerializeField] private List<ItemSO> _equipment = new List<ItemSO>(); // TODO Mariano: Used by Enemy
+    [SerializeField] private Equipment _equipment = new Equipment();
 
     [Header("Sprites")]
     [SerializeField] private Sprite _previewSprite = null;
@@ -55,9 +63,9 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     // Combat Properties
     public string Name { get { return _name; } }
+    public Equipment Equipment { get { return _equipment; } }
     public Sprite PreviewSprite { get { return _previewSprite; } }
     public Sprite TurnSprite { get { return _turnSprite; } }
-    public List<ItemSO> Equipment { get { return _equipment; } }
     public int StatsHealthMax { get { return _statsHealthMax; } }
     public int StatsBaseDamage { get { return _statsBaseDamage; } }
     public int StatsBaseDefense { get { return _statsBaseDefense; } }
@@ -93,7 +101,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         // _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
     }
 
-    public void SetCharacter(int index, List<ItemSO> inventoryCombat)
+    public void SetCharacter(int index/* , List<ItemSO> inventoryCombat */)
     {
         // _scaleNormal = transform.localScale;
         _startPosition = transform.position;
@@ -104,7 +112,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         _combatIndex = index;
         _healthActual = _statsHealthStart;
 
-        _equipment.AddRange(inventoryCombat);
+        // _equipment.AddRange(inventoryCombat);
 
         Vector3 healthBarPos = new Vector3(
             transform.position.x,
@@ -173,7 +181,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
         if (!GetProbability())
         {
-            AnimationAction(ANIM_STATE.ItemDefense);
+            AnimationAction(ANIM_STATE.Idle);
             Debug.Log($"<b> DODGE! </b>");
             return;
         }
@@ -187,7 +195,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
             _totalDefense = GetItemDefense();
             if (_totalDefense > _totalDamage)_totalDefense = _totalDamage;
 
-            AnimationAction(ANIM_STATE.ItemDefense);
+            AnimationAction(ANIM_STATE.Idle);
         }
         else
         {
@@ -218,7 +226,7 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
     {
         MaterialHeal();
 
-        AnimationAction(ANIM_STATE.ItemHeal);
+        AnimationAction(ANIM_STATE.Idle);
 
         _healthActual += GetItemHeal();
 
@@ -303,17 +311,17 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
         gameObject.SetActive(false);
         GameManager.Instance.combatManager.CheckGame();
     }
-    
+
     public virtual void RemoveCharacter()
     {
-        
+
     }
 
     public int GetItemDamage()
     {
         if (_itemAttack != null)
         {
-            _totalValue = Random.Range(_itemAttack.valueMin, _itemAttack.valueMax);
+            _totalValue = Random.Range(_itemAttack.value.x, _itemAttack.value.y);
         }
         else
         {
@@ -325,12 +333,12 @@ public class CombatCharacter : MonoBehaviour /* , IPointerEnterHandler, IPointer
 
     public int GetItemDefense()
     {
-        return _totalValue = Random.Range(_itemDefense.valueMin, _itemDefense.valueMax);
+        return _totalValue = Random.Range(_itemDefense.value.x, _itemDefense.value.y);
     }
 
     public int GetItemHeal()
     {
-        return _totalValue = Random.Range(_itemHeal.valueMin, _itemHeal.valueMax);
+        return _totalValue = Random.Range(_itemHeal.value.x, _itemHeal.value.y);
     }
 
     public bool GetProbability()

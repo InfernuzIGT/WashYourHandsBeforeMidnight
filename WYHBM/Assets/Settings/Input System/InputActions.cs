@@ -57,6 +57,22 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""633f90f4-f7e4-453c-b8a4-07e6a44bc181"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Craft"",
+                    ""type"": ""Button"",
+                    ""id"": ""27891809-06f8-492b-84af-1f3a33b24d9f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -250,7 +266,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8fd8880c-3dea-4bfa-bab7-d470bd419e5b"",
-                    ""path"": ""<HID::Microntek              USB Joystick          >/button4"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/trigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -321,6 +337,50 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""458dd9be-82c2-4f1e-b649-f3bd63ba885d"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a5fc1e5-514b-43d2-bb02-dffbe02956a5"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/button9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c5f395e9-59d7-4855-aada-29d00946cb4b"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Craft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64584993-312a-448f-a5dc-d5d00a4ce5fa"",
+                    ""path"": ""<HID::Microntek              USB Joystick          >/button3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Craft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -897,6 +957,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Walk = m_Player.FindAction("Walk", throwIfNotFound: true);
+        m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+        m_Player_Craft = m_Player.FindAction("Craft", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -963,6 +1025,8 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Interaction;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Walk;
+    private readonly InputAction m_Player_Inventory;
+    private readonly InputAction m_Player_Craft;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -972,6 +1036,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Walk => m_Wrapper.m_Player_Walk;
+        public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+        public InputAction @Craft => m_Wrapper.m_Player_Craft;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -996,6 +1062,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Walk.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnWalk;
                 @Walk.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnWalk;
                 @Walk.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnWalk;
+                @Inventory.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
+                @Inventory.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
+                @Inventory.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInventory;
+                @Craft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCraft;
+                @Craft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCraft;
+                @Craft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCraft;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1015,6 +1087,12 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Walk.started += instance.OnWalk;
                 @Walk.performed += instance.OnWalk;
                 @Walk.canceled += instance.OnWalk;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
+                @Craft.started += instance.OnCraft;
+                @Craft.performed += instance.OnCraft;
+                @Craft.canceled += instance.OnCraft;
             }
         }
     }
@@ -1131,6 +1209,8 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnInteraction(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
+        void OnCraft(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
