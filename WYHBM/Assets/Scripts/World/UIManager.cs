@@ -14,6 +14,7 @@ namespace GameMode.World
         [Header("General")]
         // public Image staminaImg;
         public Popup popup;
+        public Image progressImg;
         [Space]
         public GameObject panelPlayer;
         public GameObject panelPause;

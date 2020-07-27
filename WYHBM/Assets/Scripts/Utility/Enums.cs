@@ -102,6 +102,14 @@ public enum DIALOG_TYPE
     Completed = 3
 }
 
+public enum ENCOUNTER_ZONE
+{
+    None = 0,
+    Normal = 1,
+    Dark = 2,
+    Interior = 3,
+}
+
 public enum LANGUAGE
 {
     English = 0,

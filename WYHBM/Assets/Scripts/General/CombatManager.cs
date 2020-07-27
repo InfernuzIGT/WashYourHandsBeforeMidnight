@@ -31,10 +31,9 @@ public class CombatManager : MonoBehaviour
 
     private ExitCombatEvent _interactionCombatEvent;
 
+    private InputActions _inputCombat;
+    
     // Properties
-    private InputActions _inputActions;
-    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
-
     private List<CombatCharacter> _listWaitingCharacters;
     public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
 
@@ -45,12 +44,12 @@ public class CombatManager : MonoBehaviour
 
     private void CreateInput()
     {
-        InputActions = new InputActions();
+        _inputCombat = new InputActions();
 
-        InputActions.UI.Navigate.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        InputActions.UI.Navigate.performed += ctx => NavigateCharacter();
-        InputActions.UI.Submit.performed += ctx => SelectCharacter(true);
-        InputActions.UI.Cancel.performed += ctx => SelectCharacter(false);
+        _inputCombat.UI.Navigate.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        _inputCombat.UI.Navigate.performed += ctx => NavigateCharacter();
+        _inputCombat.UI.Submit.performed += ctx => SelectCharacter(true);
+        _inputCombat.UI.Cancel.performed += ctx => SelectCharacter(false);
     }
 
     private void Start()
@@ -119,11 +118,11 @@ public class CombatManager : MonoBehaviour
     {
         if (isEnabled)
         {
-            InputActions.Enable();
+            _inputCombat.Enable();
         }
         else
         {
-            InputActions.Disable();
+            _inputCombat.Disable();
         }
     }
 
