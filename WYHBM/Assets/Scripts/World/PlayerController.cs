@@ -64,10 +64,12 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
+    
+    // Other
+    private InputActions _inputHold;
 
     // Properties
-    private InputActions _inputActions;
-    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
+    private InputActions _inputWorld;
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -84,15 +86,20 @@ public class PlayerController : MonoBehaviour
 
     private void CreateInput()
     {
-        InputActions = new InputActions();
+        _inputWorld = new InputActions();
 
-        InputActions.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        InputActions.Player.Jump.performed += ctx => Jump();
-        InputActions.Player.Interaction.performed += ctx => Interaction();
-        InputActions.Player.Walk.started += ctx => Walk(true);
-        InputActions.Player.Walk.canceled += ctx => Walk(false);
-        InputActions.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
-        InputActions.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
+        _inputWorld.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        _inputWorld.Player.Jump.performed += ctx => Jump();
+        _inputWorld.Player.Interaction.performed += ctx => Interaction();
+        _inputWorld.Player.Walk.started += ctx => Walk(true);
+        _inputWorld.Player.Walk.canceled += ctx => Walk(false);
+        _inputWorld.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
+        _inputWorld.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
+        
+        _inputHold = new InputActions();
+        
+        _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
+        _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
     }
 
     private void Start()
@@ -119,11 +126,23 @@ public class PlayerController : MonoBehaviour
     {
         if (isEnabled)
         {
-            InputActions.Enable();
+            _inputWorld.Enable();
         }
         else
         {
-            InputActions.Disable();
+            _inputWorld.Disable();
+        }
+    }
+    
+    public void ToggleInputHold(bool isEnabled)
+    {
+        if (isEnabled)
+        {
+            _inputHold.Enable();
+        }
+        else
+        {
+            _inputHold.Disable();
         }
     }
 

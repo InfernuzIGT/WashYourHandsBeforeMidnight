@@ -16,7 +16,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("General")]
     public bool isPaused;
     public bool inCombat;
-    public bool inDarkZone;
+    public ENCOUNTER_ZONE encounterZone;
 
     [Header("References")]
     public GlobalController globalController;
@@ -63,6 +63,9 @@ public class GameManager : MonoSingleton<GameManager>
     private Coroutine _coroutineEnconters;
     private Coroutine _coroutineHoldSystem;
     private WaitForSeconds _waitHoldEnd;
+
+    // Other
+    private ENCOUNTER_ZONE _lastEncounterZone;
 
     // Events
     private FadeEvent _fadeEvent;
@@ -152,7 +155,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         while (true)
         {
-            if (!inCombat && !isPaused && globalController.GetPlayerInMovement())
+            if (!inCombat && !isPaused && globalController.GetPlayerInMovement() && encounterZone != ENCOUNTER_ZONE.None)
             {
                 _currentTimeEncounter += Time.deltaTime;
 
@@ -280,16 +283,48 @@ public class GameManager : MonoSingleton<GameManager>
         if (canSelect)combatUI.ShowActions(combatIndex);
     }
 
-    public bool GetProbabilityEncounter()
+    public void ChangeEncounterZone(bool isEnter, ENCOUNTER_ZONE newEncounterZone = ENCOUNTER_ZONE.Normal)
+    {
+        if (isEnter)
+        {
+            _lastEncounterZone = encounterZone;
+            encounterZone = newEncounterZone;
+        }
+        else
+        {
+            if (_lastEncounterZone == ENCOUNTER_ZONE.None)_currentTimeEncounter = 0;
+            encounterZone = _lastEncounterZone;
+        }
+    }
+
+    private bool GetProbabilityEncounter()
     {
         ProportionValue<bool>[] tempProb = new ProportionValue<bool>[2];
 
-        float probability = inDarkZone ? GameData.Instance.worldConfig.probabilityDarkZone : GameData.Instance.worldConfig.probabilityNormal;
+        float probability = GetProbabilityZone();
 
         tempProb[0] = ProportionValue.Create(probability, true);
         tempProb[1] = ProportionValue.Create(1 - probability, false);
 
         return tempProb.ChooseByRandom();
+    }
+
+    private float GetProbabilityZone()
+    {
+        switch (encounterZone)
+        {
+            case ENCOUNTER_ZONE.Normal:
+                return GameData.Instance.worldConfig.probabilityNormal;
+
+            case ENCOUNTER_ZONE.Interior:
+                return GameData.Instance.worldConfig.probabilityInterior;
+
+            case ENCOUNTER_ZONE.Dark:
+                return GameData.Instance.worldConfig.probabilityDarkZone;
+
+            default:
+                return 0;
+        }
     }
 
     #region Hold System
