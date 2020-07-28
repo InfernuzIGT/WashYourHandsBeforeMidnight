@@ -10,7 +10,7 @@ public class ItemDescription : MonoBehaviour
 
     public void Show(ItemSO item)
     {
-        itemImg.sprite = item.previewSprite;
+        itemImg.sprite = item.icon;
         descriptionTxt.text = item.description;
 
         switch (item.type)
@@ -19,15 +19,15 @@ public class ItemDescription : MonoBehaviour
             case ITEM_TYPE.WeaponOneHand:
             case ITEM_TYPE.WeaponTwoHands:
             case ITEM_TYPE.ItemGrenade:
-                valueTxt.text = string.Format(GameData.Instance.textConfig.itemDamage, item.valueMin, item.valueMax);
+                valueTxt.text = string.Format(GameData.Instance.textConfig.itemDamage, item.value.x, item.value.y);
                 break;
 
             case ITEM_TYPE.ItemHeal:
-                valueTxt.text = string.Format(GameData.Instance.textConfig.itemHeal, item.valueMin, item.valueMax);
+                valueTxt.text = string.Format(GameData.Instance.textConfig.itemHeal, item.value.x, item.value.y);
                 break;
 
             case ITEM_TYPE.ItemDefense:
-                valueTxt.text = string.Format(GameData.Instance.textConfig.itemDefense, item.valueMin);
+                valueTxt.text = string.Format(GameData.Instance.textConfig.itemDefense, item.value.x);
                 break;
 
             default:

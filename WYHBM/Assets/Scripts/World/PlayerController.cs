@@ -64,10 +64,12 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
+    
+    // Other
+    private InputActions _inputHold;
 
     // Properties
-    private InputActions _inputActions;
-    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
+    private InputActions _inputWorld;
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -84,38 +86,64 @@ public class PlayerController : MonoBehaviour
 
     private void CreateInput()
     {
-        InputActions = new InputActions();
+        _inputWorld = new InputActions();
 
-        InputActions.ActionPlayer.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        InputActions.ActionPlayer.Jump.performed += ctx => Jump();
-        InputActions.ActionPlayer.Interaction.performed += ctx => Interaction();
-        InputActions.ActionPlayer.Walk.started += ctx => Walk(true);
-        InputActions.ActionPlayer.Walk.canceled += ctx => Walk(false);
+        _inputWorld.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        _inputWorld.Player.Jump.performed += ctx => Jump();
+        _inputWorld.Player.Interaction.performed += ctx => Interaction();
+        _inputWorld.Player.Walk.started += ctx => Walk(true);
+        _inputWorld.Player.Walk.canceled += ctx => Walk(false);
+        _inputWorld.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
+        _inputWorld.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
+        
+        _inputHold = new InputActions();
+        
+        _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
+        _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
     }
 
     private void Start()
     {
-        // Cursor.visible = false;
-        // Cursor.lockState = CursorLockMode.Locked;
-
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
+
+        ToggleInputWorld(true);
     }
 
     private void OnEnable()
     {
-        InputActions.Enable();
-
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
     }
 
     private void OnDisable()
     {
-        InputActions.Disable();
-
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
+    }
+
+    public void ToggleInputWorld(bool isEnabled)
+    {
+        if (isEnabled)
+        {
+            _inputWorld.Enable();
+        }
+        else
+        {
+            _inputWorld.Disable();
+        }
+    }
+    
+    public void ToggleInputHold(bool isEnabled)
+    {
+        if (isEnabled)
+        {
+            _inputHold.Enable();
+        }
+        else
+        {
+            _inputHold.Disable();
+        }
     }
 
     private void Update()
@@ -130,35 +158,24 @@ public class PlayerController : MonoBehaviour
         if (_inZipline)
         {
             _gravity = 0;
+
+            _animatorController.MovementZipline(true);
+            // animator.SetBool("canZipline", true);
+
             transform.position = Vector3.MoveTowards(transform.position, endPos, .5f);
-            animator.SetBool("canZipline", true);
-        }
 
-        if (Physics.Raycast(wallCheck.transform.position, Vector3.right, out RaycastHit hitWallFront, .5f))
-        {
-            if (hitWallFront.collider.tag == "Zipline")
+            if (Vector3.Distance(transform.position, endPos) < 1)
             {
-
-                animator.SetBool("canZipline", false);
+                _animatorController.MovementZipline(false);
+                // animator.SetBool("canZipline", false);
                 _inZipline = false;
                 _gravity = 39.24f;
             }
         }
-        if (Physics.Raycast(wallCheck.transform.position, Vector3.left, out RaycastHit hitWallBack, .5f))
-        {
-            if (hitWallBack.collider.tag == "Zipline")
-            {
-                animator.SetBool("canZipline", false);
-                _inZipline = false;
-                _gravity = 39.24f;
-            }
-        }
-
     }
 
     private IEnumerator AnimClimb()
     {
-
         if (_inLadder)
         {
             animator.SetBool("canClimbLadder", true);
@@ -191,7 +208,6 @@ public class PlayerController : MonoBehaviour
         transform.position = newPos;
 
         _characterController.enabled = true;
-
     }
 
     private void Movement()
@@ -346,11 +362,15 @@ public class PlayerController : MonoBehaviour
 
     private void LadderMovement()
     {
-
-        if (!_inLadder) { animator.SetBool("canClimbLadder", false); return; }
+        if (!_inLadder)
+        {
+            animator.SetBool("canClimbLadder", false);
+            return;
+        }
         else
-
+        {
             DetectBot();
+        }
 
         _movement.x = _inputMovement.x * _speedLadder;
         _movement.z = 0;
@@ -368,7 +388,6 @@ public class PlayerController : MonoBehaviour
     {
         if (_inLadder)
         {
-
             _botPosition = new Vector3(
                 transform.position.x,
                 transform.position.y - _characterController.height / 2 - _characterController.center.y,
@@ -382,16 +401,18 @@ public class PlayerController : MonoBehaviour
                     _ladderEvent.ladderExit = LADDER_EXIT.Bot;
                     EventController.TriggerEvent(_ladderEvent);
                 }
-
             }
         }
     }
 
     private void Interaction()
     {
-        _interactionEvent.lastPlayerPosition = transform.position;
-        _interactionEvent.isRunning = _isRunning;
-        EventController.TriggerEvent(_interactionEvent);
+        if (!GameManager.Instance.inCombat)
+        {
+            _interactionEvent.lastPlayerPosition = transform.position;
+            _interactionEvent.isRunning = _isRunning;
+            EventController.TriggerEvent(_interactionEvent);
+        }
     }
 
     public void SwitchMovement()
@@ -411,7 +432,7 @@ public class PlayerController : MonoBehaviour
 
     public bool GetPlayerInMovement()
     {
-        return _characterController.isGrounded && _canMove && !_inLadder && _movement.magnitude > 0.1f;
+        return _characterController.isGrounded && _canMove && !_isJumping && !_inLadder && _movement.magnitude > 0.1f;
     }
 
     #region FMOD

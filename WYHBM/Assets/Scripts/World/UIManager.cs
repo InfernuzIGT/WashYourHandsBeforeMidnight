@@ -14,6 +14,7 @@ namespace GameMode.World
         [Header("General")]
         // public Image staminaImg;
         public Popup popup;
+        public Image progressImg;
         [Space]
         public GameObject panelPlayer;
         public GameObject panelPause;
@@ -61,7 +62,7 @@ namespace GameMode.World
         private int _objectivesIndex;
         private bool _isWriting;
         private bool _isReading;
-        private string _currentSentence;
+        private string _currentDialog;
         private string _textSkip;
         private Coroutine _coroutineWrite;
 
@@ -99,8 +100,8 @@ namespace GameMode.World
 
             panelDialog.SetActive(false);
 
-            buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
-            buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
+            // buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
+            // buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
 
             sliderSound.onValueChanged.AddListener(VolumeSound);
             sliderMusic.onValueChanged.AddListener(VolumeMusic);
@@ -127,31 +128,31 @@ namespace GameMode.World
 
         public void Pause(bool isPaused)
         {
-            panelPause.gameObject.SetActive(isPaused);;
+            panelPause.gameObject.SetActive(isPaused);
         }
 
-        public void ChangeCharacter(CombatPlayer combatPlayer, int index, bool inLeftLimit = false, bool inRightLimit = false)
-        {
-            characterNameTxt.text = combatPlayer.character.Name;
-            characterImg.sprite = combatPlayer.character.PreviewSprite;
+        // public void ChangeCharacter(CombatPlayer combatPlayer, int index, bool inLeftLimit = false, bool inRightLimit = false)
+        // {
+        //     characterNameTxt.text = combatPlayer.character.Name;
+        //     characterImg.sprite = combatPlayer.character.PreviewSprite;
 
-            characterSlot[_lastSlot].gameObject.SetActive(false);
-            characterSlot[index].gameObject.SetActive(true);
+        //     characterSlot[_lastSlot].gameObject.SetActive(false);
+        //     characterSlot[index].gameObject.SetActive(true);
 
-            _lastSlot = index;
+        //     _lastSlot = index;
 
-            buttonLeft.interactable = !inLeftLimit;
-            buttonRight.interactable = !inRightLimit;
-        }
+        //     buttonLeft.interactable = !inLeftLimit;
+        //     buttonRight.interactable = !inRightLimit;
+        // }
 
         public void VolumeSound(float vol)
         {
-            RuntimeManager.StudioSystem.setParameterByName("SoundsSlider", vol);
+            RuntimeManager.StudioSystem.setParameterByName(FMODParameters.SoundsSlider, vol);
         }
 
         public void VolumeMusic(float vol)
         {
-            RuntimeManager.StudioSystem.setParameterByName("MusicSlider", vol);
+            RuntimeManager.StudioSystem.setParameterByName(FMODParameters.MusicSlider, vol);
         }
 
         public Transform GetSlot()
@@ -165,17 +166,35 @@ namespace GameMode.World
         {
             switch (GameManager.Instance.CurrentQuestData.state)
             {
+                case QUEST_STATE.None:
 
-                case QUEST_STATE.Ready:
-
-                    if (GameManager.Instance.CurrentDialog.readySentences == null)
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.dialogNone.Length)
                     {
-                        GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Ready;
+                        panelDialog.SetActive(false);
+
+                        _dialogIndex = 0;
+                        _enableMovementEvent.canMove = true;
+
+                        EventController.TriggerEvent(_enableMovementEvent);
+                        EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
 
                         return;
                     }
+                    else
+                    {
+                        ExecuteText(GameManager.Instance.CurrentDialog.dialogNone, _dialogIndex);
+                    }
 
-                    if (_dialogIndex == GameManager.Instance.CurrentDialog.readySentences.Length)
+                    break;
+
+                case QUEST_STATE.Ready:
+
+                    if (GameManager.Instance.CurrentDialog.dialogReady == null)
+                    {
+                        GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Ready;
+                        return;
+                    }
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.dialogReady.Length)
                     {
                         SetQuest(GameManager.Instance.CurrentQuestData.quest);
 
@@ -191,24 +210,22 @@ namespace GameMode.World
 
                         return;
                     }
-
                     else
                     {
-                        ExecuteText(GameManager.Instance.CurrentDialog.readySentences, _dialogIndex);
+                        ExecuteText(GameManager.Instance.CurrentDialog.dialogReady, _dialogIndex);
                     }
 
                     break;
 
                 case QUEST_STATE.InProgress:
 
-                    if (GameManager.Instance.CurrentDialog.inProgressSentences == null)
+                    if (GameManager.Instance.CurrentDialog.dialogInProgress == null)
                     {
                         GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Completed;
-
                         return;
                     }
 
-                    if (_dialogIndex == GameManager.Instance.CurrentDialog.inProgressSentences.Length)
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.dialogInProgress.Length)
                     {
                         panelDialog.SetActive(false);
 
@@ -220,24 +237,22 @@ namespace GameMode.World
 
                         return;
                     }
-
                     else
                     {
-                        ExecuteText(GameManager.Instance.CurrentDialog.inProgressSentences, _dialogIndex);
+                        ExecuteText(GameManager.Instance.CurrentDialog.dialogInProgress, _dialogIndex);
                     }
 
                     break;
 
                 case QUEST_STATE.Completed:
 
-                    if (GameManager.Instance.CurrentDialog.CompletedSentences == null)
+                    if (GameManager.Instance.CurrentDialog.dialogCompleted == null)
                     {
                         GameManager.Instance.CurrentQuestData.state = QUEST_STATE.None;
-
                         return;
                     }
 
-                    if (_dialogIndex == GameManager.Instance.CurrentDialog.CompletedSentences.Length)
+                    if (_dialogIndex == GameManager.Instance.CurrentDialog.dialogCompleted.Length)
                     {
                         panelDialog.SetActive(false);
 
@@ -251,46 +266,25 @@ namespace GameMode.World
 
                         return;
                     }
-
                     else
                     {
-                        ExecuteText(GameManager.Instance.CurrentDialog.CompletedSentences, _dialogIndex);
+                        ExecuteText(GameManager.Instance.CurrentDialog.dialogCompleted, _dialogIndex);
                     }
 
                     break;
 
-                case QUEST_STATE.None:
-
-                    Debug.Log($"<b> QUEST NONE </b>");
-
-                    if (_dialogIndex == GameManager.Instance.CurrentDialog.noneSentences.Length)
-                    {
-                        panelDialog.SetActive(false);
-
-                        _dialogIndex = 0;
-                        _enableMovementEvent.canMove = true;
-
-                        EventController.TriggerEvent(_enableMovementEvent);
-                        EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-
-                        return;
-                    }
-
-                    else
-                    {
-                        ExecuteText(GameManager.Instance.CurrentDialog.noneSentences, _dialogIndex);
-                    }
-
-                    break;
             }
 
         }
 
-        public void ExecuteText(string[] sentences, int index)
+        public void ExecuteText(Dialog[] dialogs, int index)
         {
-            _currentSentence = sentences[index];
+            // TODO Marcos: Leer variable IsPlayer
+            // sentences[i].isPlayer
 
-            PlayText(sentences, index);
+            _currentDialog = dialogs[index].sentence;
+
+            PlayText(dialogs, index);
 
             panelDialog.SetActive(true);
 
@@ -302,26 +296,24 @@ namespace GameMode.World
         #endregion
 
         #region 
-        public void ActiveNote(bool _isActiveNote)
-        {
-            if (_isActiveNote)
-            {
-                panelNote.SetActive(false);
 
-            }
-            else
-            {
-                panelNote.SetActive(true);
-            }
+        public void ActiveNote(bool active)
+        {
+            panelNote.SetActive(active);
+        }
+
+        public void SetNoteText(string sentences)
+        {
+            noteTxt.text = sentences;
         }
 
         #endregion
 
         #region Dialogues
 
-        public void PlayText(string[] sentence, int index)
+        public void PlayText(Dialog[] dialog, int index)
         {
-            if (_dialogIndex < sentence[index].Length)
+            if (_dialogIndex < dialog[index].sentence.Length)
             {
                 if (_isWriting)
                 {
@@ -341,7 +333,7 @@ namespace GameMode.World
 
             _textSkip = "";
 
-            foreach (char c in _currentSentence)
+            foreach (char c in _currentDialog)
             {
                 _textSkip += c == _charSpace ? ' ' : c;
             }
@@ -352,7 +344,7 @@ namespace GameMode.World
 
             yield return _waitStart;
 
-            foreach (char c in _currentSentence)
+            foreach (char c in _currentDialog)
             {
                 if (c == _charSpace)
                 {
@@ -500,7 +492,7 @@ namespace GameMode.World
                     break;
 
                 case BUTTON_TYPE.Resume:
-                    GameManager.Instance.SetPause(false);
+                    GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
                     break;
 
                 case BUTTON_TYPE.Options:

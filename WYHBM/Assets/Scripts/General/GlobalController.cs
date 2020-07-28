@@ -9,8 +9,10 @@ public class GlobalController : MonoBehaviour
     public Transform spawnPoint;
 
     [Header("Cheats")]
+    public bool hideCursor = true;
+    public bool skipEncounters;
     // public bool infiniteStamina;
-    public ItemSO[] items;
+    // public ItemSO[] items;
 
     [Header("Settings")]
     public PlayerController player;
@@ -29,7 +31,13 @@ public class GlobalController : MonoBehaviour
     {
         SpawnPlayer();
         SetCamera();
-        AddItems();
+        // AddItems();
+
+        if (hideCursor)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     private void SpawnPlayer()
@@ -129,28 +137,28 @@ public class GlobalController : MonoBehaviour
         }
     }
 
-    private void AddItems()
-    {
-        if (items.Length != 0)
-        {
-            for (int i = 0; i < items.Length; i++)
-            {
-                AddItem(i);
-            }
-        }
-    }
+    // private void AddItems()
+    // {
+    //     if (items.Length != 0)
+    //     {
+    //         for (int i = 0; i < items.Length; i++)
+    //         {
+    //             AddItem(i);
+    //         }
+    //     }
+    // }
 
-    private void AddItem(int index)
-    {
-        if (GameManager.Instance.IsInventoryFull)
-        {
-            GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull);
-            return;
-        }
+    // private void AddItem(int index)
+    // {
+    //     if (GameManager.Instance.IsInventoryFull)
+    //     {
+    //         GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull);
+    //         return;
+    //     }
 
-        Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
-        newSlot.AddItem(items[index]);
-    }
+    //     Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+    //     newSlot.AddItem(items[index]);
+    // }
 
     // private void Update()
     // {
@@ -161,5 +169,15 @@ public class GlobalController : MonoBehaviour
     // {
     //     player.InfiniteStamina = infiniteStamina;
     // }
+
+    public bool GetPlayerInMovement()
+    {
+        return player.GetPlayerInMovement() && !skipEncounters;
+    }
+
+    public void HidePlayer(bool isHiding)
+    {
+        player.gameObject.SetActive(!isHiding);
+    }
 
 }

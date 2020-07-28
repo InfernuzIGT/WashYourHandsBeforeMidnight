@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class ActionButton : MonoBehaviour
 {
     public Image itemImg;
-    
+
     private ItemSO _item;
     private Button _actionButton;
 
@@ -14,21 +14,21 @@ public class ActionButton : MonoBehaviour
         _actionButton = GetComponent<Button>();
         _actionButton.onClick.AddListener(() => DoAction());
     }
-    
+
     public void Init(ItemSO item)
     {
         _item = item;
-        itemImg.sprite = item.previewSprite;
+        itemImg.sprite = item.icon;
     }
 
     private void DoAction()
     {
-        GameManager.Instance.combatManager.DoAction(_item);
+        GameManager.Instance.combatManager.SelectAction(_item);
     }
-    
-    // public void SetButtonEnable(bool isEnable)
-    // {
-    //     _actionButton.enabled = isEnable;
-    // }
+
+    public void SelectFirstButton()
+    {
+        GameManager.Instance.SelectButton(gameObject);
+    }
 
 }

@@ -34,10 +34,10 @@ namespace GameMode.Combat
             _turn = new List<Turn>();
         }
 
-        public void CreateActions(List<ItemSO> items)
+        public void CreateActions(Equipment equipment)
         {
             _actions = Instantiate(GameData.Instance.combatConfig.actionsPrefab, actionsContainer);
-            _actions.Init(items);
+            _actions.Init(equipment);
             _actions.gameObject.SetActive(false);
             actions.Add(_actions);
         }
@@ -46,8 +46,15 @@ namespace GameMode.Combat
         {
             actions[_lastIndex].gameObject.SetActive(false);
             actions[index].gameObject.SetActive(true);
+            
+            actions[index].SelectFirstButton();
 
             _lastIndex = index;
+        }
+        
+        public void HideActions(bool isHiding)
+        {
+            actions[_lastIndex].gameObject.SetActive(!isHiding);
         }
 
         public void EnableCanvas(bool enabled)

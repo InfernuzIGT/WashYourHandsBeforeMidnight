@@ -3,12 +3,18 @@
     Idle = 0,
     Hit = 1,
     Death = 2,
-    AttackMelee = 3,
-    AttackOneHand = 4,
-    AttackTwoHands = 5,
-    ItemHeal = 6,
-    ItemDefense = 7,
-    ItemGrenade = 8
+    Action_A = 3,
+    Action_B = 4,
+    Action_Item = 5
+}
+
+public enum COMBAT_STATE
+{
+    None = 0,
+    SelectAction = 1,
+    SelectCharacter = 2,
+    MakeAction = 3,
+    Wait = 4
 }
 
 // public enum TIER
@@ -58,6 +64,14 @@ public enum BUTTON_TYPE
     Quit = 6,
 }
 
+public enum PAUSE_TYPE
+{
+    None = 0,
+    PauseMenu = 1,
+    Inventory = 2,
+    Note = 3,
+}
+
 public enum MENU_TYPE
 {
     None = 0,
@@ -78,6 +92,28 @@ public enum QUEST_STATE
     Ready = 1,
     InProgress = 2,
     Completed = 3
+}
+
+public enum DIALOG_TYPE
+{
+    None = 0,
+    Ready = 1,
+    InProgress = 2,
+    Completed = 3
+}
+
+public enum ENCOUNTER_ZONE
+{
+    None = 0,
+    Normal = 1,
+    Dark = 2,
+    Interior = 3,
+}
+
+public enum LANGUAGE
+{
+    English = 0,
+    Spanish = 1
 }
 
 public enum SCENE_INDEX
