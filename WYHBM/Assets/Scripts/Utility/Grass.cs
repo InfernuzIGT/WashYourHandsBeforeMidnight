@@ -6,7 +6,7 @@ public class Grass : MonoBehaviour
 {
     private Material _material;
     private Coroutine _coroutine;
-    private string _position = "_Position";
+    private int hash_Position = Shader.PropertyToID("_Position");
     private WaitForEndOfFrame _wait;
 
     private void Start()
@@ -17,7 +17,7 @@ public class Grass : MonoBehaviour
 
     // private void Update()
     // {
-    //     _material.SetVector(_position, GameManager.Instance.globalController.player.transform.position);
+    //     _material.SetVector(hash_Position, GameManager.Instance.globalController.player.transform.position);
     // }
 
     public void EnableMovement(bool isMoving)
@@ -36,7 +36,7 @@ public class Grass : MonoBehaviour
     {
         while (true)
         {
-            _material.SetVector(_position, GameManager.Instance.globalController.player.transform.position);
+            _material.SetVector(hash_Position, GameManager.Instance.globalController.player.transform.position);
             yield return _wait;
         }
     }

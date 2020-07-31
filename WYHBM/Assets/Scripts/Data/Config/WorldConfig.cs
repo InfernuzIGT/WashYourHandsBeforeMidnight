@@ -35,4 +35,7 @@ public class WorldConfig : ScriptableObject
     [Header("Placeholder")]
     public GameObject emptyObject;
     public Sprite spriteEmptyUI;
+
+    [Header("Dialogs")]
+    public Sprite samIcon;
 }

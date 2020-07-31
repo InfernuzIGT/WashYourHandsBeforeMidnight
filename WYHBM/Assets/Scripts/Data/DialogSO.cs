@@ -11,6 +11,7 @@ public struct Dialog
 [CreateAssetMenu(fileName = "New Dialog", menuName = "Dialog", order = 0)]
 public class DialogSO : ScriptableObject
 {
+    [PreviewTexture(48)] public Sprite icon;
     public int dialogId;
     [Space]
     public Dialog[] dialogNone;
