@@ -105,6 +105,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
+        
 
         _waitHoldEnd = new WaitForSeconds(1f);
 

@@ -23,6 +23,8 @@ namespace GameMode.World
 
         [Header("Dialog")]
         public TextMeshProUGUI dialogTxt;
+        public TextMeshProUGUI dialogNameTxt;
+        public Image dialogIcon;
         public TextMeshProUGUI continueTxt;
 
         [Header("Note")]
@@ -279,8 +281,18 @@ namespace GameMode.World
 
         public void ExecuteText(Dialog[] dialogs, int index)
         {
-            // TODO Marcos: Leer variable IsPlayer
             // sentences[i].isPlayer
+            if (dialogs[index].isPlayer)
+            {
+                dialogIcon.sprite = GameData.Instance.worldConfig.samIcon;
+                dialogNameTxt.text = GameData.Instance.textConfig.samName;
+            }
+
+            else
+            {
+                dialogIcon.sprite = GameManager.Instance.CurrentDialog.icon;
+                dialogNameTxt.text = GameManager.Instance.CurrentDialog.name;
+            }
 
             _currentDialog = dialogs[index].sentence;
 
@@ -290,7 +302,6 @@ namespace GameMode.World
 
             _enableMovementEvent.canMove = false;
             EventController.TriggerEvent(_enableMovementEvent);
-
         }
 
         #endregion

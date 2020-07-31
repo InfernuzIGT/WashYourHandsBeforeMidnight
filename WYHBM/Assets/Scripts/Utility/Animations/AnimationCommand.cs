@@ -7,8 +7,9 @@ public abstract class AnimationCommand
     protected readonly int hash_IsRunning = Animator.StringToHash("isRunning"); // Bool
     protected readonly int hash_IsGrounded = Animator.StringToHash("isGrounded"); // Bool
     protected readonly int hash_ModeCombat = Animator.StringToHash("modeCombat"); // Bool
-    protected readonly int hash_ValueX = Animator.StringToHash("valueX"); // Float
     protected readonly int hash_ValueY = Animator.StringToHash("valueY"); // Float
+    protected readonly int hash_ValueX = Animator.StringToHash("valueX"); // Float
+    protected readonly int hash_valueZ = Animator.StringToHash("valueZ"); // Float
 
     // Combat
     protected readonly int hash_ActionType = Animator.StringToHash("actionType"); // Int
@@ -23,7 +24,10 @@ public abstract class AnimationCommand
     protected readonly int hash_DoorIsLocked = Animator.StringToHash("isLocked"); // Trigger
 
     // Systems
+    protected readonly int hash_isFalling = Animator.StringToHash("isFalling"); // Bool
     protected readonly int hash_CanZipline = Animator.StringToHash("canZipline"); // Bool
+    protected readonly int hash_CanClimbLedge = Animator.StringToHash("canClimbLedge"); // Bool
+    protected readonly int hash_CanClimbLadder = Animator.StringToHash("canClimbLadder"); // Bool
 
 }
 
@@ -107,6 +111,14 @@ public class AnimValueY : AnimationCommandFloat
     }
 }
 
+public class AnimValueZ : AnimationCommandFloat
+{
+    public override void Execute(Animator anim, float value)
+    {
+        anim.SetFloat(hash_valueZ, value);
+    }
+}
+
 #endregion
 
 #region Combat
@@ -178,5 +190,27 @@ public class AnimCanZipline : AnimationCommandBool
         anim.SetBool(hash_CanZipline, value);
     }
 }
+public class AnimCanClimbLedge : AnimationCommandBool
+{
+    public override void Execute(Animator anim, bool value)
+    {
+        anim.SetBool(hash_CanClimbLedge, value);
+    }
+}
 
+public class AnimCanClimbLadder : AnimationCommandBool
+{
+    public override void Execute(Animator anim, bool value)
+    {
+        anim.SetBool(hash_CanClimbLadder, value);
+    }
+}
+
+public class AnimFall : AnimationCommandBool
+{
+    public override void Execute(Animator anim, bool value)
+    {
+        anim.SetBool(hash_isFalling, value);
+    }
+}
 #endregion

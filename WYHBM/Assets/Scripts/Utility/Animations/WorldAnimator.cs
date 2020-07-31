@@ -19,6 +19,7 @@ public class WorldAnimator : AnimatorController
 
         _animValueX.Execute(_animator, movement.x);
         _animValueY.Execute(_animator, movement.z);
+        _animValueZ.Execute(_animator, movement.y);
         _animIsRunning.Execute(_animator, isRunning);
         _animIsGrounded.Execute(_animator, isGrounded);
     }
@@ -40,5 +41,20 @@ public class WorldAnimator : AnimatorController
     public void MovementZipline(bool canZipline)
     {
         _animCanZipLine.Execute(_animator, canZipline);
+    }
+
+    public void ClimbLedge(bool value)
+    {
+        _animCanClimbLedge.Execute(_animator, value);
+    }
+
+    public void PreClimbLadder(bool canClimbLadder)
+    {
+        _animCanClimbLadder.Execute(_animator, canClimbLadder);
+    }
+
+    public void Falling(bool isFalling)
+    {
+        _animFall.Execute(_animator, isFalling);
     }
 }

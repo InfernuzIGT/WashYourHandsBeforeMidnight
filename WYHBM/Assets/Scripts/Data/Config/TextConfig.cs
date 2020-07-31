@@ -3,6 +3,10 @@
 [CreateAssetMenu(fileName = "New TextConfig", menuName = "Config/TextConfig", order = 0)]
 public class TextConfig : ScriptableObject
 {
+
+    [Header("World - Dialogs")]
+    public string samName = "SAM";
+    
     [Header("Combat - General")]
     public string fadeInText = "COMBAT!";
     public string fadeOutText = "FINISH";
