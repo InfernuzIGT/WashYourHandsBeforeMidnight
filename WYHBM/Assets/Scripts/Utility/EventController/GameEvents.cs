@@ -24,7 +24,6 @@ namespace Events
     public class EnableMovementEvent : GameEvent
     {
         public bool canMove;
-        public bool enterToInterior;
     }
 
     public class LadderEvent : GameEvent

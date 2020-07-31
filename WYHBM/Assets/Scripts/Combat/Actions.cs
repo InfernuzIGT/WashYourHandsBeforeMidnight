@@ -1,40 +1,21 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Actions : MonoBehaviour
 {
-    public List<ActionButton> actionButtons;
+    public ActionButton actionButtonA;
+    public ActionButton actionButtonB;
+    public ActionButton actionButtonItem;
 
-    public void Init(List<ItemSO> items)
+    public void Init(Equipment equipment)
     {
-        int lastIndex = 0;
-
-        if (items.Count != 0)
-        {
-            for (int i = 0; i < items.Count; i++)
-            {
-                actionButtons[i].Init(items[i]);
-                actionButtons[i].gameObject.SetActive(true);
-                lastIndex = i;
-            }
-
-            if (lastIndex < 2)
-            {
-                actionButtons[lastIndex + 1].gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            actionButtons[0].gameObject.SetActive(true);
-        }
+        actionButtonA.Init(equipment.actionA);
+        actionButtonB.Init(equipment.actionB);
+        actionButtonItem.Init(equipment.actionItem[0]); // TODO Mariano: Review
     }
 
-    // public void SetButtonsEnable(bool isEnable)
-    // {
-    //     for (int i = 0; i < actionButtons.Count; i++)
-    //     {
-    //         actionButtons[i].SetButtonEnable(isEnable);
-    //     }
-    // }
-    
+    public void SelectFirstButton()
+    {
+        actionButtonA.SelectFirstButton();
+    }
+
 }

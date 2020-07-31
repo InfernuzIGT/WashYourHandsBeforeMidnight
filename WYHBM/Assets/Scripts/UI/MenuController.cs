@@ -1,10 +1,15 @@
-﻿using Events;
+﻿using System.Collections;
+using DG.Tweening;
+using Events;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
+    private FadeEvent _fadeEvent;
+    public Image _fadeImg;
+
     [Header("Cameras")]
     public GameObject[] cams;
 
@@ -13,28 +18,21 @@ public class MenuController : MonoBehaviour
     public GameObject optionsPanel;
     public GameObject creditsPanel;
     [Space]
-    public GameObject ContinueButton;
-    public GameObject NewGameButton;
-    [Space]
     public GameObject Popup;
-
-    [Header("Options")]
-    public GameObject audioPanel;
-    public GameObject gamePanel;
 
     [Header("FMOD")]
     public Slider sliderSound;
     public Slider sliderMusic;
+    // ADD SFX SLIDER
+
     [Space]
-    
+
     public StudioEventEmitter _buttonSounds;
     public StudioEventEmitter _menuMusic;
 
-    private GameObject _lastPanel;
     private GameObject _lastCam;
+    private GameObject _lastPanel;
 
-    private bool _inAudio;
-    private bool _inGame;
     // private bool _isDataLoaded;
     // public bool IsDataLoaded { get { return _isDataLoaded; } }
 
@@ -43,15 +41,24 @@ public class MenuController : MonoBehaviour
         sliderSound.onValueChanged.AddListener(VolumeSound);
         sliderMusic.onValueChanged.AddListener(VolumeMusic);
 
-        if (GameData.Data.isDataLoaded)
-        {
-            NewGameButton.SetActive(false);
-            ContinueButton.SetActive(true);
-        }
+        _fadeEvent = new FadeEvent();
+        _fadeEvent.fadeFast = true;
+        _fadeEvent.callbackMid = ChangeScene;
+
+        // if (GameData.Data.isDataLoaded)
+        // {
+        //     NewGameButton.SetActive(false);
+        //     ContinueButton.SetActive(true);
+        // }
 
         mainPanel.SetActive(true);
 
         _menuMusic.Play();
+    }
+
+    private void ChangeScene()
+    {
+        GameData.Instance.LoadScene(SCENE_INDEX.Master);
     }
 
     private void OnEnable()
@@ -75,23 +82,27 @@ public class MenuController : MonoBehaviour
         switch (evt.menuType)
         {
             case MENU_TYPE.Continue:
-                GameData.Instance.LoadScene(SCENE_INDEX.Master);
+                Fade();
+                cams[3].SetActive(true);
+
+                _lastCam = cams[0];
 
                 PlayButtonSound(3);
                 break;
 
             case MENU_TYPE.NewGame:
-                GameData.Instance.LoadScene(SCENE_INDEX.Master);
+                Fade();
+                cams[3].SetActive(true);
 
-                GameData.Data.isDataLoaded = true;
+                _lastCam = cams[0];
+
+                // GameData.Data.isDataLoaded = true;
 
                 PlayButtonSound(3);
                 break;
 
             case MENU_TYPE.Options:
-                mainPanel.SetActive(false);
-                _lastPanel = mainPanel;
-
+                creditsPanel.SetActive(false);
                 optionsPanel.SetActive(true);
 
                 cams[1].SetActive(true);
@@ -100,23 +111,8 @@ public class MenuController : MonoBehaviour
                 PlayButtonSound(1);
                 break;
 
-            case MENU_TYPE.Audio:
-                optionsPanel.SetActive(false);
-                _lastPanel = optionsPanel;
-
-                _inAudio = true;
-
-                audioPanel.SetActive(true);
-
-                _lastCam = cams[0];
-
-                PlayButtonSound(1);
-                break;
-
             case MENU_TYPE.Credits:
-                mainPanel.SetActive(false);
-                _lastPanel = mainPanel;
-
+                optionsPanel.SetActive(false);
                 creditsPanel.SetActive(true);
 
                 cams[2].SetActive(true);
@@ -126,39 +122,9 @@ public class MenuController : MonoBehaviour
                 PlayButtonSound(1);
                 break;
 
-            case MENU_TYPE.Game:
-                optionsPanel.SetActive(false);
-                _lastPanel = optionsPanel;
-
-                _inGame = true;
-
-                gamePanel.SetActive(true);
-
-                _lastCam = cams[0];
-
-                PlayButtonSound(1);
-                break;
-
             case MENU_TYPE.Back:
+
                 DesactivateAll();
-
-                if (_inAudio)
-                {
-                    optionsPanel.SetActive(true);
-                    _lastPanel = mainPanel;
-
-                    _inAudio = false;
-                    return;
-                }
-
-                if (_inGame)
-                {
-                    optionsPanel.SetActive(true);
-                    _lastPanel = mainPanel;
-
-                    _inGame = false;
-                    return;
-                }
 
                 for (int i = 0; i < cams.Length; i++)
                 {
@@ -166,7 +132,6 @@ public class MenuController : MonoBehaviour
                 }
 
                 _lastCam.SetActive(true);
-                _lastPanel.SetActive(true);
 
                 PlayButtonSound(0);
                 break;
@@ -183,8 +148,20 @@ public class MenuController : MonoBehaviour
                 PlayButtonSound(3);
                 break;
         }
+    }
+
+    private void Fade()
+    {
+        // Change Fade when world is end
+        _fadeImg.DOFade(1, 2f).OnKill(GoToMaster);
 
     }
+
+    private void GoToMaster()
+    {
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
     public void ShowPopup(bool _isOpen)
     {
         Popup.SetActive(_isOpen);
@@ -193,11 +170,8 @@ public class MenuController : MonoBehaviour
     public void DesactivateAll()
     {
         ShowPopup(false);
-        mainPanel.SetActive(false);
         optionsPanel.SetActive(false);
         creditsPanel.SetActive(false);
-        audioPanel.SetActive(false);
-        gamePanel.SetActive(false);
 
         PlayButtonSound(4);
         _menuMusic.EventInstance.setParameterByName(FMODParameters.Credits, 0f);
@@ -207,8 +181,6 @@ public class MenuController : MonoBehaviour
     {
         RuntimeManager.StudioSystem.setParameterByName("SoundsSlider", vol);
     }
-
-
 
     public void VolumeMusic(float vol)
     {

@@ -12,7 +12,7 @@ public class InteractionItem : Interaction, IInteractable
         base.Awake();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        SetPopupName(item.name);
+        SetPopupName(item.title);
 
         // Items SO for each prefab
 
@@ -57,11 +57,11 @@ public class InteractionItem : Interaction, IInteractable
 
     private void OnInteractItem(InteractionEvent evt)
     {
-        if (GameManager.Instance.IsInventoryFull)
-        {
-            GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull, false);
-            return;
-        }
+        // if (GameManager.Instance.IsInventoryFull)
+        // {
+        //     GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull, false);
+        //     return;
+        // }
 
         // for (int i = 0; i < GameManager.Instance.CurrentQuestData.progress[item.index]; i++)
         // {
@@ -87,7 +87,7 @@ public class InteractionItem : Interaction, IInteractable
     public void AddInfo(ItemSO itemInfo)
     {
         item = itemInfo;
-        _spriteRenderer.sprite = itemInfo.sprite;
+        _spriteRenderer.sprite = itemInfo.icon;
     }
 
     public void DetectSize()
@@ -116,7 +116,7 @@ public class InteractionItem : Interaction, IInteractable
         BoxCollider boxCollider = GetComponent<BoxCollider>();
 
         // Set Values
-        spriteRenderer.sprite = item.sprite;
+        spriteRenderer.sprite = item.icon;
         this.questData.quest = quest;
         this.questData.progress[0] = progress;
         this.item = item;

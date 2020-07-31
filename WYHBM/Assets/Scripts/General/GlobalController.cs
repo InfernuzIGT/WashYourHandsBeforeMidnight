@@ -9,15 +9,21 @@ public class GlobalController : MonoBehaviour
     public Transform spawnPoint;
 
     [Header("Cheats")]
+    public bool hideCursor = true;
+    public bool skipEncounters;
     // public bool infiniteStamina;
-    public ItemSO[] items;
+    // public ItemSO[] items;
 
     [Header("Settings")]
     public PlayerController player;
     public Camera mainCamera;
-    public CinemachineVirtualCamera virtualCamera;
+    public CinemachineVirtualCamera exteriorCamera;
+    public CinemachineVirtualCamera interiorCamera;
+    public CinemachineVirtualCamera cutscene;
 
-    private CinemachineVirtualCamera _newVirtualCamera;
+    private CinemachineVirtualCamera _worldCamera;
+    private CinemachineVirtualCamera _combatCamera;
+    private bool _isInteriorCamera;
 
     private float _offsetPlayer = 1.505f;
 
@@ -25,7 +31,13 @@ public class GlobalController : MonoBehaviour
     {
         SpawnPlayer();
         SetCamera();
-        AddItems();
+        // AddItems();
+
+        if (hideCursor)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     private void SpawnPlayer()
@@ -85,52 +97,68 @@ public class GlobalController : MonoBehaviour
 
     private void SetCamera()
     {
-        virtualCamera.m_Follow = player.transform;
-        virtualCamera.m_LookAt = player.transform;
-        virtualCamera.transform.position = player.transform.position;
-        
+        exteriorCamera.m_Follow = player.transform;
+        exteriorCamera.m_LookAt = player.transform;
+        // exteriorCamera.transform.position = player.transform.position;
+
+        interiorCamera.m_Follow = player.transform;
+        interiorCamera.m_LookAt = player.transform;
+        // interiorCamera.transform.position = player.transform.position;
+
+        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
+
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(player.transform);
     }
 
-    public void ChangeCamera(CinemachineVirtualCamera newCamera)
+    public void ChangeWorldCamera()
     {
-        if (newCamera == null)
+        _isInteriorCamera = !_isInteriorCamera;
+
+        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
+
+        exteriorCamera.gameObject.SetActive(!_isInteriorCamera);
+        interiorCamera.gameObject.SetActive(_isInteriorCamera);
+    }
+
+    public void ChangeToCombatCamera(CinemachineVirtualCamera combatCamera)
+    {
+        if (combatCamera == null)
         {
-            _newVirtualCamera.gameObject.SetActive(false);
-            virtualCamera.gameObject.SetActive(true);
-            _newVirtualCamera = null;
+            _combatCamera.gameObject.SetActive(false);
+            _worldCamera.gameObject.SetActive(true);
+            _combatCamera = null;
         }
         else
         {
-            newCamera.gameObject.SetActive(true);
-            virtualCamera.gameObject.SetActive(false);
-            _newVirtualCamera = newCamera;
+            combatCamera.gameObject.SetActive(true);
+            _worldCamera.gameObject.SetActive(false);
+            _combatCamera = combatCamera;
         }
     }
 
-    private void AddItems()
-    {
-        if (items.Length != 0)
-        {
-            for (int i = 0; i < items.Length; i++)
-            {
-                AddItem(i);
-            }
-        }
-    }
+    // private void AddItems()
+    // {
+    //     if (items.Length != 0)
+    //     {
+    //         for (int i = 0; i < items.Length; i++)
+    //         {
+    //             AddItem(i);
+    //         }
+    //     }
+    // }
 
-    private void AddItem(int index)
-    {
-        if (GameManager.Instance.IsInventoryFull)
-        {
-            GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull);
-            return;
-        }
+    // private void AddItem(int index)
+    // {
+    //     if (GameManager.Instance.IsInventoryFull)
+    //     {
+    //         GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupInventoryFull);
+    //         return;
+    //     }
 
-        Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
-        newSlot.AddItem(items[index]);
-    }
+    //     Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+    //     newSlot.AddItem(items[index]);
+    // }
 
     // private void Update()
     // {
@@ -141,5 +169,15 @@ public class GlobalController : MonoBehaviour
     // {
     //     player.InfiniteStamina = infiniteStamina;
     // }
+
+    public bool GetPlayerInMovement()
+    {
+        return player.GetPlayerInMovement() && !skipEncounters;
+    }
+
+    public void HidePlayer(bool isHiding)
+    {
+        player.gameObject.SetActive(!isHiding);
+    }
 
 }

@@ -1,20 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Events;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 
 [System.Serializable]
-public class CombatPlayer
+public class EnemyEncounter
 {
-    public Player character;
-    public List<ItemSO> equipment = new List<ItemSO>();
-}
-
-[System.Serializable]
-public class CombatEnemy
-{
-    public Enemy character;
-    public List<ItemSO> equipment = new List<ItemSO>();
+    public List<Enemy> enemies = new List<Enemy>();
 }
 
 public class GameManager : MonoSingleton<GameManager>
@@ -22,7 +16,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("General")]
     public bool isPaused;
     public bool inCombat;
-    public bool inWorld;
+    public ENCOUNTER_ZONE encounterZone;
 
     [Header("References")]
     public GlobalController globalController;
@@ -31,16 +25,18 @@ public class GameManager : MonoSingleton<GameManager>
     public PlayableDirector playableDirector;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
-    public Vector3 dropZone;
+    public EventSystem eventSystem;
 
     [Header("Combat")]
     public CombatArea[] combatAreas;
     [Space]
-    public List<CombatPlayer> combatPlayers;
+    public List<Player> combatPlayers;
+    [Space]
+    public List<EnemyEncounter> enemyEncounters;
 
+    public List<QuestData> listQuestData;
     // public List<QuestSO> listQuest;
     // public List<int> listProgress;
-    public List<QuestData> listQuestData;
     public Dictionary<int, QuestSO> dictionaryQuest;
     public Dictionary<int, int> dictionaryProgress;
     public List<Slot> listSlots;
@@ -48,24 +44,41 @@ public class GameManager : MonoSingleton<GameManager>
     // Combat
     private CombatArea _currentCombatArea;
     private NPCController currentNPC;
+    private float _currentTimeEncounter;
+    private float _limitTimeEncounter = 10;
 
     // Inventory
-    private int _inventoryMaxSlots = 8;
-    private int _equipmentMaxSlots = 3;
-    private int _characterIndex;
+    // private int _inventoryMaxSlots = 8;
+    // private int _equipmentMaxSlots = 3;
+    // private int _characterIndex;
+
+    // Hold System
+    private bool _holdStarted;
+    private float _holdCurrentTime;
+    private float _holdLimitTime;
+    private System.Action _holdCallback;
+    private UnityEngine.UI.Image _holdImage;
+
+    // Coroutines
+    private Coroutine _coroutineEnconters;
+    private Coroutine _coroutineHoldSystem;
+    private WaitForSeconds _waitHoldEnd;
+
+    // Other
+    private ENCOUNTER_ZONE _lastEncounterZone;
 
     // Events
     private FadeEvent _fadeEvent;
 
     // Properties
-    private InputActions _inputActions;
-    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
-
-    public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
-    public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
-
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
+
+    private float _holdFillValue;
+    public float HoldFillValue { get { return _holdFillValue; } }
+
+    // public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
+    // public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
 
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
@@ -76,15 +89,6 @@ public class GameManager : MonoSingleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-
-        CreateInput();
-    }
-
-    private void CreateInput()
-    {
-        InputActions = new InputActions();
-
-        InputActions.ActionPlayer.Pause.performed += ctx => Pause();
     }
 
     private void Start()
@@ -101,19 +105,22 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
+        
 
-        _characterIndex = 0;
-        worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
+        _waitHoldEnd = new WaitForSeconds(1f);
+
+        // _characterIndex = 0;
+        // worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
 
         // GameManager.Instance.LoadGame();
 
-        inWorld = true;
+        inCombat = false;
+
+        CheckEncounters(true);
     }
 
     private void OnEnable()
     {
-        InputActions.Enable();
-
         EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
@@ -123,8 +130,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnDisable()
     {
-        InputActions.Disable();
-
         EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
@@ -132,21 +137,79 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
 
-    // private void Update()
-    // {
-    //     if (!inCombat)
-    //     {
-    //         Pause();
-    //         OpenInventory();
-    //         OpenQuest();
-    //     }
-    // }
-
-    private void Pause()
+    public void CheckEncounters(bool isEnabled)
     {
+        if (isEnabled)
+        {
+            _coroutineEnconters = StartCoroutine(CheckEncounter());
+        }
+        else
+        {
+            StopCoroutine(_coroutineEnconters);
+            _coroutineEnconters = null;
+        }
+    }
+
+    private IEnumerator CheckEncounter()
+    {
+        yield return new WaitForSeconds(3f);
+
+        while (true)
+        {
+            if (!inCombat && !isPaused && globalController.GetPlayerInMovement() && encounterZone != ENCOUNTER_ZONE.None)
+            {
+                _currentTimeEncounter += Time.deltaTime;
+
+                if (_currentTimeEncounter > _limitTimeEncounter)
+                {
+                    _currentTimeEncounter = 0;
+                    TriggerCombat();
+                }
+            }
+            yield return null;
+        }
+    }
+
+    public void Pause(PAUSE_TYPE type)
+    {
+        switch (type)
+        {
+            case PAUSE_TYPE.PauseMenu:
+                if (!inCombat)
+                {
+                    isPaused = !isPaused;
+                    Time.timeScale = isPaused ? 0 : 1;
+                    worldUI.Pause(isPaused);
+                }
+                break;
+
+            case PAUSE_TYPE.Inventory:
+                if (!inCombat)
+                {
+                    isPaused = !isPaused;
+                    Time.timeScale = isPaused ? 0 : 1;
+                    // TODO Marcos: Show Inventory 
+                }
+                break;
+
+            case PAUSE_TYPE.Note:
+                isPaused = !isPaused;
+                Time.timeScale = isPaused ? 0 : 1;
+                worldUI.ActiveNote(isPaused);
+                break;
+
+            default:
+                isPaused = !isPaused;
+                Time.timeScale = isPaused ? 0 : 1;
+                break;
+        }
+
         if (!inCombat)
         {
-            SetPause();
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0 : 1;
+            worldUI.Pause(isPaused);
+            // SetPause(false);
         }
     }
 
@@ -168,35 +231,28 @@ public class GameManager : MonoSingleton<GameManager>
     //     }
     // }
 
-    public void SetPause()
-    {
-        isPaused = !isPaused;
-        Time.timeScale = isPaused ? 0 : 1;
-        worldUI.Pause(isPaused);
-    }
-
     private void SwitchAmbient()
     {
-        if (inWorld)
-        {
-            worldUI.EnableCanvas(true);
-            combatUI.EnableCanvas(false);
+        CheckEncounters(!inCombat);
 
-            globalController.ChangeCamera(null);
-            combatManager.CloseCombatArea();
+        globalController.player.ToggleInputWorld(!inCombat);
+        globalController.HidePlayer(inCombat);
+
+        combatUI.EnableCanvas(inCombat);
+        worldUI.EnableCanvas(!inCombat);
+
+        combatManager.ToggleInputCombat(inCombat);
+        combatManager.SetCombatArea(inCombat);
+
+        if (!inCombat)
+        {
+            globalController.ChangeToCombatCamera(null);
             combatUI.actions.Clear();
             combatUI.ClearTurn();
-
-            inCombat = false;
         }
         else
         {
-            worldUI.EnableCanvas(false);
-            combatUI.EnableCanvas(true);
-
-            globalController.ChangeCamera(_currentCombatArea.virtualCamera);
-
-            inCombat = true;
+            globalController.ChangeToCombatCamera(_currentCombatArea.virtualCamera);
         }
     }
 
@@ -205,14 +261,9 @@ public class GameManager : MonoSingleton<GameManager>
         globalController.player.SwitchMovement();
     }
 
-    private void InitiateTurn()
-    {
-        combatManager.InitiateTurn();
-    }
-
     private void StartCombat()
     {
-        currentNPC.Kill();
+        // currentNPC?.Kill();
         combatManager.InitiateTurn();
     }
 
@@ -221,65 +272,161 @@ public class GameManager : MonoSingleton<GameManager>
         combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
     }
 
-    public Vector3 GetPlayerFootPosition()
+    public void SelectButton(GameObject button)
     {
-        return globalController.player.dropZone.transform.position;
+        eventSystem.SetSelectedGameObject(button);
     }
 
-    public Ray GetRayMouse()
+    public void PlayerCanSelect(bool canSelect, int combatIndex = 0)
     {
-        return globalController.mainCamera.ScreenPointToRay(Input.mousePosition);
+        combatManager.ChangeCombatState(canSelect);
+        combatUI.ShowPlayerPanel(canSelect, true);
+        if (canSelect)combatUI.ShowActions(combatIndex);
     }
 
-    #region Inventory
-
-    public void AddItem(ItemSO item)
+    public void ChangeEncounterZone(bool isEnter, ENCOUNTER_ZONE newEncounterZone = ENCOUNTER_ZONE.Normal)
     {
-        _items.Add(item);
-    }
-
-    public void DropItem(Slot slot)
-    {
-        _items.Remove(slot.Item);
-
-        listSlots.Remove(slot);
-
-        worldUI.itemDescription.Hide();
-    }
-
-    public void EquipItem(ItemSO item)
-    {
-        combatPlayers[_characterIndex].equipment.Add(item);
-
-        _items.Remove(item);
-
-        worldUI.itemDescription.Hide();
-    }
-
-    public void UnequipItem(ItemSO item)
-    {
-        combatPlayers[_characterIndex].equipment.Remove(item);
-
-        _items.Add(item);
-    }
-
-    public void NextCharacter(bool isLeft)
-    {
-        if (isLeft)
+        if (isEnter)
         {
-            if (_characterIndex <= 0)return;
-
-            _characterIndex--;
-            worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
+            _lastEncounterZone = encounterZone;
+            encounterZone = newEncounterZone;
         }
         else
         {
-            if (_characterIndex >= combatPlayers.Count - 1)return;
-
-            _characterIndex++;
-            worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
+            if (_lastEncounterZone == ENCOUNTER_ZONE.None)_currentTimeEncounter = 0;
+            encounterZone = _lastEncounterZone;
         }
     }
+
+    private bool GetProbabilityEncounter()
+    {
+        ProportionValue<bool>[] tempProb = new ProportionValue<bool>[2];
+
+        float probability = GetProbabilityZone();
+
+        tempProb[0] = ProportionValue.Create(probability, true);
+        tempProb[1] = ProportionValue.Create(1 - probability, false);
+
+        return tempProb.ChooseByRandom();
+    }
+
+    private float GetProbabilityZone()
+    {
+        switch (encounterZone)
+        {
+            case ENCOUNTER_ZONE.Normal:
+                return GameData.Instance.worldConfig.probabilityNormal;
+
+            case ENCOUNTER_ZONE.Interior:
+                return GameData.Instance.worldConfig.probabilityInterior;
+
+            case ENCOUNTER_ZONE.Dark:
+                return GameData.Instance.worldConfig.probabilityDarkZone;
+
+            default:
+                return 0;
+        }
+    }
+
+    #region Hold System
+
+    public void SetHoldSystem(ref UnityEngine.UI.Image image, float limitTime, System.Action callback)
+    {
+        _holdImage = image;
+        _holdLimitTime = limitTime;
+        _holdCallback = callback;
+    }
+
+    public void CallHoldSystem(bool isStart)
+    {
+        _holdStarted = isStart;
+
+        if (_holdStarted)
+        {
+            _coroutineHoldSystem = StartCoroutine(Hold());
+        }
+        else
+        {
+            StopCoroutine(_coroutineHoldSystem);
+
+            _holdCurrentTime = 0;
+            _holdImage.fillAmount = 0;
+        }
+    }
+
+    private IEnumerator Hold()
+    {
+        while (_holdStarted)
+        {
+            _holdCurrentTime += Time.deltaTime;
+
+            _holdImage.fillAmount = _holdCurrentTime / _holdLimitTime;
+
+            if (_holdCurrentTime > _holdLimitTime)
+            {
+                _holdImage.fillAmount = 1;
+                _holdCallback.Invoke();
+
+                yield return _waitHoldEnd;
+
+                CallHoldSystem(false);
+            }
+
+            yield return null;
+        }
+    }
+
+    #endregion
+
+    #region Inventory
+
+    // public void AddItem(ItemSO item)
+    // {
+    //     _items.Add(item);
+    // }
+
+    // public void DropItem(Slot slot)
+    // {
+    //     _items.Remove(slot.Item);
+
+    //     listSlots.Remove(slot);
+
+    //     worldUI.itemDescription.Hide();
+    // }
+
+    // public void EquipItem(ItemSO item)
+    // {
+    //     combatPlayers[_characterIndex].equipment.Add(item);
+
+    //     _items.Remove(item);
+
+    //     worldUI.itemDescription.Hide();
+    // }
+
+    // public void UnequipItem(ItemSO item)
+    // {
+    //     combatPlayers[_characterIndex].equipment.Remove(item);
+
+    //     _items.Add(item);
+    // }
+
+    // public void NextCharacter(bool isLeft)
+    // {
+    //     if (isLeft)
+    //     {
+    //         if (_characterIndex <= 0)return;
+
+    //         _characterIndex--;
+    //         worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : _characterIndex <= 0);
+    //     }
+    //     else
+    //     {
+    //         if (_characterIndex >= combatPlayers.Count - 1)return;
+
+    //         _characterIndex++;
+    //         worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inRightLimit : _characterIndex >= combatPlayers.Count - 1);
+    //     }
+    // }
 
     #endregion
 
@@ -334,7 +481,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnEnterCombat(EnterCombatEvent evt)
     {
-        inWorld = false;
+        inCombat = true;
         currentNPC = evt.currentNPC;
 
         int indexArea = Random.Range(0, combatAreas.Length);
@@ -348,9 +495,29 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.TriggerEvent(_fadeEvent);
     }
 
+    private void TriggerCombat()
+    {
+        if (!GetProbabilityEncounter())return;
+
+        inCombat = true;
+        currentNPC = null;
+
+        int indexArea = Random.Range(0, combatAreas.Length);
+        _currentCombatArea = combatAreas[indexArea];
+
+        int indexEncounter = Random.Range(0, enemyEncounters.Count);
+        combatManager.SetData(_currentCombatArea, combatPlayers, enemyEncounters[indexEncounter].enemies);
+
+        _fadeEvent.callbackStart = SwitchMovement;
+        _fadeEvent.callbackMid = SwitchAmbient;
+        _fadeEvent.callbackEnd = StartCombat;
+
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
     public void OnExitCombat(ExitCombatEvent evt)
     {
-        inWorld = true;
+        inCombat = false;
 
         _fadeEvent.callbackStart = null;
         _fadeEvent.callbackMid = SwitchAmbient;
@@ -378,7 +545,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnCutscene(CutsceneEvent evt)
     {
-        Debug.Log($"<b> {evt.cutscene.name} </b>");
+        // Debug.Log($"<b> {evt.cutscene.name} </b>");
         playableDirector.playableAsset = evt.cutscene;
 
         playableDirector.Play();
@@ -388,32 +555,32 @@ public class GameManager : MonoSingleton<GameManager>
 
     #region Persistence
 
-    public void LoadGame()
+    /* public void LoadGame()
     {
-        // for (int i = 0; i < GameData.Data.items.Count; i++)
-        // {
-        //     if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
+        for (int i = 0; i < GameData.Data.items.Count; i++)
+        {
+            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
 
-        //     Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
-        //     newSlot.AddItem(GameData.Data.items[i]);
-        //     listSlots.Add(newSlot);
+            Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
+            newSlot.AddItem(GameData.Data.items[i]);
+            listSlots.Add(newSlot);
 
-        //     GameData.Data.items.Remove(GameData.Instance.persistenceItem);
-        // }
+            GameData.Data.items.Remove(GameData.Instance.persistenceItem);
+        }
 
-        // foreach (var key in GameData.Data.listQuest.Keys)
-        // {
-        //     Debug.Log($"<b> {GameData.Data.listQuest[key].title} </b>");
+        foreach (var key in GameData.Data.listQuest.Keys)
+        {
+            Debug.Log($"<b> {GameData.Data.listQuest[key].title} </b>");
 
-        //     if (GameData.Data.listQuest[key] == GameData.Instance.persistenceQuest)continue;
+            if (GameData.Data.listQuest[key] == GameData.Instance.persistenceQuest)continue;
 
-        //     listQuest.Add(GameData.Data.listQuest[key]);
-        //     listProgress.Add(GameData.Data.listProgress[key]);
+            listQuest.Add(GameData.Data.listQuest[key]);
+            listProgress.Add(GameData.Data.listProgress[key]);
 
-        //     worldUI.ReloadQuest(GameData.Data.listQuest[key]);
-        // }
+            worldUI.ReloadQuest(GameData.Data.listQuest[key]);
+        }
 
-        // GameManager.Instance.globalController.spawnPoint = GameData.Data.newSpawnPoint;
+        GameManager.Instance.globalController.spawnPoint = GameData.Data.newSpawnPoint;
 
     }
 
@@ -421,36 +588,36 @@ public class GameManager : MonoSingleton<GameManager>
     {
         ClearOldData();
 
-        // for (int i = 0; i < _items.Count; i++)
-        // {
-        //     GameData.Data.items.Add(_items[i]);
-        // }
+        for (int i = 0; i < _items.Count; i++)
+        {
+            GameData.Data.items.Add(_items[i]);
+        }
 
-        // foreach (var key in listQuest.Keys)
-        // {
-        // GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
-        // GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
+        foreach (var key in listQuest.Keys)
+        {
+        GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
+        GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
 
-        // }
+        }
 
-        // mueve el spawn point a la ultima posicion del jugador
-        // guarda la ulitma posicion para mover el spawn point
+        mueve el spawn point a la ultima posicion del jugador
+        guarda la ulitma posicion para mover el spawn point
 
-        // GameManager.Instance.globalController.spawnPoint.TransformPoint(
-        //     GameData.Data.newSpawnPoint.transform.position.x,
-        //     GameData.Data.newSpawnPoint.transform.position.y,
-        //     GameData.Data.newSpawnPoint.transform.position.z);
+        GameManager.Instance.globalController.spawnPoint.TransformPoint(
+            GameData.Data.newSpawnPoint.transform.position.x,
+            GameData.Data.newSpawnPoint.transform.position.y,
+            GameData.Data.newSpawnPoint.transform.position.z);
 
-        // GameData.SaveData();
+        GameData.SaveData();
 
     }
 
     private void ClearOldData()
     {
-        // GameData.Data.items.Clear();
-        // GameData.Data.listQuest.Clear();
-        // GameData.Data.listProgress.Clear();
-        // GameData.Data.position.Translate(59.1f, 0f, -49.4f);
+        GameData.Data.items.Clear();
+        GameData.Data.listQuest.Clear();
+        GameData.Data.listProgress.Clear();
+        GameData.Data.position.Translate(59.1f, 0f, -49.4f);
     }
 
     [ContextMenu("Delete Game")]
@@ -458,7 +625,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         GameData.DeleteAllData();
         GameData.Data.isDataLoaded = false;
-    }
+    } */
 
     #endregion
 

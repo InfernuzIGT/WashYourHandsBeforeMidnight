@@ -1,14 +1,30 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+
+[Serializable]
+public struct Dialog
+{
+    public bool isPlayer;
+    [TextArea] public string sentence;
+}
 
 [CreateAssetMenu(fileName = "New Dialog", menuName = "Dialog", order = 0)]
 public class DialogSO : ScriptableObject
 {
-    [TextArea()]
-    public string[] questSentences;
-
+    [PreviewTexture(48)] public Sprite icon;
+    public int dialogId;
     [Space]
-    [TextArea()] public string[] noneSentences;
-    [TextArea()] public string[] readySentences;
-    [TextArea()] public string[] inProgressSentences;
-    [TextArea()] public string[] CompletedSentences;
+    public Dialog[] dialogNone;
+    public Dialog[] dialogReady;
+    public Dialog[] dialogInProgress;
+    public Dialog[] dialogCompleted;
+    
+    [ContextMenu("Clear Data")]
+    public void ClearData()
+    {
+        dialogNone = null;
+        dialogReady = null;
+        dialogInProgress = null;
+        dialogCompleted = null;
+    }
 }
