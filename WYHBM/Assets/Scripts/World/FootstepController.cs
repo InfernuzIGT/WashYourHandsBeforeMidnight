@@ -52,6 +52,5 @@ public class FootstepController : MonoBehaviour
                     break;
             }
         }
-
     }
 }

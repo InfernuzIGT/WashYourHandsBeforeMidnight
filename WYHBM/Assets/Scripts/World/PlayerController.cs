@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private bool _isRunning;
     private float _speedHorizontal;
     private float _speedVertical;
+    private bool _isDetectingGround;
 
     // Walk
     private float _speedWalk = 7.5f;
@@ -34,25 +35,23 @@ public class PlayerController : MonoBehaviour
     //Jump
     private float _jump = 9.81f;
     private float _gravity = 39.24f;
+    private float _magnitudeFall = 15f;
     private bool _isJumping;
 
-    // Ladder
-    private float _speedLadder = 5f;
-    private bool _inLadder = false;
+    // Ivy
+    private float _speedIvy = 5f;
+    private bool _inIvy = false;
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
 
     // Zipline
     public bool _inZipline = false;
-    // public float speedZipline; 
+    private float _speedZipline = .35f;
     public Vector3 endPos;
 
     // Ledge
-    public Animator animator;
     public LayerMask Climbable;
     public bool ledgeDetected;
-    private bool _isClimbing;
-    private bool _inLedge;
     private Vector3 newPos;
 
     public Transform wallCheck;
@@ -71,6 +70,8 @@ public class PlayerController : MonoBehaviour
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
+
+    public bool IsDetectingGround { get => _isDetectingGround; set => _isDetectingGround = value; }
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
@@ -96,8 +97,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
 
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
@@ -132,64 +133,47 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Movement();
-        LadderMovement();
+        IvyMovement();
         MovementZipline();
     }
-
 
     private void MovementZipline()
     {
         if (_inZipline)
         {
+            _animatorController.MovementZipline(true);
+
             _gravity = 0;
 
-            _animatorController.MovementZipline(true);
-            // animator.SetBool("canZipline", true);
-
-            transform.position = Vector3.MoveTowards(transform.position, endPos, .5f);
+            transform.position = Vector3.MoveTowards(transform.position, endPos, _speedZipline);
 
             if (Vector3.Distance(transform.position, endPos) < 1)
             {
                 _animatorController.MovementZipline(false);
-                // animator.SetBool("canZipline", false);
                 _inZipline = false;
                 _gravity = 39.24f;
             }
         }
     }
 
-    private IEnumerator AnimClimb()
+    private void StartClimb()
     {
-        if (_inLadder)
-        {
-            animator.SetBool("canClimbLadder", true);
-        }
+        _characterController.enabled = false;
 
-        if (_inLedge)
-        {
-            _characterController.enabled = false;
+        _canMove = false;
 
-            animator.SetBool("canClimbLedge", true);
-
-            yield return new WaitForSeconds(.01f);
-
-            animator.SetBool("canClimbLedge", false);
-
-            yield return new WaitForSeconds(1.35f);
-
-            EndClimb();
-        }
-
+        _animatorController.ClimbLedge(true);
     }
 
     private void EndClimb()
     {
-        _inLedge = false;
-
-        _isClimbing = false;
-        ledgeDetected = false;
-
         transform.position = newPos;
+
+        _canMove = true;
+
+        _animatorController.ClimbLedge(false);
+
+        ledgeDetected = false;
 
         _characterController.enabled = true;
     }
@@ -205,7 +189,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Ladder
-        if (_inLadder) { return; }
+        if (_inIvy) { return; }
 
         // Run / Walk
         if (CheckRun())
@@ -231,6 +215,7 @@ public class PlayerController : MonoBehaviour
             {
                 // _speedVertical = _jump;
                 _isJumping = false;
+
             }
 
             // Add movement
@@ -238,6 +223,13 @@ public class PlayerController : MonoBehaviour
             _movement.x = (_inputMovement.x != 0 ? _inputMovementAux.x : 0) * _speedHorizontal;
             _movement.z = (_inputMovement.y != 0 ? _inputMovementAux.y : 0) * _speedHorizontal;
             _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
+
+            _animatorController.Falling(false);
+        }
+
+        if (_characterController.velocity.magnitude > _magnitudeFall && !_characterController.isGrounded && !_inIvy)
+        {
+            _animatorController.Falling(true);
         }
 
         // Move
@@ -279,20 +271,17 @@ public class PlayerController : MonoBehaviour
                 {
                     if (hitWallFront.collider.tag == "Climbable" && hitLedgeFront.collider.tag == "Climbable" && !ledgeDetected)
                     {
-                        _inLedge = true;
+                        SetNewPosition(transform.position.x + .5f, hitLedgeFront.collider.bounds.size.y + .5f, transform.position.z);
 
-                        transform.position = new Vector3(transform.position.x, hitLedgeFront.collider.bounds.size.y, transform.position.z);
+                        newPos = new Vector3(.7f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
+                            hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2,
+                            hitLedgeFront.transform.position.z);
 
-                        newPos = new Vector3(.5f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2, 
-                        hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2, 
-                        hitLedgeFront.transform.position.z);
-
-                        Debug.Log ($"<b> {newPos} </b>");
+                        Debug.Log($"<b> {newPos} </b>");
 
                         ledgeDetected = true;
 
-                        StartCoroutine(AnimClimb());
-
+                        StartClimb();
                     }
 
                     //     if (hitWallLeft.collider.tag == "Climbable" && hitLedgeLeft.collider.tag == "Climbable" && !ledgeDetected)
@@ -317,19 +306,15 @@ public class PlayerController : MonoBehaviour
                     {
                         if (hitWallBack.collider.tag == "Climbable" && hitLedgeBack.collider.tag == "Climbable" && !ledgeDetected)
                         {
-                            _inLedge = true;
+                            SetNewPosition(transform.position.x - .5f, hitLedgeBack.collider.bounds.size.y + .5f, transform.position.z);
 
-                            transform.position = new Vector3(transform.position.x, hitLedgeBack.transform.position.y + 1, transform.position.z);
-
-                            newPos = new Vector3(- .5f + hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / 2, 
-                            hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / 2,
-                            hitLedgeBack.transform.position.z);
-                            // newPos = hitLedgeBack.collider.gameObject.transform.GetChild(0).transform.position;
+                            newPos = new Vector3(-.7f + hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / 2,
+                                hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / 2,
+                                hitLedgeBack.transform.position.z);
 
                             ledgeDetected = true;
 
-                            StartCoroutine(AnimClimb());
-
+                            StartClimb();
                         }
 
                         // if (hitWallRight.collider.tag == "Climbable" && hitLedgeRight.collider.tag == "Climbable" && !ledgeDetected)
@@ -349,49 +334,51 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void LadderMovement()
+    private void IvyMovement()
     {
-        if (!_inLadder)
+        DetectBot();
+
+        if (!_inIvy)
         {
-            animator.SetBool("canClimbLadder", false);
             return;
         }
-        else
-        {
-            DetectBot();
-        }
 
-        _movement.x = _inputMovement.x * _speedLadder;
+        _inIvy = true;
+
+        _movement.x = _inputMovement.x * _speedIvy;
         _movement.z = 0;
-        _movement.y = _inputMovement.y * _speedLadder;
+        _movement.y = _inputMovement.y * _speedIvy;
         _characterController.Move(_movement * Time.deltaTime);
 
-        _inLadder = true;
-        StartCoroutine(AnimClimb());
-
         _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
-
     }
 
     private void DetectBot()
     {
-        if (_inLadder)
+        if (_characterController.isGrounded && !_inIvy)
         {
-            _botPosition = new Vector3(
-                transform.position.x,
-                transform.position.y - _characterController.height / 2 - _characterController.center.y,
-                transform.position.z);
-
-            if (Physics.Raycast(_botPosition, Vector3.down, out _hitBot, .1f))
-            {
-                if (_hitBot.collider.tag == "Interaction")
-                {
-                    _inLadder = false;
-                    _ladderEvent.ladderExit = LADDER_EXIT.Bot;
-                    EventController.TriggerEvent(_ladderEvent);
-                }
-            }
+            _animatorController.PreClimbLadder(false);
         }
+
+        else
+        {
+            _animatorController.PreClimbLadder(true);
+        }
+
+        // _botPosition = new Vector3(
+        //     transform.position.x,
+        //     transform.position.y - _characterController.height / 2 - _characterController.center.y,
+        //     transform.position.z);
+
+        // if (Physics.Raycast(_botPosition, Vector3.down, out _hitBot, .1f))
+        // {
+        //     if (_hitBot.collider.tag == "Interaction")
+        //     {
+        //         _inLadder = false;
+        //         _ladderEvent.ladderExit = LADDER_EXIT.Bot;
+        //         EventController.TriggerEvent(_ladderEvent);
+        //     }
+        // }
     }
 
     private void Interaction()
@@ -411,7 +398,7 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchLadderMovement(bool inLadder)
     {
-        _inLadder = inLadder;
+        _inIvy = inLadder;
     }
 
     public void SetNewPosition(float x, float y, float z)
@@ -421,7 +408,7 @@ public class PlayerController : MonoBehaviour
 
     public bool GetPlayerInMovement()
     {
-        return _characterController.isGrounded && _canMove && !_inLadder && _movement.magnitude > 0.1f;
+        return _characterController.isGrounded && _canMove && !_inIvy && _movement.magnitude > 0.1f;
     }
 
     #region FMOD
