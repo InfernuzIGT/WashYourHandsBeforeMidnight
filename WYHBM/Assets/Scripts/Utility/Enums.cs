@@ -79,11 +79,9 @@ public enum MENU_TYPE
     NewGame = 2,
     Options = 3,
     Credits = 4,
-    Audio = 5,
     Back = 6,
     Exit = 7,
     YesPopup = 8,
-    Game = 9,
 }
 
 public enum QUEST_STATE

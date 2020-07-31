@@ -12,8 +12,12 @@ public class AnimatorController : MonoBehaviour
     protected AnimationCommandBool _animModeCombat = new AnimModeCombat();
     protected AnimationCommandFloat _animValueX = new AnimValueX();
     protected AnimationCommandFloat _animValueY = new AnimValueY();
+    protected AnimationCommandFloat _animValueZ = new AnimValueZ();
     protected AnimationCommandInt _animActionType = new AnimActionType();
     protected AnimationCommandBool _animCanZipLine = new AnimCanZipline();
+    protected AnimationCommandBool _animCanClimbLedge = new AnimCanClimbLedge();
+    protected AnimationCommandBool _animCanClimbLadder = new AnimCanClimbLadder();
+    protected AnimationCommandBool _animFall = new AnimFall();
 
     private void Awake()
     {
