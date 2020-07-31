@@ -425,7 +425,7 @@ public class PlayerController : MonoBehaviour
 
     public bool GetPlayerInMovement()
     {
-        return _characterController.isGrounded && _canMove && !_isJumping && !_inLadder && _movement.magnitude > 0.1f;
+        return _characterController.isGrounded && _canMove && !_isJumping && !_inIvy && _movement.magnitude > 0.1f;
     }
 
     #region FMOD
