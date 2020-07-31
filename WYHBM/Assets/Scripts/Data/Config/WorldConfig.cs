@@ -13,6 +13,7 @@ public class WorldConfig : ScriptableObject
 
     [Header("Encounters")]
     public float probabilityNormal = 0.4f;
+    public float probabilityInterior = 0.45f;
     public float probabilityDarkZone = 0.7f;
 
     [Header("Fade")]

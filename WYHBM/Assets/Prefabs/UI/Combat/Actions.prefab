@@ -86,10 +86,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f82771f2e4517bb4c92ea56e53f21155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionButtons:
-  - {fileID: 711763899940656014}
-  - {fileID: 6340068263014030757}
-  - {fileID: 6803150570469303311}
+  actionButtonA: {fileID: 711763899940656014}
+  actionButtonB: {fileID: 6340068263014030757}
+  actionButtonItem: {fileID: 6803150570469303311}
 --- !u!1001 &3890325195191746227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -97,16 +96,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4968622546674420324}
     m_Modifications:
-    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
-        type: 3}
-      propertyPath: m_Name
-      value: ActionButton C
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -165,12 +154,12 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1603.3335
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -540
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -190,7 +179,7 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -200,7 +189,7 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -211,6 +200,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
+        type: 3}
+      propertyPath: m_Name
+      value: ActionButton Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 341774259ecbcc1429c89ebbd636de36, type: 3}
@@ -239,16 +238,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4968622546674420324}
     m_Modifications:
-    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
-        type: 3}
-      propertyPath: m_Name
-      value: ActionButton B
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -307,12 +296,12 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 960.00006
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -540
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -332,7 +321,7 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -342,7 +331,7 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -353,6 +342,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
+        type: 3}
+      propertyPath: m_Name
+      value: ActionButton B
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 341774259ecbcc1429c89ebbd636de36, type: 3}
@@ -381,16 +380,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4968622546674420324}
     m_Modifications:
-    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
-        type: 3}
-      propertyPath: m_Name
-      value: ActionButton A
-      objectReference: {fileID: 0}
-    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -449,12 +438,12 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 316.6667
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -540
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -474,7 +463,7 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -484,7 +473,7 @@ PrefabInstance:
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550630274502188336, guid: 341774259ecbcc1429c89ebbd636de36,
         type: 3}
@@ -495,6 +484,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
+        type: 3}
+      propertyPath: m_Name
+      value: ActionButton A
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514218366589490232, guid: 341774259ecbcc1429c89ebbd636de36,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 341774259ecbcc1429c89ebbd636de36, type: 3}

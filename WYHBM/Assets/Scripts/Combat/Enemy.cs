@@ -13,13 +13,10 @@ public class Enemy : CombatCharacter
 	public void Select()
 	{
 		int randomPlayer = Random.Range(0, GameManager.Instance.combatManager.listPlayers.Count);
+		int randomAction = Random.Range(0, 2);
 
-		GameManager.Instance.combatManager.listPlayers[randomPlayer].Select(Equipment[0]);
-		// GameManager.Instance.combatManager.listPlayers[randomPlayer].ActionReceiveDamage();
-		// GameManager.Instance.combatManager.listPlayers[randomPlayer].AnimationRecovery();
-
-		// TODO Mariano: Agregar animacion correspondiente
-		AnimationAction(ANIM_STATE.AttackMelee);
+		GameManager.Instance.combatManager.listPlayers[randomPlayer].Select(randomAction == 0 ? Equipment.actionA : Equipment.actionB);
+		AnimationAction(randomAction == 0 ? ANIM_STATE.Action_A : ANIM_STATE.Action_B);
 
 		DoAction();
 	}

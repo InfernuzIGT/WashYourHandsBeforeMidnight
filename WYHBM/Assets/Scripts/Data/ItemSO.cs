@@ -3,15 +3,13 @@
 [CreateAssetMenu(fileName = "New item", menuName = "Item", order = 0)]
 public class ItemSO : ScriptableObject
 {
-    [Header("Item Data")]
-    public new string name;
+    [Header("General")]
+    public string title;
     [TextArea] public string description;
-    [PreviewTexture(48)] public Sprite sprite;
-    [PreviewTexture(48)] public Sprite previewSprite;
+    [PreviewTexture(48)] public Sprite icon;
+    
+    [Header("Data")]
     public ITEM_TYPE type;
-    public int valueMin;
-    public int valueMax;
-    public bool isDroppeable;
-    public int index;
+    public Vector2Int value;
     [Range(0f, 1f)] public float probability = 1;
 }

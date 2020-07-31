@@ -18,7 +18,7 @@ public class ActionButton : MonoBehaviour
     public void Init(ItemSO item)
     {
         _item = item;
-        itemImg.sprite = item.previewSprite;
+        itemImg.sprite = item.icon;
     }
 
     private void DoAction()
@@ -30,10 +30,5 @@ public class ActionButton : MonoBehaviour
     {
         GameManager.Instance.SelectButton(gameObject);
     }
-
-    // public void SetButtonEnable(bool isEnable)
-    // {
-    //     _actionButton.enabled = isEnable;
-    // }
 
 }

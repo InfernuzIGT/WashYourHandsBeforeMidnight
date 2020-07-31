@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Events {
-
-	public class EventController : MonoBehaviour {
-
+namespace Events
+{
+	public class EventController : MonoBehaviour
+	{
 		//Private Members
 		private static bool _applicationIsQuitting = false;
 		private static EventController _instance;
@@ -16,16 +16,20 @@ namespace Events {
 		private delegate void EventDelegate(GameEvent eventData);
 
 		//Public Members
-		public delegate void EventDelegate<T>(T eventData) where T : GameEvent;
+		public delegate void EventDelegate<T>(T eventData)where T : GameEvent;
 
-		public static EventController Instance {
+		public static EventController Instance
+		{
 			set { _instance = value; }
 
-			get {
+			get
+			{
 
-				if (_instance == null) {
-					_instance = GameObject.FindObjectOfType<EventController>() as EventController;
-					if (_instance == null) {
+				if (_instance == null)
+				{
+					_instance = GameObject.FindObjectOfType<EventController>()as EventController;
+					if (_instance == null)
+					{
 						_instance = new GameObject().AddComponent<EventController>();
 						_instance.name = "EventManager";
 						DontDestroyOnLoad(_instance);
@@ -36,41 +40,48 @@ namespace Events {
 			}
 		}
 
-
-		public static void AddListener<T>(EventDelegate<T> listener) where T : GameEvent {
-			if (Instance._delegateLookup.ContainsKey(listener)) return;
+		public static void AddListener<T>(EventDelegate<T> listener)where T : GameEvent
+		{
+			if (Instance._delegateLookup.ContainsKey(listener))return;
 
 			//Create a generic delegate from non-generic param.
-			EventDelegate genericListener = (eventData) => listener((T) eventData);
+			EventDelegate genericListener = (eventData) => listener((T)eventData);
 			Instance._delegateLookup[listener] = genericListener;
 			EventDelegate tempListener;
 
-			if (Instance._listeners.TryGetValue(typeof(T), out tempListener)) {
+			if (Instance._listeners.TryGetValue(typeof(T), out tempListener))
+			{
 				tempListener += genericListener;
 				Instance._listeners[typeof(T)] = tempListener;
 			}
-			else {
+			else
+			{
 				Instance._listeners[typeof(T)] = genericListener;
 			}
 		}
 
-		public static void RemoveListener<T>(EventDelegate<T> listener) where T : GameEvent {
-			if (_applicationIsQuitting) return;
+		public static void RemoveListener<T>(EventDelegate<T> listener)where T : GameEvent
+		{
+			if (_applicationIsQuitting)return;
 
 			EventDelegate genericListener;
-			if (!Instance._delegateLookup.TryGetValue(listener, out genericListener)) return;
+			if (!Instance._delegateLookup.TryGetValue(listener, out genericListener))return;
 
 			EventDelegate tempListener;
 
-			if (Instance._listeners.TryGetValue(typeof(T), out tempListener)) {
-				if (genericListener != null) {
+			if (Instance._listeners.TryGetValue(typeof(T), out tempListener))
+			{
+				if (genericListener != null)
+				{
 					tempListener -= genericListener;
 				}
 
-				if (tempListener == null) {
+				if (tempListener == null)
+				{
 					Instance._listeners.Remove(typeof(T));
 				}
-				else {
+				else
+				{
 					Instance._listeners[typeof(T)] = tempListener;
 				}
 			}
@@ -78,25 +89,29 @@ namespace Events {
 			Instance._delegateLookup.Remove(listener);
 		}
 
-		public static void Clear() {
+		public static void Clear()
+		{
 			Instance._listeners.Clear();
 		}
 
-		public static void TriggerEvent(GameEvent evt) {
+		public static void TriggerEvent(GameEvent evt)
+		{
 			EventDelegate listener;
-			if (Instance._listeners.TryGetValue(evt.GetType(), out listener)) {
+			if (Instance._listeners.TryGetValue(evt.GetType(), out listener))
+			{
 				listener.Invoke(evt);
 			}
-			else {
-				Debug.Log(evt + " has no listeners");
+#if UNITY_EDITOR
+			else
+			{
+				Debug.Log($"{evt} has no listeners");
 			}
+#endif
 		}
 
-
-		public void OnDestroy() {
+		public void OnDestroy()
+		{
 			_applicationIsQuitting = true;
 		}
 	}
 }
-
-

@@ -14,6 +14,7 @@ namespace GameMode.World
         [Header("General")]
         // public Image staminaImg;
         public Popup popup;
+        public Image progressImg;
         [Space]
         public GameObject panelPlayer;
         public GameObject panelPause;
@@ -101,8 +102,8 @@ namespace GameMode.World
 
             panelDialog.SetActive(false);
 
-            buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
-            buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
+            // buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
+            // buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
 
             sliderSound.onValueChanged.AddListener(VolumeSound);
             sliderMusic.onValueChanged.AddListener(VolumeMusic);
@@ -132,19 +133,19 @@ namespace GameMode.World
             panelPause.gameObject.SetActive(isPaused);
         }
 
-        public void ChangeCharacter(CombatPlayer combatPlayer, int index, bool inLeftLimit = false, bool inRightLimit = false)
-        {
-            characterNameTxt.text = combatPlayer.character.Name;
-            characterImg.sprite = combatPlayer.character.PreviewSprite;
+        // public void ChangeCharacter(CombatPlayer combatPlayer, int index, bool inLeftLimit = false, bool inRightLimit = false)
+        // {
+        //     characterNameTxt.text = combatPlayer.character.Name;
+        //     characterImg.sprite = combatPlayer.character.PreviewSprite;
 
-            characterSlot[_lastSlot].gameObject.SetActive(false);
-            characterSlot[index].gameObject.SetActive(true);
+        //     characterSlot[_lastSlot].gameObject.SetActive(false);
+        //     characterSlot[index].gameObject.SetActive(true);
 
-            _lastSlot = index;
+        //     _lastSlot = index;
 
-            buttonLeft.interactable = !inLeftLimit;
-            buttonRight.interactable = !inRightLimit;
-        }
+        //     buttonLeft.interactable = !inLeftLimit;
+        //     buttonRight.interactable = !inRightLimit;
+        // }
 
         public void VolumeSound(float vol)
         {
@@ -306,17 +307,15 @@ namespace GameMode.World
         #endregion
 
         #region 
-        public void ActiveNote(bool _isActiveNote)
-        {
-            if (_isActiveNote)
-            {
-                panelNote.SetActive(false);
 
-            }
-            else
-            {
-                panelNote.SetActive(true);
-            }
+        public void ActiveNote(bool active)
+        {
+            panelNote.SetActive(active);
+        }
+
+        public void SetNoteText(string sentences)
+        {
+            noteTxt.text = sentences;
         }
 
         #endregion
@@ -504,7 +503,7 @@ namespace GameMode.World
                     break;
 
                 case BUTTON_TYPE.Resume:
-                    GameManager.Instance.SetPause(false);
+                    GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
                     break;
 
                 case BUTTON_TYPE.Options:

@@ -31,10 +31,9 @@ public class CombatManager : MonoBehaviour
 
     private ExitCombatEvent _interactionCombatEvent;
 
+    private InputActions _inputCombat;
+    
     // Properties
-    private InputActions _inputActions;
-    public InputActions InputActions { get { return _inputActions; } set { _inputActions = value; } }
-
     private List<CombatCharacter> _listWaitingCharacters;
     public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
 
@@ -45,12 +44,12 @@ public class CombatManager : MonoBehaviour
 
     private void CreateInput()
     {
-        InputActions = new InputActions();
+        _inputCombat = new InputActions();
 
-        InputActions.UI.Navigate.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        InputActions.UI.Navigate.performed += ctx => NavigateCharacter();
-        InputActions.UI.Submit.performed += ctx => SelectCharacter(true);
-        InputActions.UI.Cancel.performed += ctx => SelectCharacter(false);
+        _inputCombat.UI.Navigate.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        _inputCombat.UI.Navigate.performed += ctx => NavigateCharacter();
+        _inputCombat.UI.Submit.performed += ctx => SelectCharacter(true);
+        _inputCombat.UI.Cancel.performed += ctx => SelectCharacter(false);
     }
 
     private void Start()
@@ -67,7 +66,7 @@ public class CombatManager : MonoBehaviour
         _interactionCombatEvent = new ExitCombatEvent();
     }
 
-    public void SetData(CombatArea combatArea, List<CombatPlayer> combatPlayers, List<CombatEnemy> combatEnemies)
+    public void SetData(CombatArea combatArea, List<Player> combatPlayers, List<Enemy> combatEnemies)
     {
         int indexCombat = 0;
 
@@ -79,16 +78,17 @@ public class CombatManager : MonoBehaviour
         for (int i = 0; i < combatPlayers.Count; i++)
         {
             Player player = Instantiate(
-                combatPlayers[i].character,
+                combatPlayers[i],
                 combatArea.playerPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            player.SetCharacter(indexCombat, combatPlayers[i].equipment);
+            player.SetCharacter(indexCombat);
+            // player.SetCharacter(indexCombat, combatPlayers[i].equipment);
             player.gameObject.SetActive(false);
             indexCombat++;
 
-            GameManager.Instance.combatUI.CreateActions(combatPlayers[i].equipment);
+            GameManager.Instance.combatUI.CreateActions(combatPlayers[i].Equipment);
 
             listPlayers.Add(player);
             _listAllCharacters.Add(player);
@@ -97,12 +97,13 @@ public class CombatManager : MonoBehaviour
         for (int i = 0; i < combatEnemies.Count; i++)
         {
             Enemy enemy = Instantiate(
-                combatEnemies[i].character,
+                combatEnemies[i],
                 combatArea.enemyPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
-            enemy.SetCharacter(indexCombat, combatEnemies[i].equipment);
+            enemy.SetCharacter(indexCombat);
+            // enemy.SetCharacter(indexCombat, combatEnemies[i].equipment);
             enemy.gameObject.SetActive(false);
             indexCombat++;
 
@@ -117,11 +118,11 @@ public class CombatManager : MonoBehaviour
     {
         if (isEnabled)
         {
-            InputActions.Enable();
+            _inputCombat.Enable();
         }
         else
         {
-            InputActions.Disable();
+            _inputCombat.Disable();
         }
     }
 
@@ -131,7 +132,7 @@ public class CombatManager : MonoBehaviour
 
         if (item == null)
         {
-            _animState = ANIM_STATE.AttackMelee;
+            _animState = ANIM_STATE.Action_A;
             GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
             _currentItem = null;
             HighlightCharacters(true, false);
@@ -141,37 +142,37 @@ public class CombatManager : MonoBehaviour
         switch (item.type)
         {
             case ITEM_TYPE.WeaponMelee:
-                _animState = ANIM_STATE.AttackMelee;
+                _animState = ANIM_STATE.Action_A;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
             case ITEM_TYPE.WeaponOneHand:
-                _animState = ANIM_STATE.AttackOneHand;
+                _animState = ANIM_STATE.Action_B;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
             case ITEM_TYPE.WeaponTwoHands:
-                _animState = ANIM_STATE.AttackTwoHands;
+                _animState = ANIM_STATE.Action_Item;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
             case ITEM_TYPE.ItemHeal:
-                _animState = ANIM_STATE.ItemHeal;
+                _animState = ANIM_STATE.Action_Item;
                 GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 HighlightCharacters(true, true);
                 break;
 
             case ITEM_TYPE.ItemGrenade:
-                _animState = ANIM_STATE.ItemGrenade;
+                _animState = ANIM_STATE.Action_Item;
                 GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
             case ITEM_TYPE.ItemDefense:
-                _animState = ANIM_STATE.ItemDefense;
+                _animState = ANIM_STATE.Action_Item;
                 GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 HighlightCharacters(true, true);
                 break;
