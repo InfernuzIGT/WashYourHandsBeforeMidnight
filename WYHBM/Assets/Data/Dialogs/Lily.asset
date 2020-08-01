@@ -12,19 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a0f6366c5ab0040a32e318955d6b8b, type: 3}
   m_Name: Lily
   m_EditorClassIdentifier: 
-  questSentences: []
-  noneSentences:
-  - 'Lily: What are you doing here?'
-  - 'Lily: Go away.'
-  readySentences:
-  - 'Lily: It''s a really thug world.'
-  - 'Lily: So, I''m busy looking for my cats, * I gave them a kibble and they ran.'
-  - 'Lily: If you see them around, * can you bring them to me?'
-  - 'Sam: What would I get?'
-  - 'Lily: I will give you a surprise.'
-  - 'Sam: Hmm.. Okay.*.*.'
-  - 'Lily: When you catch them take to my house.'
-  inProgressSentences:
-  - 'Lily: Have you found my kitty yet?'
-  CompletedSentences:
-  - 'Lily: Oh, I''m so happy, thanks for everything. '
+  icon: {fileID: 21300000, guid: 027e497f37b5a4d42a4942b4dce486d6, type: 3}
+  dialogId: 2
+  dialogNone:
+  - isPlayer: 0
+    sentence: (She ignores you) * Mishifuzz! Mishifuzz! Where are you?
+  dialogReady:
+  - isPlayer: 0
+    sentence: Please help to find my little cat, I'm worried about it.
+  - isPlayer: 1
+    sentence: Where did you saw it last time?
+  - isPlayer: 0
+    sentence: That's a stupid question, I don't remember.
+  - isPlayer: 0
+    sentence: You can start looking in book store.
+  - isPlayer: 0
+    sentence: He loves to sleep in all the books.
+  dialogInProgress:
+  - isPlayer: 0
+    sentence: Did you find Mishifuzz?
+  dialogCompleted:
+  - isPlayer: 0
+    sentence: I'm so happy, Mishifuzz is here, I can't believe it.
