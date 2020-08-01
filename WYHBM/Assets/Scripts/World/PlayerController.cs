@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Events;
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -179,7 +180,7 @@ public class PlayerController : MonoBehaviour
 
         _animatorController.ClimbLedge(true);
 
-        _canMove = false;
+        
     }
 
     private void EndClimb()
@@ -299,6 +300,8 @@ public class PlayerController : MonoBehaviour
                         ledgeDetected = true;
 
                         StartClimb();
+
+                        FMODUnity.RuntimeManager.PlayOneShot("event:/Player/Climbing", GetComponent<Transform>().position);
                     }
 
                     //     if (hitWallLeft.collider.tag == "Climbable" && hitLedgeLeft.collider.tag == "Climbable" && !ledgeDetected)

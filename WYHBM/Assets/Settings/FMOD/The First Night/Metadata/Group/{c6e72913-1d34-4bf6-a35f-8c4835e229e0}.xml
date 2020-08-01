@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{c6e72913-1d34-4bf6-a35f-8c4835e229e0}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-11</value>
 		</property>
 		<property name="name">
 			<value>Player Footsteps Bus</value>
@@ -19,11 +19,32 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{a9be7696-5ec8-4abf-833b-b68315aa15d7}">
 		<relationship name="effects">
+			<destination>{7be81c07-0145-44b8-a671-de5554572f42}</destination>
 			<destination>{2278f1aa-a653-4955-ac58-441c5ff38f03}</destination>
 			<destination>{b5f827df-f43d-4c02-a965-0c58b9c4edd3}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{0fd9c02f-e626-4c34-a150-e93d31494f8a}" />
+	<object class="ThreeEQEffect" id="{7be81c07-0145-44b8-a671-de5554572f42}">
+		<property name="lowGain">
+			<value>-4</value>
+		</property>
+		<property name="midGain">
+			<value>-12</value>
+		</property>
+		<property name="highGain">
+			<value>-11</value>
+		</property>
+		<property name="lowCrossover">
+			<value>460</value>
+		</property>
+		<property name="highCrossover">
+			<value>4200</value>
+		</property>
+		<property name="crossoverSlope">
+			<value>2</value>
+		</property>
+	</object>
 	<object class="LimiterEffect" id="{2278f1aa-a653-4955-ac58-441c5ff38f03}">
 		<property name="boost">
 			<value>6</value>
