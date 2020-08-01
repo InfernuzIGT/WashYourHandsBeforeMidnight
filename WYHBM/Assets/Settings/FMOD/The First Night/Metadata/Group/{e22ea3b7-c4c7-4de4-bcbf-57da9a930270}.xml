@@ -18,6 +18,7 @@
 		<relationship name="effects">
 			<destination>{038535f1-1dfd-47ba-95a5-b3ccf66c109b}</destination>
 			<destination>{8fd991ec-506d-44ba-95bb-f3abaee29aca}</destination>
+			<destination>{53107150-cfb8-4696-8f45-4d0058edccce}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{8800ce35-ab4c-496d-b782-8df978a46ecb}" />
@@ -38,5 +39,16 @@
 		<relationship name="sidechains">
 			<destination>{01c183c4-8749-49b0-8541-418516f0a9d4}</destination>
 		</relationship>
+	</object>
+	<object class="MultibandEqEffect" id="{53107150-cfb8-4696-8f45-4d0058edccce}">
+		<property name="filterTypeA">
+			<value>9</value>
+		</property>
+		<property name="frequencyA">
+			<value>314.623352</value>
+		</property>
+		<property name="gainA">
+			<value>-4.65517235</value>
+		</property>
 	</object>
 </objects>
