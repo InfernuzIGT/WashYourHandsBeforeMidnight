@@ -12,10 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a0f6366c5ab0040a32e318955d6b8b, type: 3}
   m_Name: Mist
   m_EditorClassIdentifier: 
-  questSentences: []
-  noneSentences:
-  - 'Mist: Thanks for all, Sam.'
-  - 'Mist: You solve all.'
-  readySentences: []
-  inProgressSentences: []
-  CompletedSentences: []
+  icon: {fileID: 21300000, guid: f237e20a91a0a4043a417fa891f0acc0, type: 3}
+  dialogId: 3
+  dialogNone:
+  - isPlayer: 0
+    sentence: Come on John, stand up.
+  - isPlayer: 0
+    sentence: They need us in the base.
+  dialogReady: []
+  dialogInProgress: []
+  dialogCompleted:
+  - isPlayer: 0
+    sentence: Stigma sends you?
+  - isPlayer: 0
+    sentence: Please give that kit aid.
+  - isPlayer: 0
+    sentence: '*.*.*.*'
+  - isPlayer: 0
+    sentence: Thank you, we couldn't done without your help.
+  - isPlayer: 0
+    sentence: How can I pay you?
+  - isPlayer: 1
+    sentence: Do you know something about the fire in my village?
+  - isPlayer: 0
+    sentence: Sorry, I don't know who is the responsable.
+  - isPlayer: 0
+    sentence: But maybe Stigma can help you.

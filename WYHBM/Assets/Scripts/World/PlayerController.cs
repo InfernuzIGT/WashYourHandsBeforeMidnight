@@ -30,13 +30,13 @@ public class PlayerController : MonoBehaviour
     private bool _isDetectingGround;
 
     // Walk
-    private float _speedWalk = 7.5f;
+    private float _speedWalk = 3.5f;
     private bool _isWalking;
 
     //Jump
     private float _jump = 9.81f;
     private float _gravity = 39.24f;
-    private float _magnitudeFall = 15f;
+    private float _magnitudeFall = 17f;
     private bool _isJumping;
 
     // Ivy
@@ -178,8 +178,6 @@ public class PlayerController : MonoBehaviour
     {
         _characterController.enabled = false;
 
-        _canMove = false;
-
         _animatorController.ClimbLedge(true);
 
         
@@ -291,9 +289,9 @@ public class PlayerController : MonoBehaviour
                 {
                     if (hitWallFront.collider.tag == "Climbable" && hitLedgeFront.collider.tag == "Climbable" && !ledgeDetected)
                     {
-                        SetNewPosition(transform.position.x + .5f, hitLedgeFront.collider.bounds.size.y + .5f, transform.position.z);
+                        SetNewPosition(transform.position.x + .5f, hitLedgeFront.collider.bounds.size.y, transform.position.z);
 
-                        newPos = new Vector3(.7f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
+                        newPos = new Vector3(.7f+ hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
                             hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2,
                             hitLedgeFront.transform.position.z);
 
