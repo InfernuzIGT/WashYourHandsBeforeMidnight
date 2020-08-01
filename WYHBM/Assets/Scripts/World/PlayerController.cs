@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     //Jump
     private float _jump = 9.81f;
     private float _gravity = 39.24f;
-    private float _magnitudeFall = 17f;
+    private float _magnitudeFall = 20f;
     private bool _isJumping;
 
     // Ivy

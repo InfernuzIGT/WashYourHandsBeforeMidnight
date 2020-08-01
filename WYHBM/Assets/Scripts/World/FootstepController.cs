@@ -48,7 +48,7 @@ public class FootstepController : MonoBehaviour
                     break;
 
                 default:
-                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
+                    _player.footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
                     break;
             }
         }
