@@ -127,7 +127,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20642
+  m_Name: pb_Mesh381512
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5564,6 +5564,7 @@ GameObject:
   - component: {fileID: 858219977}
   - component: {fileID: 858219976}
   - component: {fileID: 858219975}
+  - component: {fileID: 858219980}
   m_Layer: 12
   m_Name: Cube
   m_TagString: Climbable
@@ -5580,7 +5581,7 @@ MeshCollider:
   m_GameObject: {fileID: 858219974}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -5861,6 +5862,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &858219980
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858219974}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 2.75, z: 3}
+  m_Center: {x: 0, y: 0.125, z: 0.5}
 --- !u!1 &858628037
 GameObject:
   m_ObjectHideFlags: 0
@@ -6169,7 +6183,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858628037}
-  m_Mesh: {fileID: 1715482855}
+  m_Mesh: {fileID: 1723996747}
 --- !u!1 &880293470
 GameObject:
   m_ObjectHideFlags: 0
@@ -7262,8 +7276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPaused: 0
   inCombat: 0
-  inDarkZone: 0
-  enableEncounters: 0
+  encounterZone: 0
   globalController: {fileID: 1379338001}
   combatManager: {fileID: 1474080104}
   cinemachineManager: {fileID: 0}
@@ -9979,13 +9992,13 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!43 &1715482855
+--- !u!43 &1723996747
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20654
+  m_Name: pb_Mesh381524
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
