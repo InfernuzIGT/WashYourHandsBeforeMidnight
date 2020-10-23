@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Events;
-using FMODUnity;
 using FMOD.Studio;
+using FMODUnity;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
-    
+
     // Other
     private InputActions _inputHold;
 
@@ -97,9 +98,33 @@ public class PlayerController : MonoBehaviour
         _inputWorld.Player.Walk.canceled += ctx => Walk(false);
         _inputWorld.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
         _inputWorld.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
-        
+
+        InputSystem.onDeviceChange +=
+            (device, change) =>
+            {
+                Debug.Log ($"<b> DEVICE: {device} / CHANGE: {change} </b>");
+                switch (change)
+                {
+                    case InputDeviceChange.Added:
+                        // New Device.
+                        break;
+                    case InputDeviceChange.Disconnected:
+                        // Device got unplugged.
+                        break;
+                    case InputDeviceChange.Reconnected:
+                        // Plugged back in.
+                        break;
+                    case InputDeviceChange.Removed:
+                        // Remove from Input System entirely; by default, Devices stay in the system once discovered.
+                        break;
+                    default:
+                        // See InputDeviceChange reference for other event types.
+                        break;
+                }
+            };
+
         _inputHold = new InputActions();
-        
+
         _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
         _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
     }
@@ -135,7 +160,7 @@ public class PlayerController : MonoBehaviour
             _inputWorld.Disable();
         }
     }
-    
+
     public void ToggleInputHold(bool isEnabled)
     {
         if (isEnabled)
@@ -180,7 +205,6 @@ public class PlayerController : MonoBehaviour
 
         _animatorController.ClimbLedge(true);
 
-        
     }
 
     private void EndClimb()
@@ -291,7 +315,7 @@ public class PlayerController : MonoBehaviour
                     {
                         SetNewPosition(transform.position.x + .5f, hitLedgeFront.collider.bounds.size.y, transform.position.z);
 
-                        newPos = new Vector3(.7f+ hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
+                        newPos = new Vector3(.7f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
                             hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2,
                             hitLedgeFront.transform.position.z);
 
