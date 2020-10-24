@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
 [System.Serializable]
@@ -14,6 +15,7 @@ public class EnemyEncounter
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
+    public DEVICE currentDevice;
     public bool isPaused;
     public bool inCombat;
     public ENCOUNTER_ZONE encounterZone;
@@ -66,6 +68,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     // Other
     private ENCOUNTER_ZONE _lastEncounterZone;
+    private DEVICE _lastDevice;
 
     // Events
     private FadeEvent _fadeEvent;
@@ -93,6 +96,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
+        DetectDevice();
+
         _items = new List<ItemSO>();
 
         // listQuest = new List<QuestSO>();
@@ -105,7 +110,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
-        
 
         _waitHoldEnd = new WaitForSeconds(1f);
 
@@ -125,6 +129,7 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
+        EventController.AddListener<DeviceEvent>(OnDevice);
 
     }
 
@@ -134,7 +139,57 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+        EventController.RemoveListener<DeviceEvent>(OnDevice);
+    }
 
+    private void DetectDevice()
+    {
+        // for (int i = 0; i < InputSystem.devices.Count; i++)
+        // {
+        //     Debug.Log($"<b> DEVICE [{i}]: {InputSystem.devices[i].displayName} </b>");
+        // }
+
+        currentDevice = UniversalFunctions.GetStartDevice();
+        _lastDevice = currentDevice;
+
+        InputSystem.onDeviceChange +=
+            (device, change) =>
+            {
+
+#if UNITY_EDITOR
+                Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
+#endif
+
+                switch (change)
+                {
+                    case InputDeviceChange.Added:
+                    case InputDeviceChange.Reconnected:
+                        _lastDevice = currentDevice;
+                        currentDevice = UniversalFunctions.GetCurrentDevice(device);
+                        break;
+
+                    case InputDeviceChange.Removed:
+                    case InputDeviceChange.Disconnected:
+                        currentDevice = _lastDevice;
+                        UniversalFunctions.PrintCurrentDevice(currentDevice);
+                        break;
+
+                        // case InputDeviceChange.ConfigurationChanged:
+                        //     break;
+                        // case InputDeviceChange.Destroyed:
+                        //     break;
+                        // case InputDeviceChange.Disabled:
+                        //     break;
+                        // case InputDeviceChange.Enabled:
+                        //     break;
+                        // case InputDeviceChange.UsageChanged:
+                        //     break;
+
+                    default:
+                        break;
+                }
+
+            };
     }
 
     public void CheckEncounters(bool isEnabled)
@@ -549,6 +604,11 @@ public class GameManager : MonoSingleton<GameManager>
         playableDirector.playableAsset = evt.cutscene;
 
         playableDirector.Play();
+    }
+
+    private void OnDevice(DeviceEvent evt)
+    {
+        Debug.Log($"<color=green> Device: {evt.device} </color>");
     }
 
     #endregion

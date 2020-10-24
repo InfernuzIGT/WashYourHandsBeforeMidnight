@@ -65,12 +65,16 @@ namespace Events
         public PlayableAsset cutscene;
         
         public int index;
-
     }
 
     public class MainMenuEvent : GameEvent
     {
         public MENU_TYPE menuType;
+    }
+    
+    public class DeviceEvent : GameEvent
+    {
+        public DEVICE device;
     }
 
     public class InfoTextEvent : GameEvent

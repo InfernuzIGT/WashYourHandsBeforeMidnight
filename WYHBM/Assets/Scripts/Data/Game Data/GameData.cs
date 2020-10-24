@@ -10,6 +10,8 @@ public class GameData : MonoSingleton<GameData>
 	public WorldConfig worldConfig;
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
+	public FMODConfig fmodConfig;
+	public DeviceConfig deviceConfig;
 
 	[Header("Persistence")]
 	public ItemSO persistenceItem;

@@ -4,7 +4,6 @@ using Events;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -98,30 +97,6 @@ public class PlayerController : MonoBehaviour
         _inputWorld.Player.Walk.canceled += ctx => Walk(false);
         _inputWorld.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
         _inputWorld.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
-
-        InputSystem.onDeviceChange +=
-            (device, change) =>
-            {
-                Debug.Log ($"<b> DEVICE: {device} / CHANGE: {change} </b>");
-                switch (change)
-                {
-                    case InputDeviceChange.Added:
-                        // New Device.
-                        break;
-                    case InputDeviceChange.Disconnected:
-                        // Device got unplugged.
-                        break;
-                    case InputDeviceChange.Reconnected:
-                        // Plugged back in.
-                        break;
-                    case InputDeviceChange.Removed:
-                        // Remove from Input System entirely; by default, Devices stay in the system once discovered.
-                        break;
-                    default:
-                        // See InputDeviceChange reference for other event types.
-                        break;
-                }
-            };
 
         _inputHold = new InputActions();
 
