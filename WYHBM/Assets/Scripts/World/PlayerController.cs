@@ -102,6 +102,9 @@ public class PlayerController : MonoBehaviour
 
         _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
         _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
+
+        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
+        GameManager.Instance.DetectDevice();
     }
 
     private void Start()
@@ -116,12 +119,14 @@ public class PlayerController : MonoBehaviour
     {
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
+        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
+        EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
     }
 
     public void ToggleInputWorld(bool isEnabled)
@@ -449,6 +454,12 @@ public class PlayerController : MonoBehaviour
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)
     {
         transform.position = evt.newPosition;
+    }
+
+    private void OnDeviceChange(DeviceChangeEvent evt)
+    {
+        UniversalFunctions.DeviceRebind(_inputWorld, evt.device);
+        UniversalFunctions.DeviceRebind(_inputHold, evt.device);
     }
 
     #endregion

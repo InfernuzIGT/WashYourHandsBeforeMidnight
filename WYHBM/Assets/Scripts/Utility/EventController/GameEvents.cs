@@ -72,7 +72,7 @@ namespace Events
         public MENU_TYPE menuType;
     }
     
-    public class DeviceEvent : GameEvent
+    public class DeviceChangeEvent : GameEvent
     {
         public DEVICE device;
     }

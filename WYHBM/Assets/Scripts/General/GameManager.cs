@@ -72,6 +72,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     // Events
     private FadeEvent _fadeEvent;
+    private DeviceChangeEvent _deviceEvent;
 
     // Properties
     private List<ItemSO> _items;
@@ -96,8 +97,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
-        DetectDevice();
-
         _items = new List<ItemSO>();
 
         // listQuest = new List<QuestSO>();
@@ -129,7 +128,6 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
-        EventController.AddListener<DeviceEvent>(OnDevice);
 
     }
 
@@ -139,18 +137,36 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
-        EventController.RemoveListener<DeviceEvent>(OnDevice);
     }
 
-    private void DetectDevice()
+    public void DetectDevice()
     {
-        // for (int i = 0; i < InputSystem.devices.Count; i++)
-        // {
-        //     Debug.Log($"<b> DEVICE [{i}]: {InputSystem.devices[i].displayName} </b>");
-        // }
+        switch (Application.platform)
+        {
+            case RuntimePlatform.Switch:
+                _lastDevice = DEVICE.Switch;
+                currentDevice = DEVICE.Switch;
+                break;
 
-        currentDevice = UniversalFunctions.GetStartDevice();
-        _lastDevice = currentDevice;
+            case RuntimePlatform.PS4:
+                _lastDevice = DEVICE.PS4;
+                currentDevice = DEVICE.PS4;
+                break;
+
+            case RuntimePlatform.XboxOne:
+                _lastDevice = DEVICE.XboxOne;
+                currentDevice = DEVICE.XboxOne;
+                break;
+
+            default:
+                _lastDevice = DEVICE.PC;
+                currentDevice = UniversalFunctions.GetStartDevice();
+                break;
+        }
+
+        _deviceEvent = new DeviceChangeEvent();
+        _deviceEvent.device = currentDevice;
+        EventController.TriggerEvent(_deviceEvent);
 
         InputSystem.onDeviceChange +=
             (device, change) =>
@@ -188,6 +204,9 @@ public class GameManager : MonoSingleton<GameManager>
                     default:
                         break;
                 }
+
+                _deviceEvent.device = currentDevice;
+                EventController.TriggerEvent(_deviceEvent);
 
             };
     }
@@ -604,11 +623,6 @@ public class GameManager : MonoSingleton<GameManager>
         playableDirector.playableAsset = evt.cutscene;
 
         playableDirector.Play();
-    }
-
-    private void OnDevice(DeviceEvent evt)
-    {
-        Debug.Log($"<color=green> Device: {evt.device} </color>");
     }
 
     #endregion

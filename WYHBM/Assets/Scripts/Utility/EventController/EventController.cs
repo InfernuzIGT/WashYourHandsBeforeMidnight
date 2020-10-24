@@ -104,7 +104,7 @@ namespace Events
 #if UNITY_EDITOR
 			else
 			{
-				Debug.Log($"{evt} has no listeners");
+				Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> <b>{evt}</b> has no listeners");
 			}
 #endif
 		}

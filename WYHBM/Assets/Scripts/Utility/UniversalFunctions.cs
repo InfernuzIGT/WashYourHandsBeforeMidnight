@@ -11,8 +11,15 @@ public enum DEVICE
     PC = 0,
     Generic = 1,
     PS4 = 2,
-    Xbox = 3,
+    XboxOne = 3,
     Switch = 4
+}
+
+public enum INPUT_ACTION
+{
+    None = 0,
+    Interaction = 1,
+    // TODO Mariano: Complete
 }
 
 public static class UniversalFunctions
@@ -67,14 +74,14 @@ public static class UniversalFunctions
         var xbox = XInputController.current;
         if (xbox != null)
         {
-            PrintStartDevice(DEVICE.Xbox, xbox, "XInputController");
-            return DEVICE.Xbox;
+            PrintStartDevice(DEVICE.XboxOne, xbox, "XInputController");
+            return DEVICE.XboxOne;
         }
         xbox = XInputControllerWindows.current;
         if (xbox != null)
         {
-            PrintStartDevice(DEVICE.Xbox, xbox, "XInputControllerWindows");
-            return DEVICE.Xbox;
+            PrintStartDevice(DEVICE.XboxOne, xbox, "XInputControllerWindows");
+            return DEVICE.XboxOne;
         }
 
         PrintStartDevice(DEVICE.PC);
@@ -86,7 +93,7 @@ public static class UniversalFunctions
         for (int i = 0; i < InputSystem.devices.Count; i++)
         {
             if (ContainsDeviceName("usb joystick", InputSystem.devices[i]) ||
-                ContainsDeviceName("gamepad", InputSystem.devices[i]))
+                ContainsDeviceName("joystick", InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.Generic, InputSystem.devices[i]);
                 return DEVICE.Generic;
@@ -103,8 +110,8 @@ public static class UniversalFunctions
             }
             if (ContainsDeviceName("xbox controller", InputSystem.devices[i]))
             {
-                PrintCurrentDevice(DEVICE.Xbox, InputSystem.devices[i]);
-                return DEVICE.Xbox;
+                PrintCurrentDevice(DEVICE.XboxOne, InputSystem.devices[i]);
+                return DEVICE.XboxOne;
             }
             if (ContainsDeviceName("keyboard", InputSystem.devices[i]))
             {
@@ -120,7 +127,7 @@ public static class UniversalFunctions
     public static DEVICE GetCurrentDevice(InputDevice device)
     {
         if (ContainsDeviceName("usb joystick", device) ||
-            ContainsDeviceName("gamepad", device))
+            ContainsDeviceName("joystick", device))
         {
             PrintCurrentDevice(DEVICE.Generic, device);
             return DEVICE.Generic;
@@ -138,8 +145,8 @@ public static class UniversalFunctions
 
         if (ContainsDeviceName("xbox controller", device))
         {
-            PrintCurrentDevice(DEVICE.Xbox, device);
-            return DEVICE.Xbox;
+            PrintCurrentDevice(DEVICE.XboxOne, device);
+            return DEVICE.XboxOne;
         }
         if (ContainsDeviceName("keyboard", device))
         {
@@ -149,6 +156,11 @@ public static class UniversalFunctions
 
         Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't detect device: {device}");
         return DEVICE.PC;
+    }
+
+    public static void DeviceRebind(InputActions inputAction, DEVICE device)
+    {
+        inputAction.bindingMask = InputBinding.MaskByGroup(device.ToString());
     }
 
     private static void PrintStartDevice(DEVICE device, InputDevice data = null, string description = null)
