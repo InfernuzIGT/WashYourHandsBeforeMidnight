@@ -6,6 +6,8 @@ using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Switch;
 using UnityEngine.InputSystem.XInput;
 
+#region Enums
+
 public enum DEVICE
 {
     PC = 0,
@@ -14,6 +16,11 @@ public enum DEVICE
     XboxOne = 3,
     Switch = 4
 }
+public enum LANGUAGE
+{
+    english = 0,
+    spanish = 1
+}
 
 public enum INPUT_ACTION
 {
@@ -21,6 +28,8 @@ public enum INPUT_ACTION
     Interaction = 1,
     // TODO Mariano: Complete
 }
+
+#endregion
 
 public static class UniversalFunctions
 {
@@ -87,6 +96,55 @@ public static class UniversalFunctions
         PrintStartDevice(DEVICE.PC);
         return DEVICE.PC;
     }
+    
+    // TODO Mariano: Ver si se puede chequear en tiempo real el Device actual
+
+    // public static DEVICE GetDifferentDevice(DEVICE currentDevice)
+    // {
+    //     switch (currentDevice)
+    //     {
+    //         case DEVICE.PC:
+                
+    //             break;
+        
+    //         default:
+    //             break;
+    //     }
+        
+    //     // Joystick
+    //     if (Joystick.current.wasUpdatedThisFrame)
+    //     {
+    //         PrintCurrentDevice(DEVICE.Generic);
+    //         return DEVICE.Generic;
+    //     }
+
+    //     // Switch
+    //     if (SwitchProControllerHID.current.wasUpdatedThisFrame)
+    //     {
+    //         PrintCurrentDevice(DEVICE.Switch);
+    //         return DEVICE.Switch;
+    //     }
+
+    //     // PS4
+    //     if (DualShockGamepad.current.wasUpdatedThisFrame ||
+    //         DualShock3GamepadHID.current.wasUpdatedThisFrame ||
+    //         DualShock4GamepadHID.current.wasUpdatedThisFrame)
+    //     {
+    //         PrintCurrentDevice(DEVICE.PS4);
+    //         return DEVICE.PS4;
+    //     }
+
+    //     // Xbox
+    //     if (XInputController.current.wasUpdatedThisFrame ||
+    //         XInputControllerWindows.current.wasUpdatedThisFrame)
+    //     {
+    //         PrintCurrentDevice(DEVICE.XboxOne);
+    //         return DEVICE.XboxOne;
+    //     }
+
+    //     PrintCurrentDevice(DEVICE.PC);
+    //     return DEVICE.PC;
+    // }
 
     public static DEVICE GetCurrentDevice()
     {
@@ -208,6 +266,20 @@ public static class UniversalFunctions
 
 #endif
 
+    }
+
+    #endregion
+
+    #region Project - The First Night
+
+    public static LANGUAGE GetLanguageEnum()
+    {
+        return GameManager.Instance.language;
+    }
+
+    public static string GetLanguageString()
+    {
+        return GameManager.Instance.language.ToString();
     }
 
     #endregion

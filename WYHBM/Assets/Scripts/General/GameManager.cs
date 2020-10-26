@@ -15,6 +15,7 @@ public class EnemyEncounter
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
+    public LANGUAGE language;
     public DEVICE currentDevice;
     public bool isPaused;
     public bool inCombat;

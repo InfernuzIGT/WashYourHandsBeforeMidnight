@@ -8,7 +8,12 @@ public class NPCSO : ScriptableObject
 
     [Header("Interaction")]
     public NPC_INTERACTION_TYPE interactionType;
-    [Space]
-    public DialogSO dialog;
+
+    [Header("Dialog")]
+    public DialogSO dialog; // TODO Mariano: REMOVE
+    [PreviewTexture(48)] public Sprite icon;
+    public TextAsset dialogDD;
+    
+    [Header("Combat")]
     public List<Enemy> combatEnemies;
 }

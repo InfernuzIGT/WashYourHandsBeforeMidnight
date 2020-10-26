@@ -108,11 +108,6 @@ public enum ENCOUNTER_ZONE
     Interior = 3,
 }
 
-public enum LANGUAGE
-{
-    English = 0,
-    Spanish = 1
-}
 
 public enum SCENE_INDEX
 {

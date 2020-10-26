@@ -2,11 +2,14 @@
 using FMODUnity;
 using UnityEngine;
 
-public class InteractionNPC : Interaction
+public class InteractionNPC : Interaction, IDialogueable
 {
     [Header("NPC")]
     public bool canInteract = true;
     public NPCSO npc;
+    
+    [Header ("DD Test")]
+    public bool haveAmount;
 
     private EnableDialogEvent _interactionDialogEvent;
     private EnterCombatEvent _interactionCombatEvent;
@@ -23,7 +26,7 @@ public class InteractionNPC : Interaction
     {
         base.Execute();
 
-        if (!canInteract) return;
+        if (!canInteract)return;
 
         if (enable)
         {
@@ -41,12 +44,13 @@ public class InteractionNPC : Interaction
                 break;
 
             case NPC_INTERACTION_TYPE.dialog:
-                _interactionDialogEvent.dialog = npc.dialog;
-                _interactionDialogEvent.enable = enable;
-                _interactionDialogEvent.questData = questData;
-                PlayCutscene();
 
-                EventController.TriggerEvent(_interactionDialogEvent);
+                // _interactionDialogEvent.dialog = npc.dialog;
+                // _interactionDialogEvent.enable = enable;
+                // _interactionDialogEvent.questData = questData;
+                // PlayCutscene();
+
+                // EventController.TriggerEvent(_interactionDialogEvent);
                 break;
 
             case NPC_INTERACTION_TYPE.fight:
@@ -65,4 +69,17 @@ public class InteractionNPC : Interaction
                 break;
         }
     }
+
+    #region Dialogue Designer
+
+    public void DDGiveReward()
+    {
+    }
+
+    public bool DDHaveAmount()
+    {
+        return haveAmount;
+    }
+
+    #endregion
 }
