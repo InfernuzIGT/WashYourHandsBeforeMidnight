@@ -23,8 +23,8 @@ public class InteractionZipline : Interaction
 
     private void OnInteractZipline(InteractionEvent evt)
     {
-        GameManager.Instance.globalController.player._inZipline = true;
-        GameManager.Instance.globalController.player.endPos = endPosition.transform.position;
+        GameManager.Instance.globalController.playerController._inZipline = true;
+        GameManager.Instance.globalController.playerController.endPos = endPosition.transform.position;
 
     }
 }

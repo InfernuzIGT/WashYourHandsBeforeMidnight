@@ -827,10 +827,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e0f67d7c74265045ab9170ddba87d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showPlayer: 0
   customSpawn: 0
   spawnPoint: {fileID: 0}
-  items: []
-  player: {fileID: 5441447954450045000, guid: c852591fc240d4a4fa2ebe65e312a0d9, type: 3}
+  hideCursor: 1
+  skipEncounters: 1
+  playerData: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
+  playerController: {fileID: 5441447954450045000, guid: c852591fc240d4a4fa2ebe65e312a0d9,
+    type: 3}
   mainCamera: {fileID: 2028688370}
   exteriorCamera: {fileID: 1911153106}
   interiorCamera: {fileID: 6573958300499658942}

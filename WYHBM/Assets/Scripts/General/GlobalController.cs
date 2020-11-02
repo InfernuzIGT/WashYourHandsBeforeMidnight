@@ -13,9 +13,14 @@ public class GlobalController : MonoBehaviour
     public bool skipEncounters;
     // public bool infiniteStamina;
     // public ItemSO[] items;
+    
+    // TODO Mariano: Add UI
 
-    [Header("Settings")]
-    public PlayerController player;
+    [Header("Player")]
+    public PlayerSO playerData;
+    public PlayerController playerController;
+
+    [Header("Camera")]
     public Camera mainCamera;
     public CinemachineVirtualCamera exteriorCamera;
     public CinemachineVirtualCamera interiorCamera;
@@ -51,13 +56,13 @@ public class GlobalController : MonoBehaviour
             if (Physics.Raycast(spawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
             {
                 Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                player = Instantiate(player, spawnPosition, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity, this.transform);
             }
             else
             {
                 Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
 
-                player = Instantiate(player, spawnPoint.position, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, spawnPoint.position, Quaternion.identity, this.transform);
             }
         }
         else
@@ -68,13 +73,13 @@ public class GlobalController : MonoBehaviour
             if (Physics.Raycast(sceneCameraPosition, Vector3.down, out hit, Mathf.Infinity))
             {
                 Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                player = Instantiate(player, spawnPosition, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity, this.transform);
             }
             else
             {
                 Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
 
-                player = Instantiate(player, sceneCameraPosition, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, sceneCameraPosition, Quaternion.identity, this.transform);
             }
         }
 #else
@@ -92,23 +97,24 @@ public class GlobalController : MonoBehaviour
         }
 
 #endif
-        player.gameObject.name = "Sam";
+
+        playerController.SetPlayerData(playerData);
     }
 
     private void SetCamera()
     {
-        exteriorCamera.m_Follow = player.transform;
-        exteriorCamera.m_LookAt = player.transform;
+        exteriorCamera.m_Follow = playerController.transform;
+        exteriorCamera.m_LookAt = playerController.transform;
         // exteriorCamera.transform.position = player.transform.position;
 
-        interiorCamera.m_Follow = player.transform;
-        interiorCamera.m_LookAt = player.transform;
+        interiorCamera.m_Follow = playerController.transform;
+        interiorCamera.m_LookAt = playerController.transform;
         // interiorCamera.transform.position = player.transform.position;
 
         _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
 
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
-        detectTargetBehind.SetTarget(player.transform);
+        detectTargetBehind.SetTarget(playerController.transform);
     }
 
     public void ChangeWorldCamera()
@@ -172,12 +178,12 @@ public class GlobalController : MonoBehaviour
 
     public bool GetPlayerInMovement()
     {
-        return player.GetPlayerInMovement() && !skipEncounters;
+        return playerController.GetPlayerInMovement() && !skipEncounters;
     }
 
     public void HidePlayer(bool isHiding)
     {
-        player.gameObject.SetActive(!isHiding);
+        playerController.gameObject.SetActive(!isHiding);
     }
 
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Switch;
@@ -15,11 +13,6 @@ public enum DEVICE
     PS4 = 2,
     XboxOne = 3,
     Switch = 4
-}
-public enum LANGUAGE
-{
-    english = 0,
-    spanish = 1
 }
 
 public enum INPUT_ACTION
@@ -96,7 +89,7 @@ public static class UniversalFunctions
         PrintStartDevice(DEVICE.PC);
         return DEVICE.PC;
     }
-    
+
     // TODO Mariano: Ver si se puede chequear en tiempo real el Device actual
 
     // public static DEVICE GetDifferentDevice(DEVICE currentDevice)
@@ -104,13 +97,13 @@ public static class UniversalFunctions
     //     switch (currentDevice)
     //     {
     //         case DEVICE.PC:
-                
+
     //             break;
-        
+
     //         default:
     //             break;
     //     }
-        
+
     //     // Joystick
     //     if (Joystick.current.wasUpdatedThisFrame)
     //     {
@@ -216,9 +209,17 @@ public static class UniversalFunctions
         return DEVICE.PC;
     }
 
-    public static void DeviceRebind(InputActions inputAction, DEVICE device)
+    public static void DeviceRebind(DEVICE device, InputActions inputAction)
     {
         inputAction.bindingMask = InputBinding.MaskByGroup(device.ToString());
+    }
+
+    public static void DeviceRebind(DEVICE device, params InputActions[] inputActions)
+    {
+        for (int i = 0; i < inputActions.Length; i++)
+        {
+            inputActions[i].bindingMask = InputBinding.MaskByGroup(device.ToString());
+        }
     }
 
     private static void PrintStartDevice(DEVICE device, InputDevice data = null, string description = null)
@@ -266,20 +267,6 @@ public static class UniversalFunctions
 
 #endif
 
-    }
-
-    #endregion
-
-    #region Project - The First Night
-
-    public static LANGUAGE GetLanguageEnum()
-    {
-        return GameManager.Instance.language;
-    }
-
-    public static string GetLanguageString()
-    {
-        return GameManager.Instance.language.ToString();
     }
 
     #endregion

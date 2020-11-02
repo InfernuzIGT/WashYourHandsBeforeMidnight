@@ -108,10 +108,15 @@ public enum ENCOUNTER_ZONE
     Interior = 3,
 }
 
-
 public enum SCENE_INDEX
 {
     MainMenu = 0,
     Master = 1,
 }
 
+// public enum PLAYER
+// {
+//     Sam = 0,
+//     Dallas = 1,
+//     Will = 2
+// }

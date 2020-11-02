@@ -1,19 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
 using Events;
-using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
+[RequireComponent(typeof(CharacterController), typeof(DeviceUtility))]
 public class PlayerController : MonoBehaviour
 {
+    public PlayerSO playerData;
+
+    [Header("Review")]
+    public bool _inZipline = false;
+    public Vector3 endPos;
+    public LayerMask Climbable;
+    public bool ledgeDetected;
+    public Transform wallCheck;
+    public Transform ledgeCheck;
+    public float wallCheckDistance;
+
     [Header("FMOD")]
+    public LayerMask layerMask;
+    [Space]
     public StudioEventEmitter footstepSound;
     public StudioEventEmitter breathingSound;
 
+    // References
     private CharacterController _characterController;
     private WorldAnimator _animatorController;
+    private DeviceUtility _deviceUtility;
 
     private InteractionEvent _interactionEvent;
     private LadderEvent _ladderEvent;
@@ -34,7 +48,7 @@ public class PlayerController : MonoBehaviour
     private bool _isWalking;
 
     //Jump
-    private float _jump = 9.81f;
+    // private float _jump = 9.81f;
     private float _gravity = 39.24f;
     private float _magnitudeFall = 20f;
     private bool _isJumping;
@@ -46,21 +60,16 @@ public class PlayerController : MonoBehaviour
     private Vector3 _botPosition;
 
     // Zipline
-    public bool _inZipline = false;
     private float _speedZipline = .35f;
-    public Vector3 endPos;
 
     // Ledge
-    public LayerMask Climbable;
-    public bool ledgeDetected;
     private Vector3 newPos;
-
-    public Transform wallCheck;
-    public Transform ledgeCheck;
-    public float wallCheckDistance;
 
     private Vector3 _lastPosition;
     private float _axisLimit = 0.7f;
+
+    // Footstep
+    private RaycastHit _hit;
 
     // Quest
     private bool _isOpenDiary;
@@ -80,10 +89,14 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        CreateInput();
-
         _characterController = GetComponent<CharacterController>();
         _animatorController = GetComponent<WorldAnimator>();
+        _deviceUtility = GetComponent<DeviceUtility>();
+
+        CreateInput();
+
+        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
+        _deviceUtility.DetectDevice();
     }
 
     private void CreateInput()
@@ -102,9 +115,6 @@ public class PlayerController : MonoBehaviour
 
         _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
         _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
-
-        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
-        GameManager.Instance.DetectDevice();
     }
 
     private void Start()
@@ -415,6 +425,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    [ContextMenu("Set Player Data")]
+    private void SetPlayerData()
+    {
+        if (playerData != null)
+        {
+            gameObject.name = string.Format("[Player] {0}", playerData.name);
+            GetComponent<SpriteRenderer>().sprite = playerData.spriteBody;
+            GetComponent<Animator>().runtimeAnimatorController = playerData.animatorController;
+        }
+    }
+
+    public void SetPlayerData(PlayerSO data)
+    {
+        playerData = data;
+
+        gameObject.name = string.Format("[Player] {0}", playerData.name);
+        GetComponent<SpriteRenderer>().sprite = playerData.spriteBody;
+        GetComponent<Animator>().runtimeAnimatorController = playerData.animatorController;
+    }
+
     public void SwitchMovement()
     {
         _canMove = !_canMove;
@@ -439,6 +469,38 @@ public class PlayerController : MonoBehaviour
 
     public void FMODPlayFootstep()
     {
+        if (!_canPlayFootstep)return;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 2, layerMask))
+        {
+            switch (_hit.collider.gameObject.tag)
+            {
+                case Tags.Ground_Grass:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 2);
+                    break;
+
+                case Tags.Ground_Dirt:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
+                    break;
+
+                case Tags.Ground_Wood:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
+                    break;
+
+                case Tags.Ground_Cement:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
+                    break;
+
+                case Tags.Ground_Ceramic:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
+                    break;
+
+                default:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
+                    break;
+            }
+        }
+
         footstepSound.Play();
     }
 
@@ -458,8 +520,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
-        UniversalFunctions.DeviceRebind(_inputWorld, evt.device);
-        UniversalFunctions.DeviceRebind(_inputHold, evt.device);
+        UniversalFunctions.DeviceRebind(evt.device, _inputWorld, _inputHold);
     }
 
     #endregion

@@ -83,14 +83,14 @@ public class DDUtility : MonoBehaviour
 
     private void OnShowMessage(DialoguePlayer sender, ShowMessageNode node)
     {
-        Debug.Log($"<b>[{node.Character}] Dialog: </b>{node.GetText(UniversalFunctions.GetLanguageString())}");
+        Debug.Log($"<b>[{node.Character}] Dialog: </b>{node.GetText(GameData.Instance.GetLanguage())}");
 
         ShowMessageNodeChoice choiceNode = node as ShowMessageNodeChoice;
         if (choiceNode != null)
         {
             for (int i = 0; i < choiceNode.Choices.Length; i++)
             {
-                Debug.LogFormat("[OPTION {0}] {1}", i + 1, choiceNode.GetChoiceText(i, UniversalFunctions.GetLanguageString()));
+                Debug.LogFormat("[OPTION {0}] {1}", i + 1, choiceNode.GetChoiceText(i, GameData.Instance.GetLanguage()));
             }
         }
         else

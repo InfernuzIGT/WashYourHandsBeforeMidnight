@@ -1,17 +1,14 @@
 ﻿using Events;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InputInfo : MonoBehaviour
 {
-    [Header("General")]
+    [Header("Input Info")]
     [SerializeField] private DEVICE currentDevice = DEVICE.PC;
     [SerializeField] private INPUT_ACTION action = INPUT_ACTION.None;
-
-    [Header("UI")]
+    [Space]
     [SerializeField] private Image infoImg = null;
-    [SerializeField] private TextMeshProUGUI infoTxt = null;
 
     private void OnEnable()
     {

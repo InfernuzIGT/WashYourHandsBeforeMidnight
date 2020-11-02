@@ -4,19 +4,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Config")]
 	public WorldConfig worldConfig;
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
-	public FMODConfig fmodConfig;
 	public DeviceConfig deviceConfig;
+
+	[Header("Localization")]
+	public LocalizationUtility localizationUtility;
 
 	[Header("Persistence")]
 	public ItemSO persistenceItem;
 	public QuestSO persistenceQuest;
-	public Transform newSpawnPos;
+	// public Transform newSpawnPos;
+	
+	public string GetLanguage()
+	{
+		return localizationUtility.Language;
+	}
 
 	#region Load Scene
 
@@ -27,7 +35,7 @@ public class GameData : MonoSingleton<GameData>
 
 	private IEnumerator LoadYourAsyncScene(SCENE_INDEX index)
 	{
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int) index);
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int)index);
 
 		while (!asyncLoad.isDone)
 		{
@@ -44,7 +52,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		get
 		{
-			if (_data == null) LoadData();
+			if (_data == null)LoadData();
 			return _data;
 		}
 	}

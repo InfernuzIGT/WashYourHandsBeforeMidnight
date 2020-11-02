@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
 [System.Serializable]
@@ -15,8 +14,6 @@ public class EnemyEncounter
 public class GameManager : MonoSingleton<GameManager>
 {
     [Header("General")]
-    public LANGUAGE language;
-    public DEVICE currentDevice;
     public bool isPaused;
     public bool inCombat;
     public ENCOUNTER_ZONE encounterZone;
@@ -69,18 +66,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     // Other
     private ENCOUNTER_ZONE _lastEncounterZone;
-    private DEVICE _lastDevice;
 
     // Events
     private FadeEvent _fadeEvent;
-    private DeviceChangeEvent _deviceEvent;
 
     // Properties
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
 
-    private float _holdFillValue;
-    public float HoldFillValue { get { return _holdFillValue; } }
+    // private float _holdFillValue;
+    // public float HoldFillValue { get { return _holdFillValue; } }
 
     // public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
     // public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
@@ -140,77 +135,7 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
     }
 
-    public void DetectDevice()
-    {
-        switch (Application.platform)
-        {
-            case RuntimePlatform.Switch:
-                _lastDevice = DEVICE.Switch;
-                currentDevice = DEVICE.Switch;
-                break;
-
-            case RuntimePlatform.PS4:
-                _lastDevice = DEVICE.PS4;
-                currentDevice = DEVICE.PS4;
-                break;
-
-            case RuntimePlatform.XboxOne:
-                _lastDevice = DEVICE.XboxOne;
-                currentDevice = DEVICE.XboxOne;
-                break;
-
-            default:
-                _lastDevice = DEVICE.PC;
-                currentDevice = UniversalFunctions.GetStartDevice();
-                break;
-        }
-
-        _deviceEvent = new DeviceChangeEvent();
-        _deviceEvent.device = currentDevice;
-        EventController.TriggerEvent(_deviceEvent);
-
-        InputSystem.onDeviceChange +=
-            (device, change) =>
-            {
-
-#if UNITY_EDITOR
-                Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
-#endif
-
-                switch (change)
-                {
-                    case InputDeviceChange.Added:
-                    case InputDeviceChange.Reconnected:
-                        _lastDevice = currentDevice;
-                        currentDevice = UniversalFunctions.GetCurrentDevice(device);
-                        break;
-
-                    case InputDeviceChange.Removed:
-                    case InputDeviceChange.Disconnected:
-                        currentDevice = _lastDevice;
-                        UniversalFunctions.PrintCurrentDevice(currentDevice);
-                        break;
-
-                        // case InputDeviceChange.ConfigurationChanged:
-                        //     break;
-                        // case InputDeviceChange.Destroyed:
-                        //     break;
-                        // case InputDeviceChange.Disabled:
-                        //     break;
-                        // case InputDeviceChange.Enabled:
-                        //     break;
-                        // case InputDeviceChange.UsageChanged:
-                        //     break;
-
-                    default:
-                        break;
-                }
-
-                _deviceEvent.device = currentDevice;
-                EventController.TriggerEvent(_deviceEvent);
-
-            };
-    }
+    
 
     public void CheckEncounters(bool isEnabled)
     {
@@ -310,7 +235,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         CheckEncounters(!inCombat);
 
-        globalController.player.ToggleInputWorld(!inCombat);
+        globalController.playerController.ToggleInputWorld(!inCombat);
         globalController.HidePlayer(inCombat);
 
         combatUI.EnableCanvas(inCombat);
@@ -333,7 +258,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void SwitchMovement()
     {
-        globalController.player.SwitchMovement();
+        globalController.playerController.SwitchMovement();
     }
 
     private void StartCombat()

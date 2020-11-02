@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Playables;
 
 namespace Events
@@ -63,7 +64,7 @@ namespace Events
     {
         public bool isTriggered;
         public PlayableAsset cutscene;
-        
+
         public int index;
     }
 
@@ -71,7 +72,7 @@ namespace Events
     {
         public MENU_TYPE menuType;
     }
-    
+
     public class DeviceChangeEvent : GameEvent
     {
         public DEVICE device;
@@ -83,5 +84,6 @@ namespace Events
         public Vector2 position;
         public Color color;
     }
+
 
 }

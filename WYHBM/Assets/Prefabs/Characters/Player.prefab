@@ -53,7 +53,7 @@ MonoBehaviour:
   Params: []
   OverrideAttenuation: 0
   OverrideMinDistance: 1
-  OverrideMaxDistance: 35
+  OverrideMaxDistance: 60
 --- !u!1 &5441447954450045010
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,14 +63,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5441447954450045005}
+  - component: {fileID: 5441447954450045000}
+  - component: {fileID: 1255290931}
   - component: {fileID: 5441447954450045004}
   - component: {fileID: 5441447954450045011}
   - component: {fileID: 5454344177718044526}
-  - component: {fileID: 5441447954450045000}
-  - component: {fileID: 1255290931}
-  - component: {fileID: 4533948557061250270}
+  - component: {fileID: 4106246413456115067}
   m_Layer: 19
-  m_Name: Sam
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,6 +94,51 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5441447954450045000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5441447954450045010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
+  _inZipline: 0
+  endPos: {x: 0, y: 0, z: 0}
+  Climbable:
+    serializedVersion: 2
+    m_Bits: 4096
+  ledgeDetected: 0
+  wallCheck: {fileID: 6335019193980573163}
+  ledgeCheck: {fileID: 7148576689432955027}
+  wallCheckDistance: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 65536
+  footstepSound: {fileID: 4696537044046352187}
+  breathingSound: {fileID: 1859904522748835540}
+--- !u!143 &1255290931
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5441447954450045010}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 3.15
+  m_Radius: 0.35
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!212 &5441447954450045004
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -177,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flipSprite: 0
---- !u!114 &5441447954450045000
+--- !u!114 &4106246413456115067
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -186,53 +231,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441447954450045010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
+  m_Script: {fileID: 11500000, guid: 07b11175bb8490e498c4c55b6c787cf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  footstepSound: {fileID: 4696537044046352187}
-  breathingSound: {fileID: 1859904522748835540}
-  _inZipline: 0
-  endPos: {x: 0, y: 0, z: 0}
-  Climbable:
-    serializedVersion: 2
-    m_Bits: 4096
-  ledgeDetected: 0
-  wallCheck: {fileID: 6335019193980573163}
-  ledgeCheck: {fileID: 7148576689432955027}
-  wallCheckDistance: 1
---- !u!143 &1255290931
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5441447954450045010}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 3.15
-  m_Radius: 0.35
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.1, z: 0}
---- !u!114 &4533948557061250270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5441447954450045010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f294ebeb78167e4bba49dfa0c5197ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 65536
+  _currentDevice: 0
 --- !u!1 &7151162135838049659
 GameObject:
   m_ObjectHideFlags: 0

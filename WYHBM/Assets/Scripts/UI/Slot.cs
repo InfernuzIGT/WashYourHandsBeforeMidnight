@@ -9,7 +9,7 @@ public class Slot : MonoBehaviour
     [Space]
     public TextMeshProUGUI nameTxt;
     public Button slotBtn;
-    SpriteState sprState = new SpriteState();
+    // SpriteState sprState = new SpriteState();
     private bool _isEquipped;
     private bool _alreadyEquipped;
     private ItemSO _item;
