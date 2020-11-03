@@ -26,6 +26,8 @@ public enum INPUT_ACTION
 
 public static class UniversalFunctions
 {
+    
+    
 
     #region Input System
 

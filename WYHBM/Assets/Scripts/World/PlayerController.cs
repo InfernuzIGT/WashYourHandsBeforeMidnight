@@ -29,8 +29,10 @@ public class PlayerController : MonoBehaviour
     private WorldAnimator _animatorController;
     private DeviceUtility _deviceUtility;
 
+    // Events
     private InteractionEvent _interactionEvent;
     private LadderEvent _ladderEvent;
+    private PauseEvent _pauseEvent;
 
     // Movement 
     private Vector2 _inputMovement;
@@ -75,7 +77,7 @@ public class PlayerController : MonoBehaviour
     private bool _isOpenDiary;
 
     // Other
-    private InputActions _inputHold;
+    // private InputActions _inputHold;
 
     // Properties
     private InputActions _inputWorld;
@@ -105,22 +107,24 @@ public class PlayerController : MonoBehaviour
 
         _inputWorld.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
         _inputWorld.Player.Jump.performed += ctx => Jump();
-        _inputWorld.Player.Interaction.performed += ctx => Interaction();
+        _inputWorld.Player.Interaction.started += ctx => Interaction(true);
+        _inputWorld.Player.Interaction.canceled += ctx => Interaction(false);
         _inputWorld.Player.Walk.started += ctx => Walk(true);
         _inputWorld.Player.Walk.canceled += ctx => Walk(false);
-        _inputWorld.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
-        _inputWorld.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
+        _inputWorld.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
+        _inputWorld.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
 
-        _inputHold = new InputActions();
+        // _inputHold = new InputActions();
 
-        _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
-        _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
+        // _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
+        // _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
     }
 
     private void Start()
     {
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
+        _pauseEvent = new PauseEvent();
 
         ToggleInputWorld(true);
     }
@@ -151,16 +155,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ToggleInputHold(bool isEnabled)
+    // public void ToggleInputHold(bool isEnabled)
+    // {
+    //     if (isEnabled)
+    //     {
+    //         _inputHold.Enable();
+    //     }
+    //     else
+    //     {
+    //         _inputHold.Disable();
+    //     }
+    // }
+
+    private void Pause(PAUSE_TYPE pauseType)
     {
-        if (isEnabled)
-        {
-            _inputHold.Enable();
-        }
-        else
-        {
-            _inputHold.Disable();
-        }
+        _pauseEvent.pauseType = pauseType;
+        EventController.TriggerEvent(_pauseEvent);
     }
 
     private void Update()
@@ -415,14 +425,15 @@ public class PlayerController : MonoBehaviour
         // }
     }
 
-    private void Interaction()
+    private void Interaction(bool isStart)
     {
-        if (!GameManager.Instance.inCombat)
-        {
-            _interactionEvent.lastPlayerPosition = transform.position;
-            _interactionEvent.isRunning = _isRunning;
-            EventController.TriggerEvent(_interactionEvent);
-        }
+        // if (!GameManager.Instance.inCombat)
+        // {
+        _interactionEvent.isStart = isStart;
+        _interactionEvent.lastPlayerPosition = transform.position;
+        _interactionEvent.isRunning = _isRunning;
+        EventController.TriggerEvent(_interactionEvent);
+        // }
     }
 
     [ContextMenu("Set Player Data")]
@@ -520,7 +531,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
-        UniversalFunctions.DeviceRebind(evt.device, _inputWorld, _inputHold);
+        // UniversalFunctions.DeviceRebind(evt.device, _inputWorld, _inputHold);
+        UniversalFunctions.DeviceRebind(evt.device, _inputWorld);
     }
 
     #endregion

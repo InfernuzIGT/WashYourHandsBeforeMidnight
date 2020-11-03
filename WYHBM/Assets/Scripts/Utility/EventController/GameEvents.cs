@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.Playables;
 
 namespace Events
@@ -11,6 +10,7 @@ namespace Events
 
     public class InteractionEvent : GameEvent
     {
+        public bool isStart;
         public Vector3 lastPlayerPosition;
         public bool isRunning;
     }
@@ -76,6 +76,11 @@ namespace Events
     public class DeviceChangeEvent : GameEvent
     {
         public DEVICE device;
+    }
+    
+    public class PauseEvent : GameEvent
+    {
+        public PAUSE_TYPE pauseType;
     }
 
     public class InfoTextEvent : GameEvent

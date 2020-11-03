@@ -30,4 +30,14 @@ public static class ProportionValue
 
         //throw new InvalidOperationException("The proportions in the collection do not add up to 1.");
     }
+
+    public static bool GetProbability(float value)
+    {
+        ProportionValue<bool>[] tempProb = new ProportionValue<bool>[2];
+
+        tempProb[0] = ProportionValue.Create(value, true);
+        tempProb[1] = ProportionValue.Create(1 - value, false);
+
+        return tempProb.ChooseByRandom();
+    }
 }
