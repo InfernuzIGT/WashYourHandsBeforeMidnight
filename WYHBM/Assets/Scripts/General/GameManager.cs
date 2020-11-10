@@ -238,8 +238,8 @@ public class GameManager : MonoSingleton<GameManager>
         globalController.playerController.ToggleInputWorld(!inCombat);
         globalController.HidePlayer(inCombat);
 
-        combatUI.EnableCanvas(inCombat);
-        worldUI.EnableCanvas(!inCombat);
+        combatUI.Show(inCombat);
+        worldUI.Show(!inCombat);
 
         combatManager.ToggleInputCombat(inCombat);
         combatManager.SetCombatArea(inCombat);

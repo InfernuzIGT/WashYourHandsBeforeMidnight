@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class GlobalController : MonoBehaviour
 {
-    [Header("Spawn")]
-    public bool customSpawn;
-    public Transform spawnPoint;
+    [Header("General")]
+    public bool isPaused;
+    public bool inCombat;
 
     [Header("Cheats")]
     public bool hideCursor = true;
     public bool skipEncounters;
     // public bool infiniteStamina;
     // public ItemSO[] items;
-    
-    // TODO Mariano: Add UI
 
     [Header("Player")]
     public PlayerSO playerData;
@@ -22,6 +20,18 @@ public class GlobalController : MonoBehaviour
 
     [Header("Camera")]
     public Camera mainCamera;
+    public CinemachineVirtualCamera worldCamera;
+
+    [Header("UI")]
+    public GameMode.World.UIManager worldUI;
+    public GameMode.Combat.UIManager combatUI;
+    public Fade fadeUI;
+
+    [Header("Spawn")]
+    public bool customSpawn;
+    public Transform spawnPoint;
+
+    [Header("-DEPRECATED-")]
     public CinemachineVirtualCamera exteriorCamera;
     public CinemachineVirtualCamera interiorCamera;
     public CinemachineVirtualCamera cutscene;
@@ -35,7 +45,9 @@ public class GlobalController : MonoBehaviour
     private void Start()
     {
         SpawnPlayer();
-        SetCamera();
+        SpawnCameras();
+        SpawnUI();
+        // SetCamera();
         // AddItems();
 
         if (hideCursor)
@@ -43,6 +55,18 @@ public class GlobalController : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
+
+    private void SpawnCameras()
+    {
+        mainCamera = Instantiate(mainCamera);
+        worldCamera = Instantiate(worldCamera);
+
+        worldCamera.m_Follow = playerController.transform;
+        worldCamera.m_LookAt = playerController.transform;
+
+        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
+        detectTargetBehind.SetTarget(playerController.transform);
     }
 
     private void SpawnPlayer()
@@ -56,13 +80,13 @@ public class GlobalController : MonoBehaviour
             if (Physics.Raycast(spawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
             {
                 Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
             }
             else
             {
                 Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
 
-                playerController = Instantiate(playerController, spawnPoint.position, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, spawnPoint.position, Quaternion.identity);
             }
         }
         else
@@ -73,13 +97,13 @@ public class GlobalController : MonoBehaviour
             if (Physics.Raycast(sceneCameraPosition, Vector3.down, out hit, Mathf.Infinity))
             {
                 Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
             }
             else
             {
                 Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
 
-                playerController = Instantiate(playerController, sceneCameraPosition, Quaternion.identity, this.transform);
+                playerController = Instantiate(playerController, sceneCameraPosition, Quaternion.identity);
             }
         }
 #else
@@ -87,18 +111,29 @@ public class GlobalController : MonoBehaviour
         if (Physics.Raycast(spawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
         {
             Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-            player = Instantiate(player, spawnPosition, Quaternion.identity, this.transform);
+            player = Instantiate(player, spawnPosition, Quaternion.identity);
         }
         else
         {
             Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
 
-            player = Instantiate(player, spawnPoint.position, Quaternion.identity, this.transform);
+            player = Instantiate(player, spawnPoint.position, Quaternion.identity);
         }
 
 #endif
 
         playerController.SetPlayerData(playerData);
+    }
+
+    private void SpawnUI()
+    {
+        fadeUI = Instantiate(fadeUI);
+        
+        worldUI = Instantiate(worldUI);
+        combatUI = Instantiate(combatUI);
+
+        worldUI.Show(!inCombat);
+        combatUI.Show(inCombat);
     }
 
     private void SetCamera()

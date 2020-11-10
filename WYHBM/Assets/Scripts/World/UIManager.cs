@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 namespace GameMode.World
 {
+    [RequireComponent(typeof(CanvasGroupUtility))]
     public class UIManager : MonoBehaviour
     {
         [Header("General")]
@@ -85,9 +86,11 @@ namespace GameMode.World
 
         private EnableMovementEvent _enableMovementEvent;
 
+        private CanvasGroupUtility _canvasUtility;
+
         private void Awake()
         {
-            _canvas = GetComponent<Canvas>();
+            _canvasUtility = GetComponent<CanvasGroupUtility>();
         }
 
         private void Start()
@@ -123,9 +126,14 @@ namespace GameMode.World
         //     staminaImg.fillAmount = value;
         // }
 
-        public void EnableCanvas(bool isEnabled)
+        // public void EnableCanvas(bool isEnabled)
+        // {
+        //     _canvas.enabled = isEnabled;
+        // }
+        
+        public void Show(bool isShowing)
         {
-            _canvas.enabled = isEnabled;
+            _canvasUtility.Show(isShowing);
         }
 
         public void Pause(bool isPaused)
