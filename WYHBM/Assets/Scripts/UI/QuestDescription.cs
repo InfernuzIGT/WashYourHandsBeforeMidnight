@@ -18,8 +18,8 @@ public class QuestDescription : MonoBehaviour
     {
         _quest = quest;
 
-        titleTxt.text = quest.title;
-        descriptionTxt.text = quest.description;
+        // titleTxt.text = quest.title;
+        // descriptionTxt.text = quest.description;
 
         _currentIndex = 0;
         _listObjectives = new List<TextMeshProUGUI>();
@@ -27,7 +27,7 @@ public class QuestDescription : MonoBehaviour
         for (int i = 0; i < quest.objetives.Length; i++)
         {
             TextMeshProUGUI questObjetive = Instantiate(GameData.Instance.worldConfig.questObjetivePrefab, container);
-            questObjetive.text = quest.objetives[i];
+            // questObjetive.text = quest.objetives[i];
             questObjetive.gameObject.SetActive(false);
             _listObjectives.Add(questObjetive);
         }

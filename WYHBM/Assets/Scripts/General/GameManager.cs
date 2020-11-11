@@ -429,10 +429,10 @@ public class GameManager : MonoSingleton<GameManager>
             dictionaryProgress.Add(data.GetInstanceID(), 0);
         }
 
-        for (int i = 0; i < data.objectsToDestroy.Length; i++)
-        {
-            Destroy(data.objectsToDestroy[i].gameObject);
-        }
+        // for (int i = 0; i < data.objectsToDestroy.Length; i++)
+        // {
+            // Destroy(data.objectsToDestroy[i].gameObject);
+        // }
 
         // if (!listQuest.ContainsKey(data.GetInstanceID()))
         // {
