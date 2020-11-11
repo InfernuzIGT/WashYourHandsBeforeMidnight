@@ -176,28 +176,28 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Movement();
-        IvyMovement();
-        MovementZipline();
+        // IvyMovement();
+        // MovementZipline();
     }
 
-    private void MovementZipline()
-    {
-        if (_inZipline)
-        {
-            _animatorController.MovementZipline(true);
+    // private void MovementZipline()
+    // {
+    //     if (_inZipline)
+    //     {
+    //         _animatorController.MovementZipline(true);
 
-            _gravity = 0;
+    //         _gravity = 0;
 
-            transform.position = Vector3.MoveTowards(transform.position, endPos, _speedZipline);
+    //         transform.position = Vector3.MoveTowards(transform.position, endPos, _speedZipline);
 
-            if (Vector3.Distance(transform.position, endPos) < 1)
-            {
-                _animatorController.MovementZipline(false);
-                _inZipline = false;
-                _gravity = 39.24f;
-            }
-        }
-    }
+    //         if (Vector3.Distance(transform.position, endPos) < 1)
+    //         {
+    //             _animatorController.MovementZipline(false);
+    //             _inZipline = false;
+    //             _gravity = 39.24f;
+    //         }
+    //     }
+    // }
 
     private void StartClimb()
     {
@@ -378,24 +378,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void IvyMovement()
-    {
-        DetectBot();
+    // private void IvyMovement()
+    // {
+    //     DetectBot();
 
-        if (!_inIvy)
-        {
-            return;
-        }
+    //     if (!_inIvy)
+    //     {
+    //         return;
+    //     }
 
-        _inIvy = true;
+    //     _inIvy = true;
 
-        _movement.x = _inputMovement.x * _speedIvy;
-        _movement.z = 0;
-        _movement.y = _inputMovement.y * _speedIvy;
-        _characterController.Move(_movement * Time.deltaTime);
+    //     _movement.x = _inputMovement.x * _speedIvy;
+    //     _movement.z = 0;
+    //     _movement.y = _inputMovement.y * _speedIvy;
+    //     _characterController.Move(_movement * Time.deltaTime);
 
-        _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
-    }
+    //     _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
+    // }
 
     private void DetectBot()
     {
