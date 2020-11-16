@@ -1,5 +1,4 @@
 ﻿using Events;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
@@ -7,9 +6,18 @@ using UnityEngine.Playables;
 [System.Serializable]
 public class QuestData
 {
+    public QuestStatusSO questStatus;
+    [Space]
     public QuestSO quest;
     public QUEST_STATE state;
     public int[] progress;
+}
+
+[System.Serializable]
+public class CutsceneData
+{
+    public PlayableAsset playableAsset;
+    public bool playInCollision;
 }
 
 [RequireComponent(typeof(BoxCollider))]
@@ -18,37 +26,25 @@ public class Interaction : MonoBehaviour
     [System.Serializable]
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
-    [Header("Popup")]
-    public bool showPopup = true;
-    public bool showPopupText = true;
-
-    [Header("Quest")]
-    public QuestData questData;
-
-    // public QuestSO quest; // TODO Marcos: Remove
-    // public int progress; // TODO Marcos: Remove
-
-    [Header("Cutscene")]
-    public PlayableAsset cutscene;
-    public bool playInCollision;
-
+    [Header("Interaction")]
+    public QuestStatusSO questStatus;
+    // public QuestData questData;
     [Space]
-
+    public CutsceneData cutsceneData;
+    [Space]
+    [Space]
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
     private SpriteRenderer _popupImage;
-    private TextMeshPro _popupText;
 
     private CutsceneEvent _cutsceneEvent;
 
     public virtual void Awake()
     {
-        _popupImage = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        _popupText = transform.GetChild(1).GetComponent<TextMeshPro>();
+        _popupImage = transform.GetComponentInChildren<SpriteRenderer>();
 
         _popupImage.enabled = false;
-        _popupText.enabled = false;
 
         _cutsceneEvent = new CutsceneEvent();
     }
@@ -69,48 +65,37 @@ public class Interaction : MonoBehaviour
 
     private void ShowPopup(bool show)
     {
-        if (!showPopup)return;
-
         _popupImage.enabled = show;
 
-        if (showPopupText)
-        {
-            _popupText.enabled = show;
-        }
     }
 
-    protected void SetPopupName(string name)
-    {
-        _popupText.text = name;
-    }
+    // protected void AddListenerQuest()
+    // {
+    //     if (questData.quest == null)return;
 
-    protected void AddListenerQuest()
-    {
-        if (questData.quest == null)return;
+    //     EventController.AddListener<InteractionEvent>(OnInteractQuest);
+    // }
 
-        EventController.AddListener<InteractionEvent>(OnInteractQuest);
-    }
+    // protected void RemoveListenerQuest()
+    // {
+    //     if (questData.quest == null)return;
 
-    protected void RemoveListenerQuest()
-    {
-        if (questData.quest == null)return;
+    //     EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
+    // }
 
-        EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
-    }
+    // private void OnInteractQuest(InteractionEvent evt)
+    // {
+    //     GameManager.Instance.ProgressQuest(questData.quest, questData.progress[0]);
 
-    private void OnInteractQuest(InteractionEvent evt)
-    {
-        GameManager.Instance.ProgressQuest(questData.quest, questData.progress[0]);
-
-        EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
-    }
+    //     EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
+    // }
 
     protected void PlayCutscene()
     {
-        if (cutscene == null)return;
+        if (cutsceneData.playableAsset == null)return;
         if (_cutsceneEvent.isTriggered == true)return;
 
-        _cutsceneEvent.cutscene = cutscene;
+        _cutsceneEvent.cutscene = cutsceneData.playableAsset;
 
         _cutsceneEvent.isTriggered = true;
 

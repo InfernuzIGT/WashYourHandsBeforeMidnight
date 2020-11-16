@@ -5,15 +5,50 @@ using UnityEngine;
 public class NPCSO : ScriptableObject
 {
     public new string name;
-
-    [Header("Interaction")]
-    public NPC_INTERACTION_TYPE interactionType;
-
-    [Header("Dialog")]
-    public DialogSO dialog; // TODO Mariano: REMOVE
-    [PreviewTexture(48)] public Sprite icon;
+    [Space]
     public TextAsset dialogDD;
-    
-    [Header("Combat")]
+
+    [Header("Emotion Icons")]
+    [PreviewTexture(48), SerializeField] private Sprite iconNone = null;
+    [PreviewTexture(48), SerializeField] private Sprite iconHappy = null;
+    [PreviewTexture(48), SerializeField] private Sprite iconSad = null;
+    [PreviewTexture(48), SerializeField] private Sprite iconAngry = null;
+    [PreviewTexture(48), SerializeField] private Sprite iconSurprise = null;
+    [PreviewTexture(48), SerializeField] private Sprite iconCurious = null;
+    [PreviewTexture(48), SerializeField] private Sprite iconSleep = null;
+
+    [Header("DEPRECATED")]
+    public NPC_INTERACTION_TYPE interactionType;
+    public DialogSO dialog;
     public List<Enemy> combatEnemies;
+
+    public Sprite GetIcon(EMOTION emotion)
+    {
+        switch (emotion)
+        {
+            case EMOTION.None:
+                return iconNone;
+
+            case EMOTION.Happy:
+                return iconHappy;
+
+            case EMOTION.Sad:
+                return iconSad;
+
+            case EMOTION.Angry:
+                return iconAngry;
+
+            case EMOTION.Surprise:
+                return iconSurprise;
+
+            case EMOTION.Curious:
+                return iconCurious;
+
+            case EMOTION.Sleep:
+                return iconSleep;
+
+        }
+
+        return null;
+    }
 }

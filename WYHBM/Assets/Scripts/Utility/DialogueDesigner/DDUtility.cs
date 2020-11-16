@@ -26,7 +26,7 @@ public class DDUtility : MonoBehaviour
 
     private void Start()
     {
-        m_loadedDialogue = Dialogue.FromAsset(_interactionNPC.npc.dialogDD);
+        m_loadedDialogue = Dialogue.FromAsset(_interactionNPC.data.dialogDD);
 
         if (m_loadedDialogue == null)
         {

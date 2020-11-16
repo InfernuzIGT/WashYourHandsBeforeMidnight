@@ -5,10 +5,8 @@ using UnityEngine;
 public class InteractionNPC : Interaction, IDialogueable
 {
     [Header("NPC")]
-    public bool canInteract = true;
-    public NPCSO npc;
-    
-    [Header ("DD Test")]
+    public NPCSO data;
+    [Space]
     public bool haveAmount;
 
     private EnableDialogEvent _interactionDialogEvent;
@@ -18,26 +16,22 @@ public class InteractionNPC : Interaction, IDialogueable
     {
         _interactionDialogEvent = new EnableDialogEvent();
         _interactionCombatEvent = new EnterCombatEvent();
-
-        SetPopupName(npc.name);
     }
 
     public override void Execute(bool enable, NPCController currentNPC)
     {
         base.Execute();
 
-        if (!canInteract)return;
+        // if (enable)
+        // {
+        //     AddListenerQuest();
+        // }
+        // else
+        // {
+        //     RemoveListenerQuest();
+        // }
 
-        if (enable)
-        {
-            AddListenerQuest();
-        }
-        else
-        {
-            RemoveListenerQuest();
-        }
-
-        switch (npc.interactionType)
+        switch (data.interactionType)
         {
             case NPC_INTERACTION_TYPE.none:
                 // Nothing
@@ -54,7 +48,7 @@ public class InteractionNPC : Interaction, IDialogueable
                 break;
 
             case NPC_INTERACTION_TYPE.fight:
-                _interactionCombatEvent.npc = npc;
+                _interactionCombatEvent.npc = data;
                 _interactionCombatEvent.currentNPC = currentNPC;
                 EventController.TriggerEvent(_interactionCombatEvent);
 

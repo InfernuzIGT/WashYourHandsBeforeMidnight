@@ -17,6 +17,17 @@ public enum COMBAT_STATE
     Wait = 4
 }
 
+public enum EMOTION
+{
+    None = 0,
+    Happy = 1,
+    Sad = 2,
+    Angry = 3,
+    Surprise = 4,
+    Curious = 5,
+    Sleep = 6
+}
+
 // public enum TIER
 // {
 //     none = 0,

@@ -9,7 +9,7 @@ public class NPCController : MonoBehaviour, IInteractable
 {
     [Header("Movement")]
     public bool canMove = true;
-    public WaypointController waypoints;
+    public Transform[] waypoints;
     public bool useRandomPosition = true;
     [Range(0f, 10f)]
     public float waitTime = 5;
@@ -40,6 +40,7 @@ public class NPCController : MonoBehaviour, IInteractable
     private Coroutine _coroutinePatrol;
     private WaitForSeconds _waitForSeconds;
     private WaitForSeconds _delay;
+    private WaitUntil _waitUntilIsMoving;
 
     private List<Transform> _visibleTargets;
     public List<Transform> VisibleTargets { get { return _visibleTargets; } }
@@ -56,18 +57,14 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        if (!_agent.isOnNavMesh && canMove)
+        if (!_agent.isOnNavMesh && canMove || !canMove || waypoints == null)
         {
-            Debug.LogError($"<color=red><b>[ERROR]</b></color> NPC '{gameObject.name}' isn't on NavMesh!");
-            return;
-        }
-
-        if (!canMove || waypoints == null)
-        {
+            // Debug.LogError($"<color=red><b>[ERROR]</b></color> NPC '{gameObject.name}' isn't on NavMesh!");
             return;
         }
 
         _waitForSeconds = new WaitForSeconds(waitTime);
+        _waitUntilIsMoving = new WaitUntil(() => _isMoving);
 
         _visibleTargets = new List<Transform>();
 
@@ -111,10 +108,12 @@ public class NPCController : MonoBehaviour, IInteractable
         {
             ChangeDestination();
 
-            while (_isMoving)
-            {
-                yield return null;
-            }
+            yield return _waitUntilIsMoving;
+
+            // while (_isMoving)
+            // {
+            //     yield return null;
+            // }
 
             yield return _waitForSeconds;
         }
@@ -126,14 +125,14 @@ public class NPCController : MonoBehaviour, IInteractable
         {
             if (useRandomPosition)
             {
-                _positionIndex = Random.Range(0, waypoints.positions.Length);
+                _positionIndex = Random.Range(0, waypoints.Length);
             }
             else
             {
-                _positionIndex = _positionIndex < waypoints.positions.Length - 1 ? _positionIndex + 1 : 0;
+                _positionIndex = _positionIndex < waypoints.Length - 1 ? _positionIndex + 1 : 0;
             }
 
-            _agent.SetDestination(waypoints.positions[_positionIndex]);
+            _agent.SetDestination(waypoints[_positionIndex].position);
             _isMoving = true;
         }
     }
@@ -188,7 +187,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
-        if (!angleIsGlobal) angleInDegrees += transform.eulerAngles.y;
+        if (!angleIsGlobal)angleInDegrees += transform.eulerAngles.y;
         _dirFromAngle = new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
         return _dirFromAngle;
     }
@@ -202,8 +201,7 @@ public class NPCController : MonoBehaviour, IInteractable
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
             _agent.isStopped = true;
             canMove = false;
-            
-            
+
             _animatorController?.Movement(Vector3.zero);
 
             _interactionNPC.Execute(true, this);
@@ -229,7 +227,7 @@ public class NPCController : MonoBehaviour, IInteractable
             return;
         }
 
-        if (canMove) _agent.isStopped = !evt.canMove;
+        if (canMove)_agent.isStopped = !evt.canMove;
 
         _animatorController?.Movement(Vector3.zero);
     }
