@@ -26,8 +26,6 @@ public enum INPUT_ACTION
 
 public static class UniversalFunctions
 {
-    
-    
 
     #region Input System
 
@@ -38,22 +36,6 @@ public static class UniversalFunctions
 
     public static DEVICE GetStartDevice()
     {
-        // Joystick
-        var joystick = Joystick.current;
-        if (joystick != null)
-        {
-            PrintStartDevice(DEVICE.Generic, joystick);
-            return DEVICE.Generic;
-        }
-
-        // Switch
-        var switchpro = SwitchProControllerHID.current;
-        if (switchpro != null)
-        {
-            PrintStartDevice(DEVICE.Switch, switchpro);
-            return DEVICE.Switch;
-        }
-
         // PS4
         var dualshock = DualShockGamepad.current;
         if (dualshock != null)
@@ -86,6 +68,22 @@ public static class UniversalFunctions
         {
             PrintStartDevice(DEVICE.XboxOne, xbox, "XInputControllerWindows");
             return DEVICE.XboxOne;
+        }
+
+        // Switch
+        var switchpro = SwitchProControllerHID.current;
+        if (switchpro != null)
+        {
+            PrintStartDevice(DEVICE.Switch, switchpro);
+            return DEVICE.Switch;
+        }
+
+        // Joystick
+        var joystick = Joystick.current;
+        if (joystick != null)
+        {
+            PrintStartDevice(DEVICE.Generic, joystick);
+            return DEVICE.Generic;
         }
 
         PrintStartDevice(DEVICE.PC);
@@ -145,6 +143,16 @@ public static class UniversalFunctions
     {
         for (int i = 0; i < InputSystem.devices.Count; i++)
         {
+            if (ContainsDeviceName("ps4 controller", InputSystem.devices[i]))
+            {
+                PrintCurrentDevice(DEVICE.PS4, InputSystem.devices[i]);
+                return DEVICE.PS4;
+            }
+            if (ContainsDeviceName("xbox controller", InputSystem.devices[i]))
+            {
+                PrintCurrentDevice(DEVICE.XboxOne, InputSystem.devices[i]);
+                return DEVICE.XboxOne;
+            }
             if (ContainsDeviceName("usb joystick", InputSystem.devices[i]) ||
                 ContainsDeviceName("joystick", InputSystem.devices[i]))
             {
@@ -155,16 +163,6 @@ public static class UniversalFunctions
             {
                 PrintCurrentDevice(DEVICE.Switch, InputSystem.devices[i]);
                 return DEVICE.Switch;
-            }
-            if (ContainsDeviceName("ps4 controller", InputSystem.devices[i]))
-            {
-                PrintCurrentDevice(DEVICE.PS4, InputSystem.devices[i]);
-                return DEVICE.PS4;
-            }
-            if (ContainsDeviceName("xbox controller", InputSystem.devices[i]))
-            {
-                PrintCurrentDevice(DEVICE.XboxOne, InputSystem.devices[i]);
-                return DEVICE.XboxOne;
             }
             if (ContainsDeviceName("keyboard", InputSystem.devices[i]))
             {
@@ -179,17 +177,6 @@ public static class UniversalFunctions
 
     public static DEVICE GetCurrentDevice(InputDevice device)
     {
-        if (ContainsDeviceName("usb joystick", device) ||
-            ContainsDeviceName("joystick", device))
-        {
-            PrintCurrentDevice(DEVICE.Generic, device);
-            return DEVICE.Generic;
-        }
-        if (ContainsDeviceName("switch pro controller", device))
-        {
-            PrintCurrentDevice(DEVICE.Switch, device);
-            return DEVICE.Switch;
-        }
         if (ContainsDeviceName("ps4 controller", device))
         {
             PrintCurrentDevice(DEVICE.PS4, device);
@@ -200,6 +187,17 @@ public static class UniversalFunctions
         {
             PrintCurrentDevice(DEVICE.XboxOne, device);
             return DEVICE.XboxOne;
+        }
+        if (ContainsDeviceName("usb joystick", device) ||
+            ContainsDeviceName("joystick", device))
+        {
+            PrintCurrentDevice(DEVICE.Generic, device);
+            return DEVICE.Generic;
+        }
+        if (ContainsDeviceName("switch pro controller", device))
+        {
+            PrintCurrentDevice(DEVICE.Switch, device);
+            return DEVICE.Switch;
         }
         if (ContainsDeviceName("keyboard", device))
         {
