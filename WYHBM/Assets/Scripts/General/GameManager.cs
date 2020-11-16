@@ -444,13 +444,13 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void ProgressQuest(QuestSO quest, int progress)
     {
-        if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
-            dictionaryProgress[quest.GetInstanceID()] != progress ||
-            dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
+        // if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
+        //     dictionaryProgress[quest.GetInstanceID()] != progress ||
+        //     dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
 
-        {
-            return;
-        }
+        // {
+        //     return;
+        // }
 
         dictionaryProgress[quest.GetInstanceID()]++;
 

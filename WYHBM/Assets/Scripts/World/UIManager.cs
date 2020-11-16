@@ -455,17 +455,17 @@ namespace GameMode.World
         {
             dicQuestDescription[data].UpdateObjetives();
 
-            if (progress == data.objetives.Length)
-            {
-                ShowPopup(string.Format(GameData.Instance.textConfig.popupCompleted, data.title));
-                dicQuestTitle[data].Complete();
+            // if (progress == data.objetives.Length)
+            // {
+            //     ShowPopup(string.Format(GameData.Instance.textConfig.popupCompleted, data.title));
+            //     dicQuestTitle[data].Complete();
 
-                GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Completed;
-            }
-            else
-            {
-                ShowPopup(string.Format(GameData.Instance.textConfig.popupNewObjetive, data.objetives[progress]));
-            }
+            //     GameManager.Instance.CurrentQuestData.state = QUEST_STATE.Completed;
+            // }
+            // else
+            // {
+            //     ShowPopup(string.Format(GameData.Instance.textConfig.popupNewObjetive, data.objetives[progress]));
+            // }
         }
 
         #endregion

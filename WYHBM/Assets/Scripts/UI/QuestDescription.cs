@@ -24,13 +24,13 @@ public class QuestDescription : MonoBehaviour
         _currentIndex = 0;
         _listObjectives = new List<TextMeshProUGUI>();
 
-        for (int i = 0; i < quest.objetives.Length; i++)
-        {
-            TextMeshProUGUI questObjetive = Instantiate(GameData.Instance.worldConfig.questObjetivePrefab, container);
-            // questObjetive.text = quest.objetives[i];
-            questObjetive.gameObject.SetActive(false);
-            _listObjectives.Add(questObjetive);
-        }
+        // for (int i = 0; i < quest.objetives.Length; i++)
+        // {
+        //     TextMeshProUGUI questObjetive = Instantiate(GameData.Instance.worldConfig.questObjetivePrefab, container);
+        //     // questObjetive.text = quest.objetives[i];
+        //     questObjetive.gameObject.SetActive(false);
+        //     _listObjectives.Add(questObjetive);
+        // }
 
         _listObjectives[0].gameObject.SetActive(true);
         _lastObjective = _listObjectives[0];
@@ -43,11 +43,11 @@ public class QuestDescription : MonoBehaviour
 
         _currentIndex++;
 
-        if (_currentIndex < _quest.objetives.Length)
-        {
-            _listObjectives[_currentIndex].gameObject.SetActive(true);
-            _lastObjective = _listObjectives[_currentIndex];
-        }
+        // if (_currentIndex < _quest.objetives.Length)
+        // {
+        //     _listObjectives[_currentIndex].gameObject.SetActive(true);
+        //     _lastObjective = _listObjectives[_currentIndex];
+        // }
     }
 
 }

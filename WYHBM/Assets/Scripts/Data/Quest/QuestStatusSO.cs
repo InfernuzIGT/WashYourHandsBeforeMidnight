@@ -13,7 +13,7 @@ public class QuestStatusSO : ScriptableObject
     [Header("Quest Status")]
     public QUEST_STATUS state = QUEST_STATUS.New;
     [Space]
-    public QUEST previusQuest = QUEST.None;
-    public QUEST newQuest = QUEST.None;
+    public QuestSO previusQuest;
+    public QuestSO newQuest;
 
 }
