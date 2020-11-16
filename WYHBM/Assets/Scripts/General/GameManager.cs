@@ -53,16 +53,16 @@ public class GameManager : MonoSingleton<GameManager>
     // private int _characterIndex;
 
     // Hold System
-    private bool _holdStarted;
-    private float _holdCurrentTime;
-    private float _holdLimitTime;
-    private System.Action _holdCallback;
-    private UnityEngine.UI.Image _holdImage;
+    // private bool _holdStarted;
+    // private float _holdCurrentTime;
+    // private float _holdLimitTime;
+    // private System.Action _holdCallback;
+    // private UnityEngine.UI.Image _holdImage;
 
     // Coroutines
     private Coroutine _coroutineEnconters;
-    private Coroutine _coroutineHoldSystem;
-    private WaitForSeconds _waitHoldEnd;
+    // private Coroutine _coroutineHoldSystem;
+    // private WaitForSeconds _waitHoldEnd;
 
     // Other
     private ENCOUNTER_ZONE _lastEncounterZone;
@@ -74,8 +74,8 @@ public class GameManager : MonoSingleton<GameManager>
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
 
-    private float _holdFillValue;
-    public float HoldFillValue { get { return _holdFillValue; } }
+    // private float _holdFillValue;
+    // public float HoldFillValue { get { return _holdFillValue; } }
 
     // public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
     // public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
@@ -105,9 +105,8 @@ public class GameManager : MonoSingleton<GameManager>
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
-        
 
-        _waitHoldEnd = new WaitForSeconds(1f);
+        // _waitHoldEnd = new WaitForSeconds(1f);
 
         // _characterIndex = 0;
         // worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
@@ -134,8 +133,9 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
-
     }
+
+    
 
     public void CheckEncounters(bool isEnabled)
     {
@@ -235,11 +235,11 @@ public class GameManager : MonoSingleton<GameManager>
     {
         CheckEncounters(!inCombat);
 
-        globalController.player.ToggleInputWorld(!inCombat);
+        globalController.playerController.ToggleInputWorld(!inCombat);
         globalController.HidePlayer(inCombat);
 
-        combatUI.EnableCanvas(inCombat);
-        worldUI.EnableCanvas(!inCombat);
+        combatUI.Show(inCombat);
+        worldUI.Show(!inCombat);
 
         combatManager.ToggleInputCombat(inCombat);
         combatManager.SetCombatArea(inCombat);
@@ -258,7 +258,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void SwitchMovement()
     {
-        globalController.player.SwitchMovement();
+        globalController.playerController.SwitchMovement();
     }
 
     private void StartCombat()
@@ -298,18 +298,6 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    private bool GetProbabilityEncounter()
-    {
-        ProportionValue<bool>[] tempProb = new ProportionValue<bool>[2];
-
-        float probability = GetProbabilityZone();
-
-        tempProb[0] = ProportionValue.Create(probability, true);
-        tempProb[1] = ProportionValue.Create(1 - probability, false);
-
-        return tempProb.ChooseByRandom();
-    }
-
     private float GetProbabilityZone()
     {
         switch (encounterZone)
@@ -328,55 +316,55 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    #region Hold System
+    // #region Hold System
 
-    public void SetHoldSystem(ref UnityEngine.UI.Image image, float limitTime, System.Action callback)
-    {
-        _holdImage = image;
-        _holdLimitTime = limitTime;
-        _holdCallback = callback;
-    }
+    // public void SetHoldSystem(ref UnityEngine.UI.Image image, float limitTime, System.Action callback)
+    // {
+    //     _holdImage = image;
+    //     _holdLimitTime = limitTime;
+    //     _holdCallback = callback;
+    // }
 
-    public void CallHoldSystem(bool isStart)
-    {
-        _holdStarted = isStart;
+    // public void CallHoldSystem(bool isStart)
+    // {
+    //     _holdStarted = isStart;
 
-        if (_holdStarted)
-        {
-            _coroutineHoldSystem = StartCoroutine(Hold());
-        }
-        else
-        {
-            StopCoroutine(_coroutineHoldSystem);
+    //     if (_holdStarted)
+    //     {
+    //         _coroutineHoldSystem = StartCoroutine(Hold());
+    //     }
+    //     else
+    //     {
+    //         StopCoroutine(_coroutineHoldSystem);
 
-            _holdCurrentTime = 0;
-            _holdImage.fillAmount = 0;
-        }
-    }
+    //         _holdCurrentTime = 0;
+    //         _holdImage.fillAmount = 0;
+    //     }
+    // }
 
-    private IEnumerator Hold()
-    {
-        while (_holdStarted)
-        {
-            _holdCurrentTime += Time.deltaTime;
+    // private IEnumerator Hold()
+    // {
+    //     while (_holdStarted)
+    //     {
+    //         _holdCurrentTime += Time.deltaTime;
 
-            _holdImage.fillAmount = _holdCurrentTime / _holdLimitTime;
+    //         _holdImage.fillAmount = _holdCurrentTime / _holdLimitTime;
 
-            if (_holdCurrentTime > _holdLimitTime)
-            {
-                _holdImage.fillAmount = 1;
-                _holdCallback.Invoke();
+    //         if (_holdCurrentTime > _holdLimitTime)
+    //         {
+    //             _holdImage.fillAmount = 1;
+    //             _holdCallback.Invoke();
 
-                yield return _waitHoldEnd;
+    //             yield return _waitHoldEnd;
 
-                CallHoldSystem(false);
-            }
+    //             CallHoldSystem(false);
+    //         }
 
-            yield return null;
-        }
-    }
+    //         yield return null;
+    //     }
+    // }
 
-    #endregion
+    // #endregion
 
     #region Inventory
 
@@ -441,10 +429,10 @@ public class GameManager : MonoSingleton<GameManager>
             dictionaryProgress.Add(data.GetInstanceID(), 0);
         }
 
-        for (int i = 0; i < data.objectsToDestroy.Length; i++)
-        {
-            Destroy(data.objectsToDestroy[i].gameObject);
-        }
+        // for (int i = 0; i < data.objectsToDestroy.Length; i++)
+        // {
+            // Destroy(data.objectsToDestroy[i].gameObject);
+        // }
 
         // if (!listQuest.ContainsKey(data.GetInstanceID()))
         // {
@@ -456,13 +444,13 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void ProgressQuest(QuestSO quest, int progress)
     {
-        if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
-            dictionaryProgress[quest.GetInstanceID()] != progress ||
-            dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
+        // if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
+        //     dictionaryProgress[quest.GetInstanceID()] != progress ||
+        //     dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
 
-        {
-            return;
-        }
+        // {
+        //     return;
+        // }
 
         dictionaryProgress[quest.GetInstanceID()]++;
 
@@ -497,7 +485,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void TriggerCombat()
     {
-        if (!GetProbabilityEncounter())return;
+        if (!ProportionValue.GetProbability(GetProbabilityZone()))return;
 
         inCombat = true;
         currentNPC = null;

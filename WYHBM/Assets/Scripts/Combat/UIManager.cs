@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameMode.Combat
 {
-    [RequireComponent(typeof(Canvas))]
+    [RequireComponent(typeof(CanvasGroupUtility))]
     public class UIManager : MonoBehaviour
     {
         [Header("General")]
@@ -19,13 +19,13 @@ namespace GameMode.Combat
         public List<Actions> actions;
 
         private List<Turn> _turn;
-        private Canvas _canvas;
+        private CanvasGroupUtility _canvasUtility;
         private Actions _actions;
         private int _lastIndex = 0;
 
         private void Awake()
         {
-            _canvas = GetComponent<Canvas>();
+            _canvasUtility = GetComponent<CanvasGroupUtility>();
         }
 
         private void Start()
@@ -46,21 +46,26 @@ namespace GameMode.Combat
         {
             actions[_lastIndex].gameObject.SetActive(false);
             actions[index].gameObject.SetActive(true);
-            
+
             actions[index].SelectFirstButton();
 
             _lastIndex = index;
         }
-        
+
         public void HideActions(bool isHiding)
         {
             actions[_lastIndex].gameObject.SetActive(!isHiding);
         }
 
-        public void EnableCanvas(bool enabled)
+        public void Show(bool isShowing)
         {
-            _canvas.enabled = enabled;
+            _canvasUtility.Show(isShowing);
         }
+
+        // public void EnableCanvas(bool enabled)
+        // {
+        //     _canvas.enabled = enabled;
+        // }
 
         // public void EnableActions(bool enabled)
         // {

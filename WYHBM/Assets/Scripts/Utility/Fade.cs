@@ -1,19 +1,21 @@
 ﻿using DG.Tweening;
 using Events;
 using UnityEngine;
-using UnityEngine.UI;
 
+[RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
 public class Fade : MonoBehaviour
 {
-    private Image _fadeImg;
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
     private bool _fadeFast;
 
-    private void Start()
+    private Canvas _canvas;
+    private CanvasGroup _canvasGroup;
+
+    private void Awake()
     {
-        _fadeImg = GetComponent<Image>();
-        _fadeImg.enabled = false;
+        _canvas = GetComponent<Canvas>();
+        _canvasGroup = GetComponent<CanvasGroup>();
     }
 
     private void OnEnable()
@@ -31,32 +33,43 @@ public class Fade : MonoBehaviour
         _fadeFast = evt.fadeFast;
         _callbackMid = evt.callbackMid;
         _callbackEnd = evt.callbackEnd;
-        
+
         evt.callbackStart?.Invoke();
 
-        _fadeImg.enabled = true;
-
-        _fadeImg.DOFade(
-                1,
-                _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
+        _canvasGroup
+            .DOFade(1, _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
+            .OnComplete(() => SetProperties(true))
             .OnKill(FadeIn);
+
+        SetCanvas(true);
     }
 
     private void FadeIn()
     {
         _callbackMid?.Invoke();
 
-        _fadeImg.DOFade(
-                0,
-                _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
+        _canvasGroup
+            .DOFade(0, _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
+            .OnComplete(() => SetCanvas(false))
             .OnKill(FadeOut);
+
+        SetProperties(false);
     }
 
     private void FadeOut()
     {
         _callbackEnd?.Invoke();
+    }
 
-        _fadeImg.enabled = false;
+    private void SetCanvas(bool isEnabled)
+    {
+        _canvas.enabled = isEnabled;
+    }
+
+    private void SetProperties(bool isEnabled)
+    {
+        _canvasGroup.interactable = isEnabled;
+        _canvasGroup.blocksRaycasts = isEnabled;
     }
 
 }

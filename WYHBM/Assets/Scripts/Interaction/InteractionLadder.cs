@@ -27,13 +27,13 @@ public class InteractionLadder : Interaction, IInteractable
     {
         inLadder = !inLadder;
 
-        GameManager.Instance.globalController.player.SwitchLadderMovement(inLadder);
+        GameManager.Instance.globalController.playerController.SwitchLadderMovement(inLadder);
 
         if (inLadder)
         {
-            GameManager.Instance.globalController.player.SetNewPosition(
+            GameManager.Instance.globalController.playerController.SetNewPosition(
                 transform.position.x,
-                GameManager.Instance.globalController.player.transform.position.y + 1, // TODO Mariano: Move To Config (ladderOffsetY)
+                GameManager.Instance.globalController.playerController.transform.position.y + 1, // TODO Mariano: Move To Config (ladderOffsetY)
                 transform.position.z);
         }
         else

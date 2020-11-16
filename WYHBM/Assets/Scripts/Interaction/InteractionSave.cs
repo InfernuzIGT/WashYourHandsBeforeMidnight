@@ -9,7 +9,6 @@ public class InteractionSave : Interaction, IInteractable
     {
         base.Awake();
 
-        SetPopupName(title);
     }
 
     public void OnInteractionEnter(Collider other)

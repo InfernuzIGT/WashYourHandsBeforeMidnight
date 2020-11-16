@@ -17,6 +17,17 @@ public enum COMBAT_STATE
     Wait = 4
 }
 
+public enum EMOTION
+{
+    None = 0,
+    Happy = 1,
+    Sad = 2,
+    Angry = 3,
+    Surprise = 4,
+    Curious = 5,
+    Sleep = 6
+}
+
 // public enum TIER
 // {
 //     none = 0,
@@ -108,14 +119,15 @@ public enum ENCOUNTER_ZONE
     Interior = 3,
 }
 
-public enum LANGUAGE
-{
-    English = 0,
-    Spanish = 1
-}
-
 public enum SCENE_INDEX
 {
     MainMenu = 0,
     Master = 1,
 }
+
+// public enum PLAYER
+// {
+//     Sam = 0,
+//     Dallas = 1,
+//     Will = 2
+// }

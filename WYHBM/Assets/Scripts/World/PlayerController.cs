@@ -1,22 +1,38 @@
-using System.Collections;
 using System.Collections.Generic;
 using Events;
 using FMODUnity;
-using FMOD.Studio;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
+[RequireComponent(typeof(CharacterController), typeof(DeviceUtility))]
 public class PlayerController : MonoBehaviour
 {
+    public PlayerSO playerData;
+
+    [Header("Review")]
+    public bool _inZipline = false;
+    public Vector3 endPos;
+    public LayerMask Climbable;
+    public bool ledgeDetected;
+    public Transform wallCheck;
+    public Transform ledgeCheck;
+    public float wallCheckDistance;
+
     [Header("FMOD")]
+    public LayerMask layerMask;
+    [Space]
     public StudioEventEmitter footstepSound;
     public StudioEventEmitter breathingSound;
 
+    // References
     private CharacterController _characterController;
     private WorldAnimator _animatorController;
+    private DeviceUtility _deviceUtility;
 
+    // Events
     private InteractionEvent _interactionEvent;
     private LadderEvent _ladderEvent;
+    private PauseEvent _pauseEvent;
 
     // Movement 
     private Vector2 _inputMovement;
@@ -34,7 +50,7 @@ public class PlayerController : MonoBehaviour
     private bool _isWalking;
 
     //Jump
-    private float _jump = 9.81f;
+    // private float _jump = 9.81f;
     private float _gravity = 39.24f;
     private float _magnitudeFall = 20f;
     private bool _isJumping;
@@ -46,27 +62,22 @@ public class PlayerController : MonoBehaviour
     private Vector3 _botPosition;
 
     // Zipline
-    public bool _inZipline = false;
     private float _speedZipline = .35f;
-    public Vector3 endPos;
 
     // Ledge
-    public LayerMask Climbable;
-    public bool ledgeDetected;
     private Vector3 newPos;
-
-    public Transform wallCheck;
-    public Transform ledgeCheck;
-    public float wallCheckDistance;
 
     private Vector3 _lastPosition;
     private float _axisLimit = 0.7f;
 
+    // Footstep
+    private RaycastHit _hit;
+
     // Quest
     private bool _isOpenDiary;
-    
+
     // Other
-    private InputActions _inputHold;
+    // private InputActions _inputHold;
 
     // Properties
     private InputActions _inputWorld;
@@ -80,10 +91,14 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        CreateInput();
-
         _characterController = GetComponent<CharacterController>();
         _animatorController = GetComponent<WorldAnimator>();
+        _deviceUtility = GetComponent<DeviceUtility>();
+
+        CreateInput();
+
+        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
+        _deviceUtility.DetectDevice();
     }
 
     private void CreateInput()
@@ -92,22 +107,24 @@ public class PlayerController : MonoBehaviour
 
         _inputWorld.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
         _inputWorld.Player.Jump.performed += ctx => Jump();
-        _inputWorld.Player.Interaction.performed += ctx => Interaction();
+        _inputWorld.Player.Interaction.started += ctx => Interaction(true);
+        _inputWorld.Player.Interaction.canceled += ctx => Interaction(false);
         _inputWorld.Player.Walk.started += ctx => Walk(true);
         _inputWorld.Player.Walk.canceled += ctx => Walk(false);
-        _inputWorld.Player.Pause.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
-        _inputWorld.Player.Inventory.performed += ctx => GameManager.Instance.Pause(PAUSE_TYPE.Inventory);
-        
-        _inputHold = new InputActions();
-        
-        _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
-        _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
+        _inputWorld.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
+        _inputWorld.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
+
+        // _inputHold = new InputActions();
+
+        // _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
+        // _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
     }
 
     private void Start()
     {
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
+        _pauseEvent = new PauseEvent();
 
         ToggleInputWorld(true);
     }
@@ -116,12 +133,14 @@ public class PlayerController : MonoBehaviour
     {
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
+        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
+        EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
     }
 
     public void ToggleInputWorld(bool isEnabled)
@@ -135,44 +154,50 @@ public class PlayerController : MonoBehaviour
             _inputWorld.Disable();
         }
     }
-    
-    public void ToggleInputHold(bool isEnabled)
+
+    // public void ToggleInputHold(bool isEnabled)
+    // {
+    //     if (isEnabled)
+    //     {
+    //         _inputHold.Enable();
+    //     }
+    //     else
+    //     {
+    //         _inputHold.Disable();
+    //     }
+    // }
+
+    private void Pause(PAUSE_TYPE pauseType)
     {
-        if (isEnabled)
-        {
-            _inputHold.Enable();
-        }
-        else
-        {
-            _inputHold.Disable();
-        }
+        _pauseEvent.pauseType = pauseType;
+        EventController.TriggerEvent(_pauseEvent);
     }
 
     private void Update()
     {
         Movement();
-        IvyMovement();
-        MovementZipline();
+        // IvyMovement();
+        // MovementZipline();
     }
 
-    private void MovementZipline()
-    {
-        if (_inZipline)
-        {
-            _animatorController.MovementZipline(true);
+    // private void MovementZipline()
+    // {
+    //     if (_inZipline)
+    //     {
+    //         _animatorController.MovementZipline(true);
 
-            _gravity = 0;
+    //         _gravity = 0;
 
-            transform.position = Vector3.MoveTowards(transform.position, endPos, _speedZipline);
+    //         transform.position = Vector3.MoveTowards(transform.position, endPos, _speedZipline);
 
-            if (Vector3.Distance(transform.position, endPos) < 1)
-            {
-                _animatorController.MovementZipline(false);
-                _inZipline = false;
-                _gravity = 39.24f;
-            }
-        }
-    }
+    //         if (Vector3.Distance(transform.position, endPos) < 1)
+    //         {
+    //             _animatorController.MovementZipline(false);
+    //             _inZipline = false;
+    //             _gravity = 39.24f;
+    //         }
+    //     }
+    // }
 
     private void StartClimb()
     {
@@ -180,7 +205,6 @@ public class PlayerController : MonoBehaviour
 
         _animatorController.ClimbLedge(true);
 
-        
     }
 
     private void EndClimb()
@@ -291,7 +315,7 @@ public class PlayerController : MonoBehaviour
                     {
                         SetNewPosition(transform.position.x + .5f, hitLedgeFront.collider.bounds.size.y, transform.position.z);
 
-                        newPos = new Vector3(.7f+ hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
+                        newPos = new Vector3(.7f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
                             hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2,
                             hitLedgeFront.transform.position.z);
 
@@ -354,24 +378,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void IvyMovement()
-    {
-        DetectBot();
+    // private void IvyMovement()
+    // {
+    //     DetectBot();
 
-        if (!_inIvy)
-        {
-            return;
-        }
+    //     if (!_inIvy)
+    //     {
+    //         return;
+    //     }
 
-        _inIvy = true;
+    //     _inIvy = true;
 
-        _movement.x = _inputMovement.x * _speedIvy;
-        _movement.z = 0;
-        _movement.y = _inputMovement.y * _speedIvy;
-        _characterController.Move(_movement * Time.deltaTime);
+    //     _movement.x = _inputMovement.x * _speedIvy;
+    //     _movement.z = 0;
+    //     _movement.y = _inputMovement.y * _speedIvy;
+    //     _characterController.Move(_movement * Time.deltaTime);
 
-        _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
-    }
+    //     _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
+    // }
 
     private void DetectBot()
     {
@@ -401,14 +425,35 @@ public class PlayerController : MonoBehaviour
         // }
     }
 
-    private void Interaction()
+    private void Interaction(bool isStart)
     {
-        if (!GameManager.Instance.inCombat)
+        // if (!GameManager.Instance.inCombat)
+        // {
+        _interactionEvent.isStart = isStart;
+        _interactionEvent.lastPlayerPosition = transform.position;
+        _interactionEvent.isRunning = _isRunning;
+        EventController.TriggerEvent(_interactionEvent);
+        // }
+    }
+
+    [ContextMenu("Set Player Data")]
+    private void SetPlayerData()
+    {
+        if (playerData != null)
         {
-            _interactionEvent.lastPlayerPosition = transform.position;
-            _interactionEvent.isRunning = _isRunning;
-            EventController.TriggerEvent(_interactionEvent);
+            gameObject.name = string.Format("[Player] {0}", playerData.name);
+            GetComponent<SpriteRenderer>().sprite = playerData.spriteBody;
+            GetComponent<Animator>().runtimeAnimatorController = playerData.animatorController;
         }
+    }
+
+    public void SetPlayerData(PlayerSO data)
+    {
+        playerData = data;
+
+        gameObject.name = string.Format("[Player] {0}", playerData.name);
+        GetComponent<SpriteRenderer>().sprite = playerData.spriteBody;
+        GetComponent<Animator>().runtimeAnimatorController = playerData.animatorController;
     }
 
     public void SwitchMovement()
@@ -435,6 +480,38 @@ public class PlayerController : MonoBehaviour
 
     public void FMODPlayFootstep()
     {
+        if (!_canPlayFootstep)return;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 2, layerMask))
+        {
+            switch (_hit.collider.gameObject.tag)
+            {
+                case Tags.Ground_Grass:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 2);
+                    break;
+
+                case Tags.Ground_Dirt:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
+                    break;
+
+                case Tags.Ground_Wood:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
+                    break;
+
+                case Tags.Ground_Cement:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
+                    break;
+
+                case Tags.Ground_Ceramic:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
+                    break;
+
+                default:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
+                    break;
+            }
+        }
+
         footstepSound.Play();
     }
 
@@ -450,6 +527,12 @@ public class PlayerController : MonoBehaviour
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)
     {
         transform.position = evt.newPosition;
+    }
+
+    private void OnDeviceChange(DeviceChangeEvent evt)
+    {
+        // UniversalFunctions.DeviceRebind(evt.device, _inputWorld, _inputHold);
+        UniversalFunctions.DeviceRebind(evt.device, _inputWorld);
     }
 
     #endregion

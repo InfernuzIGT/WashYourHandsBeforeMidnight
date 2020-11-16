@@ -15,7 +15,7 @@ public class ItemCreator : EditorWindow
     private string _pathAndName = "Assets/Data/Item/New Item.asset";
     private string _itemPathAndName;
     private string _spritePath;
-    private ItemSO _itemSO;
+    private ItemSO _itemSO = null;
     private GUIStyle _styleButtons;
     private Vector2 _scroll;
     // private Sprite[] _sprites;

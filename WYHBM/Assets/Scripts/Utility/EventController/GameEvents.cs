@@ -10,6 +10,7 @@ namespace Events
 
     public class InteractionEvent : GameEvent
     {
+        public bool isStart;
         public Vector3 lastPlayerPosition;
         public bool isRunning;
     }
@@ -63,14 +64,23 @@ namespace Events
     {
         public bool isTriggered;
         public PlayableAsset cutscene;
-        
-        public int index;
 
+        public int index;
     }
 
     public class MainMenuEvent : GameEvent
     {
         public MENU_TYPE menuType;
+    }
+
+    public class DeviceChangeEvent : GameEvent
+    {
+        public DEVICE device;
+    }
+    
+    public class PauseEvent : GameEvent
+    {
+        public PAUSE_TYPE pauseType;
     }
 
     public class InfoTextEvent : GameEvent
@@ -79,5 +89,6 @@ namespace Events
         public Vector2 position;
         public Color color;
     }
+
 
 }

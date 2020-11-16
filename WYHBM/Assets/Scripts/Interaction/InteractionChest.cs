@@ -31,8 +31,8 @@ public class InteractionChest : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            GameManager.Instance.globalController.player.ToggleInputHold(true);
-            GameManager.Instance.SetHoldSystem(ref GameManager.Instance.worldUI.progressImg, holdDuration, Success);
+            // GameManager.Instance.globalController.playerController.ToggleInputHold(true);
+            // GameManager.Instance.SetHoldSystem(ref GameManager.Instance.worldUI.progressImg, holdDuration, Success);
         }
     }
 
@@ -40,7 +40,7 @@ public class InteractionChest : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            GameManager.Instance.globalController.player.ToggleInputHold(false);
+            // GameManager.Instance.globalController.playerController.ToggleInputHold(false);
         }
     }
 
@@ -50,7 +50,7 @@ public class InteractionChest : Interaction, IInteractable
         Debug.Log($"<b> SUCCESS: </b> {_item.name}");
         // TODO Marcos: Agregar _item al inventario
 
-        GameManager.Instance.globalController.player.ToggleInputHold(false);
+        // GameManager.Instance.globalController.playerController.ToggleInputHold(false);
         Destroy(gameObject);
     }
 

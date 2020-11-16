@@ -16,7 +16,7 @@ public class QuestTitle : MonoBehaviour
         _titleTxt = GetComponentInChildren<TextMeshProUGUI>();
 
         _quest = quest;
-        _titleTxt.text = quest.title;
+        // _titleTxt.text = quest.title;
     }
 
     public void Complete()
