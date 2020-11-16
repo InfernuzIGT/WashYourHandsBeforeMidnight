@@ -41,7 +41,8 @@ public class LocalizationUtility : MonoBehaviour
     {
         LocalizationSettings.SelectedLocale = locale;
 
-        _language = locale.name;
+        // _language = locale.name;
+        _language = locale.Identifier.Code;
 
         // Debug.Log($"Update Locale: {locale.name} [{locale.Identifier.Code}]");
     }

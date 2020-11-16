@@ -9,7 +9,7 @@ public class NPCController : MonoBehaviour, IInteractable
 {
     [Header("Movement")]
     public bool canMove = true;
-    public Transform[] waypoints;
+    public WaypointController waypoints;
     public bool useRandomPosition = true;
     [Range(0f, 10f)]
     public float waitTime = 5;
@@ -125,14 +125,14 @@ public class NPCController : MonoBehaviour, IInteractable
         {
             if (useRandomPosition)
             {
-                _positionIndex = Random.Range(0, waypoints.Length);
+                _positionIndex = Random.Range(0, waypoints.positions.Length);
             }
             else
             {
-                _positionIndex = _positionIndex < waypoints.Length - 1 ? _positionIndex + 1 : 0;
+                _positionIndex = _positionIndex < waypoints.positions.Length - 1 ? _positionIndex + 1 : 0;
             }
 
-            _agent.SetDestination(waypoints[_positionIndex].position);
+            _agent.SetDestination(waypoints.positions[_positionIndex]);
             _isMoving = true;
         }
     }
