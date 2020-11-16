@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(InteractionNPC))]
 public class DDUtility : MonoBehaviour
 {
+    private const string emotion = "emotion";
+    
     public enum DDExecuteScript
     {
         GiveReward
@@ -120,6 +122,22 @@ public class DDUtility : MonoBehaviour
 
     private void OnExecuteScript(DialoguePlayer sender, string script)
     {
+        if (script.Contains(emotion))
+        {
+            string[] emotionArray = script.Split('=');
+
+            if (int.TryParse(emotionArray[1], out int emotionId))
+            {
+                _interactionNPC.data.GetIcon((EMOTION)emotionId);
+            }
+            else
+            {
+                Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse DDExecuteScript \"{script}\"", gameObject);
+            }
+
+            return;
+        }
+
         if (System.Enum.TryParse<DDExecuteScript>(script, out DDExecuteScript scriptParsed))
         {
             switch (scriptParsed)
@@ -132,6 +150,8 @@ public class DDUtility : MonoBehaviour
                     Debug.LogError($"<color=red><b>[ERROR]</b></color> No DDExecuteScript", gameObject);
                     break;
             }
+
+            return;
         }
         else
         {

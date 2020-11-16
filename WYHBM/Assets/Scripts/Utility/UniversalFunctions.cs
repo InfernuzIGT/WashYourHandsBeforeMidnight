@@ -227,23 +227,23 @@ public static class UniversalFunctions
 
 #if UNITY_EDITOR
 
-        string color = "white";
+        // string color = "white";
 
-        if (data == null)
-        {
-            Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()}");
-        }
-        else
-        {
-            if (description == null)
-            {
-                Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} [{data.displayName}]");
-            }
-            else
-            {
-                Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} - {description} [{data.displayName}]");
-            }
-        }
+        // if (data == null)
+        // {
+        //     Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()}");
+        // }
+        // else
+        // {
+        //     if (description == null)
+        //     {
+        //         Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} [{data.displayName}]");
+        //     }
+        //     else
+        //     {
+        //         Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} - {description} [{data.displayName}]");
+        //     }
+        // }
 
 #endif
 
