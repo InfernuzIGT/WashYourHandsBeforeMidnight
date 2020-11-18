@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -8,6 +9,9 @@ public class LocalizationUtility : MonoBehaviour
 {
     [SerializeField, ReadOnly] private string _language = "en";
     public string Language { get { return _language; } }
+    [Space]
+    [SerializeField] private UnityEvent OnUpdateLanguage = null;
+    
 
     private AsyncOperationHandle m_InitializeOperation;
     private List<Locale> _listLocales;
@@ -45,6 +49,8 @@ public class LocalizationUtility : MonoBehaviour
         _language = locale.Identifier.Code;
 
         // Debug.Log($"Update Locale: {locale.name} [{locale.Identifier.Code}]");
+
+        OnUpdateLanguage.Invoke();
     }
 
     public void SelectNextLanguage(bool isNext)

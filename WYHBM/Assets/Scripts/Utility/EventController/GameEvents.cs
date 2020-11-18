@@ -17,9 +17,8 @@ namespace Events
 
     public class EnableDialogEvent : GameEvent
     {
-        public QuestData questData;
+        public NPCSO npc;
         public bool enable;
-        public DialogSO dialog;
     }
 
     public class EnableMovementEvent : GameEvent
@@ -88,6 +87,11 @@ namespace Events
         public string text;
         public Vector2 position;
         public Color color;
+    }
+    
+    public class EventSystemEvent : GameEvent
+    {
+        public GameObject objectSelected;
     }
 
 

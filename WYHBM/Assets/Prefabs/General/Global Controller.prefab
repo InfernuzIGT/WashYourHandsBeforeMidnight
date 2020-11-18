@@ -45,6 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPaused: 0
   inCombat: 0
+  _currentNPC: {fileID: 0}
   hideCursor: 1
   skipEncounters: 1
   playerData: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
@@ -54,10 +55,13 @@ MonoBehaviour:
     type: 3}
   worldCamera: {fileID: 203963655111991400, guid: 1969c56e00de54e4a98cd61039552d25,
     type: 3}
+  DDUtility: {fileID: 0}
   worldUI: {fileID: 3733784730637442484, guid: ebe2453115239114da0bde694a1753f4, type: 3}
   combatUI: {fileID: 6695403580233563036, guid: 92423fca7add6c8459569ca94d5016f7,
     type: 3}
   fadeUI: {fileID: 5826295906060962881, guid: 9c351781c12edb4418498254809931d9, type: 3}
+  eventSystemUtility: {fileID: 8567285740534756541, guid: 69b663abc5585a742a8040601bd61c07,
+    type: 3}
   customSpawn: 0
   spawnPoint: {fileID: 0}
   exteriorCamera: {fileID: 0}

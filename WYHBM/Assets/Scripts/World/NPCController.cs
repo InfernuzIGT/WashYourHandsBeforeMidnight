@@ -199,7 +199,12 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
-            _agent.isStopped = true;
+
+            if (_agent.isOnNavMesh)
+            {
+                _agent.isStopped = true;
+            }
+
             canMove = false;
 
             _animatorController?.Movement(Vector3.zero);
@@ -213,7 +218,12 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
-            _agent.isStopped = false;
+
+            if (_agent.isOnNavMesh)
+            {
+                _agent.isStopped = false;
+            }
+            
             canMove = true;
 
             _interactionNPC.Execute(false, this);

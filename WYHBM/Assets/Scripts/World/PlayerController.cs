@@ -80,7 +80,8 @@ public class PlayerController : MonoBehaviour
     // private InputActions _inputHold;
 
     // Properties
-    private InputActions _inputWorld;
+    private InputActions _inputPlayer;
+    public InputActions InputPlayer { get { return _inputPlayer; } set { _inputPlayer = value; } }
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -103,16 +104,16 @@ public class PlayerController : MonoBehaviour
 
     private void CreateInput()
     {
-        _inputWorld = new InputActions();
+        _inputPlayer = new InputActions();
 
-        _inputWorld.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        _inputWorld.Player.Jump.performed += ctx => Jump();
-        _inputWorld.Player.Interaction.started += ctx => Interaction(true);
-        _inputWorld.Player.Interaction.canceled += ctx => Interaction(false);
-        _inputWorld.Player.Walk.started += ctx => Walk(true);
-        _inputWorld.Player.Walk.canceled += ctx => Walk(false);
-        _inputWorld.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
-        _inputWorld.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
+        _inputPlayer.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        _inputPlayer.Player.Jump.started += ctx => Jump();
+        _inputPlayer.Player.Interaction.started += ctx => Interaction(true);
+        _inputPlayer.Player.Interaction.canceled += ctx => Interaction(false);
+        _inputPlayer.Player.Walk.started += ctx => Walk(true);
+        _inputPlayer.Player.Walk.canceled += ctx => Walk(false);
+        _inputPlayer.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
+        _inputPlayer.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
 
         // _inputHold = new InputActions();
 
@@ -147,11 +148,11 @@ public class PlayerController : MonoBehaviour
     {
         if (isEnabled)
         {
-            _inputWorld.Enable();
+            _inputPlayer.Enable();
         }
         else
         {
-            _inputWorld.Disable();
+            _inputPlayer.Disable();
         }
     }
 
@@ -427,6 +428,8 @@ public class PlayerController : MonoBehaviour
 
     private void Interaction(bool isStart)
     {
+        Debug.Log ($"<b> PLAYER INTERACTION </b>");
+        
         // if (!GameManager.Instance.inCombat)
         // {
         _interactionEvent.isStart = isStart;
@@ -532,7 +535,7 @@ public class PlayerController : MonoBehaviour
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
         // UniversalFunctions.DeviceRebind(evt.device, _inputWorld, _inputHold);
-        UniversalFunctions.DeviceRebind(evt.device, _inputWorld);
+        UniversalFunctions.DeviceRebind(evt.device, _inputPlayer);
     }
 
     #endregion

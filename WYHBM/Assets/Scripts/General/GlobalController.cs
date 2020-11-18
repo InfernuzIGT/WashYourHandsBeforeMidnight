@@ -1,17 +1,23 @@
-﻿using Cinemachine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Cinemachine;
+using Events;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Playables;
 
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
     public bool isPaused;
     public bool inCombat;
+    [Space]
+    [SerializeField, ReadOnly] private NPCSO _currentNPC;
 
     [Header("Cheats")]
     public bool hideCursor = true;
     public bool skipEncounters;
-    // public bool infiniteStamina;
     // public ItemSO[] items;
 
     [Header("Player")]
@@ -23,9 +29,11 @@ public class GlobalController : MonoBehaviour
     public CinemachineVirtualCamera worldCamera;
 
     [Header("UI")]
+    public DDUtility DDUtility;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Fade fadeUI;
+    public EventSystemUtility eventSystemUtility;
 
     [Header("Spawn")]
     public bool customSpawn;
@@ -55,6 +63,16 @@ public class GlobalController : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
     }
 
     private void SpawnCameras()
@@ -128,12 +146,15 @@ public class GlobalController : MonoBehaviour
     private void SpawnUI()
     {
         fadeUI = Instantiate(fadeUI);
-        
+        eventSystemUtility = Instantiate(eventSystemUtility);
+
         worldUI = Instantiate(worldUI);
         combatUI = Instantiate(combatUI);
 
         worldUI.Show(!inCombat);
         combatUI.Show(inCombat);
+
+        DDUtility = worldUI.DDUtility;
     }
 
     private void SetCamera()
@@ -201,16 +222,6 @@ public class GlobalController : MonoBehaviour
     //     newSlot.AddItem(items[index]);
     // }
 
-    // private void Update()
-    // {
-    //     Cheats();
-    // }
-
-    // private void Cheats()
-    // {
-    //     player.InfiniteStamina = infiniteStamina;
-    // }
-
     public bool GetPlayerInMovement()
     {
         return playerController.GetPlayerInMovement() && !skipEncounters;
@@ -220,5 +231,45 @@ public class GlobalController : MonoBehaviour
     {
         playerController.gameObject.SetActive(!isHiding);
     }
+
+    private void SwitchInputDialog(bool enable)
+    {
+        if (enable)
+        {
+            playerController.InputPlayer.Player.Disable();
+            DDUtility.InputUI.Enable();
+        }
+        else
+        {
+            DDUtility.InputUI.Disable();
+            playerController.InputPlayer.Player.Enable();
+        }
+    }
+
+    #region Events
+
+    private void OnEnableDialog(EnableDialogEvent evt)
+    {
+        if (evt.enable)
+        {
+            _currentNPC = evt.npc;
+            EventController.AddListener<InteractionEvent>(OnInteractionDialog);
+        }
+        else
+        {
+            _currentNPC = null;
+            EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+            SwitchInputDialog(false);
+        }
+    }
+
+    private void OnInteractionDialog(InteractionEvent evt)
+    {
+        // SwitchInputDialog(true);
+
+        playerController.InputPlayer.Player.Disable(); // TODO Mariano: STACK OVERFLOW
+    }
+
+    #endregion
 
 }
