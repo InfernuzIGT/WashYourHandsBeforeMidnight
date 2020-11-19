@@ -5,6 +5,7 @@ using Events;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
 public class GlobalController : MonoBehaviour
@@ -50,8 +51,12 @@ public class GlobalController : MonoBehaviour
 
     private float _offsetPlayer = 1.505f;
 
+    private EnableMovementEvent _enableMovementEvent;
+
     private void Start()
     {
+        _enableMovementEvent = new EnableMovementEvent();
+
         SpawnPlayer();
         SpawnCameras();
         SpawnUI();
@@ -236,14 +241,17 @@ public class GlobalController : MonoBehaviour
     {
         if (enable)
         {
-            playerController.InputPlayer.Player.Disable();
-            DDUtility.InputUI.Enable();
+            playerController.Input.Player.Disable();
+            // playerController.Input.UI.Enable();
         }
         else
         {
-            DDUtility.InputUI.Disable();
-            playerController.InputPlayer.Player.Enable();
+            // playerController.Input.UI.Disable();
+            playerController.Input.Player.Enable();
         }
+
+        _enableMovementEvent.canMove = !enable;
+        EventController.TriggerEvent(_enableMovementEvent);
     }
 
     #region Events
@@ -265,9 +273,9 @@ public class GlobalController : MonoBehaviour
 
     private void OnInteractionDialog(InteractionEvent evt)
     {
-        // SwitchInputDialog(true);
+        if (!evt.isStart)return;
 
-        playerController.InputPlayer.Player.Disable(); // TODO Mariano: STACK OVERFLOW
+        SwitchInputDialog(true);
     }
 
     #endregion

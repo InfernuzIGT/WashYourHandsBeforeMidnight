@@ -235,7 +235,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         CheckEncounters(!inCombat);
 
-        globalController.playerController.ToggleInputWorld(!inCombat);
+        // globalController.playerController.ToggleInputWorld(!inCombat);
         globalController.HidePlayer(inCombat);
 
         combatUI.Show(inCombat);

@@ -16,6 +16,8 @@ public class CanvasGroupUtility : MonoBehaviour
         _canvas = GetComponent<Canvas>();
         _canvasGroup = GetComponent<CanvasGroup>();
         _isShowing = _canvasGroup.alpha == 1 ? true : false;
+        
+        SetProperties(true);
     }
 
     public void Show(bool isShowing)
@@ -25,9 +27,13 @@ public class CanvasGroupUtility : MonoBehaviour
         if (isShowing)
         {
             _canvasGroup
-                .DOFade(1, fadeDuration)
-                .OnComplete(() => SetProperties(true));
+                .DOFade(1, fadeDuration);
             SetCanvas(true);
+            
+            // _canvasGroup
+            //     .DOFade(1, fadeDuration)
+            //     .OnComplete(() => SetProperties(true));
+            // SetCanvas(true);
         }
         else
         {
@@ -35,7 +41,7 @@ public class CanvasGroupUtility : MonoBehaviour
                 .DOFade(0, fadeDuration)
                 .OnComplete(() => SetCanvas(false));
 
-            SetProperties(false);
+            // SetProperties(false);
         }
     }
 
@@ -44,7 +50,7 @@ public class CanvasGroupUtility : MonoBehaviour
         _isShowing = isShowing;
 
         SetCanvas(isShowing);
-        SetProperties(isShowing);
+        // SetProperties(isShowing);
     }
 
     private void SetCanvas(bool isEnabled)

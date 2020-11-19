@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     private float _speedHorizontal;
     private float _speedVertical;
     private bool _isDetectingGround;
+    private bool _interaction;
 
     // Walk
     private float _speedWalk = 3.5f;
@@ -80,8 +81,8 @@ public class PlayerController : MonoBehaviour
     // private InputActions _inputHold;
 
     // Properties
-    private InputActions _inputPlayer;
-    public InputActions InputPlayer { get { return _inputPlayer; } set { _inputPlayer = value; } }
+    private InputActions _input;
+    public InputActions Input { get { return _input; } set { _input = value; } }
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -104,21 +105,23 @@ public class PlayerController : MonoBehaviour
 
     private void CreateInput()
     {
-        _inputPlayer = new InputActions();
+        _input = new InputActions();
 
-        _inputPlayer.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        _inputPlayer.Player.Jump.started += ctx => Jump();
-        _inputPlayer.Player.Interaction.started += ctx => Interaction(true);
-        _inputPlayer.Player.Interaction.canceled += ctx => Interaction(false);
-        _inputPlayer.Player.Walk.started += ctx => Walk(true);
-        _inputPlayer.Player.Walk.canceled += ctx => Walk(false);
-        _inputPlayer.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
-        _inputPlayer.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
-
+        _input.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        _input.Player.Jump.started += ctx => Jump();
+        _input.Player.Interaction.performed += ctx => Interaction();
+        _input.Player.Walk.started += ctx => Walk(true);
+        _input.Player.Walk.canceled += ctx => Walk(false);
+        _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
+        _input.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
+        
         // _inputHold = new InputActions();
 
         // _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
         // _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
+        
+        _input.Player.Enable();
+        _input.UI.Disable();
     }
 
     private void Start()
@@ -127,7 +130,7 @@ public class PlayerController : MonoBehaviour
         _ladderEvent = new LadderEvent();
         _pauseEvent = new PauseEvent();
 
-        ToggleInputWorld(true);
+        // ToggleInputWorld(true);
     }
 
     private void OnEnable()
@@ -144,17 +147,17 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
     }
 
-    public void ToggleInputWorld(bool isEnabled)
-    {
-        if (isEnabled)
-        {
-            _inputPlayer.Enable();
-        }
-        else
-        {
-            _inputPlayer.Disable();
-        }
-    }
+    // public void ToggleInputWorld(bool isEnabled)
+    // {
+    //     if (isEnabled)
+    //     {
+    //         _input.Enable();
+    //     }
+    //     else
+    //     {
+    //         _input.Disable();
+    //     }
+    // }
 
     // public void ToggleInputHold(bool isEnabled)
     // {
@@ -426,13 +429,13 @@ public class PlayerController : MonoBehaviour
         // }
     }
 
-    private void Interaction(bool isStart)
+    private void Interaction()
     {
-        Debug.Log ($"<b> PLAYER INTERACTION </b>");
+        _interaction = !_interaction; // TODO Mariano: Reset to FALSE when Input is RE-ENABLED
         
         // if (!GameManager.Instance.inCombat)
         // {
-        _interactionEvent.isStart = isStart;
+        _interactionEvent.isStart = _interaction;
         _interactionEvent.lastPlayerPosition = transform.position;
         _interactionEvent.isRunning = _isRunning;
         EventController.TriggerEvent(_interactionEvent);
@@ -534,8 +537,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
-        // UniversalFunctions.DeviceRebind(evt.device, _inputWorld, _inputHold);
-        UniversalFunctions.DeviceRebind(evt.device, _inputPlayer);
+        UniversalFunctions.DeviceRebind(evt.device, _input);
     }
 
     #endregion

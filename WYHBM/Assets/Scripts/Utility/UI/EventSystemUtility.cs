@@ -26,5 +26,5 @@ public class EventSystemUtility : MonoBehaviour
     {
         _eventSystem.firstSelectedGameObject = evt.objectSelected;
     }
-    
+
 }

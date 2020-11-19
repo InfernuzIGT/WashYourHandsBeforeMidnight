@@ -25,6 +25,7 @@ public class DDUtility : MonoBehaviour
     [SerializeField] private float timeSpace = 1f;
 
     [Header("References")]
+    [SerializeField] private Button _dialogPanelBtn = null;
     [SerializeField] private DDButton[] _ddButtons = null;
     [Space]
     [SerializeField] private TextMeshProUGUI _dialogTxt = null;
@@ -42,9 +43,6 @@ public class DDUtility : MonoBehaviour
     private WaitForSeconds _waitStart;
     private WaitForSeconds _waitSpace;
     private WaitForSeconds _waitDeactivateUI;
-
-    private InputActions _inputUI;
-    public InputActions InputUI { get { return _inputUI; } set { _inputUI = value; } }
 
     private CanvasGroupUtility _canvasUtility;
 
@@ -90,27 +88,18 @@ public class DDUtility : MonoBehaviour
 
         _eventSystemEvent = new EventSystemEvent();
 
-        CreateInput();
-
         _currentLanguage = GameData.Instance.GetLanguage();
 
         for (int i = 0; i < _ddButtons.Length; i++)
         {
-            _ddButtons[i].AddListener(() => SelectNode(i));
+            int index = i;
+            _ddButtons[i].AddListener(() => SelectNode(index));
         }
 
         // // if you want to handle a particular dialogue differently, you can use these instead
         // //m_dialoguePlayer.OverrideOnShowMessage += OnShowMessageSpecial;
         // //m_dialoguePlayer.OverrideOnEvaluateCondition += OnEvaluateConditionSpecial;
         // //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
-    }
-
-    private void CreateInput()
-    {
-        _inputUI = new InputActions();
-
-        _inputUI.UI.Submit.started += ctx => Select();
-        _inputUI.UI.Cancel.started += ctx => Back();
     }
 
     private void OnEnable()
@@ -149,7 +138,7 @@ public class DDUtility : MonoBehaviour
 
     private void OnInteractionDialog(InteractionEvent evt)
     {
-        Debug.Log($"<b> SHOW DIALOG </b>");
+        if (!evt.isStart)return;
 
         _dialoguePlayer = new DialoguePlayer(_loadedDialogue);
         _dialoguePlayer.OnDialogueEnded += OnDialogueEnded;
@@ -176,8 +165,8 @@ public class DDUtility : MonoBehaviour
 
     private void OnDialogueEnded(DialoguePlayer sender)
     {
-        _dialoguePlayer = null;
         _dialoguePlayer.OnDialogueEnded -= OnDialogueEnded;
+        _dialoguePlayer = null;
 
         _showMessageNode = null;
         _choiceNode = null;
@@ -282,34 +271,42 @@ public class DDUtility : MonoBehaviour
             _ddButtons[0].Select();
 
             _eventSystemEvent.objectSelected = _ddButtons[0].gameObject;
-            EventController.TriggerEvent(_eventSystemEvent);
+        }
+        else
+        {
+            _dialogPanelBtn.Select();
+
+            _eventSystemEvent.objectSelected = _dialogPanelBtn.gameObject;
         }
 
+        EventController.TriggerEvent(_eventSystemEvent);
         _continueImg.SetActive(true);
     }
 
     private void SelectNode(int index)
     {
+        // UpdateNode(_dialoguePlayer.CurrentNode as ShowMessageNode);
+
         _dialoguePlayer.AdvanceMessage(index);
     }
 
-    private void Select()
+    public void Select()
     {
-        Debug.Log ($"<b> SELECT </b>");
-        
+        if (_dialoguePlayer == null || _showMessageNode == null)return;
+
         if (_choiceNode != null)
         {
             Play();
         }
         else
         {
-            _dialoguePlayer.AdvanceMessage(0);
+            SelectNode(0);
         }
     }
 
     private void Back()
     {
-        _dialoguePlayer.AdvanceMessage(_lastIndexButton);
+        SelectNode(_lastIndexButton);
     }
 
     public void UpdateLanguage(string language)

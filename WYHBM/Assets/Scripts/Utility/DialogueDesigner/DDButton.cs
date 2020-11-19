@@ -1,10 +1,11 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button), typeof(CanvasGroupUtility))]
-public class DDButton : MonoBehaviour
+public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     [Header("References")]
     [SerializeField] private Button _button = null;
@@ -47,7 +48,7 @@ public class DDButton : MonoBehaviour
 
     public void Select()
     {
-        _selection.SetActive(true);
+        _button.Select();
     }
 
     public void SetInput()
@@ -55,4 +56,13 @@ public class DDButton : MonoBehaviour
         _inputImg.enabled = true;
     }
 
+    public void OnSelect(BaseEventData eventData)
+    {
+        _selection.SetActive(true);
+    }
+
+	public void OnDeselect(BaseEventData eventData)
+	{
+        _selection.SetActive(false);
+	}
 }
