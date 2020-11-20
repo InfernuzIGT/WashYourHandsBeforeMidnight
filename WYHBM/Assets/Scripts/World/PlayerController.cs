@@ -114,12 +114,12 @@ public class PlayerController : MonoBehaviour
         _input.Player.Walk.canceled += ctx => Walk(false);
         _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
         _input.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
-        
+
         // _inputHold = new InputActions();
 
         // _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
         // _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
-        
+
         _input.Player.Enable();
         _input.UI.Disable();
     }
@@ -229,8 +229,7 @@ public class PlayerController : MonoBehaviour
         // Stop animation
         if (!_canMove)
         {
-            _isRunning = false;
-            _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
+            StopMovement();
             return;
         }
 
@@ -289,6 +288,15 @@ public class PlayerController : MonoBehaviour
         //Sound
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
         footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+    }
+
+    private void StopMovement()
+    {
+        _inputMovement = Vector2.zero;
+        _inputMovementAux = _inputMovement;
+
+        _isRunning = false;
+        _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
     }
 
     private bool CheckRun()
@@ -432,7 +440,7 @@ public class PlayerController : MonoBehaviour
     private void Interaction()
     {
         _interaction = !_interaction; // TODO Mariano: Reset to FALSE when Input is RE-ENABLED
-        
+
         // if (!GameManager.Instance.inCombat)
         // {
         _interactionEvent.isStart = _interaction;

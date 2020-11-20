@@ -47,6 +47,7 @@ public class DDUtility : MonoBehaviour
     private CanvasGroupUtility _canvasUtility;
 
     private int _lastIndexButton;
+    private bool _canInteract = true;
 
     // Events
     private EnableDialogEvent _enableDialogEvent;
@@ -120,6 +121,11 @@ public class DDUtility : MonoBehaviour
         DialoguePlayer.GlobalOnExecuteScript -= OnExecuteScript;
     }
 
+    public void SetInteraction(bool canInteract)
+    {
+        _canInteract = canInteract;
+    }
+
     private void OnEnableDialog(EnableDialogEvent evt)
     {
         if (evt.enable)
@@ -138,7 +144,7 @@ public class DDUtility : MonoBehaviour
 
     private void OnInteractionDialog(InteractionEvent evt)
     {
-        if (!evt.isStart)return;
+        if (!evt.isStart && !_canInteract)return;
 
         _dialoguePlayer = new DialoguePlayer(_loadedDialogue);
         _dialoguePlayer.OnDialogueEnded += OnDialogueEnded;

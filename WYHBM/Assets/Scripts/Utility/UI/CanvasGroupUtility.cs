@@ -1,11 +1,15 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
 public class CanvasGroupUtility : MonoBehaviour
 {
     [Header("General")]
     [SerializeField, Range(0, 5)] private float fadeDuration = 1;
+    [Space]
+    [SerializeField] private UnityEvent OnShow = null;
+    [SerializeField] private UnityEvent OnHide = null;
 
     private bool _isShowing;
     private Canvas _canvas;
@@ -16,7 +20,7 @@ public class CanvasGroupUtility : MonoBehaviour
         _canvas = GetComponent<Canvas>();
         _canvasGroup = GetComponent<CanvasGroup>();
         _isShowing = _canvasGroup.alpha == 1 ? true : false;
-        
+
         SetProperties(true);
     }
 
@@ -27,9 +31,11 @@ public class CanvasGroupUtility : MonoBehaviour
         if (isShowing)
         {
             _canvasGroup
-                .DOFade(1, fadeDuration);
+                .DOFade(1, fadeDuration)
+                .OnComplete(() => CallEvent(true));
+
             SetCanvas(true);
-            
+
             // _canvasGroup
             //     .DOFade(1, fadeDuration)
             //     .OnComplete(() => SetProperties(true));
@@ -56,12 +62,26 @@ public class CanvasGroupUtility : MonoBehaviour
     private void SetCanvas(bool isEnabled)
     {
         _canvas.enabled = isEnabled;
+
+        if (!isEnabled)CallEvent(false);
     }
 
     private void SetProperties(bool isEnabled)
     {
         _canvasGroup.interactable = isEnabled;
         _canvasGroup.blocksRaycasts = isEnabled;
+    }
+
+    private void CallEvent(bool isStarted)
+    {
+        if (isStarted)
+        {
+            OnShow.Invoke();
+        }
+        else
+        {
+            OnHide.Invoke();
+        }
     }
 
 }

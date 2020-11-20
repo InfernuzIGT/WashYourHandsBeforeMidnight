@@ -16,9 +16,8 @@ public class GlobalController : MonoBehaviour
     [Space]
     [SerializeField, ReadOnly] private NPCSO _currentNPC;
 
-    [Header("Cheats")]
-    public bool hideCursor = true;
-    public bool skipEncounters;
+    // [Header("Cheats")]
+    private bool skipEncounters = true;
     // public ItemSO[] items;
 
     [Header("Player")]
@@ -30,7 +29,6 @@ public class GlobalController : MonoBehaviour
     public CinemachineVirtualCamera worldCamera;
 
     [Header("UI")]
-    public DDUtility DDUtility;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Fade fadeUI;
@@ -45,6 +43,8 @@ public class GlobalController : MonoBehaviour
     public CinemachineVirtualCamera interiorCamera;
     public CinemachineVirtualCamera cutscene;
 
+    private DDUtility _ddUtility;
+    
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
     private bool _isInteriorCamera;
@@ -63,11 +63,17 @@ public class GlobalController : MonoBehaviour
         // SetCamera();
         // AddItems();
 
-        if (hideCursor)
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+#if UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        // TODO Mariano: REORDER OBJECTS IN HIERARCHY
+        // TODO Mariano: RENAME OBJECTS IN HIERARCHY
+#else
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+#endif
+
     }
 
     private void OnEnable()
@@ -159,7 +165,7 @@ public class GlobalController : MonoBehaviour
         worldUI.Show(!inCombat);
         combatUI.Show(inCombat);
 
-        DDUtility = worldUI.DDUtility;
+        _ddUtility = worldUI.DDUtility;
     }
 
     private void SetCamera()

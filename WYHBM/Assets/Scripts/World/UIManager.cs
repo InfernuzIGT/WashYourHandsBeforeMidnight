@@ -24,11 +24,11 @@ namespace GameMode.World
         // public GameObject panelDialog;
         public GameObject panelNote;
 
-        [Header("Dialog")]
-        public TextMeshProUGUI dialogTxt;
-        public TextMeshProUGUI dialogNameTxt;
-        public Image dialogIcon;
-        public TextMeshProUGUI continueTxt;
+        // [Header("Dialog")]
+        // public TextMeshProUGUI dialogTxt;
+        // public TextMeshProUGUI dialogNameTxt;
+        // public Image dialogIcon;
+        // public TextMeshProUGUI continueTxt;
 
         [Header("Note")]
         public TextMeshProUGUI noteTxt;
@@ -101,9 +101,9 @@ namespace GameMode.World
             dicQuestDescription = new Dictionary<QuestSO, QuestDescription>();
 
             _enableMovementEvent = new EnableMovementEvent();
-            continueTxt.enabled = false;
+            // continueTxt.enabled = false;
 
-            _currentQuestSelected = new GameObject();
+            // _currentQuestSelected = new GameObject();
 
             // panelDialog.SetActive(false);
 
@@ -367,35 +367,35 @@ namespace GameMode.World
 
         private IEnumerator WriteText()
         {
-            _isReading = true;
+            // _isReading = true;
 
-            _textSkip = "";
+            // _textSkip = "";
 
-            foreach (char c in _currentDialog)
-            {
-                _textSkip += c == _charSpace ? ' ' : c;
-            }
+            // foreach (char c in _currentDialog)
+            // {
+            //     _textSkip += c == _charSpace ? ' ' : c;
+            // }
 
-            dialogTxt.text = "";
+            // dialogTxt.text = "";
 
-            _isReading = false;
+            // _isReading = false;
 
-            yield return _waitStart;
+            // yield return _waitStart;
 
-            foreach (char c in _currentDialog)
-            {
-                if (c == _charSpace)
-                {
-                    dialogTxt.text += ' ';
-                    yield return _waitSpace;
-                }
-                else
-                {
-                    dialogTxt.text += c;
-                }
+            // foreach (char c in _currentDialog)
+            // {
+            //     if (c == _charSpace)
+            //     {
+            //         dialogTxt.text += ' ';
+            //         yield return _waitSpace;
+            //     }
+            //     else
+            //     {
+            //         dialogTxt.text += c;
+            //     }
 
                 yield return null;
-            }
+            // }
 
             CompleteText();
         }
@@ -411,9 +411,9 @@ namespace GameMode.World
 
             StopCoroutine(_coroutineWrite);
 
-            dialogTxt.text = _textSkip;
+            // dialogTxt.text = _textSkip;
 
-            continueTxt.enabled = true;
+            // continueTxt.enabled = true;
 
             _dialogIndex++;
 
