@@ -41,9 +41,9 @@ public class DeviceUtility : MonoBehaviour
             (device, change) =>
             {
 
-#if UNITY_EDITOR
+// #if UNITY_EDITOR
                 Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
-#endif
+// #endif
 
                 switch (change)
                 {
