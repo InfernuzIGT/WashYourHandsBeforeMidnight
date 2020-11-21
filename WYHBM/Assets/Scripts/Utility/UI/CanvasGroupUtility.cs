@@ -34,12 +34,12 @@ public class CanvasGroupUtility : MonoBehaviour
                 .DOFade(1, fadeDuration)
                 .OnComplete(() => CallEvent(true));
 
-            SetCanvas(true);
 
             // _canvasGroup
             //     .DOFade(1, fadeDuration)
             //     .OnComplete(() => SetProperties(true));
-            // SetCanvas(true);
+            
+            SetCanvas(true);
         }
         else
         {

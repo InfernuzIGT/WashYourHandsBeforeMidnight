@@ -3,7 +3,6 @@ using DD;
 using Events;
 using TMPro;
 using UnityEngine;
-// using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DDUtility : MonoBehaviour
@@ -39,6 +38,8 @@ public class DDUtility : MonoBehaviour
     private string _currentDialog;
     private string _textSkip;
     private Coroutine _coroutineWrite;
+    private bool _canInteract = true;
+    private int _lastIndexButton;
 
     private WaitForSeconds _waitStart;
     private WaitForSeconds _waitSpace;
@@ -46,15 +47,14 @@ public class DDUtility : MonoBehaviour
 
     private CanvasGroupUtility _canvasUtility;
 
-    private int _lastIndexButton;
-    private bool _canInteract = true;
-
     // Events
-    private EnableDialogEvent _enableDialogEvent;
+    private ChangeInputEvent _changeInputEvent;
     private EnableMovementEvent _enableMovementEvent;
+    private ShowInteractionHintEvent _showInteractionHintEvent;
     private EventSystemEvent _eventSystemEvent;
 
-    // Dialogue Designer
+    #region  Dialogue Designer
+
     private ShowMessageNode _showMessageNode;
     private ShowMessageNodeChoice _choiceNode;
 
@@ -73,6 +73,8 @@ public class DDUtility : MonoBehaviour
     private Dialogue _loadedDialogue;
     private DialoguePlayer _dialoguePlayer;
 
+    #endregion
+
     private void Start()
     {
         _canvasUtility = GetComponent<CanvasGroupUtility>();
@@ -81,12 +83,13 @@ public class DDUtility : MonoBehaviour
         _waitSpace = new WaitForSeconds(timeSpace);
         _waitDeactivateUI = new WaitForSeconds(messageLifetime);
 
-        _enableDialogEvent = new EnableDialogEvent();
-        _enableDialogEvent.enable = false;
+        _changeInputEvent = new ChangeInputEvent();
+        _changeInputEvent.enable = true;
 
         _enableMovementEvent = new EnableMovementEvent();
         _enableMovementEvent.canMove = true;
 
+        _showInteractionHintEvent = new ShowInteractionHintEvent();;
         _eventSystemEvent = new EventSystemEvent();
 
         _currentLanguage = GameData.Instance.GetLanguage();
@@ -154,9 +157,15 @@ public class DDUtility : MonoBehaviour
         _npcImg.sprite = _currentNPC.GetIcon(EMOTION.None);
         _npcTxt.text = _currentNPC.name;
 
+        _currentDialog = "";
+        _dialogTxt.text = "";
+
         _canvasUtility.Show(true);
 
         _dialoguePlayer.Play();
+
+        _showInteractionHintEvent.show = false;
+        EventController.TriggerEvent(_showInteractionHintEvent);
     }
 
     private void UpdateNode(ShowMessageNode showMessageNode)
@@ -177,17 +186,20 @@ public class DDUtility : MonoBehaviour
         _showMessageNode = null;
         _choiceNode = null;
 
+        _currentDialog = "";
+        _dialogTxt.text = "";
+
         _canvasUtility.Show(false);
 
-        EventController.TriggerEvent(_enableDialogEvent);
+        _showInteractionHintEvent.show = true;
+        EventController.TriggerEvent(_showInteractionHintEvent);
+        EventController.TriggerEvent(_changeInputEvent);
         EventController.TriggerEvent(_enableMovementEvent);
     }
 
     private void OnShowMessage(DialoguePlayer sender, ShowMessageNode node)
     {
         _currentDialog = node.GetText(_currentLanguage);
-
-        // Debug.Log($"<b>[{node.Character}] Dialog: </b>{node.GetText(GameData.Instance.GetLanguage())}");
 
         UpdateNode(node);
 
@@ -291,8 +303,6 @@ public class DDUtility : MonoBehaviour
 
     private void SelectNode(int index)
     {
-        // UpdateNode(_dialoguePlayer.CurrentNode as ShowMessageNode);
-
         _dialoguePlayer.AdvanceMessage(index);
     }
 

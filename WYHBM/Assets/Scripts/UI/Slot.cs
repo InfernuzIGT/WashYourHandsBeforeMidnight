@@ -44,7 +44,7 @@ public class Slot : MonoBehaviour
     {
         // GameManager.Instance.DropItem(this);
 
-        GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupDestroyItem);
+        // GameManager.Instance.worldUI.ShowPopup(GameData.Instance.textConfig.popupDestroyItem);
 
         Destroy(gameObject);
     }

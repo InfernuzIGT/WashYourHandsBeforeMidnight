@@ -79,11 +79,13 @@ public class GlobalController : MonoBehaviour
     private void OnEnable()
     {
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<ChangeInputEvent>(OnChangeInput);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
     }
 
     private void SpawnCameras()
@@ -243,20 +245,18 @@ public class GlobalController : MonoBehaviour
         playerController.gameObject.SetActive(!isHiding);
     }
 
-    private void SwitchInputDialog(bool enable)
+    private void ChangeInput(bool enable)
     {
         if (enable)
         {
-            playerController.Input.Player.Disable();
-            // playerController.Input.UI.Enable();
+            playerController.Input.Player.Enable();
         }
         else
         {
-            // playerController.Input.UI.Disable();
-            playerController.Input.Player.Enable();
+            playerController.Input.Player.Disable();
         }
 
-        _enableMovementEvent.canMove = !enable;
+        _enableMovementEvent.canMove = enable;
         EventController.TriggerEvent(_enableMovementEvent);
     }
 
@@ -273,7 +273,7 @@ public class GlobalController : MonoBehaviour
         {
             _currentNPC = null;
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-            SwitchInputDialog(false);
+            ChangeInput(true);
         }
     }
 
@@ -281,7 +281,12 @@ public class GlobalController : MonoBehaviour
     {
         if (!evt.isStart)return;
 
-        SwitchInputDialog(true);
+        ChangeInput(false);
+    }
+    
+    private void OnChangeInput(ChangeInputEvent evt)
+    {
+        ChangeInput(evt.enable);
     }
 
     #endregion

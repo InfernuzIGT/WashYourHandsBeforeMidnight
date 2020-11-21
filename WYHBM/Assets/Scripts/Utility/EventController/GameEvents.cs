@@ -93,6 +93,16 @@ namespace Events
     {
         public GameObject objectSelected;
     }
+    
+    public class ChangeInputEvent : GameEvent
+    {
+        public bool enable;
+    }
+    
+    public class ShowInteractionHintEvent : GameEvent
+    {
+        public bool show;
+    }
 
 
 }

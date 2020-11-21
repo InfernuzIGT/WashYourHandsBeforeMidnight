@@ -30,12 +30,14 @@ public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
     public void Show(string text)
     {
         _text.text = text;
+        _button.interactable = true;
 
         _canvasUtility.Show(true);
     }
 
     public void Hide()
     {
+        _button.interactable = false;
         _selection.SetActive(false);
         _inputImg.enabled = false;
         _canvasUtility.ShowInstant(false);
@@ -61,8 +63,8 @@ public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
         _selection.SetActive(true);
     }
 
-	public void OnDeselect(BaseEventData eventData)
-	{
+    public void OnDeselect(BaseEventData eventData)
+    {
         _selection.SetActive(false);
-	}
+    }
 }

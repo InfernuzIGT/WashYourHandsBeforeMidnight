@@ -431,7 +431,7 @@ namespace GameMode.World
             }
 
             GameManager.Instance.AddQuest(data);
-            ShowPopup(string.Format(GameData.Instance.textConfig.popupNewQuest, data.title));
+            // ShowPopup(string.Format(GameData.Instance.textConfig.popupNewQuest, data.title));
 
             // Create Quest Title
             QuestTitle questTitle = Instantiate(GameData.Instance.worldConfig.questTitlePrefab, diaryTitleContainer);
