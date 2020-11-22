@@ -1,17 +1,23 @@
-﻿using Cinemachine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Cinemachine;
+using Events;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
     public bool isPaused;
     public bool inCombat;
+    [Space]
+    [SerializeField, ReadOnly] private NPCSO _currentNPC;
 
-    [Header("Cheats")]
-    public bool hideCursor = true;
-    public bool skipEncounters;
-    // public bool infiniteStamina;
+    // [Header("Cheats")]
+    private bool skipEncounters = true;
     // public ItemSO[] items;
 
     [Header("Player")]
@@ -26,6 +32,7 @@ public class GlobalController : MonoBehaviour
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Fade fadeUI;
+    public EventSystemUtility eventSystemUtility;
 
     [Header("Spawn")]
     public bool customSpawn;
@@ -36,25 +43,49 @@ public class GlobalController : MonoBehaviour
     public CinemachineVirtualCamera interiorCamera;
     public CinemachineVirtualCamera cutscene;
 
+    private DDUtility _ddUtility;
+    
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
     private bool _isInteriorCamera;
 
     private float _offsetPlayer = 1.505f;
 
+    private EnableMovementEvent _enableMovementEvent;
+
     private void Start()
     {
+        _enableMovementEvent = new EnableMovementEvent();
+
         SpawnPlayer();
         SpawnCameras();
         SpawnUI();
         // SetCamera();
         // AddItems();
 
-        if (hideCursor)
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+#if UNITY_EDITOR
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        // TODO Mariano: REORDER OBJECTS IN HIERARCHY
+        // TODO Mariano: RENAME OBJECTS IN HIERARCHY
+#else
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+#endif
+
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<ChangeInputEvent>(OnChangeInput);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
     }
 
     private void SpawnCameras()
@@ -128,12 +159,15 @@ public class GlobalController : MonoBehaviour
     private void SpawnUI()
     {
         fadeUI = Instantiate(fadeUI);
-        
+        eventSystemUtility = Instantiate(eventSystemUtility);
+
         worldUI = Instantiate(worldUI);
         combatUI = Instantiate(combatUI);
 
         worldUI.Show(!inCombat);
         combatUI.Show(inCombat);
+
+        _ddUtility = worldUI.DDUtility;
     }
 
     private void SetCamera()
@@ -201,16 +235,6 @@ public class GlobalController : MonoBehaviour
     //     newSlot.AddItem(items[index]);
     // }
 
-    // private void Update()
-    // {
-    //     Cheats();
-    // }
-
-    // private void Cheats()
-    // {
-    //     player.InfiniteStamina = infiniteStamina;
-    // }
-
     public bool GetPlayerInMovement()
     {
         return playerController.GetPlayerInMovement() && !skipEncounters;
@@ -220,5 +244,51 @@ public class GlobalController : MonoBehaviour
     {
         playerController.gameObject.SetActive(!isHiding);
     }
+
+    private void ChangeInput(bool enable)
+    {
+        if (enable)
+        {
+            playerController.Input.Player.Enable();
+        }
+        else
+        {
+            playerController.Input.Player.Disable();
+        }
+
+        _enableMovementEvent.canMove = enable;
+        EventController.TriggerEvent(_enableMovementEvent);
+    }
+
+    #region Events
+
+    private void OnEnableDialog(EnableDialogEvent evt)
+    {
+        if (evt.enable)
+        {
+            _currentNPC = evt.npc;
+            EventController.AddListener<InteractionEvent>(OnInteractionDialog);
+        }
+        else
+        {
+            _currentNPC = null;
+            EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+            ChangeInput(true);
+        }
+    }
+
+    private void OnInteractionDialog(InteractionEvent evt)
+    {
+        if (!evt.isStart)return;
+
+        ChangeInput(false);
+    }
+    
+    private void OnChangeInput(ChangeInputEvent evt)
+    {
+        ChangeInput(evt.enable);
+    }
+
+    #endregion
 
 }

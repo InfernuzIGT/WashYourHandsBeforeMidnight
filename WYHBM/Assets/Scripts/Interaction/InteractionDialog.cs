@@ -11,7 +11,7 @@ public class InteractionDialog : Interaction
     private void Start()
     {
         _interactionDialogEvent = new EnableDialogEvent();
-        _interactionDialogEvent.dialog = dialog;
+        // _interactionDialogEvent.dialog = dialog;
     }
 
     public override void Execute(bool enable, NPCController currentNPC)

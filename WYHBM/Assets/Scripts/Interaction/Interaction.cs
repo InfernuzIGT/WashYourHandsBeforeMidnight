@@ -36,17 +36,19 @@ public class Interaction : MonoBehaviour
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
-    private SpriteRenderer _popupImage;
+    private SpriteRenderer _hintSprite;
 
     private CutsceneEvent _cutsceneEvent;
+    private ShowInteractionHintEvent _showInteractionHintEvent;
 
     public virtual void Awake()
     {
-        _popupImage = transform.GetComponentInChildren<SpriteRenderer>();
+        _hintSprite = transform.GetComponentInChildren<SpriteRenderer>();
 
-        _popupImage.enabled = false;
+        _hintSprite.enabled = false;
 
         _cutsceneEvent = new CutsceneEvent();
+        _showInteractionHintEvent = new ShowInteractionHintEvent();;
     }
 
     #region Interaction
@@ -54,19 +56,21 @@ public class Interaction : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         onEnter.Invoke(other);
-        ShowPopup(true);
+        ShowHint(true);
     }
 
     private void OnTriggerExit(Collider other)
     {
         onExit.Invoke(other);
-        ShowPopup(false);
+        ShowHint(false);
     }
 
-    private void ShowPopup(bool show)
+    private void ShowHint(bool show)
     {
-        _popupImage.enabled = show;
+        _hintSprite.enabled = show;
 
+        _showInteractionHintEvent.show = show;
+        EventController.TriggerEvent(_showInteractionHintEvent);
     }
 
     // protected void AddListenerQuest()

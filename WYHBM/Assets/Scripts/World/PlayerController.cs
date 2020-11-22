@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     private float _speedHorizontal;
     private float _speedVertical;
     private bool _isDetectingGround;
+    private bool _interaction;
 
     // Walk
     private float _speedWalk = 3.5f;
@@ -76,11 +77,9 @@ public class PlayerController : MonoBehaviour
     // Quest
     private bool _isOpenDiary;
 
-    // Other
-    // private InputActions _inputHold;
-
     // Properties
-    private InputActions _inputWorld;
+    private InputActions _input;
+    public InputActions Input { get { return _input; } set { _input = value; } }
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -96,28 +95,20 @@ public class PlayerController : MonoBehaviour
         _deviceUtility = GetComponent<DeviceUtility>();
 
         CreateInput();
-
-        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
-        _deviceUtility.DetectDevice();
     }
 
     private void CreateInput()
     {
-        _inputWorld = new InputActions();
+        _input = new InputActions();
 
-        _inputWorld.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        _inputWorld.Player.Jump.performed += ctx => Jump();
-        _inputWorld.Player.Interaction.started += ctx => Interaction(true);
-        _inputWorld.Player.Interaction.canceled += ctx => Interaction(false);
-        _inputWorld.Player.Walk.started += ctx => Walk(true);
-        _inputWorld.Player.Walk.canceled += ctx => Walk(false);
-        _inputWorld.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
-        _inputWorld.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
+        _input.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+        _input.Player.Jump.started += ctx => Jump();
+        _input.Player.Interaction.performed += ctx => Interaction();
+        _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
+        _input.Player.Options.performed += ctx => Pause(PAUSE_TYPE.Inventory);
 
-        // _inputHold = new InputActions();
-
-        // _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
-        // _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
+        _input.Player.Enable();
+        _input.UI.Disable();
     }
 
     private void Start()
@@ -126,7 +117,7 @@ public class PlayerController : MonoBehaviour
         _ladderEvent = new LadderEvent();
         _pauseEvent = new PauseEvent();
 
-        ToggleInputWorld(true);
+        _deviceUtility.DetectDevice();
     }
 
     private void OnEnable()
@@ -142,30 +133,6 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
     }
-
-    public void ToggleInputWorld(bool isEnabled)
-    {
-        if (isEnabled)
-        {
-            _inputWorld.Enable();
-        }
-        else
-        {
-            _inputWorld.Disable();
-        }
-    }
-
-    // public void ToggleInputHold(bool isEnabled)
-    // {
-    //     if (isEnabled)
-    //     {
-    //         _inputHold.Enable();
-    //     }
-    //     else
-    //     {
-    //         _inputHold.Disable();
-    //     }
-    // }
 
     private void Pause(PAUSE_TYPE pauseType)
     {
@@ -225,8 +192,7 @@ public class PlayerController : MonoBehaviour
         // Stop animation
         if (!_canMove)
         {
-            _isRunning = false;
-            _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
+            StopMovement();
             return;
         }
 
@@ -287,14 +253,18 @@ public class PlayerController : MonoBehaviour
         footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
     }
 
+    private void StopMovement()
+    {
+        _inputMovement = Vector2.zero;
+        _inputMovementAux = _inputMovement;
+
+        _isRunning = false;
+        _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
+    }
+
     private bool CheckRun()
     {
         return !_isWalking && Mathf.Abs(_inputMovement.x) > _axisLimit || !_isWalking && Mathf.Abs(_inputMovement.y) > _axisLimit;
-    }
-
-    private void Walk(bool isWalking)
-    {
-        _isWalking = isWalking;
     }
 
     private void Jump()
@@ -425,11 +395,13 @@ public class PlayerController : MonoBehaviour
         // }
     }
 
-    private void Interaction(bool isStart)
+    private void Interaction()
     {
+        _interaction = !_interaction; // TODO Mariano: Reset to FALSE when Input is RE-ENABLED
+
         // if (!GameManager.Instance.inCombat)
         // {
-        _interactionEvent.isStart = isStart;
+        _interactionEvent.isStart = _interaction;
         _interactionEvent.lastPlayerPosition = transform.position;
         _interactionEvent.isRunning = _isRunning;
         EventController.TriggerEvent(_interactionEvent);
@@ -531,8 +503,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
-        // UniversalFunctions.DeviceRebind(evt.device, _inputWorld, _inputHold);
-        UniversalFunctions.DeviceRebind(evt.device, _inputWorld);
+        InputUtility.DeviceRebind(evt.device, _input);
     }
 
     #endregion

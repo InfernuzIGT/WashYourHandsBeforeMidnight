@@ -1,12 +1,68 @@
-﻿using DD;
+﻿using System.Collections;
+using DD;
+using Events;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(InteractionNPC))]
 public class DDUtility : MonoBehaviour
 {
+    public enum DIALOG_STATE
+    {
+        Ready = 0,
+        InProgress = 1,
+        Done = 2
+    }
+
+    [SerializeField, ReadOnly] private NPCSO _currentNPC = null;
+    [SerializeField, ReadOnly] private string _currentLanguage = "";
+    [SerializeField, ReadOnly] private DIALOG_STATE _dialogState = DIALOG_STATE.Done;
+
+    [Header("Settings")]
+    [SerializeField] private float messageLifetime = 3f;
+    [SerializeField] private float timeStart = 0.5f;
+    [SerializeField] private float timeSpace = 1f;
+
+    [Header("References")]
+    [SerializeField] private InputActionReference _actionCancel;
+    [Space]
+    [SerializeField] private Button _dialogPanelBtn = null;
+    [SerializeField] private DDButton[] _ddButtons = null;
+    [Space]
+    [SerializeField] private TextMeshProUGUI _dialogTxt = null;
+    [SerializeField] private Image _npcImg = null;
+    [SerializeField] private TextMeshProUGUI _npcTxt = null;
+    [SerializeField] private GameObject _continueImg = null;
+
+    // Dialogues
+    private char _charSpace = '*';
+    private bool _isReading;
+    private string _currentDialog;
+    private string _textSkip;
+    private Coroutine _coroutineWrite;
+    private bool _canInteract = true;
+    private int _lastIndexButton;
+
+    private WaitForSeconds _waitStart;
+    private WaitForSeconds _waitSpace;
+    private WaitForSeconds _waitDeactivateUI;
+
+    private CanvasGroupUtility _canvasUtility;
+
+    // Events
+    private ChangeInputEvent _changeInputEvent;
+    private EnableMovementEvent _enableMovementEvent;
+    private ShowInteractionHintEvent _showInteractionHintEvent;
+    private EventSystemEvent _eventSystemEvent;
+
+    #region  Dialogue Designer
+
+    private ShowMessageNode _showMessageNode;
+    private ShowMessageNodeChoice _choiceNode;
+
     private const string emotion = "emotion";
-    
+
     public enum DDExecuteScript
     {
         GiveReward
@@ -17,87 +73,280 @@ public class DDUtility : MonoBehaviour
         HaveAmount
     }
 
-    private InteractionNPC _interactionNPC;
-    private Dialogue m_loadedDialogue;
-    private DialoguePlayer m_dialoguePlayer;
+    private Dialogue _loadedDialogue;
+    private DialoguePlayer _dialoguePlayer;
 
-    private void Awake()
-    {
-        _interactionNPC = GetComponent<InteractionNPC>();
-    }
+    #endregion
 
     private void Start()
     {
-        m_loadedDialogue = Dialogue.FromAsset(_interactionNPC.data.dialogDD);
+        _canvasUtility = GetComponent<CanvasGroupUtility>();
 
-        if (m_loadedDialogue == null)
+        _waitStart = new WaitForSeconds(timeStart);
+        _waitSpace = new WaitForSeconds(timeSpace);
+        _waitDeactivateUI = new WaitForSeconds(messageLifetime);
+
+        _changeInputEvent = new ChangeInputEvent();
+        _changeInputEvent.enable = true;
+
+        _enableMovementEvent = new EnableMovementEvent();
+        _enableMovementEvent.canMove = true;
+
+        _showInteractionHintEvent = new ShowInteractionHintEvent();;
+        _eventSystemEvent = new EventSystemEvent();
+
+        _currentLanguage = GameData.Instance.GetLanguage();
+
+        for (int i = 0; i < _ddButtons.Length; i++)
         {
-            Debug.LogError($"<color=red><b>[ERROR]</b></color> No DialogDD", gameObject);
-            return;
+            int index = i;
+            _ddButtons[i].AddListener(() => SelectNode(index));
         }
 
-        m_dialoguePlayer = new DialoguePlayer(m_loadedDialogue);
+        _dialogPanelBtn.onClick.AddListener(Select);
+
+        _actionCancel.action.performed += ctx => Back();
+
+        // // if you want to handle a particular dialogue differently, you can use these instead
+        // //m_dialoguePlayer.OverrideOnShowMessage += OnShowMessageSpecial;
+        // //m_dialoguePlayer.OverrideOnEvaluateCondition += OnEvaluateConditionSpecial;
+        // //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
 
         DialoguePlayer.GlobalOnShowMessage += OnShowMessage;
         DialoguePlayer.GlobalOnEvaluateCondition += OnEvaluateCondition;
         DialoguePlayer.GlobalOnExecuteScript += OnExecuteScript;
+    }
 
-        // if you want to handle a particular dialogue differently, you can use these instead
-        //m_dialoguePlayer.OverrideOnShowMessage += OnShowMessageSpecial;
-        //m_dialoguePlayer.OverrideOnEvaluateCondition += OnEvaluateConditionSpecial;
-        //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
+    private void OnDisable()
+    {
+        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
 
-        m_dialoguePlayer.OnDialogueEnded += OnDialogueEnded;
+        DialoguePlayer.GlobalOnShowMessage -= OnShowMessage;
+        DialoguePlayer.GlobalOnEvaluateCondition -= OnEvaluateCondition;
+        DialoguePlayer.GlobalOnExecuteScript -= OnExecuteScript;
+    }
 
-        m_dialoguePlayer.Play();
+    public void SetInteraction(bool canInteract)
+    {
+        _canInteract = canInteract;
+    }
+
+    private void OnEnableDialog(EnableDialogEvent evt)
+    {
+        if (evt.enable)
+        {
+            _currentNPC = evt.npc;
+            _loadedDialogue = Dialogue.FromAsset(evt.npc.dialogDD);
+            EventController.AddListener<InteractionEvent>(OnInteractionDialog);
+        }
+        else
+        {
+            _currentNPC = null;
+            _loadedDialogue = null;
+            EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+        }
+    }
+
+    private void OnInteractionDialog(InteractionEvent evt)
+    {
+        if (!evt.isStart && !_canInteract)return;
+
+        _dialoguePlayer = new DialoguePlayer(_loadedDialogue);
+        _dialoguePlayer.OnDialogueEnded += OnDialogueEnded;
+
+        UpdateNode(_dialoguePlayer.CurrentNode as ShowMessageNode);
+
+        _npcImg.sprite = _currentNPC.GetIcon(EMOTION.None);
+        _npcTxt.text = _currentNPC.name;
+
+        _currentDialog = "";
+        _dialogTxt.text = "";
+
+        _canvasUtility.Show(true);
+
+        _dialoguePlayer.Play();
+
+        _showInteractionHintEvent.show = false;
+        EventController.TriggerEvent(_showInteractionHintEvent);
+    }
+
+    private void UpdateNode(ShowMessageNode showMessageNode)
+    {
+        _showMessageNode = showMessageNode;
+
+        if (_showMessageNode != null)
+        {
+            _choiceNode = _showMessageNode as ShowMessageNodeChoice;
+        }
     }
 
     private void OnDialogueEnded(DialoguePlayer sender)
     {
-        Debug.Log($"<color=green><b> DIALOGUE ENDED </b></color>");
-    }
+        _dialoguePlayer.OnDialogueEnded -= OnDialogueEnded;
+        _dialoguePlayer = null;
 
-    private void Update()
-    {
-        // wait for player input on any Show Message Node, then advance
-        ShowMessageNode showMessageNode = m_dialoguePlayer.CurrentNode as ShowMessageNode;
-        if (showMessageNode != null)
-        {
-            ShowMessageNodeChoice choiceNode = showMessageNode as ShowMessageNodeChoice;
-            if (choiceNode != null)
-            {
-                int numberInput = GetAlphaNumberDown();
-                if (numberInput >= 1)
-                {
-                    m_dialoguePlayer.AdvanceMessage(numberInput - 1);
-                }
-            }
-            else
-            {
-                // Close
-                if (Keyboard.current.digit1Key.wasPressedThisFrame)
-                {
-                    m_dialoguePlayer.AdvanceMessage(0);
-                }
-            }
-        }
+        _showMessageNode = null;
+        _choiceNode = null;
+
+        _currentDialog = "";
+        _dialogTxt.text = "";
+
+        _canvasUtility.Show(false);
+
+        _showInteractionHintEvent.show = true;
+        EventController.TriggerEvent(_showInteractionHintEvent);
+        EventController.TriggerEvent(_changeInputEvent);
+        EventController.TriggerEvent(_enableMovementEvent);
     }
 
     private void OnShowMessage(DialoguePlayer sender, ShowMessageNode node)
     {
-        Debug.Log($"<b>[{node.Character}] Dialog: </b>{node.GetText(GameData.Instance.GetLanguage())}");
+        _currentDialog = node.GetText(_currentLanguage);
 
-        ShowMessageNodeChoice choiceNode = node as ShowMessageNodeChoice;
-        if (choiceNode != null)
+        UpdateNode(node);
+
+        _lastIndexButton = 0;
+        _continueImg.SetActive(false);
+
+        for (int i = 0; i < _ddButtons.Length; i++)_ddButtons[i].Hide();
+
+        _dialogState = DIALOG_STATE.Ready;
+
+        Play();
+    }
+
+    private void Play()
+    {
+        switch (_dialogState)
         {
-            for (int i = 0; i < choiceNode.Choices.Length; i++)
+            case DIALOG_STATE.Ready:
+                _coroutineWrite = StartCoroutine(WriteText());
+                break;
+
+            case DIALOG_STATE.InProgress:
+                CompleteText();
+                break;
+
+            case DIALOG_STATE.Done:
+                break;
+        }
+    }
+
+    private IEnumerator WriteText()
+    {
+        _dialogState = DIALOG_STATE.InProgress;
+
+        _isReading = true;
+
+        _textSkip = "";
+
+        foreach (char c in _currentDialog)
+        {
+            _textSkip += c == _charSpace ? ' ' : c;
+        }
+
+        _dialogTxt.text = "";
+
+        _isReading = false;
+
+        yield return _waitStart;
+
+        foreach (char c in _currentDialog)
+        {
+            if (c == _charSpace)
             {
-                Debug.LogFormat("[OPTION {0}] {1}", i + 1, choiceNode.GetChoiceText(i, GameData.Instance.GetLanguage()));
+                _dialogTxt.text += ' ';
+                yield return _waitSpace;
             }
+            else
+            {
+                _dialogTxt.text += c;
+            }
+
+            yield return null;
+        }
+
+        CompleteText();
+    }
+
+    private void CompleteText()
+    {
+        if (_isReading)return;
+
+        _dialogState = DIALOG_STATE.Done;
+
+        StopCoroutine(_coroutineWrite);
+
+        _dialogTxt.text = _textSkip;
+
+        if (_choiceNode != null)
+        {
+            for (int i = 0; i < _choiceNode.Choices.Length; i++)
+            {
+                _ddButtons[i].Show(_choiceNode.GetChoiceText(i, _currentLanguage));
+                _lastIndexButton = i;
+            }
+
+            _ddButtons[_lastIndexButton].SetInput();
+            _ddButtons[0].Select();
+
+            _eventSystemEvent.objectSelected = _ddButtons[0].gameObject;
         }
         else
         {
-            Debug.Log($"<b> NO CHOICE / ONE OPTION</b>");
+            _dialogPanelBtn.Select();
+
+            _eventSystemEvent.objectSelected = _dialogPanelBtn.gameObject;
+
+            _continueImg.SetActive(true);
+        }
+
+        EventController.TriggerEvent(_eventSystemEvent);
+    }
+
+    private void SelectNode(int index)
+    {
+        _dialoguePlayer.AdvanceMessage(index);
+    }
+
+    private void Select()
+    {
+        if (_dialoguePlayer == null || _showMessageNode == null)return;
+
+        if (_choiceNode != null)
+        {
+            Play();
+        }
+        else
+        {
+            SelectNode(0);
+        }
+    }
+
+    private void Back()
+    {
+        if (_dialoguePlayer == null || _showMessageNode == null || _choiceNode == null)return;
+
+        SelectNode(_lastIndexButton);
+    }
+
+    public void UpdateLanguage(string language)
+    {
+        _currentLanguage = language;
+
+        _currentDialog = _showMessageNode.GetText(_currentLanguage);
+
+        if (_choiceNode != null)
+        {
+            for (int i = 0; i < _choiceNode.Choices.Length; i++)
+            {
+                _ddButtons[i].UpdateText(_choiceNode.GetChoiceText(i, _currentLanguage));
+            }
         }
     }
 
@@ -108,7 +357,9 @@ public class DDUtility : MonoBehaviour
             switch (scriptParsed)
             {
                 case DDEvaluateCondition.HaveAmount:
-                    return _interactionNPC.DDHaveAmount();
+                    // TODO Mariano: Review
+                    // return _currentNPC.DDHaveAmount(); 
+                    return true;
 
                 default:
                     Debug.LogError($"<color=red><b>[ERROR]</b></color> No DDEvaluateCondition", gameObject);
@@ -128,7 +379,7 @@ public class DDUtility : MonoBehaviour
 
             if (int.TryParse(emotionArray[1], out int emotionId))
             {
-                _interactionNPC.data.GetIcon((EMOTION)emotionId);
+                _npcImg.sprite = _currentNPC.GetIcon((EMOTION)emotionId);
             }
             else
             {
@@ -143,7 +394,7 @@ public class DDUtility : MonoBehaviour
             switch (scriptParsed)
             {
                 case DDExecuteScript.GiveReward:
-                    _interactionNPC.DDGiveReward();
+                    // _currentNPC.DDGiveReward();
                     break;
 
                 default:
@@ -157,16 +408,6 @@ public class DDUtility : MonoBehaviour
         {
             Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse DDExecuteScript \"{script}\"", gameObject);
         }
-    }
-
-    private int GetAlphaNumberDown()
-    {
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)return 1;
-        if (Keyboard.current.digit2Key.wasPressedThisFrame)return 2;
-        if (Keyboard.current.digit3Key.wasPressedThisFrame)return 3;
-        if (Keyboard.current.digit4Key.wasPressedThisFrame)return 4;
-
-        return -1;
     }
 
 }

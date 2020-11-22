@@ -235,7 +235,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         CheckEncounters(!inCombat);
 
-        globalController.playerController.ToggleInputWorld(!inCombat);
+        // globalController.playerController.ToggleInputWorld(!inCombat);
         globalController.HidePlayer(inCombat);
 
         combatUI.Show(inCombat);
@@ -517,18 +517,18 @@ public class GameManager : MonoSingleton<GameManager>
     // Enable interaction dialog
     private void OnEnableDialog(EnableDialogEvent evt)
     {
-        if (evt.enable)
-        {
-            _currentDialog = evt.dialog;
-            _currentQuestData = evt.questData;
-            EventController.AddListener<InteractionEvent>(worldUI.OnInteractionDialog);
-        }
-        else
-        {
-            _currentDialog = null;
-            _currentQuestData = null;
-            EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
-        }
+        // if (evt.enable)
+        // {
+        //     _currentDialog = evt.dialog;
+        //     _currentQuestData = evt.questData;
+        //     EventController.AddListener<InteractionEvent>(worldUI.OnInteractionDialog);
+        // }
+        // else
+        // {
+        //     _currentDialog = null;
+        //     _currentQuestData = null;
+        //     EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
+        // }
     }
 
     private void OnCutscene(CutsceneEvent evt)

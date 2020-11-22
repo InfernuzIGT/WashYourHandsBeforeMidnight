@@ -7,6 +7,8 @@ public class DeviceUtility : MonoBehaviour
     [SerializeField, ReadOnly] private DEVICE _currentDevice;
     private DeviceChangeEvent _deviceEvent;
     private DEVICE _lastDevice;
+    private bool _isAdded;
+    private bool _isReconnected;
 
     public void DetectDevice()
     {
@@ -29,7 +31,7 @@ public class DeviceUtility : MonoBehaviour
 
             default:
                 _lastDevice = DEVICE.PC;
-                _currentDevice = UniversalFunctions.GetStartDevice();
+                _currentDevice = InputUtility.GetStartDevice();
                 break;
         }
 
@@ -41,22 +43,50 @@ public class DeviceUtility : MonoBehaviour
             (device, change) =>
             {
 
-#if UNITY_EDITOR
-                Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
-#endif
+                if (InputUtility.debugMode)Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
 
                 switch (change)
                 {
                     case InputDeviceChange.Added:
+                        if (!_isAdded)
+                        {
+                            _isAdded = true;
+                            _isReconnected = true;
+
+                            _lastDevice = _currentDevice;
+                            _currentDevice = InputUtility.GetCurrentDevice(device);
+                        }
+                        break;
+
                     case InputDeviceChange.Reconnected:
-                        _lastDevice = _currentDevice;
-                        _currentDevice = UniversalFunctions.GetCurrentDevice(device);
+
+                        if (!_isReconnected)
+                        {
+                            _isReconnected = true;
+
+                            _lastDevice = _currentDevice;
+                            _currentDevice = InputUtility.GetCurrentDevice(device);
+                        }
                         break;
 
                     case InputDeviceChange.Removed:
+                        if (_isAdded)
+                        {
+                            _isAdded = false;
+
+                            _currentDevice = _lastDevice;
+                            InputUtility.PrintCurrentDevice(_currentDevice);
+                        }
+                        break;
+
                     case InputDeviceChange.Disconnected:
-                        _currentDevice = _lastDevice;
-                        UniversalFunctions.PrintCurrentDevice(_currentDevice);
+                        if (_isReconnected)
+                        {
+                            _isReconnected = false;
+
+                            _currentDevice = _lastDevice;
+                            InputUtility.PrintCurrentDevice(_currentDevice);
+                        }
                         break;
 
                         // case InputDeviceChange.ConfigurationChanged:

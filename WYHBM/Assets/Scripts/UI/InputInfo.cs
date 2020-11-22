@@ -23,7 +23,7 @@ public class InputInfo : MonoBehaviour
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
         currentDevice = evt.device;
-        infoImg.sprite = GameData.Instance.deviceConfig.GetIcon(currentDevice, action);
+        infoImg.sprite = GameData.Instance.GetInputIcon(currentDevice, action);
     }
 
 }

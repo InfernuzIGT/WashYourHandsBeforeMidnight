@@ -11,19 +11,34 @@ public class GameData : MonoSingleton<GameData>
 	public WorldConfig worldConfig;
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
-	public DeviceConfig deviceConfig;
 
 	[Header("Localization")]
 	public LocalizationUtility localizationUtility;
+
+	[Header("Input System")]
+	public DeviceSO[] deviceData;
 
 	[Header("Persistence")]
 	public ItemSO persistenceItem;
 	public QuestSO persistenceQuest;
 	// public Transform newSpawnPos;
-	
+
 	public string GetLanguage()
 	{
 		return localizationUtility.Language;
+	}
+
+	public Sprite GetInputIcon(DEVICE device, INPUT_ACTION action)
+	{
+		for (int i = 0; i < deviceData.Length; i++)
+		{
+			if (deviceData[i].type == device)
+			{
+				return deviceData[i].GetIcon(action);
+			}
+		}
+
+		return null;
 	}
 
 	#region Load Scene
