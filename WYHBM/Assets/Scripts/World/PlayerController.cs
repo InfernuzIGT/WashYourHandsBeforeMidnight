@@ -77,9 +77,6 @@ public class PlayerController : MonoBehaviour
     // Quest
     private bool _isOpenDiary;
 
-    // Other
-    // private InputActions _inputHold;
-
     // Properties
     private InputActions _input;
     public InputActions Input { get { return _input; } set { _input = value; } }
@@ -98,9 +95,6 @@ public class PlayerController : MonoBehaviour
         _deviceUtility = GetComponent<DeviceUtility>();
 
         CreateInput();
-
-        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
-        _deviceUtility.DetectDevice();
     }
 
     private void CreateInput()
@@ -110,15 +104,8 @@ public class PlayerController : MonoBehaviour
         _input.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
         _input.Player.Jump.started += ctx => Jump();
         _input.Player.Interaction.performed += ctx => Interaction();
-        _input.Player.Walk.started += ctx => Walk(true);
-        _input.Player.Walk.canceled += ctx => Walk(false);
         _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
-        _input.Player.Inventory.performed += ctx => Pause(PAUSE_TYPE.Inventory);
-
-        // _inputHold = new InputActions();
-
-        // _inputHold.Player.Interaction.started += ctx => GameManager.Instance.CallHoldSystem(true);
-        // _inputHold.Player.Interaction.canceled += ctx => GameManager.Instance.CallHoldSystem(false);
+        _input.Player.Options.performed += ctx => Pause(PAUSE_TYPE.Inventory);
 
         _input.Player.Enable();
         _input.UI.Disable();
@@ -130,7 +117,7 @@ public class PlayerController : MonoBehaviour
         _ladderEvent = new LadderEvent();
         _pauseEvent = new PauseEvent();
 
-        // ToggleInputWorld(true);
+        _deviceUtility.DetectDevice();
     }
 
     private void OnEnable()
@@ -146,30 +133,6 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
     }
-
-    // public void ToggleInputWorld(bool isEnabled)
-    // {
-    //     if (isEnabled)
-    //     {
-    //         _input.Enable();
-    //     }
-    //     else
-    //     {
-    //         _input.Disable();
-    //     }
-    // }
-
-    // public void ToggleInputHold(bool isEnabled)
-    // {
-    //     if (isEnabled)
-    //     {
-    //         _inputHold.Enable();
-    //     }
-    //     else
-    //     {
-    //         _inputHold.Disable();
-    //     }
-    // }
 
     private void Pause(PAUSE_TYPE pauseType)
     {
@@ -302,11 +265,6 @@ public class PlayerController : MonoBehaviour
     private bool CheckRun()
     {
         return !_isWalking && Mathf.Abs(_inputMovement.x) > _axisLimit || !_isWalking && Mathf.Abs(_inputMovement.y) > _axisLimit;
-    }
-
-    private void Walk(bool isWalking)
-    {
-        _isWalking = isWalking;
     }
 
     private void Jump()
@@ -545,7 +503,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
-        UniversalFunctions.DeviceRebind(evt.device, _input);
+        InputUtility.DeviceRebind(evt.device, _input);
     }
 
     #endregion

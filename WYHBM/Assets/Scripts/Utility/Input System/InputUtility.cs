@@ -4,55 +4,61 @@ using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Switch;
 using UnityEngine.InputSystem.XInput;
 
-#region Enums
-
 public enum DEVICE
 {
     PC = 0,
     Generic = 1,
     PS4 = 2,
     XboxOne = 3,
-    Switch = 4
+    Switch = 4,
+    // TODO Mariano: Steam? Xbox360?
 }
 
 public enum INPUT_ACTION
 {
     None = 0,
     Interaction = 1,
+    Attack = 2,
+    Jump = 3,
+    Cancel = 4,
+    Pause = 5,
+    Options = 6,
     // TODO Mariano: Complete
 }
 
-#endregion
-
-public static class UniversalFunctions
+public static class InputUtility
 {
-
-    #region Input System
+    
+#if UNITY_EDITOR
+    public static bool debugMode = true;
+#else
+    public static bool debugMode = false;
+#endif
 
     public static bool ContainsDeviceName(string name, InputDevice device)
     {
-        return device.displayName.ToLower().Contains(name.ToLower());
+        return device.displayName.ToLower().Contains(name);
     }
 
     public static DEVICE GetStartDevice()
     {
-        // PS4
+        // Playstation
         var dualshock = DualShockGamepad.current;
         if (dualshock != null)
         {
-            PrintStartDevice(DEVICE.PS4, dualshock, "DualShockGamepad");
+            PrintStartDevice(DEVICE.PS4, dualshock, Devices.NativeName.DualShockGamepad);
             return DEVICE.PS4;
         }
         dualshock = DualShock3GamepadHID.current;
         if (dualshock != null)
         {
-            PrintStartDevice(DEVICE.PS4, dualshock, "DualShock3GamepadHID");
+            PrintStartDevice(DEVICE.PS4, dualshock, Devices.NativeName.DualShock3GamepadHID);
             return DEVICE.PS4;
         }
         dualshock = DualShock4GamepadHID.current;
         if (dualshock != null)
         {
-            PrintStartDevice(DEVICE.PS4, dualshock, "DualShock4GamepadHID");
+            PrintStartDevice(DEVICE.PS4, dualshock, Devices.NativeName.DualShock4GamepadHID);
             return DEVICE.PS4;
         }
 
@@ -60,17 +66,17 @@ public static class UniversalFunctions
         var xbox = XInputController.current;
         if (xbox != null)
         {
-            PrintStartDevice(DEVICE.XboxOne, xbox, "XInputController");
+            PrintStartDevice(DEVICE.XboxOne, xbox, Devices.NativeName.XInputController);
             return DEVICE.XboxOne;
         }
         xbox = XInputControllerWindows.current;
         if (xbox != null)
         {
-            PrintStartDevice(DEVICE.XboxOne, xbox, "XInputControllerWindows");
+            PrintStartDevice(DEVICE.XboxOne, xbox, Devices.NativeName.XInputControllerWindows);
             return DEVICE.XboxOne;
         }
 
-        // Switch
+        // Nintendo
         var switchpro = SwitchProControllerHID.current;
         if (switchpro != null)
         {
@@ -78,7 +84,7 @@ public static class UniversalFunctions
             return DEVICE.Switch;
         }
 
-        // Joystick
+        // Generic
         var joystick = Joystick.current;
         if (joystick != null)
         {
@@ -90,81 +96,31 @@ public static class UniversalFunctions
         return DEVICE.PC;
     }
 
-    // TODO Mariano: Ver si se puede chequear en tiempo real el Device actual
-
-    // public static DEVICE GetDifferentDevice(DEVICE currentDevice)
-    // {
-    //     switch (currentDevice)
-    //     {
-    //         case DEVICE.PC:
-
-    //             break;
-
-    //         default:
-    //             break;
-    //     }
-
-    //     // Joystick
-    //     if (Joystick.current.wasUpdatedThisFrame)
-    //     {
-    //         PrintCurrentDevice(DEVICE.Generic);
-    //         return DEVICE.Generic;
-    //     }
-
-    //     // Switch
-    //     if (SwitchProControllerHID.current.wasUpdatedThisFrame)
-    //     {
-    //         PrintCurrentDevice(DEVICE.Switch);
-    //         return DEVICE.Switch;
-    //     }
-
-    //     // PS4
-    //     if (DualShockGamepad.current.wasUpdatedThisFrame ||
-    //         DualShock3GamepadHID.current.wasUpdatedThisFrame ||
-    //         DualShock4GamepadHID.current.wasUpdatedThisFrame)
-    //     {
-    //         PrintCurrentDevice(DEVICE.PS4);
-    //         return DEVICE.PS4;
-    //     }
-
-    //     // Xbox
-    //     if (XInputController.current.wasUpdatedThisFrame ||
-    //         XInputControllerWindows.current.wasUpdatedThisFrame)
-    //     {
-    //         PrintCurrentDevice(DEVICE.XboxOne);
-    //         return DEVICE.XboxOne;
-    //     }
-
-    //     PrintCurrentDevice(DEVICE.PC);
-    //     return DEVICE.PC;
-    // }
-
     public static DEVICE GetCurrentDevice()
     {
         for (int i = 0; i < InputSystem.devices.Count; i++)
         {
-            if (ContainsDeviceName("ps4 controller", InputSystem.devices[i]))
+            if (ContainsDeviceName(Devices.Name.PS4, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.PS4, InputSystem.devices[i]);
                 return DEVICE.PS4;
             }
-            if (ContainsDeviceName("xbox controller", InputSystem.devices[i]))
+            if (ContainsDeviceName(Devices.Name.XBOX, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.XboxOne, InputSystem.devices[i]);
                 return DEVICE.XboxOne;
             }
-            if (ContainsDeviceName("usb joystick", InputSystem.devices[i]) ||
-                ContainsDeviceName("joystick", InputSystem.devices[i]))
-            {
-                PrintCurrentDevice(DEVICE.Generic, InputSystem.devices[i]);
-                return DEVICE.Generic;
-            }
-            if (ContainsDeviceName("switch pro controller", InputSystem.devices[i]))
+            if (ContainsDeviceName(Devices.Name.SWITCH, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.Switch, InputSystem.devices[i]);
                 return DEVICE.Switch;
             }
-            if (ContainsDeviceName("keyboard", InputSystem.devices[i]))
+            if (ContainsDeviceName(Devices.Name.JOYSTICK, InputSystem.devices[i]))
+            {
+                PrintCurrentDevice(DEVICE.Generic, InputSystem.devices[i]);
+                return DEVICE.Generic;
+            }
+            if (ContainsDeviceName(Devices.Name.KEYBOARD, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.PC);
                 return DEVICE.PC;
@@ -177,29 +133,50 @@ public static class UniversalFunctions
 
     public static DEVICE GetCurrentDevice(InputDevice device)
     {
-        if (ContainsDeviceName("ps4 controller", device))
+        switch (device.name)
+        {
+            case Devices.NativeName.DualShockGamepad:
+            case Devices.NativeName.DualShock3GamepadHID:
+            case Devices.NativeName.DualShock4GamepadHID:
+                PrintCurrentDevice(DEVICE.PS4, device);
+                return DEVICE.PS4;
+
+            case Devices.NativeName.XInputController:
+            case Devices.NativeName.XInputControllerWindows:
+                PrintCurrentDevice(DEVICE.XboxOne, device);
+                return DEVICE.XboxOne;
+
+            case Devices.NativeName.SwitchProControllerHID:
+                PrintCurrentDevice(DEVICE.Switch, device);
+                return DEVICE.Switch;
+
+            case Devices.NativeName.Keyboard:
+                PrintCurrentDevice(DEVICE.PC);
+                return DEVICE.PC;
+        }
+
+        if (ContainsDeviceName(Devices.Name.PS4, device))
         {
             PrintCurrentDevice(DEVICE.PS4, device);
             return DEVICE.PS4;
         }
-
-        if (ContainsDeviceName("xbox controller", device))
+        if (ContainsDeviceName(Devices.Name.XBOX, device))
         {
             PrintCurrentDevice(DEVICE.XboxOne, device);
             return DEVICE.XboxOne;
         }
-        if (ContainsDeviceName("usb joystick", device) ||
-            ContainsDeviceName("joystick", device))
-        {
-            PrintCurrentDevice(DEVICE.Generic, device);
-            return DEVICE.Generic;
-        }
-        if (ContainsDeviceName("switch pro controller", device))
+        if (ContainsDeviceName(Devices.Name.SWITCH, device))
         {
             PrintCurrentDevice(DEVICE.Switch, device);
             return DEVICE.Switch;
         }
-        if (ContainsDeviceName("keyboard", device))
+        if (ContainsDeviceName(Devices.Name.JOYSTICK, device))
+        {
+            PrintCurrentDevice(DEVICE.Generic, device);
+            return DEVICE.Generic;
+        }
+
+        if (ContainsDeviceName(Devices.Name.KEYBOARD, device))
         {
             PrintCurrentDevice(DEVICE.PC);
             return DEVICE.PC;
@@ -227,23 +204,25 @@ public static class UniversalFunctions
 
 #if UNITY_EDITOR
 
-        // string color = "white";
+        if (!debugMode)return;
 
-        // if (data == null)
-        // {
-        //     Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()}");
-        // }
-        // else
-        // {
-        //     if (description == null)
-        //     {
-        //         Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} [{data.displayName}]");
-        //     }
-        //     else
-        //     {
-        //         Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} - {description} [{data.displayName}]");
-        //     }
-        // }
+        string color = "white";
+
+        if (data == null)
+        {
+            Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()}");
+        }
+        else
+        {
+            if (description == null)
+            {
+                Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} [{data.displayName}]");
+            }
+            else
+            {
+                Debug.Log($"<color={color}><b> Start Device: </b></color> {device.ToString()} - {description} [{data.displayName}]");
+            }
+        }
 
 #endif
 
@@ -253,6 +232,8 @@ public static class UniversalFunctions
     {
 
 #if UNITY_EDITOR
+
+        if (!debugMode)return;
 
         string color = "green";
 
@@ -268,7 +249,5 @@ public static class UniversalFunctions
 #endif
 
     }
-
-    #endregion
 
 }

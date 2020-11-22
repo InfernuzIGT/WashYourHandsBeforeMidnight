@@ -3,6 +3,7 @@ using DD;
 using Events;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DDUtility : MonoBehaviour
@@ -24,6 +25,8 @@ public class DDUtility : MonoBehaviour
     [SerializeField] private float timeSpace = 1f;
 
     [Header("References")]
+    [SerializeField] private InputActionReference _actionCancel;
+    [Space]
     [SerializeField] private Button _dialogPanelBtn = null;
     [SerializeField] private DDButton[] _ddButtons = null;
     [Space]
@@ -99,6 +102,10 @@ public class DDUtility : MonoBehaviour
             int index = i;
             _ddButtons[i].AddListener(() => SelectNode(index));
         }
+
+        _dialogPanelBtn.onClick.AddListener(Select);
+
+        _actionCancel.action.performed += ctx => Back();
 
         // // if you want to handle a particular dialogue differently, you can use these instead
         // //m_dialoguePlayer.OverrideOnShowMessage += OnShowMessageSpecial;
@@ -295,10 +302,11 @@ public class DDUtility : MonoBehaviour
             _dialogPanelBtn.Select();
 
             _eventSystemEvent.objectSelected = _dialogPanelBtn.gameObject;
+
+            _continueImg.SetActive(true);
         }
 
         EventController.TriggerEvent(_eventSystemEvent);
-        _continueImg.SetActive(true);
     }
 
     private void SelectNode(int index)
@@ -306,7 +314,7 @@ public class DDUtility : MonoBehaviour
         _dialoguePlayer.AdvanceMessage(index);
     }
 
-    public void Select()
+    private void Select()
     {
         if (_dialoguePlayer == null || _showMessageNode == null)return;
 
@@ -322,6 +330,8 @@ public class DDUtility : MonoBehaviour
 
     private void Back()
     {
+        if (_dialoguePlayer == null || _showMessageNode == null || _choiceNode == null)return;
+
         SelectNode(_lastIndexButton);
     }
 

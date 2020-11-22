@@ -6445,6 +6445,8 @@ MonoBehaviour:
   messageLifetime: 3
   timeStart: 0.5
   timeSpace: 1
+  _actionCancel: {fileID: 3076292541289502039, guid: 3891028e3cb1643469d5dc6b11210c05,
+    type: 3}
   _dialogPanelBtn: {fileID: 715088113811798775}
   _ddButtons:
   - {fileID: 5752101136866908214}
@@ -7619,18 +7621,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5669658931276804916}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4373158871367973674}
-        m_MethodName: Select
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &6289988758656698424
 GameObject:
   m_ObjectHideFlags: 0
@@ -11004,7 +10995,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
