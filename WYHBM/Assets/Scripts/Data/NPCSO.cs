@@ -4,11 +4,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New NPC", menuName = "NPC", order = 0)]
 public class NPCSO : ScriptableObject
 {
-    public new string name;
+    [Header("NPC")]
+    [SerializeField] private string _name = "(Enter Name)";
+    [SerializeField] private string _subtitle = "(Enter Subtitle)";
     [Space]
-    public TextAsset dialogDD;
+    [SerializeField, PreviewTexture(64)] private Sprite _sprite = null;
+    [SerializeField] private AnimatorOverrideController _animatorController = null;
 
-    [Header("Emotion Icons")]
+    [Header("IA")]
+    [SerializeField] private bool _canMove = true;
+    [SerializeField] private bool _useRandomPosition = true;
+    [SerializeField, Range(0f, 10f)] private float _waitTime = 5;
+    [SerializeField, Range(0f, 10f)] private float _speed = 5;
+    [Space]
+    [SerializeField] private bool _canDetectPlayer = false;
+    [SerializeField, Range(0f, 50f)] private float _viewRadius = 10;
+
+    [Header("Dialogue Designer")]
+    [SerializeField] private TextAsset _dialogDD = null;
+    [Space]
     [PreviewTexture(48), SerializeField] private Sprite iconNone = null;
     [PreviewTexture(48), SerializeField] private Sprite iconHappy = null;
     [PreviewTexture(48), SerializeField] private Sprite iconSad = null;
@@ -18,9 +32,22 @@ public class NPCSO : ScriptableObject
     [PreviewTexture(48), SerializeField] private Sprite iconSleep = null;
 
     [Header("DEPRECATED")]
-    public NPC_INTERACTION_TYPE interactionType;
-    public DialogSO dialog;
     public List<Enemy> combatEnemies;
+
+    // Properties
+    public string Name { get { return _name; } }
+    public string Subtitle { get { return _subtitle; } }
+    public Sprite Sprite { get { return _sprite; } }
+    public AnimatorOverrideController AnimatorController { get { return _animatorController; } }
+
+    public bool CanMove { get { return _canMove; } }
+    public bool UseRandomPosition { get { return _useRandomPosition; } }
+    public float WaitTime { get { return _waitTime; } }
+    public float Speed { get { return _speed; } }
+    public bool CanDetectPlayer { get { return _canDetectPlayer; } }
+    public float ViewRadius { get { return _viewRadius; } }
+    
+    public TextAsset DialogDD { get { return _dialogDD; } }
 
     public Sprite GetIcon(EMOTION emotion)
     {

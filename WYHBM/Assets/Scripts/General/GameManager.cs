@@ -16,7 +16,6 @@ public class GameManager : MonoSingleton<GameManager>
     [Header("General")]
     public bool isPaused;
     public bool inCombat;
-    public ENCOUNTER_ZONE encounterZone;
 
     [Header("References")]
     public GlobalController globalController;
@@ -63,9 +62,6 @@ public class GameManager : MonoSingleton<GameManager>
     private Coroutine _coroutineEnconters;
     // private Coroutine _coroutineHoldSystem;
     // private WaitForSeconds _waitHoldEnd;
-
-    // Other
-    private ENCOUNTER_ZONE _lastEncounterZone;
 
     // Events
     private FadeEvent _fadeEvent;
@@ -135,8 +131,6 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
     }
 
-    
-
     public void CheckEncounters(bool isEnabled)
     {
         if (isEnabled)
@@ -156,7 +150,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         while (true)
         {
-            if (!inCombat && !isPaused && globalController.GetPlayerInMovement() && encounterZone != ENCOUNTER_ZONE.None)
+            if (!inCombat && !isPaused && globalController.GetPlayerInMovement())
             {
                 _currentTimeEncounter += Time.deltaTime;
 
@@ -284,38 +278,6 @@ public class GameManager : MonoSingleton<GameManager>
         if (canSelect)combatUI.ShowActions(combatIndex);
     }
 
-    public void ChangeEncounterZone(bool isEnter, ENCOUNTER_ZONE newEncounterZone = ENCOUNTER_ZONE.Normal)
-    {
-        if (isEnter)
-        {
-            _lastEncounterZone = encounterZone;
-            encounterZone = newEncounterZone;
-        }
-        else
-        {
-            if (_lastEncounterZone == ENCOUNTER_ZONE.None)_currentTimeEncounter = 0;
-            encounterZone = _lastEncounterZone;
-        }
-    }
-
-    private float GetProbabilityZone()
-    {
-        switch (encounterZone)
-        {
-            case ENCOUNTER_ZONE.Normal:
-                return GameData.Instance.worldConfig.probabilityNormal;
-
-            case ENCOUNTER_ZONE.Interior:
-                return GameData.Instance.worldConfig.probabilityInterior;
-
-            case ENCOUNTER_ZONE.Dark:
-                return GameData.Instance.worldConfig.probabilityDarkZone;
-
-            default:
-                return 0;
-        }
-    }
-
     // #region Hold System
 
     // public void SetHoldSystem(ref UnityEngine.UI.Image image, float limitTime, System.Action callback)
@@ -431,7 +393,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         // for (int i = 0; i < data.objectsToDestroy.Length; i++)
         // {
-            // Destroy(data.objectsToDestroy[i].gameObject);
+        // Destroy(data.objectsToDestroy[i].gameObject);
         // }
 
         // if (!listQuest.ContainsKey(data.GetInstanceID()))
@@ -485,7 +447,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void TriggerCombat()
     {
-        if (!ProportionValue.GetProbability(GetProbabilityZone()))return;
+        if (!ProportionValue.GetProbability(0.4f))return;
 
         inCombat = true;
         currentNPC = null;

@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class InteractionNPC : Interaction, IDialogueable
 {
-    [Header("NPC")]
-    public NPCSO data;
-    [Space]
-    public bool haveAmount;
+    // [Header("NPC")]
+    // [SerializeField] private NPCController NPC;
+    // public bool haveAmount;
 
     private EnableDialogEvent _interactionDialogEvent;
     // private EnterCombatEvent _interactionCombatEvent;
@@ -22,7 +21,8 @@ public class InteractionNPC : Interaction, IDialogueable
     {
         base.Execute();
 
-        _interactionDialogEvent.npc = data;
+        _interactionDialogEvent.npc = currentNPC;
+        _interactionDialogEvent.data = currentNPC.Data;
         _interactionDialogEvent.enable = enable;
 
         EventController.TriggerEvent(_interactionDialogEvent);
@@ -76,7 +76,8 @@ public class InteractionNPC : Interaction, IDialogueable
 
     public bool DDHaveAmount()
     {
-        return haveAmount;
+        return false;
+        // return haveAmount;
     }
 
     #endregion
