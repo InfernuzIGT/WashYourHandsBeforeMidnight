@@ -12,8 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036b42f3713f2e14594d971d498cf1b4, type: 3}
   m_Name: TestDallas
   m_EditorClassIdentifier: 
-  name: Dallas
-  dialogDD: {fileID: 4900000, guid: 775d7969b8539e245bee8f18e763dbd9, type: 3}
+  _name: Dallas
+  _subtitle: El Loco
+  _sprite: {fileID: -1165399278658134991, guid: 9a3cc0d00c940a647a5cf6299987fcc3,
+    type: 3}
+  _animatorController: {fileID: 22100000, guid: 64fd9ff476eecf34f83c6b1a80e3c7a3,
+    type: 2}
+  _canMove: 0
+  _useRandomPosition: 1
+  _waitTime: 5
+  _speed: 5
+  _canDetectPlayer: 0
+  _viewRadius: 10
+  _dialogDD: {fileID: 4900000, guid: 775d7969b8539e245bee8f18e763dbd9, type: 3}
   iconNone: {fileID: 21300000, guid: 6017d1c02847773499eab008495c93fd, type: 3}
   iconHappy: {fileID: 21300000, guid: 6807acbba527bd14e8f8e57803098e2c, type: 3}
   iconSad: {fileID: 21300000, guid: e19a197e5c222d84d99bdd9ad519c059, type: 3}
@@ -21,6 +32,4 @@ MonoBehaviour:
   iconSurprise: {fileID: 0}
   iconCurious: {fileID: 0}
   iconSleep: {fileID: 0}
-  interactionType: 1
-  dialog: {fileID: 0}
   combatEnemies: []
