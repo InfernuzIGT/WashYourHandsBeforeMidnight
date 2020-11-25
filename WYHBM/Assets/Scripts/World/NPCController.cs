@@ -7,23 +7,13 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class NPCController : MonoBehaviour, IInteractable
 {
-    [Header("Movement")]
-    public bool canMove = true;
-    public WaypointController waypoints;
-    public bool useRandomPosition = true;
-    [Range(0f, 10f)]
-    public float waitTime = 5;
-    [Range(0f, 10f)]
-    public float speed = 5;
-
-    [Header("Field of View")]
-    public bool canDetectPlayer;
-    [Range(0f, 50f)]
-    public float viewRadius = 10;
+    [SerializeField] private NPCSO _data;
+    [SerializeField] private WaypointController _waypoints;
 
     private WorldAnimator _animatorController;
     private InteractionNPC _interactionNPC;
     private NavMeshAgent _agent;
+    private bool _canMove;
     private bool _isMoving;
     private int _positionIndex = 0;
 
@@ -40,12 +30,16 @@ public class NPCController : MonoBehaviour, IInteractable
     private Coroutine _coroutinePatrol;
     private WaitForSeconds _waitForSeconds;
     private WaitForSeconds _delay;
+    private WaitUntil _waitUntilIsMoving;
 
+    // Properties
     private List<Transform> _visibleTargets;
     public List<Transform> VisibleTargets { get { return _visibleTargets; } }
 
     private float _viewAngle = 360;
     public float ViewAngle { get { return _viewAngle; } }
+
+    public NPCSO Data { get { return _data; } }
 
     private void Awake()
     {
@@ -54,20 +48,32 @@ public class NPCController : MonoBehaviour, IInteractable
         _agent = GetComponent<NavMeshAgent>();
     }
 
+    public void SetData()
+    {
+        GetComponent<SpriteRenderer>().sprite = _data.Sprite;;
+        GetComponent<Animator>().runtimeAnimatorController = _data.AnimatorController;
+
+        Debug.Log($"<color=green><b>[NPC {_data.Name}]</b></color> Data loaded successfully!");
+    }
+
     private void Start()
     {
-        if (!_agent.isOnNavMesh && canMove)
+        
+#if UNITY_EDITOR
+        gameObject.name = string.Format("[NPC] {0}", _data.Name);
+#endif
+
+        if (!_agent.isOnNavMesh && _data.CanMove || !_data.CanMove || _waypoints == null)
         {
-            Debug.LogError($"<color=red><b>[ERROR]</b></color> NPC '{gameObject.name}' isn't on NavMesh!");
+            // Debug.LogError($"<color=red><b>[ERROR]</b></color> NPC '{gameObject.name}' isn't on NavMesh!");
+            _canMove = false;
             return;
         }
 
-        if (!canMove || waypoints == null)
-        {
-            return;
-        }
+        _canMove = true;
 
-        _waitForSeconds = new WaitForSeconds(waitTime);
+        _waitForSeconds = new WaitForSeconds(_data.WaitTime);
+        _waitUntilIsMoving = new WaitUntil(() => _isMoving);
 
         _visibleTargets = new List<Transform>();
 
@@ -75,7 +81,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
         _coroutinePatrol = StartCoroutine(MovementAgent());
 
-        if (canDetectPlayer)
+        if (_data.CanDetectPlayer)
         {
             _delay = new WaitForSeconds(0.25f);
             StartCoroutine(FindTargetsWithDelay());
@@ -84,7 +90,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        if (_agent.isOnNavMesh && canMove)
+        if (_agent.isOnNavMesh && _canMove)
         {
             Movement();
         }
@@ -95,7 +101,7 @@ public class NPCController : MonoBehaviour, IInteractable
         if (_agent.remainingDistance > _agent.stoppingDistance)
         {
             _animatorController.Movement(_agent.desiredVelocity);
-            _agent.speed = speed;
+            _agent.speed = _data.Speed;
         }
         else
         {
@@ -107,14 +113,11 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private IEnumerator MovementAgent()
     {
-        while (canMove)
+        while (_data.CanMove)
         {
             ChangeDestination();
 
-            while (_isMoving)
-            {
-                yield return null;
-            }
+            yield return _waitUntilIsMoving;
 
             yield return _waitForSeconds;
         }
@@ -124,16 +127,16 @@ public class NPCController : MonoBehaviour, IInteractable
     {
         if (!_agent.isStopped && !_agent.hasPath)
         {
-            if (useRandomPosition)
+            if (_data.UseRandomPosition)
             {
-                _positionIndex = Random.Range(0, waypoints.positions.Length);
+                _positionIndex = Random.Range(0, _waypoints.positions.Length);
             }
             else
             {
-                _positionIndex = _positionIndex < waypoints.positions.Length - 1 ? _positionIndex + 1 : 0;
+                _positionIndex = _positionIndex < _waypoints.positions.Length - 1 ? _positionIndex + 1 : 0;
             }
 
-            _agent.SetDestination(waypoints.positions[_positionIndex]);
+            _agent.SetDestination(_waypoints.positions[_positionIndex]);
             _isMoving = true;
         }
     }
@@ -142,7 +145,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private IEnumerator FindTargetsWithDelay()
     {
-        while (canMove)
+        while (_data.CanMove)
         {
             yield return _delay;
             FindVisibleTargets();
@@ -154,7 +157,7 @@ public class NPCController : MonoBehaviour, IInteractable
         _visibleTargets.Clear();
         _targetVisible = false;
 
-        _targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, GameData.Instance.worldConfig.layerEnemyTarget);
+        _targetsInViewRadius = Physics.OverlapSphere(transform.position, _data.ViewRadius, GameData.Instance.worldConfig.layerEnemyTarget);
 
         for (int i = 0; i < _targetsInViewRadius.Length; i++)
         {
@@ -188,7 +191,7 @@ public class NPCController : MonoBehaviour, IInteractable
 
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
-        if (!angleIsGlobal) angleInDegrees += transform.eulerAngles.y;
+        if (!angleIsGlobal)angleInDegrees += transform.eulerAngles.y;
         _dirFromAngle = new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
         return _dirFromAngle;
     }
@@ -200,10 +203,11 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
-            _agent.isStopped = true;
-            canMove = false;
-            
-            
+
+            if (_agent.isOnNavMesh)_agent.isStopped = true;
+
+            _canMove = false;
+
             _animatorController?.Movement(Vector3.zero);
 
             _interactionNPC.Execute(true, this);
@@ -215,8 +219,10 @@ public class NPCController : MonoBehaviour, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
-            _agent.isStopped = false;
-            canMove = true;
+
+            if (_agent.isOnNavMesh)_agent.isStopped = false;
+
+            _canMove = true;
 
             _interactionNPC.Execute(false, this);
         }
@@ -224,12 +230,12 @@ public class NPCController : MonoBehaviour, IInteractable
 
     private void OnStopMovement(EnableMovementEvent evt)
     {
-        if (!canMove || waypoints == null)
+        if (!_data.CanMove || _waypoints == null)
         {
             return;
         }
 
-        if (canMove) _agent.isStopped = !evt.canMove;
+        if (_data.CanMove)_agent.isStopped = !evt.canMove;
 
         _animatorController?.Movement(Vector3.zero);
     }

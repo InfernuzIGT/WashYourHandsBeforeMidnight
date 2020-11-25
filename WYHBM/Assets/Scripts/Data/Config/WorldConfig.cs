@@ -11,10 +11,6 @@ public class WorldConfig : ScriptableObject
     public float timeStart = 0.5f;
     public float timeSpace = 1f;
 
-    [Header("Encounters")]
-    public float probabilityNormal = 0.4f;
-    public float probabilityInterior = 0.45f;
-    public float probabilityDarkZone = 0.7f;
 
     [Header("Fade")]
     public float fadeFastDuration = 1.5f;

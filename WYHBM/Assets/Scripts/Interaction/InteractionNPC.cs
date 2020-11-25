@@ -1,68 +1,84 @@
 ﻿using Events;
-using FMODUnity;
+// using FMODUnity;
 using UnityEngine;
 
-public class InteractionNPC : Interaction
+public class InteractionNPC : Interaction, IDialogueable
 {
-    [Header("NPC")]
-    public bool canInteract = true;
-    public NPCSO npc;
+    // [Header("NPC")]
+    // [SerializeField] private NPCController NPC;
+    // public bool haveAmount;
 
     private EnableDialogEvent _interactionDialogEvent;
-    private EnterCombatEvent _interactionCombatEvent;
+    // private EnterCombatEvent _interactionCombatEvent;
 
     private void Start()
     {
         _interactionDialogEvent = new EnableDialogEvent();
-        _interactionCombatEvent = new EnterCombatEvent();
-
-        SetPopupName(npc.name);
+        // _interactionCombatEvent = new EnterCombatEvent();
     }
 
     public override void Execute(bool enable, NPCController currentNPC)
     {
         base.Execute();
 
-        if (!canInteract) return;
+        _interactionDialogEvent.npc = currentNPC;
+        _interactionDialogEvent.data = currentNPC.Data;
+        _interactionDialogEvent.enable = enable;
 
-        if (enable)
-        {
-            AddListenerQuest();
-        }
-        else
-        {
-            RemoveListenerQuest();
-        }
+        EventController.TriggerEvent(_interactionDialogEvent);
 
-        switch (npc.interactionType)
-        {
-            case NPC_INTERACTION_TYPE.none:
-                // Nothing
-                break;
+        // if (enable)
+        // {
+        //     AddListenerQuest();
+        // }
+        // else
+        // {
+        //     RemoveListenerQuest();
+        // }
 
-            case NPC_INTERACTION_TYPE.dialog:
-                _interactionDialogEvent.dialog = npc.dialog;
-                _interactionDialogEvent.enable = enable;
-                _interactionDialogEvent.questData = questData;
-                PlayCutscene();
+        // switch (data.interactionType)
+        // {
+        //     case NPC_INTERACTION_TYPE.none:
+        //         // Nothing
+        //         break;
 
-                EventController.TriggerEvent(_interactionDialogEvent);
-                break;
+        //     case NPC_INTERACTION_TYPE.dialog:
 
-            case NPC_INTERACTION_TYPE.fight:
-                _interactionCombatEvent.npc = npc;
-                _interactionCombatEvent.currentNPC = currentNPC;
-                EventController.TriggerEvent(_interactionCombatEvent);
+        //         _interactionDialogEvent.npc = data;
+        //         _interactionDialogEvent.enable = enable;
+        //         // _interactionDialogEvent.questData = questData;
+        //         PlayCutscene();
 
-                RuntimeManager.PlayOneShot(FMODParameters.OneShot_Stinger);
-                break;
+        //         EventController.TriggerEvent(_interactionDialogEvent);
+        //         break;
 
-            case NPC_INTERACTION_TYPE.dialogAndFight:
-                // TODO Mariano: Primero se fuerza un dialog, y al finalizar se va al combate
-                break;
+        //     case NPC_INTERACTION_TYPE.fight:
+        //         _interactionCombatEvent.npc = data;
+        //         _interactionCombatEvent.currentNPC = currentNPC;
+        //         EventController.TriggerEvent(_interactionCombatEvent);
 
-            default:
-                break;
-        }
+        //         RuntimeManager.PlayOneShot(FMODParameters.OneShot_Stinger);
+        //         break;
+
+        //     case NPC_INTERACTION_TYPE.dialogAndFight:
+        //         // TODO Mariano: Primero se fuerza un dialog, y al finalizar se va al combate
+        //         break;
+
+        //     default:
+        //         break;
+        // }
     }
+
+    #region Dialogue Designer
+
+    public void DDGiveReward()
+    { }
+
+    public bool DDHaveAmount()
+    {
+        return false;
+        // return haveAmount;
+    }
+
+    #endregion
 }
