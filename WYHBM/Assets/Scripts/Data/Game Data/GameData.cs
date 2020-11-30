@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,20 +13,28 @@ public class GameData : MonoSingleton<GameData>
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
 
-	[Header("Localization")]
-	public LocalizationUtility localizationUtility;
-
 	[Header("Input System")]
 	public DeviceSO[] deviceData;
 
-	[Header("Persistence")]
-	public ItemSO persistenceItem;
-	public QuestSO persistenceQuest;
-	// public Transform newSpawnPos;
+	private LocalizationUtility _localizationUtility;
+	private UpdateLanguageEvent _updateLanguageEvent;
 
-	public string GetLanguage()
+	private void Start()
 	{
-		return localizationUtility.Language;
+		_localizationUtility = GetComponent<LocalizationUtility>();
+
+		_updateLanguageEvent = new UpdateLanguageEvent();
+	}
+	
+	public void SelectNextLanguage()
+	{
+		_localizationUtility.SelectNextLanguage(true);
+	}
+
+	public void UpdateLanguage(string language)
+	{
+		_updateLanguageEvent.language = language;
+		EventController.TriggerEvent(_updateLanguageEvent);
 	}
 
 	public Sprite GetInputIcon(DEVICE device, INPUT_ACTION action)

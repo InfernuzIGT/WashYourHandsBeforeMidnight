@@ -7,11 +7,14 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class LocalizationUtility : MonoBehaviour
 {
-    [SerializeField, ReadOnly] private string _language = "en";
+    [System.Serializable]
+    public class UnityStringEvent : UnityEvent<string> { }
+
+    [SerializeField, ReadOnly] private string _language = "";
     public string Language { get { return _language; } }
+
     [Space]
-    [SerializeField] private UnityEvent OnUpdateLanguage = null;
-    
+    [SerializeField] private UnityStringEvent OnUpdateLanguage = null;
 
     private AsyncOperationHandle m_InitializeOperation;
     private List<Locale> _listLocales;
@@ -45,12 +48,9 @@ public class LocalizationUtility : MonoBehaviour
     {
         LocalizationSettings.SelectedLocale = locale;
 
-        // _language = locale.name;
         _language = locale.Identifier.Code;
 
-        // Debug.Log($"Update Locale: {locale.name} [{locale.Identifier.Code}]");
-
-        OnUpdateLanguage.Invoke();
+        OnUpdateLanguage.Invoke(_language);
     }
 
     public void SelectNextLanguage(bool isNext)

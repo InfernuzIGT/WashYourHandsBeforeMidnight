@@ -95,6 +95,11 @@ namespace Events
         public GameObject objectSelected;
     }
     
+    public class UpdateLanguageEvent : GameEvent
+    {
+        public string language;
+    }
+    
     public class ChangeInputEvent : GameEvent
     {
         public bool enable;
