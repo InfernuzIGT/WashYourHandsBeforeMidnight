@@ -25,6 +25,7 @@ public class EventSystemUtility : MonoBehaviour
     private void OnUpdateSelection(EventSystemEvent evt)
     {
         _eventSystem.firstSelectedGameObject = evt.objectSelected;
+        _eventSystem.SetSelectedGameObject(evt.objectSelected);
     }
 
 }

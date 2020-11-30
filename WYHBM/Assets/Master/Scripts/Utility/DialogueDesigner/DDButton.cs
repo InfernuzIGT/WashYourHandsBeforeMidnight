@@ -29,18 +29,16 @@ public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void Show(string text)
     {
+        gameObject.SetActive(true);
+        
         _text.text = text;
-        _button.interactable = true;
 
         _canvasUtility.Show(true);
     }
 
     public void Hide()
     {
-        _button.interactable = false;
-        _selection.SetActive(false);
-        _inputImg.enabled = false;
-        _canvasUtility.ShowInstant(false);
+        gameObject.SetActive(false);
     }
 
     public void UpdateText(string text)

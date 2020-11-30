@@ -397,15 +397,12 @@ public class PlayerController : MonoBehaviour
 
     private void Interaction()
     {
-        _interaction = !_interaction; // TODO Mariano: Reset to FALSE when Input is RE-ENABLED
-
-        // if (!GameManager.Instance.inCombat)
-        // {
+        _interaction = !_interaction;
+        
         _interactionEvent.isStart = _interaction;
         _interactionEvent.lastPlayerPosition = transform.position;
         _interactionEvent.isRunning = _isRunning;
         EventController.TriggerEvent(_interactionEvent);
-        // }
     }
 
     public void SetPlayerData(PlayerSO data)
@@ -483,6 +480,8 @@ public class PlayerController : MonoBehaviour
     private void OnStopMovement(EnableMovementEvent evt)
     {
         _canMove = evt.canMove;
+
+        if (evt.canMove)_interaction = false;
     }
 
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)

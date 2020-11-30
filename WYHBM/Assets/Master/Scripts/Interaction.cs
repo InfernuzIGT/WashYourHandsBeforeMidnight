@@ -26,11 +26,11 @@ public class Interaction : MonoBehaviour
     [System.Serializable]
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
-    [Header("Interaction")]
-    public QuestStatusSO questStatus;
+    // [Header("Interaction")]
+    private QuestStatusSO questStatus;
     // public QuestData questData;
     [Space]
-    public CutsceneData cutsceneData;
+    private CutsceneData cutsceneData;
     [Space]
     [Space]
     public InteractionUnityEvent onEnter;

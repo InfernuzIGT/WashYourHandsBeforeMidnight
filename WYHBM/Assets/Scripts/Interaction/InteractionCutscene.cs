@@ -17,11 +17,11 @@ public class InteractionCutscene : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            if (cutsceneData.playInCollision)
-            {
+            // if (cutsceneData.playInCollision)
+            // {
                 PlayCutscene();
                 Destroy(this.gameObject);
-            }
+            // }
 
             EventController.AddListener<InteractionEvent>(OnInteractCutscene);
         }
@@ -37,17 +37,17 @@ public class InteractionCutscene : Interaction, IInteractable
 
     private void OnInteractCutscene(InteractionEvent evt)
     {
-        if (cutsceneData.playableAsset == null)return;
+        // if (cutsceneData.playableAsset == null)return;
 
-        _cutsceneEvent.cutscene = cutsceneData.playableAsset;
+        // _cutsceneEvent.cutscene = cutsceneData.playableAsset;
 
-        EventController.TriggerEvent(_cutsceneEvent);
+        // EventController.TriggerEvent(_cutsceneEvent);
 
-        if (!cutsceneData.playInCollision)
-        {
-            PlayCutscene();
-            Destroy(this.gameObject);
-        }
+        // if (!cutsceneData.playInCollision)
+        // {
+            // PlayCutscene();
+            // Destroy(this.gameObject);
+        // }
 
     }
 

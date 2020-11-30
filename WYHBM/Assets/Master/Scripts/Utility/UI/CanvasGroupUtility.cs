@@ -34,11 +34,6 @@ public class CanvasGroupUtility : MonoBehaviour
                 .DOFade(1, fadeDuration)
                 .OnComplete(() => CallEvent(true));
 
-
-            // _canvasGroup
-            //     .DOFade(1, fadeDuration)
-            //     .OnComplete(() => SetProperties(true));
-            
             SetCanvas(true);
         }
         else
@@ -46,8 +41,6 @@ public class CanvasGroupUtility : MonoBehaviour
             _canvasGroup
                 .DOFade(0, fadeDuration)
                 .OnComplete(() => SetCanvas(false));
-
-            // SetProperties(false);
         }
     }
 
@@ -56,12 +49,12 @@ public class CanvasGroupUtility : MonoBehaviour
         _isShowing = isShowing;
 
         SetCanvas(isShowing);
-        // SetProperties(isShowing);
     }
 
     private void SetCanvas(bool isEnabled)
     {
         _canvas.enabled = isEnabled;
+        _canvasGroup.interactable = isEnabled;
 
         if (!isEnabled)CallEvent(false);
     }

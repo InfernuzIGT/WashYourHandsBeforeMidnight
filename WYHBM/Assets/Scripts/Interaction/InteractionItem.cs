@@ -37,7 +37,7 @@ public class InteractionItem : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            if (cutsceneData.playInCollision)PlayCutscene();
+            // if (cutsceneData.playInCollision)PlayCutscene();
 
             // AddListenerQuest();
             EventController.AddListener<InteractionEvent>(OnInteractItem);
@@ -71,7 +71,7 @@ public class InteractionItem : Interaction, IInteractable
         //     }
         // }
 
-        if (!cutsceneData.playInCollision)PlayCutscene();
+        // if (!cutsceneData.playInCollision)PlayCutscene();
 
         Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
         newSlot.AddItem(item);

@@ -61,15 +61,19 @@ public class DDUtility : MonoBehaviour
     private ShowMessageNodeChoice _choiceNode;
 
     private const string emotion = "emotion";
+    // TODO Mariano: Quest?
+    // private const string quest = "quest";
 
     public enum DDExecuteScript
     {
-        GiveReward
+        StartQuest,
+        FinishQuest
     }
 
     public enum DDEvaluateCondition
     {
-        HaveAmount
+        FirstTime,
+        Finished,
     }
 
     private Dialogue _loadedDialogue;
@@ -92,8 +96,6 @@ public class DDUtility : MonoBehaviour
 
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
         _eventSystemEvent = new EventSystemEvent();
-
-        // _currentLanguage = GameData.Instance.GetLanguage();
 
         for (int i = 0; i < _ddButtons.Length; i++)
         {
@@ -197,6 +199,9 @@ public class DDUtility : MonoBehaviour
         _dialogTxt.text = "";
 
         _canvasUtility.Show(false);
+
+        _eventSystemEvent.objectSelected = null;
+        EventController.TriggerEvent(_eventSystemEvent);
 
         _showInteractionHintEvent.show = true;
         EventController.TriggerEvent(_showInteractionHintEvent);
@@ -332,9 +337,9 @@ public class DDUtility : MonoBehaviour
     private void OnUpdateLanguage(UpdateLanguageEvent evt)
     {
         _currentLanguage = evt.language;
-        
+
         if (_dialoguePlayer == null || _showMessageNode == null)return;
-        
+
         _currentDialog = _showMessageNode.GetText(_currentLanguage);
         _dialogTxt.text = _currentDialog;
 
@@ -353,10 +358,11 @@ public class DDUtility : MonoBehaviour
         {
             switch (scriptParsed)
             {
-                case DDEvaluateCondition.HaveAmount:
-                    // TODO Mariano: Review
-                    // return _currentNPC.DDHaveAmount(); 
+                case DDEvaluateCondition.FirstTime:
                     return true;
+
+                case DDEvaluateCondition.Finished:
+                    return GameData.Instance.TestBool();
 
                 default:
                     Debug.LogError($"<color=red><b>[ERROR]</b></color> No DDEvaluateCondition", gameObject);
@@ -390,7 +396,7 @@ public class DDUtility : MonoBehaviour
         {
             switch (scriptParsed)
             {
-                case DDExecuteScript.GiveReward:
+                case DDExecuteScript.StartQuest:
                     // _currentNPC.DDGiveReward();
                     break;
 
