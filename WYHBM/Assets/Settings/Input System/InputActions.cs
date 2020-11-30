@@ -67,7 +67,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""interactions"": ""Press""
                 },
                 {
-                    ""name"": ""Test"",
+                    ""name"": ""DebugMode"",
                     ""type"": ""Button"",
                     ""id"": ""68b6befc-e8bc-4370-9652-08060962ccd4"",
                     ""expectedControlType"": ""Button"",
@@ -431,11 +431,11 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""238cedf1-f9f6-4182-8958-3bffcc3e86e7"",
-                    ""path"": ""<Keyboard>/t"",
+                    ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Test"",
+                    ""groups"": ""PC"",
+                    ""action"": ""DebugMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1002,7 +1002,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Options = m_Player.FindAction("Options", throwIfNotFound: true);
-        m_Player_Test = m_Player.FindAction("Test", throwIfNotFound: true);
+        m_Player_DebugMode = m_Player.FindAction("DebugMode", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1063,7 +1063,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Options;
-    private readonly InputAction m_Player_Test;
+    private readonly InputAction m_Player_DebugMode;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -1074,7 +1074,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Options => m_Wrapper.m_Player_Options;
-        public InputAction @Test => m_Wrapper.m_Player_Test;
+        public InputAction @DebugMode => m_Wrapper.m_Player_DebugMode;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1102,9 +1102,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Options.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOptions;
                 @Options.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOptions;
                 @Options.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOptions;
-                @Test.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTest;
-                @Test.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTest;
-                @Test.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTest;
+                @DebugMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
+                @DebugMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
+                @DebugMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1127,9 +1127,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Options.started += instance.OnOptions;
                 @Options.performed += instance.OnOptions;
                 @Options.canceled += instance.OnOptions;
-                @Test.started += instance.OnTest;
-                @Test.performed += instance.OnTest;
-                @Test.canceled += instance.OnTest;
+                @DebugMode.started += instance.OnDebugMode;
+                @DebugMode.performed += instance.OnDebugMode;
+                @DebugMode.canceled += instance.OnDebugMode;
             }
         }
     }
@@ -1236,7 +1236,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnOptions(InputAction.CallbackContext context);
-        void OnTest(InputAction.CallbackContext context);
+        void OnDebugMode(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
