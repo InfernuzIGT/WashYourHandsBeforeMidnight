@@ -13,8 +13,6 @@ public class GlobalController : MonoBehaviour
     [Header("General")]
     public bool isPaused;
     public bool inCombat;
-    [Space]
-    [SerializeField, ReadOnly] private NPCSO _currentNPC = null;
 
     [Header("Developer")]
     [SerializeField] private bool _inputDebugMode = true;
@@ -276,12 +274,10 @@ public class GlobalController : MonoBehaviour
     {
         if (evt.enable)
         {
-            _currentNPC = evt.data;
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
         }
         else
         {
-            _currentNPC = null;
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
             ChangeInput(true);
         }

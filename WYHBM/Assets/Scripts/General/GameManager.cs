@@ -33,7 +33,7 @@ public class GameManager : MonoSingleton<GameManager>
     [Space]
     public List<EnemyEncounter> enemyEncounters;
 
-    public List<QuestData> listQuestData;
+    // public List<QuestData> listQuestData;
     // public List<QuestSO> listQuest;
     // public List<int> listProgress;
     public Dictionary<int, QuestSO> dictionaryQuest;
@@ -79,8 +79,8 @@ public class GameManager : MonoSingleton<GameManager>
     private DialogSO _currentDialog;
     public DialogSO CurrentDialog { get { return _currentDialog; } }
 
-    private QuestData _currentQuestData;
-    public QuestData CurrentQuestData { get { return _currentQuestData; } }
+    // private QuestData _currentQuestData;
+    // public QuestData CurrentQuestData { get { return _currentQuestData; } }
 
     protected override void Awake()
     {
@@ -93,7 +93,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         // listQuest = new List<QuestSO>();
         // listProgress = new List<int>();
-        listQuestData = new List<QuestData>();
+        // listQuestData = new List<QuestData>();
         dictionaryQuest = new Dictionary<int, QuestSO>();
         dictionaryProgress = new Dictionary<int, int>();
 

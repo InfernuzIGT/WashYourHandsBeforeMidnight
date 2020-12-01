@@ -8,4 +8,8 @@ public class QuestSO : ScriptableObject
     public LocalizedString title = new LocalizedString() { TableReference = "Quest_Title" };
     [Space]
     public LocalizedString description = new LocalizedString() { TableReference = "Quest_Description" };
+    [Space]
+    [Range(0, 9)] public int steps;
+
+    // TODO Mariano: Add Reward
 }

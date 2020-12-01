@@ -15,7 +15,7 @@ public class DDUtility : MonoBehaviour
         Done = 2
     }
 
-    [SerializeField, ReadOnly] private NPCSO _currentNPC = null;
+    [SerializeField, ReadOnly] private NPCController _currentNPC = null;
     [SerializeField, ReadOnly] private string _currentLanguage = "";
     [SerializeField, ReadOnly] private DIALOG_STATE _dialogState = DIALOG_STATE.Done;
 
@@ -66,8 +66,9 @@ public class DDUtility : MonoBehaviour
 
     public enum DDExecuteScript
     {
-        StartQuest,
-        FinishQuest
+        NewQuest,
+        UpdateQuest,
+        CompleteQuest
     }
 
     public enum DDEvaluateCondition
@@ -142,8 +143,8 @@ public class DDUtility : MonoBehaviour
     {
         if (evt.enable)
         {
-            _currentNPC = evt.data;
-            _loadedDialogue = Dialogue.FromAsset(evt.data.DialogDD);
+            _currentNPC = evt.npc;
+            _loadedDialogue = Dialogue.FromAsset(evt.npc.GetDialogData());
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
         }
         else
@@ -163,7 +164,7 @@ public class DDUtility : MonoBehaviour
 
         UpdateNode(_dialoguePlayer.CurrentNode as ShowMessageNode);
 
-        _npcImg.sprite = _currentNPC.GetIcon(EMOTION.None);
+        _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
         _npcTxt.text = _currentNPC.name;
 
         _currentDialog = "";
@@ -359,10 +360,10 @@ public class DDUtility : MonoBehaviour
             switch (scriptParsed)
             {
                 case DDEvaluateCondition.FirstTime:
-                    return true;
+                    return _currentNPC.DDFirstTime();
 
                 case DDEvaluateCondition.Finished:
-                    return GameData.Instance.TestBool();
+                    return _currentNPC.DDFinished();
 
                 default:
                     Debug.LogError($"<color=red><b>[ERROR]</b></color> No DDEvaluateCondition", gameObject);
@@ -382,7 +383,7 @@ public class DDUtility : MonoBehaviour
 
             if (int.TryParse(emotionArray[1], out int emotionId))
             {
-                _npcImg.sprite = _currentNPC.GetIcon((EMOTION)emotionId);
+                _npcImg.sprite = _currentNPC.Data.GetIcon((EMOTION)emotionId);
             }
             else
             {
@@ -396,8 +397,16 @@ public class DDUtility : MonoBehaviour
         {
             switch (scriptParsed)
             {
-                case DDExecuteScript.StartQuest:
-                    // _currentNPC.DDGiveReward();
+                case DDExecuteScript.NewQuest:
+                    _currentNPC.DDNewQuest();
+                    break;
+
+                case DDExecuteScript.UpdateQuest:
+                    _currentNPC.DDUpdateQuest();
+                    break;
+
+                case DDExecuteScript.CompleteQuest:
+                    _currentNPC.DDCompleteQuest();
                     break;
 
                 default:

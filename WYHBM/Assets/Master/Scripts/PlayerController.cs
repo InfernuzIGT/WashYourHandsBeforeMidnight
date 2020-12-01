@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController), typeof(DeviceUtility))]
 public class PlayerController : MonoBehaviour
 {
-    public PlayerSO playerData;
+    [SerializeField, ReadOnly] private PlayerSO _playerData;
 
     [Header("Review")]
     public bool _inZipline = false;
@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
 
     public bool IsDetectingGround { get => _isDetectingGround; set => _isDetectingGround = value; }
+    public PlayerSO PlayerData { get { return _playerData; } }
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
@@ -398,7 +399,7 @@ public class PlayerController : MonoBehaviour
     private void Interaction()
     {
         _interaction = !_interaction;
-        
+
         _interactionEvent.isStart = _interaction;
         _interactionEvent.lastPlayerPosition = transform.position;
         _interactionEvent.isRunning = _isRunning;
@@ -407,11 +408,11 @@ public class PlayerController : MonoBehaviour
 
     public void SetPlayerData(PlayerSO data)
     {
-        playerData = data;
+        _playerData = data;
 
-        gameObject.name = string.Format("[Player] {0}", playerData.name);
-        GetComponent<SpriteRenderer>().sprite = playerData.spriteBody;
-        GetComponent<Animator>().runtimeAnimatorController = playerData.animatorController;
+        gameObject.name = string.Format("[Player] {0}", _playerData.name);
+        GetComponent<SpriteRenderer>().sprite = _playerData.Sprite;
+        GetComponent<Animator>().runtimeAnimatorController = _playerData.AnimatorController;
     }
 
     public void SwitchMovement()

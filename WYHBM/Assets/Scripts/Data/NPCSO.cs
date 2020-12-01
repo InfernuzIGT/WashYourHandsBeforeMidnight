@@ -4,12 +4,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New NPC", menuName = "NPC", order = 0)]
 public class NPCSO : ScriptableObject
 {
-    [Header("NPC")]
+    [System.Serializable]
+    public struct NPCData
+    {
+        public TextAsset dialogDD;
+        [Space]
+        public QuestSO quest;
+    }
+
+    [Header("General")]
     [SerializeField] private string _name = "(Enter Name)";
-    [SerializeField] private string _subtitle = "(Enter Subtitle)";
     [Space]
-    [SerializeField, PreviewTexture(64)] private Sprite _sprite = null;
-    [SerializeField] private AnimatorOverrideController _animatorController = null;
+    [SerializeField] private NPCData[] _data = null;
 
     [Header("IA")]
     [SerializeField] private bool _canMove = true;
@@ -20,9 +26,10 @@ public class NPCSO : ScriptableObject
     [SerializeField] private bool _canDetectPlayer = false;
     [SerializeField, Range(0f, 50f)] private float _viewRadius = 10;
 
-    [Header("Dialogue Designer")]
-    [SerializeField] private TextAsset _dialogDD = null;
-    [Space]
+    [Header("Art")]
+    [SerializeField, PreviewTexture(64)] private Sprite _sprite = null;
+    [SerializeField] private AnimatorOverrideController _animatorController = null;
+    [Space(24)]
     [PreviewTexture(48), SerializeField] private Sprite iconNone = null;
     [PreviewTexture(48), SerializeField] private Sprite iconHappy = null;
     [PreviewTexture(48), SerializeField] private Sprite iconSad = null;
@@ -36,9 +43,7 @@ public class NPCSO : ScriptableObject
 
     // Properties
     public string Name { get { return _name; } }
-    public string Subtitle { get { return _subtitle; } }
-    public Sprite Sprite { get { return _sprite; } }
-    public AnimatorOverrideController AnimatorController { get { return _animatorController; } }
+    public NPCData[] Data { get { return _data; } }
 
     public bool CanMove { get { return _canMove; } }
     public bool UseRandomPosition { get { return _useRandomPosition; } }
@@ -46,8 +51,9 @@ public class NPCSO : ScriptableObject
     public float Speed { get { return _speed; } }
     public bool CanDetectPlayer { get { return _canDetectPlayer; } }
     public float ViewRadius { get { return _viewRadius; } }
-    
-    public TextAsset DialogDD { get { return _dialogDD; } }
+
+    public Sprite Sprite { get { return _sprite; } }
+    public AnimatorOverrideController AnimatorController { get { return _animatorController; } }
 
     public Sprite GetIcon(EMOTION emotion)
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class NPCController : MonoBehaviour, IInteractable
+public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 {
     [SerializeField] private NPCSO _data;
     [SerializeField] private WaypointController _waypoints;
@@ -39,6 +39,8 @@ public class NPCController : MonoBehaviour, IInteractable
     private float _viewAngle = 360;
     public float ViewAngle { get { return _viewAngle; } }
 
+    private PlayerSO _playerData;
+
     public NPCSO Data { get { return _data; } }
 
     private void Awake()
@@ -48,17 +50,9 @@ public class NPCController : MonoBehaviour, IInteractable
         _agent = GetComponent<NavMeshAgent>();
     }
 
-    public void SetData()
-    {
-        GetComponent<SpriteRenderer>().sprite = _data.Sprite;;
-        GetComponent<Animator>().runtimeAnimatorController = _data.AnimatorController;
-
-        Debug.Log($"<color=green><b>[NPC {_data.Name}]</b></color> Data loaded successfully!");
-    }
-
     private void Start()
     {
-        
+
 #if UNITY_EDITOR
         gameObject.name = string.Format("[NPC] {0}", _data.Name);
 #endif
@@ -208,6 +202,8 @@ public class NPCController : MonoBehaviour, IInteractable
 
             _canMove = false;
 
+            if (_playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
+
             _animatorController?.Movement(Vector3.zero);
 
             _interactionNPC.Execute(true, this);
@@ -245,4 +241,60 @@ public class NPCController : MonoBehaviour, IInteractable
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         Destroy(gameObject);
     }
+
+    public TextAsset GetDialogData()
+    {
+        return _data.Data[_playerData.ID].dialogDD;
+    }
+
+    public QuestSO GetQuestData()
+    {
+        return _data.Data[_playerData.ID].quest;
+    }
+
+    #region Dialogue Designer
+
+    public void DDNewQuest()
+    {
+        Debug.Log ($"<b> ADD QUEST </b>");
+        // TODO Mariano: Add a new Quest
+    }
+
+    public void DDUpdateQuest()
+    {
+        Debug.Log ($"<b> UPDATE QUEST </b>");
+        // TODO Mariano: Add a step to Quest
+        // TODO Mariano: Check if is completed
+    }
+
+    public void DDCompleteQuest()
+    {
+        Debug.Log ($"<b> COMPLETE QUEST </b>");
+        // TODO Mariano: Set to Finished
+        // TODO Mariano: Give Reward?
+    }
+
+    public bool DDFirstTime()
+    {
+        return true;
+    }
+
+    public bool DDFinished()
+    {
+        return false;
+    }
+
+    #endregion
+
+#if UNITY_EDITOR
+
+    public void SetData()
+    {
+        GetComponent<SpriteRenderer>().sprite = _data.Sprite;;
+        GetComponent<Animator>().runtimeAnimatorController = _data.AnimatorController;
+
+        Debug.Log($"<color=green><b>[NPC {_data.Name}]</b></color> Data loaded successfully!");
+    }
+
+#endif
 }

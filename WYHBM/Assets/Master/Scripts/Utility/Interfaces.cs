@@ -8,6 +8,9 @@ public interface IInteractable
 
 public interface IDialogueable
 {
-    void DDGiveReward();
-    bool DDHaveAmount();
+    void DDNewQuest();
+    void DDUpdateQuest();
+    void DDCompleteQuest();
+    bool DDFirstTime();
+    bool DDFinished();
 }

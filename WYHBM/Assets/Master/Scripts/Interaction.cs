@@ -3,35 +3,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
 
-[System.Serializable]
-public class QuestData
-{
-    public QuestStatusSO questStatus;
-    [Space]
-    public QuestSO quest;
-    public QUEST_STATE state;
-    public int[] progress;
-}
-
-[System.Serializable]
-public class CutsceneData
-{
-    public PlayableAsset playableAsset;
-    public bool playInCollision;
-}
-
 [RequireComponent(typeof(BoxCollider))]
 public class Interaction : MonoBehaviour
 {
     [System.Serializable]
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
-    // [Header("Interaction")]
-    private QuestStatusSO questStatus;
-    // public QuestData questData;
-    [Space]
-    private CutsceneData cutsceneData;
-    [Space]
+    [Header("Interaction")]
+    public QuestSO quest;
+    public PlayableAsset cutscene;
     [Space]
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
@@ -39,6 +19,7 @@ public class Interaction : MonoBehaviour
     private SpriteRenderer _hintSprite;
 
     private CutsceneEvent _cutsceneEvent;
+    private QuestEvent _questEvent;
     private ShowInteractionHintEvent _showInteractionHintEvent;
 
     public virtual void Awake()
@@ -48,6 +29,7 @@ public class Interaction : MonoBehaviour
         _hintSprite.enabled = false;
 
         _cutsceneEvent = new CutsceneEvent();
+        _questEvent = new QuestEvent();
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
     }
 
@@ -73,36 +55,19 @@ public class Interaction : MonoBehaviour
         EventController.TriggerEvent(_showInteractionHintEvent);
     }
 
-    // protected void AddListenerQuest()
-    // {
-    //     if (questData.quest == null)return;
-
-    //     EventController.AddListener<InteractionEvent>(OnInteractQuest);
-    // }
-
-    // protected void RemoveListenerQuest()
-    // {
-    //     if (questData.quest == null)return;
-
-    //     EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
-    // }
-
-    // private void OnInteractQuest(InteractionEvent evt)
-    // {
-    //     GameManager.Instance.ProgressQuest(questData.quest, questData.progress[0]);
-
-    //     EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
-    // }
-
-    protected void PlayCutscene()
+    protected void TriggerQuest()
     {
-        if (cutsceneData.playableAsset == null)return;
-        if (_cutsceneEvent.isTriggered == true)return;
+        if (quest == null)return;
 
-        _cutsceneEvent.cutscene = cutsceneData.playableAsset;
+        _questEvent.quest = quest;
+        EventController.TriggerEvent(_questEvent);
+    }
+    
+    protected void TriggerCutscene()
+    {
+        if (cutscene == null)return;
 
-        _cutsceneEvent.isTriggered = true;
-
+        _cutsceneEvent.cutscene = cutscene;
         EventController.TriggerEvent(_cutsceneEvent);
     }
 

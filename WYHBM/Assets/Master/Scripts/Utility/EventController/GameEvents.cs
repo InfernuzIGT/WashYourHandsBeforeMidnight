@@ -18,7 +18,6 @@ namespace Events
     public class EnableDialogEvent : GameEvent
     {
         public NPCController npc;
-        public NPCSO data;
         public bool enable;
     }
 
@@ -62,10 +61,12 @@ namespace Events
 
     public class CutsceneEvent : GameEvent
     {
-        public bool isTriggered;
         public PlayableAsset cutscene;
-
-        public int index;
+    }
+    
+    public class QuestEvent : GameEvent
+    {
+        public QuestSO quest;
     }
 
     public class MainMenuEvent : GameEvent

@@ -444,7 +444,7 @@ namespace GameMode.World
             dicQuestDescription.Add(data, questDescription);
             SelectQuest(data);
 
-            GameManager.Instance.CurrentQuestData.state = QUEST_STATE.InProgress;
+            // GameManager.Instance.CurrentQuestData.state = QUEST_STATE.InProgress;
         }
 
         public void ReloadQuest(QuestSO data)
