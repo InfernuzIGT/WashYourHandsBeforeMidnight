@@ -8,9 +8,8 @@ public interface IInteractable
 
 public interface IDialogueable
 {
-    void DDNewQuest();
-    void DDUpdateQuest();
-    void DDCompleteQuest();
+    void DDQuest(QUEST_STATE state);
     bool DDFirstTime();
     bool DDFinished();
+    bool DDCheckQuest();
 }

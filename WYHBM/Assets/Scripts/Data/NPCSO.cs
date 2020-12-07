@@ -4,18 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New NPC", menuName = "NPC", order = 0)]
 public class NPCSO : ScriptableObject
 {
-    [System.Serializable]
-    public struct NPCData
-    {
-        public TextAsset dialogDD;
-        [Space]
-        public QuestSO quest;
-    }
-
     [Header("General")]
     [SerializeField] private string _name = "(Enter Name)";
     [Space]
-    [SerializeField] private NPCData[] _data = null;
+    [SerializeField] private InteractionData[] _data = null;
 
     [Header("IA")]
     [SerializeField] private bool _canMove = true;
@@ -43,7 +35,7 @@ public class NPCSO : ScriptableObject
 
     // Properties
     public string Name { get { return _name; } }
-    public NPCData[] Data { get { return _data; } }
+    public InteractionData[] Data { get { return _data; } }
 
     public bool CanMove { get { return _canMove; } }
     public bool UseRandomPosition { get { return _useRandomPosition; } }

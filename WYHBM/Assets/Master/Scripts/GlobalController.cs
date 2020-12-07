@@ -8,28 +8,34 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
+[System.Serializable]
+public class Quest
+{
+    public QuestSO data;
+    public int currentStep = 0;
+}
+
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
+    public PlayerSO playerData;
+    [Space]
     public bool isPaused;
     public bool inCombat;
+    [Space]
+    public List<Quest> listQuest;
 
     [Header("Developer")]
     [SerializeField] private bool _inputDebugMode = true;
-    [Space]
     [SerializeField] private Transform _customSpawnPoint = null;
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
-    [Header("Player")]
-    public PlayerSO playerData;
+    [Header("References")]
     public PlayerController playerController;
-
-    [Header("Camera")]
     public Camera mainCamera;
     public CinemachineVirtualCamera worldCamera;
-
-    [Header("UI")]
+    [Space]
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Fade fadeUI;
@@ -39,8 +45,6 @@ public class GlobalController : MonoBehaviour
     public CinemachineVirtualCamera exteriorCamera;
     public CinemachineVirtualCamera interiorCamera;
     public CinemachineVirtualCamera cutscene;
-
-    private DDUtility _ddUtility;
 
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
@@ -87,12 +91,14 @@ public class GlobalController : MonoBehaviour
     private void OnEnable()
     {
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<QuestEvent>(OnQuest);
         EventController.AddListener<ChangeInputEvent>(OnChangeInput);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<QuestEvent>(OnQuest);
         EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
     }
 
@@ -174,8 +180,6 @@ public class GlobalController : MonoBehaviour
 
         worldUI.Show(!inCombat);
         combatUI.Show(inCombat);
-
-        _ddUtility = worldUI.DDUtility;
     }
 
     private void SetCamera()
@@ -268,6 +272,13 @@ public class GlobalController : MonoBehaviour
         EventController.TriggerEvent(_enableMovementEvent);
     }
 
+    private void CompleteQuest(int index)
+    {
+        listQuest[index].currentStep = listQuest[index].data.steps;
+
+        Debug.Log($"<b> QUEST COMPLETED! </b>");
+    }
+
     #region Events
 
     private void OnEnableDialog(EnableDialogEvent evt)
@@ -293,6 +304,63 @@ public class GlobalController : MonoBehaviour
     private void OnChangeInput(ChangeInputEvent evt)
     {
         ChangeInput(evt.enable);
+    }
+
+    private void OnQuest(QuestEvent evt)
+    {
+        switch (evt.state)
+        {
+            case QUEST_STATE.New:
+                for (int i = 0; i < listQuest.Count; i++)
+                {
+                    if (listQuest[i].data = evt.data)
+                    {
+                        Debug.Log($"<b> QUEST ALREADY EXISTS! </b>");
+                        return;
+                    }
+                }
+
+                Quest newQuest = new Quest();
+                newQuest.data = evt.data;
+                newQuest.currentStep = 0;
+
+                listQuest.Add(newQuest);
+                return;
+
+            case QUEST_STATE.Update:
+                for (int i = 0; i < listQuest.Count; i++)
+                {
+                    if (listQuest[i].data = evt.data)
+                    {
+                        listQuest[i].currentStep++;
+
+                        if (listQuest[i].currentStep >= evt.data.steps)
+                        {
+                            CompleteQuest(i);
+                        }
+                        else
+                        {
+                            Debug.Log($"<b> QUEST UPDATED! </b>");
+                        }
+                        return;
+                    }
+                }
+                break;
+
+            case QUEST_STATE.Complete:
+                for (int i = 0; i < listQuest.Count; i++)
+                {
+                    if (listQuest[i].data = evt.data)
+                    {
+                        CompleteQuest(i);
+                        return;
+                    }
+                }
+                break;
+
+        }
+
+        Debug.LogError($"<color=red><b>[ERROR]</b></color> OnQuest fail! Quest: {evt.data.name}, State: {evt.state}");
     }
 
     #endregion

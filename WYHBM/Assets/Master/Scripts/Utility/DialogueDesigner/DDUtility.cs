@@ -27,9 +27,10 @@ public class DDUtility : MonoBehaviour
     [SerializeField] private InputActionReference _actionCancel = null;
     [Space]
     [SerializeField] private Button _dialogPanelBtn = null;
+    [SerializeField] private TextMeshProUGUI _dialogTxt = null;
     [SerializeField] private DDButton[] _ddButtons = null;
     [Space]
-    [SerializeField] private TextMeshProUGUI _dialogTxt = null;
+    [SerializeField] private CanvasGroup _canvasImagePanel = null;
     [SerializeField] private Image _npcImg = null;
     [SerializeField] private TextMeshProUGUI _npcTxt = null;
     [SerializeField] private GameObject _continueImg = null;
@@ -61,8 +62,6 @@ public class DDUtility : MonoBehaviour
     private ShowMessageNodeChoice _choiceNode;
 
     private const string emotion = "emotion";
-    // TODO Mariano: Quest?
-    // private const string quest = "quest";
 
     public enum DDExecuteScript
     {
@@ -75,10 +74,12 @@ public class DDUtility : MonoBehaviour
     {
         FirstTime,
         Finished,
+        CheckQuest,
     }
 
     private Dialogue _loadedDialogue;
     private DialoguePlayer _dialoguePlayer;
+    private IDialogueable _dialogueable;
 
     #endregion
 
@@ -97,7 +98,7 @@ public class DDUtility : MonoBehaviour
 
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
         _eventSystemEvent = new EventSystemEvent();
-
+        
         for (int i = 0; i < _ddButtons.Length; i++)
         {
             int index = i;
@@ -144,13 +145,15 @@ public class DDUtility : MonoBehaviour
         if (evt.enable)
         {
             _currentNPC = evt.npc;
-            _loadedDialogue = Dialogue.FromAsset(evt.npc.GetDialogData());
+            _loadedDialogue = Dialogue.FromAsset(evt.dialogue);
+            _dialogueable = evt.dialogueable;
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
         }
         else
         {
             _currentNPC = null;
             _loadedDialogue = null;
+            _dialogueable = null;
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
         }
     }
@@ -164,8 +167,17 @@ public class DDUtility : MonoBehaviour
 
         UpdateNode(_dialoguePlayer.CurrentNode as ShowMessageNode);
 
-        _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
-        _npcTxt.text = _currentNPC.name;
+        if (_currentNPC != null)
+        {
+            _canvasImagePanel.alpha = 1;
+
+            _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
+            _npcTxt.text = _currentNPC.name;
+        }
+        else
+        {
+            _canvasImagePanel.alpha = 0;
+        }
 
         _currentDialog = "";
         _dialogTxt.text = "";
@@ -375,10 +387,13 @@ public class DDUtility : MonoBehaviour
             switch (scriptParsed)
             {
                 case DDEvaluateCondition.FirstTime:
-                    return _currentNPC.DDFirstTime();
+                    return _dialogueable.DDFirstTime();
 
                 case DDEvaluateCondition.Finished:
-                    return _currentNPC.DDFinished();
+                    return _dialogueable.DDFinished();
+                    
+                case DDEvaluateCondition.CheckQuest:
+                    return _dialogueable.DDFinished();
 
                 default:
                     Debug.LogError($"<color=red><b>[ERROR]</b></color> No DDEvaluateCondition", gameObject);
@@ -413,15 +428,18 @@ public class DDUtility : MonoBehaviour
             switch (scriptParsed)
             {
                 case DDExecuteScript.NewQuest:
-                    _currentNPC.DDNewQuest();
+                    _dialogueable.DDQuest(QUEST_STATE.New);
+                    // _currentNPC.DDQuest(QUEST_STATE.New);
                     break;
 
                 case DDExecuteScript.UpdateQuest:
-                    _currentNPC.DDUpdateQuest();
+                    _dialogueable.DDQuest(QUEST_STATE.Update);
+                    // _currentNPC.DDQuest(QUEST_STATE.Update);
                     break;
 
                 case DDExecuteScript.CompleteQuest:
-                    _currentNPC.DDCompleteQuest();
+                    _dialogueable.DDQuest(QUEST_STATE.Complete);
+                    // _currentNPC.DDQuest(QUEST_STATE.Complete);
                     break;
 
                 default:
@@ -436,5 +454,6 @@ public class DDUtility : MonoBehaviour
             Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse DDExecuteScript \"{script}\"", gameObject);
         }
     }
+  
 
 }

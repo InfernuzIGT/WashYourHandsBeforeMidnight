@@ -10,9 +10,10 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     [SerializeField] private NPCSO _data;
     [SerializeField] private WaypointController _waypoints;
 
+    private NavMeshAgent _agent;
     private WorldAnimator _animatorController;
     private InteractionNPC _interactionNPC;
-    private NavMeshAgent _agent;
+    private QuestEvent _questEvent;
     private bool _canMove;
     private bool _isMoving;
     private int _positionIndex = 0;
@@ -48,6 +49,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _animatorController = GetComponent<WorldAnimator>();
         _interactionNPC = GetComponentInChildren<InteractionNPC>();
         _agent = GetComponent<NavMeshAgent>();
+
+        _questEvent = new QuestEvent();
     }
 
     private void Start()
@@ -254,33 +257,28 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     #region Dialogue Designer
 
-    public void DDNewQuest()
+    public void DDQuest(QUEST_STATE state)
     {
-        Debug.Log ($"<b> ADD QUEST </b>");
-        // TODO Mariano: Add a new Quest
-    }
-
-    public void DDUpdateQuest()
-    {
-        Debug.Log ($"<b> UPDATE QUEST </b>");
-        // TODO Mariano: Add a step to Quest
-        // TODO Mariano: Check if is completed
-    }
-
-    public void DDCompleteQuest()
-    {
-        Debug.Log ($"<b> COMPLETE QUEST </b>");
-        // TODO Mariano: Set to Finished
-        // TODO Mariano: Give Reward?
+        _questEvent.data = GetQuestData();
+        _questEvent.state = state;
+        EventController.TriggerEvent(_questEvent);
     }
 
     public bool DDFirstTime()
     {
+        // TODO Mariano: Persistence
         return true;
     }
 
     public bool DDFinished()
     {
+        // TODO Mariano: Persistence
+        return false;
+    }
+
+    public bool DDCheckQuest()
+    {
+        // TODO Mariano: Persistence
         return false;
     }
 

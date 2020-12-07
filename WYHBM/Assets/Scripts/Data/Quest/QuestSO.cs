@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Localization;
 
+public enum QUEST_STATE
+{
+    New = 0,
+    Update = 1,
+    Complete = 2
+}
+
 [CreateAssetMenu(fileName = "New Quest Data", menuName = "Quest/Data", order = 0)]
 public class QuestSO : ScriptableObject
 {
