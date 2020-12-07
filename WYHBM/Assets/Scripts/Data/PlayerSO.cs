@@ -3,10 +3,10 @@
 [CreateAssetMenu(fileName = "New Player", menuName = "Player", order = 0)]
 public class PlayerSO : ScriptableObject
 {
-    [SerializeField] private int _id;
-    [SerializeField] private string _name;
-    [SerializeField, PreviewTexture(64)] private Sprite _sprite;
-    [SerializeField] private AnimatorOverrideController _animatorController;
+    [SerializeField] private int _id = 0;
+    [SerializeField] private string _name = "-";
+    [SerializeField, PreviewTexture(64)] private Sprite _sprite = null;
+    [SerializeField] private AnimatorOverrideController _animatorController = null;
 
     // Properties
     public int ID { get { return _id; } }

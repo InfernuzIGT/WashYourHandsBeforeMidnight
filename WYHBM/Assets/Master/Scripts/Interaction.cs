@@ -113,20 +113,27 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public bool DDFirstTime()
     {
-        // TODO Mariano: Persistence
-        return true;
+        return !GameData.Instance.CheckAndWriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.FirstTime));
     }
 
     public bool DDFinished()
     {
-        // TODO Mariano: Persistence
-        return false;
+        return GameData.Instance.CheckID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
     }
-    
+
     public bool DDCheckQuest()
     {
-        // TODO Mariano: Persistence
-        return false;
+        return GameData.Instance.CheckQuest(GetQuestData());
+    }
+
+    public bool DDHaveQuest()
+    {
+        return GameData.Instance.HaveQuest(GetQuestData());
+    }
+
+    public void DDFinish()
+    {
+        GameData.Instance.WriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
     }
 
     #endregion

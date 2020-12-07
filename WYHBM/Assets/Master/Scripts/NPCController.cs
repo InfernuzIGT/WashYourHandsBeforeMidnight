@@ -7,8 +7,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 {
-    [SerializeField] private NPCSO _data;
-    [SerializeField] private WaypointController _waypoints;
+    [SerializeField] private NPCSO _data = null;
+    [SerializeField] private WaypointController _waypoints = null;
 
     private NavMeshAgent _agent;
     private WorldAnimator _animatorController;
@@ -55,10 +55,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Start()
     {
-
-#if UNITY_EDITOR
-        gameObject.name = string.Format("[NPC] {0}", _data.Name);
-#endif
+        gameObject.name = string.Format("NPC_{0}", _data.Name);
+        _interactionNPC.gameObject.name = string.Format("InteractionNPC_{0}", _data.Name);
 
         if (!_agent.isOnNavMesh && _data.CanMove || !_data.CanMove || _waypoints == null)
         {
@@ -266,20 +264,27 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     public bool DDFirstTime()
     {
-        // TODO Mariano: Persistence
-        return true;
+        return !GameData.Instance.CheckAndWriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.FirstTime));
     }
 
     public bool DDFinished()
     {
-        // TODO Mariano: Persistence
-        return false;
+        return GameData.Instance.CheckID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
     }
 
     public bool DDCheckQuest()
     {
-        // TODO Mariano: Persistence
-        return false;
+        return GameData.Instance.CheckQuest(GetQuestData());
+    }
+
+    public bool DDHaveQuest()
+    {
+        return GameData.Instance.HaveQuest(GetQuestData());
+    }
+    
+    public void DDFinish()
+    {
+        GameData.Instance.WriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
     }
 
     #endregion

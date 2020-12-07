@@ -66,6 +66,11 @@ namespace Events
         public PlayableAsset cutscene;
     }
 
+    public class SessionEvent : GameEvent
+    {
+        public SESSION_OPTION option;
+    }
+
     public class QuestEvent : GameEvent
     {
         public QuestSO data;

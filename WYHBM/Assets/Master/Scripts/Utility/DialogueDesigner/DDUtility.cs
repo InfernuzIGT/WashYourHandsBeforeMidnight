@@ -61,13 +61,12 @@ public class DDUtility : MonoBehaviour
     private ShowMessageNode _showMessageNode;
     private ShowMessageNodeChoice _choiceNode;
 
-    private const string emotion = "emotion";
-
     public enum DDExecuteScript
     {
         NewQuest,
         UpdateQuest,
-        CompleteQuest
+        CompleteQuest,
+        Finish,
     }
 
     public enum DDEvaluateCondition
@@ -75,6 +74,7 @@ public class DDUtility : MonoBehaviour
         FirstTime,
         Finished,
         CheckQuest,
+        HaveQuest,
     }
 
     private Dialogue _loadedDialogue;
@@ -98,7 +98,7 @@ public class DDUtility : MonoBehaviour
 
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
         _eventSystemEvent = new EventSystemEvent();
-        
+
         for (int i = 0; i < _ddButtons.Length; i++)
         {
             int index = i;
@@ -391,9 +391,12 @@ public class DDUtility : MonoBehaviour
 
                 case DDEvaluateCondition.Finished:
                     return _dialogueable.DDFinished();
-                    
+
                 case DDEvaluateCondition.CheckQuest:
-                    return _dialogueable.DDFinished();
+                    return _dialogueable.DDCheckQuest();
+
+                case DDEvaluateCondition.HaveQuest:
+                    return _dialogueable.DDHaveQuest();
 
                 default:
                     Debug.LogError($"<color=red><b>[ERROR]</b></color> No DDEvaluateCondition", gameObject);
@@ -407,7 +410,7 @@ public class DDUtility : MonoBehaviour
 
     private void OnExecuteScript(DialoguePlayer sender, string script)
     {
-        if (script.Contains(emotion))
+        if (script.Contains(DDParameters.Emotion))
         {
             string[] emotionArray = script.Split('=');
 
@@ -429,17 +432,18 @@ public class DDUtility : MonoBehaviour
             {
                 case DDExecuteScript.NewQuest:
                     _dialogueable.DDQuest(QUEST_STATE.New);
-                    // _currentNPC.DDQuest(QUEST_STATE.New);
                     break;
 
                 case DDExecuteScript.UpdateQuest:
                     _dialogueable.DDQuest(QUEST_STATE.Update);
-                    // _currentNPC.DDQuest(QUEST_STATE.Update);
                     break;
 
                 case DDExecuteScript.CompleteQuest:
                     _dialogueable.DDQuest(QUEST_STATE.Complete);
-                    // _currentNPC.DDQuest(QUEST_STATE.Complete);
+                    break;
+
+                case DDExecuteScript.Finish:
+                    _dialogueable.DDFinish();
                     break;
 
                 default:
@@ -454,6 +458,5 @@ public class DDUtility : MonoBehaviour
             Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse DDExecuteScript \"{script}\"", gameObject);
         }
     }
-  
 
 }

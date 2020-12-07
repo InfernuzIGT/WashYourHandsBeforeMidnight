@@ -23,7 +23,7 @@ public class GlobalController : MonoBehaviour
     public bool isPaused;
     public bool inCombat;
     [Space]
-    public List<Quest> listQuest;
+    public SessionData sessionData;
 
     [Header("Developer")]
     [SerializeField] private bool _inputDebugMode = true;
@@ -32,6 +32,7 @@ public class GlobalController : MonoBehaviour
     // public ItemSO[] items;
 
     [Header("References")]
+    public GameData gameData;
     public PlayerController playerController;
     public Camera mainCamera;
     public CinemachineVirtualCamera worldCamera;
@@ -67,6 +68,8 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
+        CheckGameData();
+
         _enableMovementEvent = new EnableMovementEvent();
 
         SpawnPlayer();
@@ -93,6 +96,7 @@ public class GlobalController : MonoBehaviour
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
         EventController.AddListener<QuestEvent>(OnQuest);
         EventController.AddListener<ChangeInputEvent>(OnChangeInput);
+        EventController.AddListener<SessionEvent>(OnSession);
     }
 
     private void OnDisable()
@@ -100,18 +104,16 @@ public class GlobalController : MonoBehaviour
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
         EventController.RemoveListener<QuestEvent>(OnQuest);
         EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
+        EventController.RemoveListener<SessionEvent>(OnSession);
     }
 
-    private void SpawnCameras()
+    private void CheckGameData()
     {
-        mainCamera = Instantiate(mainCamera);
-        worldCamera = Instantiate(worldCamera);
+        GameData tempGamedata = GameObject.FindObjectOfType<GameData>();
+        
+        gameData = tempGamedata != null ? tempGamedata : Instantiate(gameData);
 
-        worldCamera.m_Follow = playerController.transform;
-        worldCamera.m_LookAt = playerController.transform;
-
-        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
-        detectTargetBehind.SetTarget(playerController.transform);
+        sessionData = gameData.LoadSession();
     }
 
     private void SpawnPlayer()
@@ -168,6 +170,20 @@ public class GlobalController : MonoBehaviour
 #endif
 
         playerController.SetPlayerData(playerData);
+
+        sessionData.playerData = playerData;
+    }
+
+    private void SpawnCameras()
+    {
+        mainCamera = Instantiate(mainCamera);
+        worldCamera = Instantiate(worldCamera);
+
+        worldCamera.m_Follow = playerController.transform;
+        worldCamera.m_LookAt = playerController.transform;
+
+        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
+        detectTargetBehind.SetTarget(playerController.transform);
     }
 
     private void SpawnUI()
@@ -274,9 +290,7 @@ public class GlobalController : MonoBehaviour
 
     private void CompleteQuest(int index)
     {
-        listQuest[index].currentStep = listQuest[index].data.steps;
-
-        Debug.Log($"<b> QUEST COMPLETED! </b>");
+        sessionData.listQuest[index].currentStep = sessionData.listQuest[index].data.steps;
     }
 
     #region Events
@@ -306,62 +320,99 @@ public class GlobalController : MonoBehaviour
         ChangeInput(evt.enable);
     }
 
+    private void OnSession(SessionEvent evt)
+    {
+        if (gameData == null)
+        {
+            Debug.LogError($"<color=red><b>[ERROR]</b></color> GameData NULL");
+            return;
+        }
+
+        switch (evt.option)
+        {
+            case SESSION_OPTION.Save:
+                gameData.SaveSession(sessionData);
+                break;
+
+            case SESSION_OPTION.Load:
+                sessionData = gameData.LoadSession();
+                break;
+
+            case SESSION_OPTION.Delete:
+                gameData.DeleteAll();
+                break;
+        }
+    }
+
     private void OnQuest(QuestEvent evt)
     {
         switch (evt.state)
         {
             case QUEST_STATE.New:
-                for (int i = 0; i < listQuest.Count; i++)
+                for (int i = 0; i < sessionData.listQuest.Count; i++)
                 {
-                    if (listQuest[i].data = evt.data)
-                    {
-                        Debug.Log($"<b> QUEST ALREADY EXISTS! </b>");
-                        return;
-                    }
+                    if (sessionData.listQuest[i].data = evt.data)return;
                 }
 
                 Quest newQuest = new Quest();
                 newQuest.data = evt.data;
                 newQuest.currentStep = 0;
 
-                listQuest.Add(newQuest);
+                sessionData.listQuest.Add(newQuest);
+                
+                gameData.SaveSession(sessionData);
                 return;
 
             case QUEST_STATE.Update:
-                for (int i = 0; i < listQuest.Count; i++)
+                for (int i = 0; i < sessionData.listQuest.Count; i++)
                 {
-                    if (listQuest[i].data = evt.data)
+                    if (sessionData.listQuest[i].data = evt.data)
                     {
-                        listQuest[i].currentStep++;
+                        sessionData.listQuest[i].currentStep++;
 
-                        if (listQuest[i].currentStep >= evt.data.steps)
-                        {
-                            CompleteQuest(i);
-                        }
-                        else
-                        {
-                            Debug.Log($"<b> QUEST UPDATED! </b>");
-                        }
+                        if (sessionData.listQuest[i].currentStep >= evt.data.steps)CompleteQuest(i);
+
                         return;
                     }
                 }
-                break;
+                return;
 
             case QUEST_STATE.Complete:
-                for (int i = 0; i < listQuest.Count; i++)
+                for (int i = 0; i < sessionData.listQuest.Count; i++)
                 {
-                    if (listQuest[i].data = evt.data)
+                    if (sessionData.listQuest[i].data = evt.data)
                     {
                         CompleteQuest(i);
                         return;
                     }
                 }
-                break;
-
+                return;
         }
 
         Debug.LogError($"<color=red><b>[ERROR]</b></color> OnQuest fail! Quest: {evt.data.name}, State: {evt.state}");
     }
+
+    #endregion
+
+    #region  Editor
+
+#if UNITY_EDITOR
+
+    public void EditorSave()
+    {
+        SessionEvent sessionEvent = new SessionEvent();
+        sessionEvent.option = SESSION_OPTION.Save;
+        EventController.TriggerEvent(sessionEvent);
+    }
+
+    public void EditorLoad()
+    {
+        SessionEvent sessionEvent = new SessionEvent();
+        sessionEvent.option = SESSION_OPTION.Load;
+        EventController.TriggerEvent(sessionEvent);
+    }
+
+#endif
 
     #endregion
 

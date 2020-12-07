@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
     // Walk
     private float _speedWalk = 3.5f;
-    private bool _isWalking;
+    // private bool _isWalking;
 
     //Jump
     // private float _jump = 9.81f;
@@ -57,13 +57,13 @@ public class PlayerController : MonoBehaviour
     private bool _isJumping;
 
     // Ivy
-    private float _speedIvy = 5f;
+    // private float _speedIvy = 5f;
     private bool _inIvy = false;
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
 
     // Zipline
-    private float _speedZipline = .35f;
+    // private float _speedZipline = .35f;
 
     // Ledge
     private Vector3 newPos;
@@ -265,7 +265,7 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckRun()
     {
-        return !_isWalking && Mathf.Abs(_inputMovement.x) > _axisLimit || !_isWalking && Mathf.Abs(_inputMovement.y) > _axisLimit;
+        return /* !_isWalking && */ Mathf.Abs(_inputMovement.x) > _axisLimit || /* !_isWalking  && */Mathf.Abs(_inputMovement.y) > _axisLimit;
     }
 
     private void Jump()

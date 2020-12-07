@@ -12,4 +12,6 @@ public interface IDialogueable
     bool DDFirstTime();
     bool DDFinished();
     bool DDCheckQuest();
+    bool DDHaveQuest();
+    void DDFinish();
 }
