@@ -170,6 +170,8 @@ public class DDUtility : MonoBehaviour
         _currentDialog = "";
         _dialogTxt.text = "";
 
+        _dialogState = DIALOG_STATE.Ready;
+
         _canvasUtility.Show(true);
 
         _dialoguePlayer.Play();
@@ -256,9 +258,9 @@ public class DDUtility : MonoBehaviour
 
         yield return _waitStart;
 
-        _totalVisibleCharacters = _dialogTxt.textInfo.characterCount;
-
         _isReading = false;
+
+        _totalVisibleCharacters = _dialogTxt.textInfo.characterCount;
 
         while (_visibleCount < _totalVisibleCharacters)
         {
@@ -311,7 +313,20 @@ public class DDUtility : MonoBehaviour
 
     private void SelectNode(int index)
     {
-        _dialoguePlayer.AdvanceMessage(index);
+        switch (_dialogState)
+        {
+            case DIALOG_STATE.Ready:
+                break;
+
+            case DIALOG_STATE.InProgress:
+                CompleteText();
+                break;
+
+            case DIALOG_STATE.Done:
+                _dialoguePlayer.AdvanceMessage(index);
+                break;
+        }
+
     }
 
     private void Select()

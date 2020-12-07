@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
 public class CanvasGroupUtility : MonoBehaviour
@@ -14,11 +15,14 @@ public class CanvasGroupUtility : MonoBehaviour
     private bool _isShowing;
     private Canvas _canvas;
     private CanvasGroup _canvasGroup;
+    private LayoutElement _layoutElement;
 
     private void Awake()
     {
         _canvas = GetComponent<Canvas>();
         _canvasGroup = GetComponent<CanvasGroup>();
+        _layoutElement = GetComponent<LayoutElement>();
+
         _isShowing = _canvasGroup.alpha == 1 ? true : false;
 
         SetProperties(true);
@@ -55,6 +59,8 @@ public class CanvasGroupUtility : MonoBehaviour
     {
         _canvas.enabled = isEnabled;
         _canvasGroup.interactable = isEnabled;
+
+        if (_layoutElement != null)_layoutElement.ignoreLayout = !isEnabled;
 
         if (!isEnabled)CallEvent(false);
     }
