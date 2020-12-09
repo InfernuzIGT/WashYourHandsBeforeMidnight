@@ -4,41 +4,34 @@ using UnityEngine.Events;
 using UnityEngine.Playables;
 
 [System.Serializable]
-public class QuestData
+public struct InteractionData
 {
-    public QuestStatusSO questStatus;
+    public TextAsset dialogDD;
     [Space]
     public QuestSO quest;
-    public QUEST_STATE state;
-    public int[] progress;
-}
-
-[System.Serializable]
-public class CutsceneData
-{
-    public PlayableAsset playableAsset;
-    public bool playInCollision;
 }
 
 [RequireComponent(typeof(BoxCollider))]
-public class Interaction : MonoBehaviour
+public class Interaction : MonoBehaviour, IDialogueable
 {
     [System.Serializable]
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     [Header("Interaction")]
-    public QuestStatusSO questStatus;
-    // public QuestData questData;
+    public InteractionData[] data;
     [Space]
-    public CutsceneData cutsceneData;
+    public QUEST_STATE[] questState;
     [Space]
+    public PlayableAsset cutscene;
     [Space]
     public InteractionUnityEvent onEnter;
     public InteractionUnityEvent onExit;
 
     private SpriteRenderer _hintSprite;
+    private PlayerSO _playerData;
 
     private CutsceneEvent _cutsceneEvent;
+    private QuestEvent _questEvent;
     private ShowInteractionHintEvent _showInteractionHintEvent;
 
     public virtual void Awake()
@@ -48,6 +41,7 @@ public class Interaction : MonoBehaviour
         _hintSprite.enabled = false;
 
         _cutsceneEvent = new CutsceneEvent();
+        _questEvent = new QuestEvent();
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
     }
 
@@ -55,6 +49,8 @@ public class Interaction : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag(Tags.Player) && _playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
+
         onEnter.Invoke(other);
         ShowHint(true);
     }
@@ -73,37 +69,27 @@ public class Interaction : MonoBehaviour
         EventController.TriggerEvent(_showInteractionHintEvent);
     }
 
-    // protected void AddListenerQuest()
-    // {
-    //     if (questData.quest == null)return;
-
-    //     EventController.AddListener<InteractionEvent>(OnInteractQuest);
-    // }
-
-    // protected void RemoveListenerQuest()
-    // {
-    //     if (questData.quest == null)return;
-
-    //     EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
-    // }
-
-    // private void OnInteractQuest(InteractionEvent evt)
-    // {
-    //     GameManager.Instance.ProgressQuest(questData.quest, questData.progress[0]);
-
-    //     EventController.RemoveListener<InteractionEvent>(OnInteractQuest);
-    // }
-
-    protected void PlayCutscene()
+    protected void TriggerCutscene()
     {
-        if (cutsceneData.playableAsset == null)return;
-        if (_cutsceneEvent.isTriggered == true)return;
+        if (cutscene == null)return;
 
-        _cutsceneEvent.cutscene = cutsceneData.playableAsset;
-
-        _cutsceneEvent.isTriggered = true;
-
+        _cutsceneEvent.cutscene = cutscene;
         EventController.TriggerEvent(_cutsceneEvent);
+    }
+
+    public TextAsset GetDialogData()
+    {
+        return data[_playerData.ID].dialogDD;
+    }
+
+    public QuestSO GetQuestData()
+    {
+        return data[_playerData.ID].quest;
+    }
+
+    public QUEST_STATE GetQuestState()
+    {
+        return questState[_playerData.ID];
     }
 
     #endregion
@@ -111,7 +97,44 @@ public class Interaction : MonoBehaviour
     #region Execution
 
     public virtual void Execute() { }
+    public virtual void Execute(bool enable) { }
     public virtual void Execute(bool enable, NPCController currentNPC) { }
+
+    #endregion
+
+    #region Dialogue Designer
+
+    public void DDQuest(QUEST_STATE state)
+    {
+        _questEvent.data = GetQuestData();
+        _questEvent.state = state;
+        EventController.TriggerEvent(_questEvent);
+    }
+
+    public bool DDFirstTime()
+    {
+        return !GameData.Instance.CheckAndWriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.FirstTime));
+    }
+
+    public bool DDFinished()
+    {
+        return GameData.Instance.CheckID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
+    }
+
+    public bool DDCheckQuest()
+    {
+        return GameData.Instance.CheckQuest(GetQuestData());
+    }
+
+    public bool DDHaveQuest()
+    {
+        return GameData.Instance.HaveQuest(GetQuestData());
+    }
+
+    public void DDFinish()
+    {
+        GameData.Instance.WriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
+    }
 
     #endregion
 }

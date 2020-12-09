@@ -87,14 +87,6 @@ public enum MENU_TYPE
     YesPopup = 8,
 }
 
-public enum QUEST_STATE
-{
-    None = 0,
-    Ready = 1,
-    InProgress = 2,
-    Completed = 3
-}
-
 public enum DIALOG_TYPE
 {
     None = 0,

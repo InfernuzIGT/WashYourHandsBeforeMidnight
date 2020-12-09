@@ -12,13 +12,13 @@ public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] private CanvasGroupUtility _canvasUtility = null;
     [Space]
     [SerializeField] private TextMeshProUGUI _text = null;
-    [SerializeField] private GameObject _selection = null;
+    [SerializeField] private Image _selectionImg = null;
     [SerializeField] private Image _inputImg = null;
 
     private void Start()
     {
         _inputImg.enabled = false;
-        _selection.SetActive(false);
+        _selectionImg.enabled = false;
         _canvasUtility.ShowInstant(false);
     }
 
@@ -29,18 +29,19 @@ public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void Show(string text)
     {
+        // gameObject.SetActive(true);
+
         _text.text = text;
-        _button.interactable = true;
 
         _canvasUtility.Show(true);
+
+        _selectionImg.enabled = false;
     }
 
     public void Hide()
     {
-        _button.interactable = false;
-        _selection.SetActive(false);
-        _inputImg.enabled = false;
         _canvasUtility.ShowInstant(false);
+        // gameObject.SetActive(false);
     }
 
     public void UpdateText(string text)
@@ -60,11 +61,11 @@ public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
-        _selection.SetActive(true);
+        _selectionImg.enabled = true;
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        _selection.SetActive(false);
+        _selectionImg.enabled = false;
     }
 }

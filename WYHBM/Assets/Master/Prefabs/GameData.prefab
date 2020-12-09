@@ -47,14 +47,11 @@ MonoBehaviour:
   worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
   combatConfig: {fileID: 11400000, guid: aef813af54698824ba8ae4f7bee4a0c3, type: 2}
   textConfig: {fileID: 11400000, guid: f71be2b2a211cce44bb4c3a9b28874c7, type: 2}
-  localizationUtility: {fileID: 8947044879963769972}
   deviceData:
   - {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
   - {fileID: 11400000, guid: 6893bcf79cdc59244bac89d9c3fbfa19, type: 2}
   - {fileID: 11400000, guid: 7e3cf72de6efb51459e9cb869088913a, type: 2}
   - {fileID: 11400000, guid: 584e150e9d0803c439026b42b6ca259d, type: 2}
-  persistenceItem: {fileID: 11400000, guid: e1074e1cc67a8324e9554958d4af9e20, type: 2}
-  persistenceQuest: {fileID: 11400000, guid: 6dda44ac4fcc01448a9d9e83cb6d56d6, type: 2}
 --- !u!114 &8947044879963769972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +64,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfcb2e4ec94b8af40bc7e0e6f124f08a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _language: en
+  _language: 
   OnUpdateLanguage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7222876601119083809}
+        m_MethodName: UpdateLanguage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

@@ -12,14 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7eb0417692f4ca47b252304c31de6be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showPopup: 1
+  data: []
+  questState: 
+  cutscene: {fileID: 0}
   onEnter:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5916925748176518425}
+        m_MethodName: OnInteractionEnter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onExit:
     m_PersistentCalls:
-      m_Calls: []
-  dialog: {fileID: 0}
+      m_Calls:
+      - m_Target: {fileID: 5916925748176518425}
+        m_MethodName: OnInteractionExit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &986258466982117238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27,10 +50,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6336170719119332957, guid: 109232e5a0434c744a00baf85d3299f2,
+    - target: {fileID: 212643904017522734, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
-      propertyPath: m_Name
-      value: Interaction Dialog
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
@@ -87,10 +110,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 212643904017522734, guid: 109232e5a0434c744a00baf85d3299f2,
+    - target: {fileID: 6336170719119332957, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
-      propertyPath: m_Mesh
-      value: 
+      propertyPath: m_Name
+      value: Interaction Dialog
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 109232e5a0434c744a00baf85d3299f2, type: 3}

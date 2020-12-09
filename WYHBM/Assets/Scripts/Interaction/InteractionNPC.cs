@@ -2,7 +2,7 @@
 // using FMODUnity;
 using UnityEngine;
 
-public class InteractionNPC : Interaction, IDialogueable
+public class InteractionNPC : Interaction
 {
     // [Header("NPC")]
     // [SerializeField] private NPCController NPC;
@@ -21,20 +21,12 @@ public class InteractionNPC : Interaction, IDialogueable
     {
         base.Execute();
 
-        _interactionDialogEvent.npc = currentNPC;
-        _interactionDialogEvent.data = currentNPC.Data;
         _interactionDialogEvent.enable = enable;
+        _interactionDialogEvent.npc = currentNPC;
+        _interactionDialogEvent.dialogueable = currentNPC;
+        _interactionDialogEvent.dialogue = currentNPC.GetDialogData();
 
         EventController.TriggerEvent(_interactionDialogEvent);
-
-        // if (enable)
-        // {
-        //     AddListenerQuest();
-        // }
-        // else
-        // {
-        //     RemoveListenerQuest();
-        // }
 
         // switch (data.interactionType)
         // {
@@ -69,16 +61,4 @@ public class InteractionNPC : Interaction, IDialogueable
         // }
     }
 
-    #region Dialogue Designer
-
-    public void DDGiveReward()
-    { }
-
-    public bool DDHaveAmount()
-    {
-        return false;
-        // return haveAmount;
-    }
-
-    #endregion
 }

@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class InteractionSave : Interaction, IInteractable
 {
-    private string title = "Save Game";
+    private SessionEvent _sessionEvent;
 
-    public override void Awake()
+    private void Start()
     {
-        base.Awake();
-
+        _sessionEvent = new SessionEvent();
+        _sessionEvent.option = SESSION_OPTION.Save;
     }
 
     public void OnInteractionEnter(Collider other)
@@ -29,6 +29,7 @@ public class InteractionSave : Interaction, IInteractable
 
     private void OnInteractSave(InteractionEvent evt)
     {
-        // GameManager.Instance.SaveGame();
+        EventController.TriggerEvent(_sessionEvent);
+        EventController.RemoveListener<InteractionEvent>(OnInteractSave);
     }
 }

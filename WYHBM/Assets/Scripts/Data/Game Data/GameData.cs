@@ -1,31 +1,66 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+public enum SESSION_OPTION
+{
+	Save = 0,
+	Load = 1,
+	Delete = 2,
+}
+
+/// <summary>
+/// Used by:
+/// - GlobalController
+/// - Interaction
+/// - NPCController
+/// </summary>
 
 [RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
+	public SessionData sessionData;
+
 	[Header("Config")]
 	public WorldConfig worldConfig;
 	public CombatConfig combatConfig;
 	public TextConfig textConfig;
 
-	[Header("Localization")]
-	public LocalizationUtility localizationUtility;
-
 	[Header("Input System")]
 	public DeviceSO[] deviceData;
 
-	[Header("Persistence")]
-	public ItemSO persistenceItem;
-	public QuestSO persistenceQuest;
-	// public Transform newSpawnPos;
+	private GlobalController _globalController;
+	private LocalizationUtility _localizationUtility;
+	private UpdateLanguageEvent _updateLanguageEvent;
 
-	public string GetLanguage()
+	protected override void Awake()
 	{
-		return localizationUtility.Language;
+		base.Awake();
+
+		_globalController = GameObject.FindObjectOfType<GlobalController>();
+
+		// Load();
+	}
+
+	private void Start()
+	{
+		_localizationUtility = GetComponent<LocalizationUtility>();
+
+		_updateLanguageEvent = new UpdateLanguageEvent();
+	}
+
+	public void SelectNextLanguage()
+	{
+		_localizationUtility.SelectNextLanguage(true);
+	}
+
+	public void UpdateLanguage(string language)
+	{
+		_updateLanguageEvent.language = language;
+		EventController.TriggerEvent(_updateLanguageEvent);
 	}
 
 	public Sprite GetInputIcon(DEVICE device, INPUT_ACTION action)
@@ -40,8 +75,6 @@ public class GameData : MonoSingleton<GameData>
 
 		return null;
 	}
-
-	#region Load Scene
 
 	public void LoadScene(SCENE_INDEX sceneIndex)
 	{
@@ -58,21 +91,76 @@ public class GameData : MonoSingleton<GameData>
 		}
 	}
 
-	#endregion
-
 	#region Persistence
 
-	private static SessionData _data;
-	public static SessionData Data
+	public bool SaveSession(SessionData currentSession)
 	{
-		get
+		sessionData = currentSession;
+		return Save();
+	}
+
+	public SessionData LoadSession()
+	{
+		Load();
+		return sessionData;
+	}
+
+	public bool CheckID(string id)
+	{
+		return _globalController.sessionData.listIds.Contains(id);
+	}
+
+	public void WriteID(string id)
+	{
+		if (!_globalController.sessionData.listIds.Contains(id))
 		{
-			if (_data == null)LoadData();
-			return _data;
+			_globalController.sessionData.listIds.Add(id);
+			// sessionData.listIds.Add(id);
+			Save();
 		}
 	}
 
-	private static bool LoadData()
+	public bool CheckAndWriteID(string id)
+	{
+		bool containId = _globalController.sessionData.listIds.Contains(id);
+
+		if (!containId)
+		{
+			_globalController.sessionData.listIds.Add(id);
+			// sessionData.listIds.Add(id);
+			Save();
+		}
+
+		return containId;
+	}
+
+	public bool CheckQuest(QuestSO questData)
+	{
+		for (int i = 0; i < _globalController.sessionData.listQuest.Count; i++)
+		{
+			if (_globalController.sessionData.listQuest[i].data == questData)
+			{
+				return _globalController.sessionData.listQuest[i].currentStep >= questData.steps;
+			}
+		}
+
+		return false;
+	}
+
+	public bool HaveQuest(QuestSO questData)
+	{
+		for (int i = 0; i < _globalController.sessionData.listQuest.Count; i++)
+		{
+			if (_globalController.sessionData.listQuest[i].data == questData)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public bool Load()
 	{
 		bool valid = false;
 
@@ -82,29 +170,29 @@ public class GameData : MonoSingleton<GameData>
 			bool success = DESEncryption.TryDecrypt(data, out string original);
 			if (success)
 			{
-				_data = JsonUtility.FromJson<SessionData>(original);
+				sessionData = JsonUtility.FromJson<SessionData>(original);
 				valid = true;
 			}
-			else
-			{
-				_data = new SessionData();
-			}
+			// else
+			// {
+			// 	sessionData = new SessionData();
+			// }
 		}
-		else
-		{
-			_data = new SessionData();
-		}
+		// else
+		// {
+		// 	sessionData = new SessionData();
+		// }
 
 		return valid;
 	}
 
-	public static bool SaveData()
+	public bool Save()
 	{
 		bool valid = false;
 
 		try
 		{
-			string result = DESEncryption.Encrypt(JsonUtility.ToJson(_data));
+			string result = DESEncryption.Encrypt(JsonUtility.ToJson(sessionData));
 			PlayerPrefs.SetString("data", result);
 			PlayerPrefs.Save();
 			valid = true;
@@ -117,7 +205,7 @@ public class GameData : MonoSingleton<GameData>
 		return valid;
 	}
 
-	public static bool DeleteAllData()
+	public bool DeleteAll()
 	{
 		bool valid = false;
 
@@ -131,6 +219,8 @@ public class GameData : MonoSingleton<GameData>
 			Debug.LogError($"<color=red><b>[ERROR]</b></color> Save Data: {ex}");
 		}
 
+		sessionData = null;
+
 		return valid;
 	}
 
@@ -141,30 +231,15 @@ public class GameData : MonoSingleton<GameData>
 [Serializable]
 public class SessionData
 {
-	public List<ItemSO> items = new List<ItemSO>();
-	public List<QuestSO> listQuest = new List<QuestSO>();
-	public List<int> listProgress = new List<int>();
-	public bool isDataLoaded;
+	public PlayerSO playerData;
 	public Transform newSpawnPoint;
+
+	public List<Quest> listQuest;
+	public List<string> listIds;
 
 	public SessionData()
 	{
-		// items.Add(GameData.Instance.persistenceItem);
-		// listQuest.Add(GameData.Instance.persistenceQuest);
-		// listProgress.Add(0);
-
-		// isDataLoaded = true;
-
-		// guardar variable de data cargada 
-		// crea actualiza el spawn point a la posicion guardada, moviendo el spawnpoint a esa pos
-
-		// GameData.Instance.newSpawnPos = newSpawnPoint;
-		// newSpawnPoint = GameManager.Instance.globalController.player.transform;
-
-		// newSpawnPoint.TransformPoint(
-		// 	GameManager.Instance.globalController.player.transform.position.x,
-		// 	GameManager.Instance.globalController.player.transform.position.y,
-		// 	GameManager.Instance.globalController.player.transform.position.z);
-
+		listQuest = new List<Quest>();
+		listIds = new List<string>();
 	}
 }

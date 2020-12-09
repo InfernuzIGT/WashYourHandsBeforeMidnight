@@ -15,7 +15,7 @@ public class DDUtility : MonoBehaviour
         Done = 2
     }
 
-    [SerializeField, ReadOnly] private NPCSO _currentNPC = null;
+    [SerializeField, ReadOnly] private NPCController _currentNPC = null;
     [SerializeField, ReadOnly] private string _currentLanguage = "";
     [SerializeField, ReadOnly] private DIALOG_STATE _dialogState = DIALOG_STATE.Done;
 
@@ -27,9 +27,10 @@ public class DDUtility : MonoBehaviour
     [SerializeField] private InputActionReference _actionCancel = null;
     [Space]
     [SerializeField] private Button _dialogPanelBtn = null;
+    [SerializeField] private TextMeshProUGUI _dialogTxt = null;
     [SerializeField] private DDButton[] _ddButtons = null;
     [Space]
-    [SerializeField] private TextMeshProUGUI _dialogTxt = null;
+    [SerializeField] private CanvasGroup _canvasImagePanel = null;
     [SerializeField] private Image _npcImg = null;
     [SerializeField] private TextMeshProUGUI _npcTxt = null;
     [SerializeField] private GameObject _continueImg = null;
@@ -60,20 +61,25 @@ public class DDUtility : MonoBehaviour
     private ShowMessageNode _showMessageNode;
     private ShowMessageNodeChoice _choiceNode;
 
-    private const string emotion = "emotion";
-
     public enum DDExecuteScript
     {
-        GiveReward
+        NewQuest,
+        UpdateQuest,
+        CompleteQuest,
+        Finish,
     }
 
     public enum DDEvaluateCondition
     {
-        HaveAmount
+        FirstTime,
+        Finished,
+        CheckQuest,
+        HaveQuest,
     }
 
     private Dialogue _loadedDialogue;
     private DialoguePlayer _dialoguePlayer;
+    private IDialogueable _dialogueable;
 
     #endregion
 
@@ -92,8 +98,6 @@ public class DDUtility : MonoBehaviour
 
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
         _eventSystemEvent = new EventSystemEvent();
-
-        _currentLanguage = GameData.Instance.GetLanguage();
 
         for (int i = 0; i < _ddButtons.Length; i++)
         {
@@ -114,6 +118,7 @@ public class DDUtility : MonoBehaviour
     private void OnEnable()
     {
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<UpdateLanguageEvent>(OnUpdateLanguage);
 
         DialoguePlayer.GlobalOnShowMessage += OnShowMessage;
         DialoguePlayer.GlobalOnEvaluateCondition += OnEvaluateCondition;
@@ -123,6 +128,7 @@ public class DDUtility : MonoBehaviour
     private void OnDisable()
     {
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<UpdateLanguageEvent>(OnUpdateLanguage);
 
         DialoguePlayer.GlobalOnShowMessage -= OnShowMessage;
         DialoguePlayer.GlobalOnEvaluateCondition -= OnEvaluateCondition;
@@ -138,14 +144,16 @@ public class DDUtility : MonoBehaviour
     {
         if (evt.enable)
         {
-            _currentNPC = evt.data;
-            _loadedDialogue = Dialogue.FromAsset(evt.data.DialogDD);
+            _currentNPC = evt.npc;
+            _loadedDialogue = Dialogue.FromAsset(evt.dialogue);
+            _dialogueable = evt.dialogueable;
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
         }
         else
         {
             _currentNPC = null;
             _loadedDialogue = null;
+            _dialogueable = null;
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
         }
     }
@@ -159,11 +167,22 @@ public class DDUtility : MonoBehaviour
 
         UpdateNode(_dialoguePlayer.CurrentNode as ShowMessageNode);
 
-        _npcImg.sprite = _currentNPC.GetIcon(EMOTION.None);
-        _npcTxt.text = _currentNPC.name;
+        if (_currentNPC != null)
+        {
+            _canvasImagePanel.alpha = 1;
+
+            _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
+            _npcTxt.text = _currentNPC.name;
+        }
+        else
+        {
+            _canvasImagePanel.alpha = 0;
+        }
 
         _currentDialog = "";
         _dialogTxt.text = "";
+
+        _dialogState = DIALOG_STATE.Ready;
 
         _canvasUtility.Show(true);
 
@@ -195,6 +214,9 @@ public class DDUtility : MonoBehaviour
         _dialogTxt.text = "";
 
         _canvasUtility.Show(false);
+
+        _eventSystemEvent.objectSelected = null;
+        EventController.TriggerEvent(_eventSystemEvent);
 
         _showInteractionHintEvent.show = true;
         EventController.TriggerEvent(_showInteractionHintEvent);
@@ -248,9 +270,9 @@ public class DDUtility : MonoBehaviour
 
         yield return _waitStart;
 
-        _totalVisibleCharacters = _dialogTxt.textInfo.characterCount;
-
         _isReading = false;
+
+        _totalVisibleCharacters = _dialogTxt.textInfo.characterCount;
 
         while (_visibleCount < _totalVisibleCharacters)
         {
@@ -303,7 +325,20 @@ public class DDUtility : MonoBehaviour
 
     private void SelectNode(int index)
     {
-        _dialoguePlayer.AdvanceMessage(index);
+        switch (_dialogState)
+        {
+            case DIALOG_STATE.Ready:
+                break;
+
+            case DIALOG_STATE.InProgress:
+                CompleteText();
+                break;
+
+            case DIALOG_STATE.Done:
+                _dialoguePlayer.AdvanceMessage(index);
+                break;
+        }
+
     }
 
     private void Select()
@@ -327,9 +362,11 @@ public class DDUtility : MonoBehaviour
         SelectNode(_lastIndexButton);
     }
 
-    public void UpdateLanguage(string language)
+    private void OnUpdateLanguage(UpdateLanguageEvent evt)
     {
-        _currentLanguage = language;
+        _currentLanguage = evt.language;
+
+        if (_dialoguePlayer == null || _showMessageNode == null)return;
 
         _currentDialog = _showMessageNode.GetText(_currentLanguage);
         _dialogTxt.text = _currentDialog;
@@ -349,10 +386,17 @@ public class DDUtility : MonoBehaviour
         {
             switch (scriptParsed)
             {
-                case DDEvaluateCondition.HaveAmount:
-                    // TODO Mariano: Review
-                    // return _currentNPC.DDHaveAmount(); 
-                    return true;
+                case DDEvaluateCondition.FirstTime:
+                    return _dialogueable.DDFirstTime();
+
+                case DDEvaluateCondition.Finished:
+                    return _dialogueable.DDFinished();
+
+                case DDEvaluateCondition.CheckQuest:
+                    return _dialogueable.DDCheckQuest();
+
+                case DDEvaluateCondition.HaveQuest:
+                    return _dialogueable.DDHaveQuest();
 
                 default:
                     Debug.LogError($"<color=red><b>[ERROR]</b></color> No DDEvaluateCondition", gameObject);
@@ -366,13 +410,13 @@ public class DDUtility : MonoBehaviour
 
     private void OnExecuteScript(DialoguePlayer sender, string script)
     {
-        if (script.Contains(emotion))
+        if (script.Contains(DDParameters.Emotion))
         {
             string[] emotionArray = script.Split('=');
 
             if (int.TryParse(emotionArray[1], out int emotionId))
             {
-                _npcImg.sprite = _currentNPC.GetIcon((EMOTION)emotionId);
+                _npcImg.sprite = _currentNPC.Data.GetIcon((EMOTION)emotionId);
             }
             else
             {
@@ -386,8 +430,20 @@ public class DDUtility : MonoBehaviour
         {
             switch (scriptParsed)
             {
-                case DDExecuteScript.GiveReward:
-                    // _currentNPC.DDGiveReward();
+                case DDExecuteScript.NewQuest:
+                    _dialogueable.DDQuest(QUEST_STATE.New);
+                    break;
+
+                case DDExecuteScript.UpdateQuest:
+                    _dialogueable.DDQuest(QUEST_STATE.Update);
+                    break;
+
+                case DDExecuteScript.CompleteQuest:
+                    _dialogueable.DDQuest(QUEST_STATE.Complete);
+                    break;
+
+                case DDExecuteScript.Finish:
+                    _dialogueable.DDFinish();
                     break;
 
                 default:

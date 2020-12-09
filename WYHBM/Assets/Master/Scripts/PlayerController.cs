@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController), typeof(DeviceUtility))]
 public class PlayerController : MonoBehaviour
 {
-    public PlayerSO playerData;
+    [SerializeField, ReadOnly] private PlayerSO _playerData;
 
     [Header("Review")]
     public bool _inZipline = false;
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
     // Walk
     private float _speedWalk = 3.5f;
-    private bool _isWalking;
+    // private bool _isWalking;
 
     //Jump
     // private float _jump = 9.81f;
@@ -57,13 +57,13 @@ public class PlayerController : MonoBehaviour
     private bool _isJumping;
 
     // Ivy
-    private float _speedIvy = 5f;
+    // private float _speedIvy = 5f;
     private bool _inIvy = false;
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
 
     // Zipline
-    private float _speedZipline = .35f;
+    // private float _speedZipline = .35f;
 
     // Ledge
     private Vector3 newPos;
@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
 
     public bool IsDetectingGround { get => _isDetectingGround; set => _isDetectingGround = value; }
+    public PlayerSO PlayerData { get { return _playerData; } }
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
@@ -264,7 +265,7 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckRun()
     {
-        return !_isWalking && Mathf.Abs(_inputMovement.x) > _axisLimit || !_isWalking && Mathf.Abs(_inputMovement.y) > _axisLimit;
+        return /* !_isWalking && */ Mathf.Abs(_inputMovement.x) > _axisLimit || /* !_isWalking  && */Mathf.Abs(_inputMovement.y) > _axisLimit;
     }
 
     private void Jump()
@@ -397,24 +398,21 @@ public class PlayerController : MonoBehaviour
 
     private void Interaction()
     {
-        _interaction = !_interaction; // TODO Mariano: Reset to FALSE when Input is RE-ENABLED
+        _interaction = !_interaction;
 
-        // if (!GameManager.Instance.inCombat)
-        // {
         _interactionEvent.isStart = _interaction;
         _interactionEvent.lastPlayerPosition = transform.position;
         _interactionEvent.isRunning = _isRunning;
         EventController.TriggerEvent(_interactionEvent);
-        // }
     }
 
     public void SetPlayerData(PlayerSO data)
     {
-        playerData = data;
+        _playerData = data;
 
-        gameObject.name = string.Format("[Player] {0}", playerData.name);
-        GetComponent<SpriteRenderer>().sprite = playerData.spriteBody;
-        GetComponent<Animator>().runtimeAnimatorController = playerData.animatorController;
+        gameObject.name = string.Format("[Player] {0}", _playerData.name);
+        GetComponent<SpriteRenderer>().sprite = _playerData.Sprite;
+        GetComponent<Animator>().runtimeAnimatorController = _playerData.AnimatorController;
     }
 
     public void SwitchMovement()
@@ -483,6 +481,8 @@ public class PlayerController : MonoBehaviour
     private void OnStopMovement(EnableMovementEvent evt)
     {
         _canMove = evt.canMove;
+
+        if (evt.canMove)_interaction = false;
     }
 
     private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)

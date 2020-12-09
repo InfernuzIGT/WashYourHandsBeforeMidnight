@@ -17,9 +17,10 @@ namespace Events
 
     public class EnableDialogEvent : GameEvent
     {
-        public NPCController npc;
-        public NPCSO data;
         public bool enable;
+        public NPCController npc;
+        public TextAsset dialogue;
+        public IDialogueable dialogueable;
     }
 
     public class EnableMovementEvent : GameEvent
@@ -62,10 +63,18 @@ namespace Events
 
     public class CutsceneEvent : GameEvent
     {
-        public bool isTriggered;
         public PlayableAsset cutscene;
+    }
 
-        public int index;
+    public class SessionEvent : GameEvent
+    {
+        public SESSION_OPTION option;
+    }
+
+    public class QuestEvent : GameEvent
+    {
+        public QuestSO data;
+        public QUEST_STATE state;
     }
 
     public class MainMenuEvent : GameEvent
@@ -77,7 +86,7 @@ namespace Events
     {
         public DEVICE device;
     }
-    
+
     public class PauseEvent : GameEvent
     {
         public PAUSE_TYPE pauseType;
@@ -89,21 +98,25 @@ namespace Events
         public Vector2 position;
         public Color color;
     }
-    
+
     public class EventSystemEvent : GameEvent
     {
         public GameObject objectSelected;
     }
-    
+
+    public class UpdateLanguageEvent : GameEvent
+    {
+        public string language;
+    }
+
     public class ChangeInputEvent : GameEvent
     {
         public bool enable;
     }
-    
+
     public class ShowInteractionHintEvent : GameEvent
     {
         public bool show;
     }
-
 
 }

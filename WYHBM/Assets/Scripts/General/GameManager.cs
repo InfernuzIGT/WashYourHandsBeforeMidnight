@@ -33,11 +33,6 @@ public class GameManager : MonoSingleton<GameManager>
     [Space]
     public List<EnemyEncounter> enemyEncounters;
 
-    public List<QuestData> listQuestData;
-    // public List<QuestSO> listQuest;
-    // public List<int> listProgress;
-    public Dictionary<int, QuestSO> dictionaryQuest;
-    public Dictionary<int, int> dictionaryProgress;
     public List<Slot> listSlots;
 
     // Combat
@@ -51,17 +46,8 @@ public class GameManager : MonoSingleton<GameManager>
     // private int _equipmentMaxSlots = 3;
     // private int _characterIndex;
 
-    // Hold System
-    // private bool _holdStarted;
-    // private float _holdCurrentTime;
-    // private float _holdLimitTime;
-    // private System.Action _holdCallback;
-    // private UnityEngine.UI.Image _holdImage;
-
     // Coroutines
     private Coroutine _coroutineEnconters;
-    // private Coroutine _coroutineHoldSystem;
-    // private WaitForSeconds _waitHoldEnd;
 
     // Events
     private FadeEvent _fadeEvent;
@@ -70,17 +56,11 @@ public class GameManager : MonoSingleton<GameManager>
     private List<ItemSO> _items;
     public List<ItemSO> Items { get { return _items; } }
 
-    // private float _holdFillValue;
-    // public float HoldFillValue { get { return _holdFillValue; } }
-
     // public bool IsInventoryFull { get { return _items.Count == _inventoryMaxSlots; } }
     // public bool IsEquipmentFull { get { return combatPlayers[_characterIndex].equipment.Count == _equipmentMaxSlots; } }
 
-    private DialogSO _currentDialog;
-    public DialogSO CurrentDialog { get { return _currentDialog; } }
-
-    private QuestData _currentQuestData;
-    public QuestData CurrentQuestData { get { return _currentQuestData; } }
+    // private QuestData _currentQuestData;
+    // public QuestData CurrentQuestData { get { return _currentQuestData; } }
 
     protected override void Awake()
     {
@@ -91,23 +71,13 @@ public class GameManager : MonoSingleton<GameManager>
     {
         _items = new List<ItemSO>();
 
-        // listQuest = new List<QuestSO>();
-        // listProgress = new List<int>();
-        listQuestData = new List<QuestData>();
-        dictionaryQuest = new Dictionary<int, QuestSO>();
-        dictionaryProgress = new Dictionary<int, int>();
-
         listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.fadeFast = true;
 
-        // _waitHoldEnd = new WaitForSeconds(1f);
-
         // _characterIndex = 0;
         // worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
-
-        // GameManager.Instance.LoadGame();
 
         inCombat = false;
 
@@ -118,7 +88,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
-        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
 
     }
@@ -127,7 +96,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
-        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
     }
 
@@ -278,56 +246,6 @@ public class GameManager : MonoSingleton<GameManager>
         if (canSelect)combatUI.ShowActions(combatIndex);
     }
 
-    // #region Hold System
-
-    // public void SetHoldSystem(ref UnityEngine.UI.Image image, float limitTime, System.Action callback)
-    // {
-    //     _holdImage = image;
-    //     _holdLimitTime = limitTime;
-    //     _holdCallback = callback;
-    // }
-
-    // public void CallHoldSystem(bool isStart)
-    // {
-    //     _holdStarted = isStart;
-
-    //     if (_holdStarted)
-    //     {
-    //         _coroutineHoldSystem = StartCoroutine(Hold());
-    //     }
-    //     else
-    //     {
-    //         StopCoroutine(_coroutineHoldSystem);
-
-    //         _holdCurrentTime = 0;
-    //         _holdImage.fillAmount = 0;
-    //     }
-    // }
-
-    // private IEnumerator Hold()
-    // {
-    //     while (_holdStarted)
-    //     {
-    //         _holdCurrentTime += Time.deltaTime;
-
-    //         _holdImage.fillAmount = _holdCurrentTime / _holdLimitTime;
-
-    //         if (_holdCurrentTime > _holdLimitTime)
-    //         {
-    //             _holdImage.fillAmount = 1;
-    //             _holdCallback.Invoke();
-
-    //             yield return _waitHoldEnd;
-
-    //             CallHoldSystem(false);
-    //         }
-
-    //         yield return null;
-    //     }
-    // }
-
-    // #endregion
-
     #region Inventory
 
     // public void AddItem(ItemSO item)
@@ -380,53 +298,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     #endregion
 
-    #region Quest
-
-    public void AddQuest(QuestSO data)
-    {
-        if (!dictionaryQuest.ContainsKey(data.GetInstanceID()))
-        {
-            dictionaryQuest.Add(data.GetInstanceID(), data);
-
-            dictionaryProgress.Add(data.GetInstanceID(), 0);
-        }
-
-        // for (int i = 0; i < data.objectsToDestroy.Length; i++)
-        // {
-        // Destroy(data.objectsToDestroy[i].gameObject);
-        // }
-
-        // if (!listQuest.ContainsKey(data.GetInstanceID()))
-        // {
-        //     listQuest.Add(data.GetInstanceID(), data);
-
-        //     ListProgress.Add(data.GetInstanceID(), 0);
-        // }
-    }
-
-    public void ProgressQuest(QuestSO quest, int progress)
-    {
-        // if (!dictionaryQuest.ContainsKey(quest.GetInstanceID()) ||
-        //     dictionaryProgress[quest.GetInstanceID()] != progress ||
-        //     dictionaryProgress[quest.GetInstanceID()] >= dictionaryQuest[quest.GetInstanceID()].objetives.Length)
-
-        // {
-        //     return;
-        // }
-
-        dictionaryProgress[quest.GetInstanceID()]++;
-
-        worldUI.UpdateQuest(dictionaryQuest[quest.GetInstanceID()], dictionaryProgress[quest.GetInstanceID()]);
-    }
-
-    public void GiveReward()
-    {
-        // TODO Mariano: Dar recompensa del QuestSO
-        // Instantiate item in inventory
-    }
-
-    #endregion
-
     #region Events
 
     public void OnEnterCombat(EnterCombatEvent evt)
@@ -476,23 +347,6 @@ public class GameManager : MonoSingleton<GameManager>
         EventController.TriggerEvent(_fadeEvent);
     }
 
-    // Enable interaction dialog
-    private void OnEnableDialog(EnableDialogEvent evt)
-    {
-        // if (evt.enable)
-        // {
-        //     _currentDialog = evt.dialog;
-        //     _currentQuestData = evt.questData;
-        //     EventController.AddListener<InteractionEvent>(worldUI.OnInteractionDialog);
-        // }
-        // else
-        // {
-        //     _currentDialog = null;
-        //     _currentQuestData = null;
-        //     EventController.RemoveListener<InteractionEvent>(worldUI.OnInteractionDialog);
-        // }
-    }
-
     private void OnCutscene(CutsceneEvent evt)
     {
         // Debug.Log($"<b> {evt.cutscene.name} </b>");
@@ -503,80 +357,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     #endregion
 
-    #region Persistence
-
-    /* public void LoadGame()
-    {
-        for (int i = 0; i < GameData.Data.items.Count; i++)
-        {
-            if (GameData.Data.items[i] == GameData.Instance.persistenceItem) continue;
-
-            Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, worldUI.itemParents);
-            newSlot.AddItem(GameData.Data.items[i]);
-            listSlots.Add(newSlot);
-
-            GameData.Data.items.Remove(GameData.Instance.persistenceItem);
-        }
-
-        foreach (var key in GameData.Data.listQuest.Keys)
-        {
-            Debug.Log($"<b> {GameData.Data.listQuest[key].title} </b>");
-
-            if (GameData.Data.listQuest[key] == GameData.Instance.persistenceQuest)continue;
-
-            listQuest.Add(GameData.Data.listQuest[key]);
-            listProgress.Add(GameData.Data.listProgress[key]);
-
-            worldUI.ReloadQuest(GameData.Data.listQuest[key]);
-        }
-
-        GameManager.Instance.globalController.spawnPoint = GameData.Data.newSpawnPoint;
-
-    }
-
-    public void SaveGame()
-    {
-        ClearOldData();
-
-        for (int i = 0; i < _items.Count; i++)
-        {
-            GameData.Data.items.Add(_items[i]);
-        }
-
-        foreach (var key in listQuest.Keys)
-        {
-        GameData.Data.dictionaryQuest.Add(dictionaryQuest[key].GetInstanceID(), dictionaryQuest[key]);
-        GameData.Data.dictionaryProgress.Add(dictionaryQuest[key].GetInstanceID(), dictionaryProgress[key]);
-
-        }
-
-        mueve el spawn point a la ultima posicion del jugador
-        guarda la ulitma posicion para mover el spawn point
-
-        GameManager.Instance.globalController.spawnPoint.TransformPoint(
-            GameData.Data.newSpawnPoint.transform.position.x,
-            GameData.Data.newSpawnPoint.transform.position.y,
-            GameData.Data.newSpawnPoint.transform.position.z);
-
-        GameData.SaveData();
-
-    }
-
-    private void ClearOldData()
-    {
-        GameData.Data.items.Clear();
-        GameData.Data.listQuest.Clear();
-        GameData.Data.listProgress.Clear();
-        GameData.Data.position.Translate(59.1f, 0f, -49.4f);
-    }
-
-    [ContextMenu("Delete Game")]
-    public void DeleteGame()
-    {
-        GameData.DeleteAllData();
-        GameData.Data.isDataLoaded = false;
-    } */
-
-    #endregion
+    
 
 }
