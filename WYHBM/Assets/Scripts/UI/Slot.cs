@@ -36,7 +36,7 @@ public class Slot : MonoBehaviour
         // GameManager.Instance.AddItem(_item);
 
         iconImg.sprite = newItem.icon;
-        buttonTxt.text = GameData.Instance.textConfig.itemDrop;
+        // buttonTxt.text = GameData.Instance.textConfig.itemDrop;
         nameTxt.text = newItem.title;
     }
 

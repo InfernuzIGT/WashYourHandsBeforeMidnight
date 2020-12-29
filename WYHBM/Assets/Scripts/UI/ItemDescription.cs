@@ -19,15 +19,15 @@ public class ItemDescription : MonoBehaviour
             case ITEM_TYPE.WeaponOneHand:
             case ITEM_TYPE.WeaponTwoHands:
             case ITEM_TYPE.ItemGrenade:
-                valueTxt.text = string.Format(GameData.Instance.textConfig.itemDamage, item.value.x, item.value.y);
+                // valueTxt.text = string.Format(GameData.Instance.textConfig.itemDamage, item.value.x, item.value.y);
                 break;
 
             case ITEM_TYPE.ItemHeal:
-                valueTxt.text = string.Format(GameData.Instance.textConfig.itemHeal, item.value.x, item.value.y);
+                // valueTxt.text = string.Format(GameData.Instance.textConfig.itemHeal, item.value.x, item.value.y);
                 break;
 
             case ITEM_TYPE.ItemDefense:
-                valueTxt.text = string.Format(GameData.Instance.textConfig.itemDefense, item.value.x);
+                // valueTxt.text = string.Format(GameData.Instance.textConfig.itemDefense, item.value.x);
                 break;
 
             default:
@@ -38,7 +38,7 @@ public class ItemDescription : MonoBehaviour
 
     public void Hide()
     {
-        itemImg.sprite = GameData.Instance.worldConfig.spriteEmptyUI;;
+        // itemImg.sprite = GameData.Instance.worldConfig.spriteEmptyUI;;
         descriptionTxt.text = "";
         valueTxt.text = "";
     }

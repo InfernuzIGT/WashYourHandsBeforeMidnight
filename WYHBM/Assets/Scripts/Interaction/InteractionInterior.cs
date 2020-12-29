@@ -9,7 +9,7 @@ public class InteractionInterior : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            GameManager.Instance.globalController.ChangeWorldCamera();
+            // GameManager.Instance.globalController.ChangeWorldCamera();
         }
     }
 

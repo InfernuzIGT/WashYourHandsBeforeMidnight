@@ -3,6 +3,8 @@
 [RequireComponent(typeof(Camera))]
 public class DetectTargetBehind : MonoBehaviour
 {
+    [SerializeField] private WorldConfig _worldConfig = null;
+
     private Transform _target;
     private TargetBehind _currentTargetBehind;
 
@@ -18,7 +20,7 @@ public class DetectTargetBehind : MonoBehaviour
 
     private void DetectTarget()
     {
-        if (Physics.Linecast(transform.position, _target.position, out RaycastHit hit, GameData.Instance.worldConfig.layerOcclusionMask, QueryTriggerInteraction.UseGlobal))
+        if (Physics.Linecast(transform.position, _target.position, out RaycastHit hit, _worldConfig.layerOcclusionMask, QueryTriggerInteraction.UseGlobal))
         {
             if (_currentTargetBehind != hit.transform.gameObject)
             {

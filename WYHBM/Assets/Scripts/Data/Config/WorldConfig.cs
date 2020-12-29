@@ -13,6 +13,7 @@ public class WorldConfig : ScriptableObject
 
 
     [Header("Fade")]
+    public float fadeCutsceneDuration = 1;
     public float fadeFastDuration = 1.5f;
     public float fadeSlowDuration = 3;
 

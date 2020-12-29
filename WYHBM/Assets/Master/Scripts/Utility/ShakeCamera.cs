@@ -7,6 +7,8 @@ namespace GameMode.Combat
 {
 	public class ShakeCamera : MonoBehaviour
 	{
+		[SerializeField] private CombatConfig _combatConfig = null;
+
 		private float _shakeElapsedTime = 0f;
 		private CinemachineVirtualCamera _virtualCamera;
 		private CinemachineBasicMultiChannelPerlin _virtualCameraNoise;
@@ -40,12 +42,12 @@ namespace GameMode.Combat
 
 		private IEnumerator cShake()
 		{
-			_shakeElapsedTime = GameData.Instance.combatConfig.shakeDuration;
+			_shakeElapsedTime = _combatConfig.shakeDuration;
 
 			while (_shakeElapsedTime > 0)
 			{
-				_virtualCameraNoise.m_AmplitudeGain = GameData.Instance.combatConfig.shakeAmplitude;
-				_virtualCameraNoise.m_FrequencyGain = GameData.Instance.combatConfig.shakeFrequency;
+				_virtualCameraNoise.m_AmplitudeGain = _combatConfig.shakeAmplitude;
+				_virtualCameraNoise.m_FrequencyGain = _combatConfig.shakeFrequency;
 
 				_shakeElapsedTime -= Time.deltaTime;
 				yield return new WaitForEndOfFrame();

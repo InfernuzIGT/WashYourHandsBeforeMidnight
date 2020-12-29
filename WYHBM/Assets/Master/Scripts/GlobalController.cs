@@ -31,21 +31,19 @@ public class GlobalController : MonoBehaviour
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
-    [Header("References")]
-    public GameData gameData;
-    public PlayerController playerController;
+    [Header("References (Scene)")]
     public Camera mainCamera;
     public CinemachineVirtualCamera worldCamera;
+
+    [Header("References (Project)")]
+    public GameData gameData;
+    public PlayerController playerController;
     [Space]
+    public PlayableDirector playableDirector;
     public GameMode.World.UIManager worldUI;
     public GameMode.Combat.UIManager combatUI;
     public Fade fadeUI;
     public EventSystemUtility eventSystemUtility;
-
-    [Header("-DEPRECATED-")]
-    public CinemachineVirtualCamera exteriorCamera;
-    public CinemachineVirtualCamera interiorCamera;
-    public CinemachineVirtualCamera cutscene;
 
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
@@ -54,6 +52,8 @@ public class GlobalController : MonoBehaviour
     private float _offsetPlayer = 1.505f;
 
     private EnableMovementEvent _enableMovementEvent;
+    private CutsceneEvent _cutsceneEvent;
+    private EnableDialogEvent _interactionDialogEvent;
 
     private void Awake()
     {
@@ -72,11 +72,19 @@ public class GlobalController : MonoBehaviour
 
         _enableMovementEvent = new EnableMovementEvent();
 
+        _interactionDialogEvent = new EnableDialogEvent();
+        _interactionDialogEvent.enable = false;
+
+        _cutsceneEvent = new CutsceneEvent();
+        _cutsceneEvent.show = false;
+
         SpawnPlayer();
         SpawnCameras();
         SpawnUI();
         // SetCamera();
         // AddItems();
+
+        playableDirector.stopped += OnCutsceneStop;
 
 #if UNITY_EDITOR
         Cursor.visible = true;
@@ -97,6 +105,7 @@ public class GlobalController : MonoBehaviour
         EventController.AddListener<QuestEvent>(OnQuest);
         EventController.AddListener<ChangeInputEvent>(OnChangeInput);
         EventController.AddListener<SessionEvent>(OnSession);
+        EventController.AddListener<CutsceneEvent>(OnCutscene);
     }
 
     private void OnDisable()
@@ -105,12 +114,13 @@ public class GlobalController : MonoBehaviour
         EventController.RemoveListener<QuestEvent>(OnQuest);
         EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
         EventController.RemoveListener<SessionEvent>(OnSession);
+        EventController.RemoveListener<CutsceneEvent>(OnCutscene);
     }
 
     private void CheckGameData()
     {
         GameData tempGamedata = GameObject.FindObjectOfType<GameData>();
-        
+
         gameData = tempGamedata != null ? tempGamedata : Instantiate(gameData);
 
         sessionData = gameData.LoadSession();
@@ -176,9 +186,6 @@ public class GlobalController : MonoBehaviour
 
     private void SpawnCameras()
     {
-        mainCamera = Instantiate(mainCamera);
-        worldCamera = Instantiate(worldCamera);
-
         worldCamera.m_Follow = playerController.transform;
         worldCamera.m_LookAt = playerController.transform;
 
@@ -198,31 +205,26 @@ public class GlobalController : MonoBehaviour
         combatUI.Show(inCombat);
     }
 
-    private void SetCamera()
-    {
-        exteriorCamera.m_Follow = playerController.transform;
-        exteriorCamera.m_LookAt = playerController.transform;
-        // exteriorCamera.transform.position = player.transform.position;
+    // private void SetCamera()
+    // {
+    //     exteriorCamera.m_Follow = playerController.transform;
+    //     exteriorCamera.m_LookAt = playerController.transform;
 
-        interiorCamera.m_Follow = playerController.transform;
-        interiorCamera.m_LookAt = playerController.transform;
-        // interiorCamera.transform.position = player.transform.position;
+    //     interiorCamera.m_Follow = playerController.transform;
+    //     interiorCamera.m_LookAt = playerController.transform;
 
-        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
+    //     _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
+    // }
 
-        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
-        detectTargetBehind.SetTarget(playerController.transform);
-    }
+    // public void ChangeWorldCamera()
+    // {
+    //     _isInteriorCamera = !_isInteriorCamera;
 
-    public void ChangeWorldCamera()
-    {
-        _isInteriorCamera = !_isInteriorCamera;
+    //     _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
 
-        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
-
-        exteriorCamera.gameObject.SetActive(!_isInteriorCamera);
-        interiorCamera.gameObject.SetActive(_isInteriorCamera);
-    }
+    //     exteriorCamera.gameObject.SetActive(!_isInteriorCamera);
+    //     interiorCamera.gameObject.SetActive(_isInteriorCamera);
+    // }
 
     public void ChangeToCombatCamera(CinemachineVirtualCamera combatCamera)
     {
@@ -238,6 +240,13 @@ public class GlobalController : MonoBehaviour
             _worldCamera.gameObject.SetActive(false);
             _combatCamera = combatCamera;
         }
+    }
+
+    private void OnCutsceneStop(PlayableDirector pd)
+    {
+        ChangeInput(true);
+
+        EventController.TriggerEvent(_cutsceneEvent);
     }
 
     // private void AddItems()
@@ -320,6 +329,12 @@ public class GlobalController : MonoBehaviour
         ChangeInput(evt.enable);
     }
 
+    private void OnCutscene(CutsceneEvent evt)
+    {
+        playableDirector.playableAsset = evt.cutscene;
+        playableDirector.Play();
+    }
+
     private void OnSession(SessionEvent evt)
     {
         if (gameData == null)
@@ -359,7 +374,7 @@ public class GlobalController : MonoBehaviour
                 newQuest.currentStep = 0;
 
                 sessionData.listQuest.Add(newQuest);
-                
+
                 gameData.SaveSession(sessionData);
                 return;
 

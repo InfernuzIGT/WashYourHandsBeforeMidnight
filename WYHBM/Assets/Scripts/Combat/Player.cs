@@ -23,13 +23,13 @@ public class Player : CombatCharacter
         base.AnimationActionStart();
 
         transform.
-        DOMove(transform.position - GameData.Instance.combatConfig.positionAction, GameData.Instance.combatConfig.animationDuration).
+        DOMove(transform.position - _combatConfig.positionAction, _combatConfig.animationDuration).
         SetEase(Ease.OutQuad);
 
         // transform.
-        // DOMoveX(GameData.Instance.combatConfig.positionXCharacter, GameData.Instance.combatConfig.waitCombatDuration).
+        // DOMoveX(_combatConfig.positionXCharacter, _combatConfig.waitCombatDuration).
         // SetEase(Ease.OutQuad).
-        // SetDelay(GameData.Instance.combatConfig.transitionDuration);
+        // SetDelay(_combatConfig.transitionDuration);
     }
 
     public override void AnimationActionEnd()
@@ -37,7 +37,7 @@ public class Player : CombatCharacter
         base.AnimationActionEnd();
 
         transform.
-        DOMove(StartPosition, GameData.Instance.combatConfig.animationDuration).
+        DOMove(StartPosition, _combatConfig.animationDuration).
         SetEase(Ease.OutQuad);
     }
 

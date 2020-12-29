@@ -73,13 +73,13 @@ public class InteractionItem : Interaction, IInteractable
 
         // if (!cutsceneData.playInCollision)PlayCutscene();
 
-        Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
-        newSlot.AddItem(item);
+        // Slot newSlot = Instantiate(GameData.Instance.worldConfig.slotPrefab, GameManager.Instance.worldUI.itemParents);
+        // newSlot.AddItem(item);
 
-        GameManager.Instance.listSlots.Add(newSlot);
+        // GameManager.Instance.listSlots.Add(newSlot);
 
-        EventController.RemoveListener<InteractionEvent>(OnInteractItem);
-        Destroy(gameObject);
+        // EventController.RemoveListener<InteractionEvent>(OnInteractItem);
+        // Destroy(gameObject);
     }
 
     public void AddInfo(ItemSO itemInfo)

@@ -1,13 +1,23 @@
 ﻿using DG.Tweening;
 using Events;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
+[RequireComponent(typeof(Canvas))]
 public class Fade : MonoBehaviour
 {
+    [Header("Fade")]
+    [SerializeField] private WorldConfig _worldConfig = null;
+    [Space]
+    [SerializeField] private Image _fadeImg = null;
+    [SerializeField] private Image _letterboxTopImg = null;
+    [SerializeField] private Image _letterboxBotImg = null;
+
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
     private bool _fadeFast;
+    private bool _show;
+    private float _letterboxSize;
 
     private Canvas _canvas;
     private CanvasGroup _canvasGroup;
@@ -16,16 +26,20 @@ public class Fade : MonoBehaviour
     {
         _canvas = GetComponent<Canvas>();
         _canvasGroup = GetComponent<CanvasGroup>();
+
+        _letterboxSize = _letterboxTopImg.rectTransform.sizeDelta.y;
     }
 
     private void OnEnable()
     {
         EventController.AddListener<FadeEvent>(OnFade);
+        EventController.AddListener<CutsceneEvent>(OnCutscene);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<FadeEvent>(OnFade);
+        EventController.RemoveListener<CutsceneEvent>(OnCutscene);
     }
 
     private void OnFade(FadeEvent evt)
@@ -36,9 +50,8 @@ public class Fade : MonoBehaviour
 
         evt.callbackStart?.Invoke();
 
-        _canvasGroup
-            .DOFade(1, _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
-            .OnComplete(() => SetProperties(true))
+        _fadeImg
+            .DOFade(1, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnKill(FadeIn);
 
         SetCanvas(true);
@@ -48,12 +61,10 @@ public class Fade : MonoBehaviour
     {
         _callbackMid?.Invoke();
 
-        _canvasGroup
-            .DOFade(0, _fadeFast ? GameData.Instance.worldConfig.fadeFastDuration : GameData.Instance.worldConfig.fadeSlowDuration)
+        _fadeImg
+            .DOFade(0, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnComplete(() => SetCanvas(false))
             .OnKill(FadeOut);
-
-        SetProperties(false);
     }
 
     private void FadeOut()
@@ -66,10 +77,27 @@ public class Fade : MonoBehaviour
         _canvas.enabled = isEnabled;
     }
 
-    private void SetProperties(bool isEnabled)
+    private void OnCutscene(CutsceneEvent evt)
     {
-        _canvasGroup.interactable = isEnabled;
-        _canvasGroup.blocksRaycasts = isEnabled;
+        _show = evt.show;
+
+        _letterboxTopImg.rectTransform
+            .DOLocalMoveY(evt.show ? -_letterboxSize : _letterboxSize, 1)
+            .SetRelative();
+
+        _letterboxBotImg.rectTransform
+            .DOLocalMoveY(evt.show ? _letterboxSize : -_letterboxSize, 1)
+            .SetRelative()
+            .OnKill(CheckLetterbox);
+
+        SetCanvas(true);
+    }
+
+    private void CheckLetterbox()
+    {
+        if (_show)return;
+
+        SetCanvas(false);
     }
 
 }

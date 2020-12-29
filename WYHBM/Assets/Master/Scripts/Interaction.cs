@@ -1,7 +1,6 @@
 ﻿using Events;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 
 [System.Serializable]
 public struct InteractionData
@@ -18,21 +17,20 @@ public class Interaction : MonoBehaviour, IDialogueable
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     [Header("Interaction")]
-    public InteractionData[] data;
+    [SerializeField] private InteractionData[] data = null;
+    [SerializeField] private QUEST_STATE[] questState = null;
     [Space]
-    public QUEST_STATE[] questState;
-    [Space]
-    public PlayableAsset cutscene;
-    [Space]
-    public InteractionUnityEvent onEnter;
-    public InteractionUnityEvent onExit;
+    [SerializeField] private InteractionUnityEvent onEnter = null;
+    [SerializeField] private InteractionUnityEvent onExit = null;
 
+    protected PlayerSO _playerData;
+    protected bool _showHint = true;
     private SpriteRenderer _hintSprite;
-    private PlayerSO _playerData;
 
-    private CutsceneEvent _cutsceneEvent;
     private QuestEvent _questEvent;
     private ShowInteractionHintEvent _showInteractionHintEvent;
+
+    protected PlayerSO PlayerData { get { return _playerData; } }
 
     public virtual void Awake()
     {
@@ -40,7 +38,6 @@ public class Interaction : MonoBehaviour, IDialogueable
 
         _hintSprite.enabled = false;
 
-        _cutsceneEvent = new CutsceneEvent();
         _questEvent = new QuestEvent();
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
     }
@@ -63,18 +60,12 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     private void ShowHint(bool show)
     {
+        if (!_showHint)return;
+
         _hintSprite.enabled = show;
 
         _showInteractionHintEvent.show = show;
         EventController.TriggerEvent(_showInteractionHintEvent);
-    }
-
-    protected void TriggerCutscene()
-    {
-        if (cutscene == null)return;
-
-        _cutsceneEvent.cutscene = cutscene;
-        EventController.TriggerEvent(_cutsceneEvent);
     }
 
     public TextAsset GetDialogData()

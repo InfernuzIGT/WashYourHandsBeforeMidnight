@@ -131,13 +131,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19808560acaa54d47af94cb6167f1412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canMove: 1
-  waypoints: {fileID: 0}
-  useRandomPosition: 1
-  waitTime: 5
-  speed: 5
-  canDetectPlayer: 0
-  viewRadius: 10
+  _data: {fileID: 0}
+  _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
+  _waypoints: {fileID: 0}
 --- !u!195 &3609575662864725218
 NavMeshAgent:
   m_ObjectHideFlags: 0
