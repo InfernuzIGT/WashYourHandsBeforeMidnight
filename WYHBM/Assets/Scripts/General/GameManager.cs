@@ -88,7 +88,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
         EventController.AddListener<ExitCombatEvent>(OnExitCombat);
-        EventController.AddListener<CutsceneEvent>(OnCutscene);
+        // EventController.AddListener<CutsceneEvent>(OnCutscene);
 
     }
 
@@ -96,7 +96,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
         EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
-        EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+        // EventController.RemoveListener<CutsceneEvent>(OnCutscene);
     }
 
     public void CheckEncounters(bool isEnabled)

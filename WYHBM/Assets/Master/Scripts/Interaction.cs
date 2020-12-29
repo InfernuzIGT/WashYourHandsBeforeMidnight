@@ -1,7 +1,6 @@
 ﻿using Events;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 
 [System.Serializable]
 public struct InteractionData
@@ -18,19 +17,18 @@ public class Interaction : MonoBehaviour, IDialogueable
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     [Header("Interaction")]
-    public InteractionData[] data;
+    [SerializeField] private InteractionData[] data;
     [Space]
-    public QUEST_STATE[] questState;
+    [SerializeField] private QUEST_STATE[] questState;
     [Space]
-    public PlayableAsset cutscene;
-    [Space]
-    public InteractionUnityEvent onEnter;
-    public InteractionUnityEvent onExit;
+    [SerializeField] private InteractionUnityEvent onEnter;
+    [SerializeField] private InteractionUnityEvent onExit;
 
     private SpriteRenderer _hintSprite;
     private PlayerSO _playerData;
 
-    private CutsceneEvent _cutsceneEvent;
+    protected bool _showHint = true;
+
     private QuestEvent _questEvent;
     private ShowInteractionHintEvent _showInteractionHintEvent;
 
@@ -40,7 +38,6 @@ public class Interaction : MonoBehaviour, IDialogueable
 
         _hintSprite.enabled = false;
 
-        _cutsceneEvent = new CutsceneEvent();
         _questEvent = new QuestEvent();
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
     }
@@ -63,18 +60,12 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     private void ShowHint(bool show)
     {
+        if (!_showHint)return;
+
         _hintSprite.enabled = show;
 
         _showInteractionHintEvent.show = show;
         EventController.TriggerEvent(_showInteractionHintEvent);
-    }
-
-    protected void TriggerCutscene()
-    {
-        if (cutscene == null)return;
-
-        _cutsceneEvent.cutscene = cutscene;
-        EventController.TriggerEvent(_cutsceneEvent);
     }
 
     public TextAsset GetDialogData()

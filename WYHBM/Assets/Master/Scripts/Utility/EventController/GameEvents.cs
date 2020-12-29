@@ -64,8 +64,10 @@ namespace Events
     public class CutsceneEvent : GameEvent
     {
         public PlayableAsset cutscene;
+        public bool instantLetterbox;
+        public bool show;
     }
-
+    
     public class SessionEvent : GameEvent
     {
         public SESSION_OPTION option;
