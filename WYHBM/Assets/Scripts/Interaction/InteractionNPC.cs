@@ -24,6 +24,7 @@ public class InteractionNPC : Interaction
         _interactionDialogEvent.enable = enable;
         _interactionDialogEvent.npc = currentNPC;
         _interactionDialogEvent.dialogueable = currentNPC;
+        _interactionDialogEvent.playerData = PlayerData;
         _interactionDialogEvent.dialogue = currentNPC.GetDialogData();
 
         EventController.TriggerEvent(_interactionDialogEvent);

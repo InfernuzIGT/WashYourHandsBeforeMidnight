@@ -34,7 +34,7 @@ public class GlobalController : MonoBehaviour
     [Header("References (Scene)")]
     public Camera mainCamera;
     public CinemachineVirtualCamera worldCamera;
-    
+
     [Header("References (Project)")]
     public GameData gameData;
     public PlayerController playerController;
@@ -50,10 +50,10 @@ public class GlobalController : MonoBehaviour
     private bool _isInteriorCamera;
 
     private float _offsetPlayer = 1.505f;
-    private bool _instantLetterbox;
 
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
+    private EnableDialogEvent _interactionDialogEvent;
 
     private void Awake()
     {
@@ -71,6 +71,9 @@ public class GlobalController : MonoBehaviour
         CheckGameData();
 
         _enableMovementEvent = new EnableMovementEvent();
+
+        _interactionDialogEvent = new EnableDialogEvent();
+        _interactionDialogEvent.enable = false;
 
         _cutsceneEvent = new CutsceneEvent();
         _cutsceneEvent.show = false;
@@ -243,7 +246,6 @@ public class GlobalController : MonoBehaviour
     {
         ChangeInput(true);
 
-        _cutsceneEvent.instantLetterbox = _instantLetterbox;
         EventController.TriggerEvent(_cutsceneEvent);
     }
 
@@ -329,8 +331,6 @@ public class GlobalController : MonoBehaviour
 
     private void OnCutscene(CutsceneEvent evt)
     {
-        _instantLetterbox = evt.instantLetterbox;
-
         playableDirector.playableAsset = evt.cutscene;
         playableDirector.Play();
     }

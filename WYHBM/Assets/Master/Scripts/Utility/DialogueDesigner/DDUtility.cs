@@ -15,6 +15,8 @@ public class DDUtility : MonoBehaviour
         Done = 2
     }
 
+    // [SerializeField] private CharacterDataSO _characterData = null;
+
     [SerializeField, ReadOnly] private NPCController _currentNPC = null;
     [SerializeField, ReadOnly] private string _currentLanguage = "";
     [SerializeField, ReadOnly] private DIALOG_STATE _dialogState = DIALOG_STATE.Done;
@@ -43,6 +45,10 @@ public class DDUtility : MonoBehaviour
     private int _totalVisibleCharacters;
     private int _counter;
     private int _visibleCount;
+    // private CharacterSO _currentCharacter;
+    // private PlayerSO _currentPlayer;
+    // private string _currentName = "DDUtility";
+    // private string _lastName;
 
     private Coroutine _coroutineWrite;
     private WaitForSeconds _waitStart;
@@ -147,6 +153,7 @@ public class DDUtility : MonoBehaviour
             _currentNPC = evt.npc;
             _loadedDialogue = Dialogue.FromAsset(evt.dialogue);
             _dialogueable = evt.dialogueable;
+            // _currentPlayer = evt.playerData;
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
         }
         else
@@ -154,6 +161,7 @@ public class DDUtility : MonoBehaviour
             _currentNPC = null;
             _loadedDialogue = null;
             _dialogueable = null;
+            // _currentPlayer = null;
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
         }
     }
@@ -172,7 +180,7 @@ public class DDUtility : MonoBehaviour
             _canvasImagePanel.alpha = 1;
 
             _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
-            _npcTxt.text = _currentNPC.name;
+            _npcTxt.text = _currentNPC.Data.Name;
         }
         else
         {
@@ -200,7 +208,40 @@ public class DDUtility : MonoBehaviour
         {
             _choiceNode = _showMessageNode as ShowMessageNodeChoice;
         }
+
     }
+
+    // private void UpdateUI()
+    // {
+    //     if (_showMessageNode.SpeakerType != SpeakerType.Character)return;
+
+    //     _currentName = _showMessageNode.Character;
+
+    //     if (_currentName == _lastName)return;
+
+    //     _lastName = _currentName;
+
+    //     if (_currentName == "Player")
+    //     {
+    //         _currentCharacter = _currentPlayer;
+    //     }
+    //     else
+    //     {
+    //         _currentCharacter = _characterData.GetCharacterByName(_currentName);
+    //     }
+
+    //     if (_currentCharacter != null)
+    //     {
+    //         _canvasImagePanel.alpha = 1;
+
+    //         _npcImg.sprite = _currentCharacter.GetIcon(EMOTION.None);
+    //         _npcTxt.text = _currentCharacter.name;
+    //     }
+    //     else
+    //     {
+    //         _canvasImagePanel.alpha = 0;
+    //     }
+    // }
 
     private void OnDialogueEnded(DialoguePlayer sender)
     {
@@ -230,6 +271,8 @@ public class DDUtility : MonoBehaviour
         _dialogTxt.text = _currentDialog;
 
         UpdateNode(node);
+        
+        // UpdateUI();
 
         _lastIndexButton = 0;
         _continueImg.SetActive(false);
@@ -417,6 +460,7 @@ public class DDUtility : MonoBehaviour
             if (int.TryParse(emotionArray[1], out int emotionId))
             {
                 _npcImg.sprite = _currentNPC.Data.GetIcon((EMOTION)emotionId);
+                // _npcImg.sprite = _currentCharacter.GetIcon((EMOTION)emotionId);
             }
             else
             {

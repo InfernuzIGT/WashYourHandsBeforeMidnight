@@ -1,26 +1,22 @@
-﻿using System.Collections;
-using Events;
+﻿using Events;
 using UnityEngine;
 using UnityEngine.Playables;
 
 public class InteractionCutscene : Interaction, IInteractable
 {
     [Header("Cutscene")]
-    [SerializeField] private PlayableAsset cutscene;
-    [SerializeField] private bool instantLetterbox;
-    // [SerializeField] private bool hasFade;
+    [SerializeField] private PlayableAsset cutscene = null;
 
     private CutsceneEvent _cutsceneEvent;
     private FadeEvent _fadeEvent;
     private ChangeInputEvent _changeInputEvent;
+    private InteractionEvent _interactionEvent;
 
     public override void Awake()
     {
         base.Awake();
 
         _cutsceneEvent = new CutsceneEvent();
-        _cutsceneEvent.cutscene = cutscene;
-        _cutsceneEvent.instantLetterbox = instantLetterbox;
         _cutsceneEvent.show = true;
 
         _changeInputEvent = new ChangeInputEvent();
@@ -33,30 +29,39 @@ public class InteractionCutscene : Interaction, IInteractable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            if (cutscene == null)return;
-
-            StartCoroutine(TriggerCutscene());
+            TriggerCutscene();
         }
     }
 
     public void OnInteractionExit(Collider other) { }
 
-    private IEnumerator TriggerCutscene()
+    private void TriggerCutscene()
     {
-        // if (hasFade)
-        // {
+        if (cutscene == null)return;
 
-        //     yield return new WaitForSeconds(1);
-        // }
+        if (CheckAndWriteCutscene())
+        {
+            Destroy(this.gameObject);
+            return;
+        }
 
-        // TODO Mariano: SAVE
+        _cutsceneEvent.cutscene = cutscene;
+        _cutsceneEvent.playerData = PlayerData;
 
         EventController.TriggerEvent(_cutsceneEvent);
         EventController.TriggerEvent(_changeInputEvent);
 
         Destroy(this.gameObject);
+    }
 
-        yield return null;
+    private bool CheckAndWriteCutscene()
+    {
+        return GameData.Instance.CheckAndWriteID(string.Format(DDParameters.Format, cutscene.name, DDParameters.Cutscene));
+    }
+
+    private bool CheckCutscene()
+    {
+        return GameData.Instance.CheckID(string.Format(DDParameters.Format, cutscene.name, DDParameters.Cutscene));
     }
 
 }

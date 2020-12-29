@@ -8,5 +8,6 @@
     public const string HaveQuest = "DDHaveQuest";
 
     public const string Emotion = "emotion";
+    public const string Cutscene = "Cutscene";
 
 }

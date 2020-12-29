@@ -21,6 +21,7 @@ namespace Events
         public NPCController npc;
         public TextAsset dialogue;
         public IDialogueable dialogueable;
+        public PlayerSO playerData;
     }
 
     public class EnableMovementEvent : GameEvent
@@ -64,10 +65,10 @@ namespace Events
     public class CutsceneEvent : GameEvent
     {
         public PlayableAsset cutscene;
-        public bool instantLetterbox;
         public bool show;
+        public PlayerSO playerData;
     }
-    
+
     public class SessionEvent : GameEvent
     {
         public SESSION_OPTION option;

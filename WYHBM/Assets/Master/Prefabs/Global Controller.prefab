@@ -55,13 +55,13 @@ MonoBehaviour:
     listIds: []
   _inputDebugMode: 1
   _customSpawnPoint: {fileID: 0}
-  gameData: {fileID: 7222876601119083809, guid: 91e3eab5bc2b28e41aab94fa5dd126f3,
-    type: 3}
-  playerController: {fileID: 5441447954450045000, guid: c852591fc240d4a4fa2ebe65e312a0d9,
-    type: 3}
   mainCamera: {fileID: 3572255221697695743, guid: 8403060f023a2be4b8c8f8d97072773d,
     type: 3}
   worldCamera: {fileID: 203963655111991400, guid: 1969c56e00de54e4a98cd61039552d25,
+    type: 3}
+  gameData: {fileID: 7222876601119083809, guid: 91e3eab5bc2b28e41aab94fa5dd126f3,
+    type: 3}
+  playerController: {fileID: 5441447954450045000, guid: c852591fc240d4a4fa2ebe65e312a0d9,
     type: 3}
   playableDirector: {fileID: 190124564774067418}
   worldUI: {fileID: 3733784730637442484, guid: ebe2453115239114da0bde694a1753f4, type: 3}
@@ -70,9 +70,6 @@ MonoBehaviour:
   fadeUI: {fileID: 5826295906060962881, guid: 9c351781c12edb4418498254809931d9, type: 3}
   eventSystemUtility: {fileID: 8567285740534756541, guid: 69b663abc5585a742a8040601bd61c07,
     type: 3}
-  exteriorCamera: {fileID: 0}
-  interiorCamera: {fileID: 0}
-  cutscene: {fileID: 0}
 --- !u!320 &190124564774067418
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -82,7 +79,7 @@ PlayableDirector:
   m_GameObject: {fileID: 8160450674754796521}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: bca60b418a1bcc6488390597892616e7, type: 2}
+  m_PlayableAsset: {fileID: 0}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1

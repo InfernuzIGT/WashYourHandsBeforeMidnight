@@ -16,6 +16,7 @@ public enum SESSION_OPTION
 /// Used by:
 /// - GlobalController
 /// - Interaction
+/// - Interaction Cutscene
 /// - NPCController
 /// </summary>
 

@@ -17,20 +17,20 @@ public class Interaction : MonoBehaviour, IDialogueable
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     [Header("Interaction")]
-    [SerializeField] private InteractionData[] data;
+    [SerializeField] private InteractionData[] data = null;
+    [SerializeField] private QUEST_STATE[] questState = null;
     [Space]
-    [SerializeField] private QUEST_STATE[] questState;
-    [Space]
-    [SerializeField] private InteractionUnityEvent onEnter;
-    [SerializeField] private InteractionUnityEvent onExit;
+    [SerializeField] private InteractionUnityEvent onEnter = null;
+    [SerializeField] private InteractionUnityEvent onExit = null;
 
-    private SpriteRenderer _hintSprite;
-    private PlayerSO _playerData;
-
+    protected PlayerSO _playerData;
     protected bool _showHint = true;
+    private SpriteRenderer _hintSprite;
 
     private QuestEvent _questEvent;
     private ShowInteractionHintEvent _showInteractionHintEvent;
+
+    protected PlayerSO PlayerData { get { return _playerData; } }
 
     public virtual void Awake()
     {

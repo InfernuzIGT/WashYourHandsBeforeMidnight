@@ -7,11 +7,11 @@ using UnityEngine.UI;
 public class Fade : MonoBehaviour
 {
     [Header("Fade")]
-    [SerializeField] private WorldConfig _worldConfig;
+    [SerializeField] private WorldConfig _worldConfig = null;
     [Space]
-    [SerializeField] private Image _fadeImg;
-    [SerializeField] private Image _letterboxTopImg;
-    [SerializeField] private Image _letterboxBotImg;
+    [SerializeField] private Image _fadeImg = null;
+    [SerializeField] private Image _letterboxTopImg = null;
+    [SerializeField] private Image _letterboxBotImg = null;
 
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
@@ -82,11 +82,11 @@ public class Fade : MonoBehaviour
         _show = evt.show;
 
         _letterboxTopImg.rectTransform
-            .DOLocalMoveY(evt.show ? -_letterboxSize : _letterboxSize, evt.instantLetterbox ? 0 : 1)
+            .DOLocalMoveY(evt.show ? -_letterboxSize : _letterboxSize, 1)
             .SetRelative();
 
         _letterboxBotImg.rectTransform
-            .DOLocalMoveY(evt.show ? _letterboxSize : -_letterboxSize, evt.instantLetterbox ? 0 : 1)
+            .DOLocalMoveY(evt.show ? _letterboxSize : -_letterboxSize, 1)
             .SetRelative()
             .OnKill(CheckLetterbox);
 
