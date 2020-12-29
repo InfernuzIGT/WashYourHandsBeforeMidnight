@@ -17,8 +17,8 @@ public class CharacterUI : MonoBehaviour
 
     public void Kill()
     {
-        _canvasGroup.
-        DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
-        SetEase(Ease.OutQuad);
+        // _canvasGroup.
+        // DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
+        // SetEase(Ease.OutQuad);
     }
 }

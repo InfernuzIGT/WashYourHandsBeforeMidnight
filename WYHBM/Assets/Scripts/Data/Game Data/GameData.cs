@@ -23,12 +23,8 @@ public enum SESSION_OPTION
 [RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
+	[Header("Session Data")]
 	public SessionData sessionData;
-
-	[Header("Config")]
-	public WorldConfig worldConfig;
-	public CombatConfig combatConfig;
-	public TextConfig textConfig;
 
 	[Header("Input System")]
 	public DeviceSO[] deviceData;

@@ -7,6 +7,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 {
+    [SerializeField] private WorldConfig _worldConfig = null;
     [SerializeField] private NPCSO _data = null;
     [SerializeField] private WaypointController _waypoints = null;
 
@@ -152,7 +153,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _visibleTargets.Clear();
         _targetVisible = false;
 
-        _targetsInViewRadius = Physics.OverlapSphere(transform.position, _data.ViewRadius, GameData.Instance.worldConfig.layerEnemyTarget);
+        _targetsInViewRadius = Physics.OverlapSphere(transform.position, _data.ViewRadius, _worldConfig.layerEnemyTarget);
 
         for (int i = 0; i < _targetsInViewRadius.Length; i++)
         {
@@ -163,7 +164,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             {
                 _distanceToTarget = Vector3.Distance(transform.position, _target.position);
 
-                if (!Physics.Raycast(transform.position, _directionToTarget, _distanceToTarget, GameData.Instance.worldConfig.layerEnemyObstacle))
+                if (!Physics.Raycast(transform.position, _directionToTarget, _distanceToTarget, _worldConfig.layerEnemyObstacle))
                 {
                     _visibleTargets.Add(_target);
                     _targetLastPosition = _target.transform.position;
@@ -281,7 +282,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     {
         return GameData.Instance.HaveQuest(GetQuestData());
     }
-    
+
     public void DDFinish()
     {
         GameData.Instance.WriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));

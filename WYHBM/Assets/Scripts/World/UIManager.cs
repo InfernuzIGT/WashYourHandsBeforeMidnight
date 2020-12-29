@@ -95,9 +95,9 @@ namespace GameMode.World
             // buttonLeft.interactable = false;
             // buttonRight.interactable = false;
 
-            _waitStart = new WaitForSeconds(GameData.Instance.worldConfig.timeStart);
-            _waitSpace = new WaitForSeconds(GameData.Instance.worldConfig.timeSpace);
-            _waitDeactivateUI = new WaitForSeconds(GameData.Instance.worldConfig.messageLifetime);
+            // _waitStart = new WaitForSeconds(GameData.Instance.worldConfig.timeStart);
+            // _waitSpace = new WaitForSeconds(GameData.Instance.worldConfig.timeSpace);
+            // _waitDeactivateUI = new WaitForSeconds(GameData.Instance.worldConfig.messageLifetime);
 
             // GameData.Instance.persistenceItem
         }
@@ -174,35 +174,35 @@ namespace GameMode.World
                 return;
             }
 
-            // ShowPopup(string.Format(GameData.Instance.textConfig.popupNewQuest, data.title));
+            // // ShowPopup(string.Format(GameData.Instance.textConfig.popupNewQuest, data.title));
 
-            // Create Quest Title
-            QuestTitle questTitle = Instantiate(GameData.Instance.worldConfig.questTitlePrefab, diaryTitleContainer);
-            questTitle.Init(data);
-            dicQuestTitle.Add(data, questTitle);
+            // // Create Quest Title
+            // QuestTitle questTitle = Instantiate(GameData.Instance.worldConfig.questTitlePrefab, diaryTitleContainer);
+            // questTitle.Init(data);
+            // dicQuestTitle.Add(data, questTitle);
 
-            // Create Quest Description
-            QuestDescription questDescription = Instantiate(GameData.Instance.worldConfig.questDescriptionPrefab, diaryDescriptionContainer);
-            questDescription.Init(data);
-            dicQuestDescription.Add(data, questDescription);
-            SelectQuest(data);
+            // // Create Quest Description
+            // QuestDescription questDescription = Instantiate(GameData.Instance.worldConfig.questDescriptionPrefab, diaryDescriptionContainer);
+            // questDescription.Init(data);
+            // dicQuestDescription.Add(data, questDescription);
+            // SelectQuest(data);
 
             // GameManager.Instance.CurrentQuestData.state = QUEST_STATE.InProgress;
         }
 
         public void ReloadQuest(QuestSO data)
         {
-            // Create Quest Title
-            QuestTitle questTitle = Instantiate(GameData.Instance.worldConfig.questTitlePrefab, diaryTitleContainer);
-            questTitle.Init(data);
-            dicQuestTitle.Add(data, questTitle);
+            // // Create Quest Title
+            // QuestTitle questTitle = Instantiate(GameData.Instance.worldConfig.questTitlePrefab, diaryTitleContainer);
+            // questTitle.Init(data);
+            // dicQuestTitle.Add(data, questTitle);
 
-            // Create Quest Description
-            QuestDescription questDescription = Instantiate(GameData.Instance.worldConfig.questDescriptionPrefab, diaryDescriptionContainer);
-            questDescription.Init(data);
-            dicQuestDescription.Add(data, questDescription);
+            // // Create Quest Description
+            // QuestDescription questDescription = Instantiate(GameData.Instance.worldConfig.questDescriptionPrefab, diaryDescriptionContainer);
+            // questDescription.Init(data);
+            // dicQuestDescription.Add(data, questDescription);
 
-            Debug.Log($"<b> Quest: {data.title} </b>");
+            // Debug.Log($"<b> Quest: {data.title} </b>");
         }
 
         public void SelectQuest(QuestSO data)

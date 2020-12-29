@@ -15,6 +15,7 @@ public class Equipment
 public class CombatCharacter : MonoBehaviour
 {
     [Header("General")]
+    [SerializeField] protected CombatConfig _combatConfig = null;
     [SerializeField] private string _name = null;
     [SerializeField] private Equipment _equipment = new Equipment();
 
@@ -96,12 +97,12 @@ public class CombatCharacter : MonoBehaviour
         // infoTextEvent = new InfoTextEvent();
         _shakeEvent = new ShakeEvent();
 
-        _waitPerAction = new WaitForSeconds(GameData.Instance.combatConfig.waitTimePerAction);
+        _waitPerAction = new WaitForSeconds(_combatConfig.waitTimePerAction);
 
-        // _infoTextPosition = new Vector2(transform.position.x, GameData.Instance.combatConfig.positionYTextStart);
+        // _infoTextPosition = new Vector2(transform.position.x, _combatConfig.positionYTextStart);
     }
 
-    public void SetCharacter(int index/* , List<ItemSO> inventoryCombat */)
+    public void SetCharacter(int index /* , List<ItemSO> inventoryCombat */ )
     {
         // _scaleNormal = transform.localScale;
         _startPosition = transform.position;
@@ -116,11 +117,11 @@ public class CombatCharacter : MonoBehaviour
 
         Vector3 healthBarPos = new Vector3(
             transform.position.x,
-            transform.position.y + GameData.Instance.combatConfig.offsetHealthBar,
+            transform.position.y + _combatConfig.offsetHealthBar,
             transform.position.z);
 
-        _characterUI = Instantiate(GameData.Instance.combatConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
-        _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.startFillDuration);
+        _characterUI = Instantiate(_combatConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
+        _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, _combatConfig.startFillDuration);
     }
 
     // public void OnPointerEnter(PointerEventData eventData)
@@ -216,10 +217,10 @@ public class CombatCharacter : MonoBehaviour
         }
 
         _characterUI.healthBar.
-        DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration).
+        DOFillAmount(_healthActual / _statsHealthMax, _combatConfig.fillDuration).
         OnComplete(Kill);
 
-        // ShowInfoText(totalDamage, GameData.Instance.textConfig.colorMsgDamage);
+        // ShowInfoText(totalDamage, _textConfig.colorMsgDamage);
     }
 
     private void ActionHeal()
@@ -230,11 +231,11 @@ public class CombatCharacter : MonoBehaviour
 
         _healthActual += GetItemHeal();
 
-        // ShowInfoText(amountHeal, GameData.Instance.textConfig.colorMsgHeal);
+        // ShowInfoText(amountHeal, _textConfig.colorMsgHeal);
 
         if (_healthActual > _statsHealthMax)_healthActual = _statsHealthMax;
 
-        _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, GameData.Instance.combatConfig.fillDuration);
+        _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, _combatConfig.fillDuration);
     }
 
     #endregion
@@ -259,12 +260,12 @@ public class CombatCharacter : MonoBehaviour
 
     public virtual void AnimationActionStart()
     {
-        // transform.DOScale(GameData.Instance.combatConfig.scaleCombat, GameData.Instance.combatConfig.transitionDuration);
+        // transform.DOScale(_combatConfig.scaleCombat, _combatConfig.transitionDuration);
     }
 
     public virtual void AnimationActionEnd()
     {
-        // transform.DOScale(_scaleNormal, GameData.Instance.combatConfig.transitionDuration);
+        // transform.DOScale(_scaleNormal, _combatConfig.transitionDuration);
     }
 
     public void AnimationRecovery()
@@ -301,7 +302,7 @@ public class CombatCharacter : MonoBehaviour
             _characterUI.Kill();
 
             _spriteRenderer.
-            DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
+            DOFade(0, _combatConfig.canvasFadeDuration).
             SetEase(Ease.OutQuad).OnComplete(CheckGame);
         }
     }
@@ -449,7 +450,7 @@ public class CombatCharacter : MonoBehaviour
     {
         float elapsedTime = 0;
 
-        float timeThreshold = (10 / _statsReaction) * GameData.Instance.combatConfig.actionTimeThresholdMultiplier;
+        float timeThreshold = (10 / _statsReaction) * _combatConfig.actionTimeThresholdMultiplier;
 
         while (elapsedTime <= timeThreshold)
         {

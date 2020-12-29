@@ -36,7 +36,7 @@ namespace GameMode.Combat
 
         public void CreateActions(Equipment equipment)
         {
-            _actions = Instantiate(GameData.Instance.combatConfig.actionsPrefab, actionsContainer);
+            // _actions = Instantiate(GameData.Instance.combatConfig.actionsPrefab, actionsContainer);
             _actions.Init(equipment);
             _actions.gameObject.SetActive(false);
             actions.Add(_actions);

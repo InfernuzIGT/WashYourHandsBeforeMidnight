@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
+    [SerializeField] private WorldConfig _worldConfig = null;
+    [SerializeField] private CombatConfig _combatConfig = null;
+
     [Header("Character - Players")]
     public List<Player> listPlayers;
 
@@ -32,7 +35,7 @@ public class CombatManager : MonoBehaviour
     private ExitCombatEvent _interactionCombatEvent;
 
     private InputActions _inputCombat;
-    
+
     // Properties
     private List<CombatCharacter> _listWaitingCharacters;
     public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
@@ -60,8 +63,8 @@ public class CombatManager : MonoBehaviour
         _listWaitingCharacters = new List<CombatCharacter>();
         _listSelectionCharacters = new List<CombatCharacter>();
 
-        // _waitStart = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeToStart);
-        _waitBetweenTurns = new WaitForSeconds(GameData.Instance.combatConfig.waitTimeBetweenTurns);
+        // _waitStart = new WaitForSeconds(_combatConfig.waitTimeToStart);
+        _waitBetweenTurns = new WaitForSeconds(_combatConfig.waitTimeBetweenTurns);
 
         _interactionCombatEvent = new ExitCombatEvent();
     }
@@ -71,7 +74,7 @@ public class CombatManager : MonoBehaviour
         int indexCombat = 0;
 
         _combatAreaContainer = Instantiate(
-            GameData.Instance.worldConfig.emptyObject,
+            _worldConfig.emptyObject,
             combatArea.transform.position,
             combatArea.transform.rotation);
 
@@ -79,7 +82,7 @@ public class CombatManager : MonoBehaviour
         {
             Player player = Instantiate(
                 combatPlayers[i],
-                combatArea.playerPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
+                combatArea.playerPosition[i].position + _worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
@@ -98,7 +101,7 @@ public class CombatManager : MonoBehaviour
         {
             Enemy enemy = Instantiate(
                 combatEnemies[i],
-                combatArea.enemyPosition[i].position + GameData.Instance.worldConfig.playerBaseOffset,
+                combatArea.enemyPosition[i].position + _worldConfig.playerBaseOffset,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
@@ -339,7 +342,7 @@ public class CombatManager : MonoBehaviour
     {
         _isEndOfCombat = true;
 
-        // uIController.endTxt.text = isWin ? GameData.Instance.textConfig.gameWinTxt : GameData.Instance.textConfig.gameLoseTxt;
+        // uIController.endTxt.text = isWin ? _textConfig.gameWinTxt : _textConfig.gameLoseTxt;
 
         // uIController.endTxt.gameObject.SetActive(true);
 
