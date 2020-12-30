@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 5454344177718044526}
   - component: {fileID: 4106246413456115067}
   m_Layer: 19
-  m_Name: Player
+  m_Name: Player Base
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,7 +106,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
+  testInput: {fileID: -944628639613478452, guid: 3891028e3cb1643469d5dc6b11210c05,
+    type: 3}
+  testcaca:
+    m_Name: Testcaca
+    m_Id: baf09fe8-8879-42bd-8ab5-b0732f99c0ea
+    m_Asset: {fileID: 0}
+    m_Actions:
+    - m_Name: New action
+      m_Type: 1
+      m_ExpectedControlType: Button
+      m_Id: 274c57f7-d025-44e4-981f-2f2853fc30db
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+    m_Bindings:
+    - m_Name: 
+      m_Id: aabd7617-2ced-4a5e-9c16-03167450b147
+      m_Path: 
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: New action
+      m_Flags: 0
+  _playerData: {fileID: 0}
   _inZipline: 0
   endPos: {x: 0, y: 0, z: 0}
   Climbable:
@@ -121,6 +144,7 @@ MonoBehaviour:
     m_Bits: 65536
   footstepSound: {fileID: 4696537044046352187}
   breathingSound: {fileID: 1859904522748835540}
+  _lookMovement: {x: 0, y: 0}
 --- !u!143 &1255290931
 CharacterController:
   m_ObjectHideFlags: 0

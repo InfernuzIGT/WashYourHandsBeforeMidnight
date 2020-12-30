@@ -29,7 +29,7 @@ public class GlobalController : MonoBehaviour
 
     [Header("References (Scene)")]
     public Camera mainCamera;
-    public CinemachineVirtualCamera worldCamera;
+    public CinemachineFreeLookUtility playerCamera;
 
     [Header("References (Project)")]
     public GameData gameData;
@@ -75,7 +75,7 @@ public class GlobalController : MonoBehaviour
         _cutsceneEvent.show = false;
 
         SpawnPlayer();
-        SpawnCameras();
+        CheckCamera();
         SpawnUI();
         // SetCamera();
         // AddItems();
@@ -180,10 +180,9 @@ public class GlobalController : MonoBehaviour
         sessionData.playerData = playerData;
     }
 
-    private void SpawnCameras()
+    private void CheckCamera()
     {
-        worldCamera.m_Follow = playerController.transform;
-        worldCamera.m_LookAt = playerController.transform;
+        playerCamera.Init(playerController, eventSystemUtility.InputUIModule);
 
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(playerController.transform);
@@ -240,7 +239,7 @@ public class GlobalController : MonoBehaviour
 
     private void OnCutsceneStop(PlayableDirector pd)
     {
-        ChangeInput(true);
+        EnableMovement(true);
 
         EventController.TriggerEvent(_cutsceneEvent);
     }
@@ -278,17 +277,8 @@ public class GlobalController : MonoBehaviour
         playerController.gameObject.SetActive(!isHiding);
     }
 
-    private void ChangeInput(bool enable)
+    private void EnableMovement(bool enable)
     {
-        if (enable)
-        {
-            playerController.Input.Player.Enable();
-        }
-        else
-        {
-            playerController.Input.Player.Disable();
-        }
-
         _enableMovementEvent.canMove = enable;
         EventController.TriggerEvent(_enableMovementEvent);
     }
@@ -309,7 +299,7 @@ public class GlobalController : MonoBehaviour
         else
         {
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-            ChangeInput(true);
+            EnableMovement(true);
         }
     }
 
@@ -317,12 +307,12 @@ public class GlobalController : MonoBehaviour
     {
         if (!evt.isStart)return;
 
-        ChangeInput(false);
+        EnableMovement(false);
     }
 
     private void OnChangeInput(ChangeInputEvent evt)
     {
-        ChangeInput(evt.enable);
+        EnableMovement(evt.enable);
     }
 
     private void OnCutscene(CutsceneEvent evt)

@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Settings/Input System/InputActions.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Settings/Input System/CustomInputAction.inputactions'
 
 using System;
 using System.Collections;
@@ -6,18 +6,26 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public class @InputActions : IInputActionCollection, IDisposable
+public class @CustomInputAction : IInputActionCollection, IDisposable
 {
     public InputActionAsset asset { get; }
-    public @InputActions()
+    public @CustomInputAction()
     {
         asset = InputActionAsset.FromJson(@"{
-    ""name"": ""InputActions"",
+    ""name"": ""CustomInputAction"",
     ""maps"": [
         {
             ""name"": ""Player"",
             ""id"": ""a350cff5-9b17-41ce-a559-a4c742828970"",
             ""actions"": [
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""4f5254e5-949c-4ff4-b7d7-b1ee28cdb2dc"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
                 {
                     ""name"": ""Move"",
                     ""type"": ""PassThrough"",
@@ -70,6 +78,14 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""name"": ""DebugMode"",
                     ""type"": ""Button"",
                     ""id"": ""68b6befc-e8bc-4370-9652-08060962ccd4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reset Camera"",
+                    ""type"": ""Button"",
+                    ""id"": ""9377efe5-7dc2-4b98-828f-b930ce4e4e58"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -526,17 +542,58 @@ public class @InputActions : IInputActionCollection, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1298364-4bb6-492a-9d9d-151a806e247b"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13ae3cd1-cd31-438c-a915-8d65e5a14ce5"",
+                    ""path"": ""<DualShockGamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba71543c-275c-497b-97f9-6db972c30428"",
+                    ""path"": ""<DualShockGamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Reset Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
         {
             ""name"": ""UI"",
-            ""id"": ""2ac6c038-3493-4258-91fb-a951c503d4d1"",
+            ""id"": ""6bd2b6e8-87f8-4abb-b33e-3f8e53508025"",
             ""actions"": [
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""7d59fd98-47ee-4bc6-8d04-ff14aa15efe7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
                 {
                     ""name"": ""Navigate"",
                     ""type"": ""Value"",
-                    ""id"": ""780e49c2-e4d7-4353-956d-420198f0f9bb"",
+                    ""id"": ""40edcc8c-94c0-4c7c-9a19-93b66e5f386e"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -544,7 +601,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
-                    ""id"": ""0e6387b9-9903-4448-a458-f890dcef2e59"",
+                    ""id"": ""8d4f8569-026d-4aad-af30-71a059f458a1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -552,7 +609,15 @@ public class @InputActions : IInputActionCollection, IDisposable
                 {
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
-                    ""id"": ""87447fae-d16b-4930-9eb4-af1a2d185f64"",
+                    ""id"": ""a18fe46d-6512-4d49-8eb9-4e5b672cbb3a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reset Camera"",
+                    ""type"": ""Button"",
+                    ""id"": ""0190e7d9-ff14-4f6d-945d-e0635b23418c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -561,7 +626,7 @@ public class @InputActions : IInputActionCollection, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""USB Joystick"",
-                    ""id"": ""25efc2d0-7d97-4343-a468-a77a2207ab89"",
+                    ""id"": ""f640f169-098f-45b6-aaf9-263541383830"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -572,7 +637,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""a079232c-3a23-40c5-97e9-bd4416da5366"",
+                    ""id"": ""03c780ea-f360-4817-9d18-a899ddba5e98"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/stick/up"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -583,7 +648,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""8c5642da-1e53-4b3e-98f7-6355c0a617e9"",
+                    ""id"": ""8475efa8-9afa-41be-af5e-5131329f2f12"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/hat/up"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -594,7 +659,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""164088b8-8699-4a0d-a7cb-d4219b52a9f2"",
+                    ""id"": ""8d955d95-093a-4ebf-9d99-216795102546"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/stick/down"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -605,7 +670,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""2eba1e76-321d-49c4-9662-734dbd8b847e"",
+                    ""id"": ""b9f65e55-201c-4a7e-ac58-2f202d32c7b7"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/hat/down"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -616,7 +681,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""81e1b60e-c251-4542-ab6b-25bc6fb42e36"",
+                    ""id"": ""78eee479-321f-4721-b074-5122212bf912"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/stick/left"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -627,7 +692,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""22eb0671-a38d-4881-9776-221254283882"",
+                    ""id"": ""926605e0-1cc7-4673-86a6-fcd4602121cb"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/hat/left"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -638,7 +703,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""82fab6d9-30de-48cd-8f38-edb2ed820a77"",
+                    ""id"": ""9c8feced-9f9c-45f9-bab3-af11bfe0cd3c"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/stick/right"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -649,7 +714,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""db2df611-0cce-4590-a89a-ae6ff0f76c8d"",
+                    ""id"": ""05edd1c2-ba4a-46ac-8e8a-1b4cb3ce4952"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/hat/right"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -660,7 +725,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Gamepad"",
-                    ""id"": ""9b033a96-0d1e-4384-9b47-6ce2b8210f8a"",
+                    ""id"": ""ac042ccc-4846-4f81-8487-412d52ff13d7"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -671,7 +736,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""fa3393c5-e461-4b1d-baf6-255f29b10a0d"",
+                    ""id"": ""04c05ec1-d6f0-44ed-ba98-5a94318836a4"",
                     ""path"": ""<Gamepad>/leftStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -682,7 +747,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""efb35327-5410-433b-9f81-7e4ee35123d5"",
+                    ""id"": ""13546525-ca20-495e-93cc-054c01310f77"",
                     ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -693,7 +758,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""87f6a6e6-5fff-4501-94a9-b184faf99c4a"",
+                    ""id"": ""00c30244-d261-4f12-9600-ff0aac329659"",
                     ""path"": ""<Gamepad>/leftStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -704,7 +769,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""4c5055dd-c446-4fb7-a84b-689f528b1517"",
+                    ""id"": ""3622cba8-96cc-403d-956b-30d7f7cd5f42"",
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -715,7 +780,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""5c022590-691a-4c4f-be99-bf903c91ec2c"",
+                    ""id"": ""dd9af845-d0d4-4cbc-9338-e6850749cace"",
                     ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -726,7 +791,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""f261b4d4-c2ed-4b02-9756-2e9e1c36fd48"",
+                    ""id"": ""84367974-208f-4c5c-918d-b8ea510169b6"",
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -737,7 +802,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""d8deac6d-1270-4aeb-a8a9-ab795efec724"",
+                    ""id"": ""70e529c8-6f93-4fa6-8892-305d76428ccb"",
                     ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -748,7 +813,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""4d988f11-5ef4-41ea-babf-bdc17ebaf3f6"",
+                    ""id"": ""a9697ccb-3a03-448c-9d37-8e67987416ac"",
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -759,7 +824,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Keyboard"",
-                    ""id"": ""48b1e140-4767-45b0-b3d0-5452da4db165"",
+                    ""id"": ""b83400e1-8e44-45ce-85bf-efdf955f05a9"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -770,7 +835,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""c8f2ba0e-1675-4187-8d9c-e9fbe4957bc5"",
+                    ""id"": ""52d7a9f8-e5db-46f8-a81c-ad299fe2343b"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -781,7 +846,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""44d0e8fc-70d0-4171-a8ed-5c1e88114299"",
+                    ""id"": ""61ea371f-914e-49fb-acb8-9f750c342138"",
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -792,7 +857,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""8ffd2f65-f84a-4a56-9baf-5064767aa34d"",
+                    ""id"": ""242c25e9-f430-4971-b5bd-f15df8efca67"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -803,7 +868,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""9f8a95c0-e03d-4c6e-85ac-8ca91744f0af"",
+                    ""id"": ""e74c484e-f5b8-455c-8d99-a6606e2c7621"",
                     ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -814,7 +879,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""df70386b-0b2e-4296-b2c3-82c3436600ba"",
+                    ""id"": ""e61a2808-9017-435e-b70b-a59e9f9c2ee9"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -825,7 +890,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""d2d217f4-cdc3-4c1f-9f6f-e0b77638d76b"",
+                    ""id"": ""2a1b1181-1677-4121-8cdc-79a342b8f727"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -836,7 +901,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""855474a5-d1b0-4db6-9a9c-85489f1bf19c"",
+                    ""id"": ""b4111b65-aa91-4165-881a-d41e76e20e49"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -847,7 +912,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""79d50663-4243-4755-8841-7bd976180852"",
+                    ""id"": ""037abdc8-13eb-42d6-9542-5cc7699bb87e"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -858,7 +923,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""0eccae91-7fec-4557-9e22-e4bcf7ddc9b6"",
+                    ""id"": ""03433bc2-a8c8-42b1-b7b5-ba24aa62c61f"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -869,7 +934,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a1605578-5b0a-4e10-a8e6-ed6e459de545"",
+                    ""id"": ""9134c747-4b25-4d6c-bcea-74c1608efada"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/button2"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -880,7 +945,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""93226c0b-0499-4578-87cd-f7273cf088e3"",
+                    ""id"": ""efc5e97c-0f75-4e36-aad5-b7b345254607"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -891,7 +956,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c78ebd6c-11b9-4779-bf0a-b6b3a4f0200c"",
+                    ""id"": ""d46f6c40-ca81-413e-bcb0-40a17151159e"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -902,7 +967,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c12b5141-bc96-443f-9a30-6c8c229e887c"",
+                    ""id"": ""1f3b461e-c3d0-4ea0-bafa-334568edd142"",
                     ""path"": ""<HID::Microntek              USB Joystick          >/trigger"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -913,7 +978,7 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""95122ec9-a0ee-4abb-be8e-e5f3a5e9836e"",
+                    ""id"": ""7be171d8-a33d-4e79-8a00-d1fc3746469f"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -924,12 +989,45 @@ public class @InputActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a41bfbfb-56e6-4864-8d06-f5ffb5c8158a"",
+                    ""id"": ""dd3cc64d-a21c-4925-8670-339288beb0ff"",
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XboxOne;Switch;PS4"",
                     ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7dafd5a-c1c7-4e69-bb67-5cf34666ab05"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1c96c9f-bd0d-42b3-809e-4caa939138d7"",
+                    ""path"": ""<DualShockGamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""396e6411-c04d-4f2a-bb40-01f2f710651e"",
+                    ""path"": ""<DualShockGamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Reset Camera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -996,6 +1094,7 @@ public class @InputActions : IInputActionCollection, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
+        m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
@@ -1003,11 +1102,14 @@ public class @InputActions : IInputActionCollection, IDisposable
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Options = m_Player.FindAction("Options", throwIfNotFound: true);
         m_Player_DebugMode = m_Player.FindAction("DebugMode", throwIfNotFound: true);
+        m_Player_ResetCamera = m_Player.FindAction("Reset Camera", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Look = m_UI.FindAction("Look", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
+        m_UI_ResetCamera = m_UI.FindAction("Reset Camera", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1057,6 +1159,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
+    private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Interaction;
     private readonly InputAction m_Player_Attack;
@@ -1064,10 +1167,12 @@ public class @InputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Options;
     private readonly InputAction m_Player_DebugMode;
+    private readonly InputAction m_Player_ResetCamera;
     public struct PlayerActions
     {
-        private @InputActions m_Wrapper;
-        public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        private @CustomInputAction m_Wrapper;
+        public PlayerActions(@CustomInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
@@ -1075,6 +1180,7 @@ public class @InputActions : IInputActionCollection, IDisposable
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Options => m_Wrapper.m_Player_Options;
         public InputAction @DebugMode => m_Wrapper.m_Player_DebugMode;
+        public InputAction @ResetCamera => m_Wrapper.m_Player_ResetCamera;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1084,6 +1190,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
+                @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
@@ -1105,10 +1214,16 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @DebugMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
                 @DebugMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
                 @DebugMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
+                @ResetCamera.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
+                @ResetCamera.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
+                @ResetCamera.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
@@ -1130,6 +1245,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @DebugMode.started += instance.OnDebugMode;
                 @DebugMode.performed += instance.OnDebugMode;
                 @DebugMode.canceled += instance.OnDebugMode;
+                @ResetCamera.started += instance.OnResetCamera;
+                @ResetCamera.performed += instance.OnResetCamera;
+                @ResetCamera.canceled += instance.OnResetCamera;
             }
         }
     }
@@ -1138,16 +1256,20 @@ public class @InputActions : IInputActionCollection, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_Look;
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Submit;
     private readonly InputAction m_UI_Cancel;
+    private readonly InputAction m_UI_ResetCamera;
     public struct UIActions
     {
-        private @InputActions m_Wrapper;
-        public UIActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        private @CustomInputAction m_Wrapper;
+        public UIActions(@CustomInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Look => m_Wrapper.m_UI_Look;
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
+        public InputAction @ResetCamera => m_Wrapper.m_UI_ResetCamera;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1157,6 +1279,9 @@ public class @InputActions : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_UIActionsCallbackInterface != null)
             {
+                @Look.started -= m_Wrapper.m_UIActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnLook;
                 @Navigate.started -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
                 @Navigate.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
                 @Navigate.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
@@ -1166,10 +1291,16 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Cancel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
+                @ResetCamera.started -= m_Wrapper.m_UIActionsCallbackInterface.OnResetCamera;
+                @ResetCamera.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnResetCamera;
+                @ResetCamera.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnResetCamera;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
             {
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
                 @Navigate.started += instance.OnNavigate;
                 @Navigate.performed += instance.OnNavigate;
                 @Navigate.canceled += instance.OnNavigate;
@@ -1179,6 +1310,9 @@ public class @InputActions : IInputActionCollection, IDisposable
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
+                @ResetCamera.started += instance.OnResetCamera;
+                @ResetCamera.performed += instance.OnResetCamera;
+                @ResetCamera.canceled += instance.OnResetCamera;
             }
         }
     }
@@ -1230,6 +1364,7 @@ public class @InputActions : IInputActionCollection, IDisposable
     }
     public interface IPlayerActions
     {
+        void OnLook(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnInteraction(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
@@ -1237,11 +1372,14 @@ public class @InputActions : IInputActionCollection, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnOptions(InputAction.CallbackContext context);
         void OnDebugMode(InputAction.CallbackContext context);
+        void OnResetCamera(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
+        void OnLook(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnResetCamera(InputAction.CallbackContext context);
     }
 }

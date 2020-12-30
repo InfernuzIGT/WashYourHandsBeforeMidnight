@@ -203,7 +203,7 @@ public class GameManager : MonoSingleton<GameManager>
         combatUI.Show(inCombat);
         worldUI.Show(!inCombat);
 
-        combatManager.ToggleInputCombat(inCombat);
+        // combatManager.ToggleInputCombat(inCombat);
         combatManager.SetCombatArea(inCombat);
 
         if (!inCombat)

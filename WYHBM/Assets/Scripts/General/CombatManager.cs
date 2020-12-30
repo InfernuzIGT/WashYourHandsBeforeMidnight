@@ -34,26 +34,26 @@ public class CombatManager : MonoBehaviour
 
     private ExitCombatEvent _interactionCombatEvent;
 
-    private InputActions _inputCombat;
+    // private CustomInputActions _inputCombat;
 
     // Properties
     private List<CombatCharacter> _listWaitingCharacters;
     public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
 
-    public void Awake()
-    {
-        CreateInput();
-    }
+    // public void Awake()
+    // {
+    //     CreateInput();
+    // }
 
-    private void CreateInput()
-    {
-        _inputCombat = new InputActions();
+    // private void CreateInput()
+    // {
+    //     _inputCombat = new CustomInputActions();
 
-        _inputCombat.UI.Navigate.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        _inputCombat.UI.Navigate.performed += ctx => NavigateCharacter();
-        _inputCombat.UI.Submit.performed += ctx => SelectCharacter(true);
-        _inputCombat.UI.Cancel.performed += ctx => SelectCharacter(false);
-    }
+    //     _inputCombat.UI.Navigate.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
+    //     _inputCombat.UI.Navigate.performed += ctx => NavigateCharacter();
+    //     _inputCombat.UI.Submit.performed += ctx => SelectCharacter(true);
+    //     _inputCombat.UI.Cancel.performed += ctx => SelectCharacter(false);
+    // }
 
     private void Start()
     {
@@ -117,17 +117,17 @@ public class CombatManager : MonoBehaviour
         GameManager.Instance.combatUI.CreateTurn(_listAllCharacters);
     }
 
-    public void ToggleInputCombat(bool isEnabled)
-    {
-        if (isEnabled)
-        {
-            _inputCombat.Enable();
-        }
-        else
-        {
-            _inputCombat.Disable();
-        }
-    }
+    // public void ToggleInputCombat(bool isEnabled)
+    // {
+    //     if (isEnabled)
+    //     {
+    //         _inputCombat.Enable();
+    //     }
+    //     else
+    //     {
+    //         _inputCombat.Disable();
+    //     }
+    // }
 
     public void SelectAction(ItemSO item)
     {

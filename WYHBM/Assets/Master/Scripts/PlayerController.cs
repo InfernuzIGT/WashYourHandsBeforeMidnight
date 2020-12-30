@@ -78,8 +78,8 @@ public class PlayerController : MonoBehaviour
     private bool _isOpenDiary;
 
     // Properties
-    private InputActions _input;
-    public InputActions Input { get { return _input; } set { _input = value; } }
+    private CustomInputAction _input;
+    public CustomInputAction Input { get { return _input; } set { _input = value; } }
 
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
@@ -91,16 +91,16 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        CreateInput();
+
         _characterController = GetComponent<CharacterController>();
         _animatorController = GetComponent<WorldAnimator>();
         _deviceUtility = GetComponent<DeviceUtility>();
-
-        CreateInput();
     }
 
     private void CreateInput()
     {
-        _input = new InputActions();
+        _input = new CustomInputAction();
 
         _input.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
         _input.Player.Jump.started += ctx => Jump();
@@ -265,7 +265,7 @@ public class PlayerController : MonoBehaviour
 
     private bool CheckRun()
     {
-        return /* !_isWalking && */ Mathf.Abs(_inputMovement.x) > _axisLimit || /* !_isWalking  && */Mathf.Abs(_inputMovement.y) > _axisLimit;
+        return /* !_isWalking && */ Mathf.Abs(_inputMovement.x) > _axisLimit || /* !_isWalking  && */ Mathf.Abs(_inputMovement.y) > _axisLimit;
     }
 
     private void Jump()
@@ -481,6 +481,15 @@ public class PlayerController : MonoBehaviour
     private void OnStopMovement(EnableMovementEvent evt)
     {
         _canMove = evt.canMove;
+
+        if (_canMove)
+        {
+            _input.Player.Enable();
+        }
+        else
+        {
+            _input.Player.Disable();
+        }
 
         if (evt.canMove)_interaction = false;
     }
