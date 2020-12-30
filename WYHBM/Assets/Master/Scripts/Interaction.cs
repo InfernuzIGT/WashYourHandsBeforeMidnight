@@ -25,7 +25,9 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     protected PlayerSO _playerData;
     protected bool _showHint = true;
+
     private SpriteRenderer _hintSprite;
+    private bool _canInteract = true;
 
     private QuestEvent _questEvent;
     private ShowInteractionHintEvent _showInteractionHintEvent;
@@ -42,10 +44,27 @@ public class Interaction : MonoBehaviour, IDialogueable
         _showInteractionHintEvent = new ShowInteractionHintEvent();;
     }
 
+    private void OnEnable()
+    {
+        EventController.AddListener<CutsceneEvent>(OnCutscene);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+    }
+
+    private void OnCutscene(CutsceneEvent evt)
+    {
+        _canInteract = !evt.show;
+    }
+
     #region Interaction
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!_canInteract)return;
+
         if (other.gameObject.CompareTag(Tags.Player) && _playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
 
         onEnter.Invoke(other);
@@ -54,6 +73,8 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     private void OnTriggerExit(Collider other)
     {
+        if (!_canInteract)return;
+
         onExit.Invoke(other);
         ShowHint(false);
     }

@@ -13,15 +13,6 @@ MonoBehaviour:
   m_Name: TestDallas
   m_EditorClassIdentifier: 
   _name: Dallas
-  _data:
-  - dialogDD: {fileID: 4900000, guid: 775d7969b8539e245bee8f18e763dbd9, type: 3}
-    quest: {fileID: 11400000, guid: 586bb04ab73fb444ba68eccc01aa1029, type: 2}
-  _canMove: 0
-  _useRandomPosition: 1
-  _waitTime: 5
-  _speed: 5
-  _canDetectPlayer: 0
-  _viewRadius: 10
   _sprite: {fileID: -1165399278658134991, guid: 9a3cc0d00c940a647a5cf6299987fcc3,
     type: 3}
   _animatorController: {fileID: 22100000, guid: 64fd9ff476eecf34f83c6b1a80e3c7a3,
@@ -33,4 +24,13 @@ MonoBehaviour:
   iconSurprise: {fileID: 0}
   iconCurious: {fileID: 0}
   iconSleep: {fileID: 0}
+  _data:
+  - dialogDD: {fileID: 4900000, guid: 775d7969b8539e245bee8f18e763dbd9, type: 3}
+    quest: {fileID: 11400000, guid: 586bb04ab73fb444ba68eccc01aa1029, type: 2}
+  _canMove: 1
+  _useRandomPosition: 1
+  _waitTime: 5
+  _speed: 5
+  _canDetectPlayer: 0
+  _viewRadius: 10
   combatEnemies: []
