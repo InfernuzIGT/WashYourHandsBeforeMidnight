@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Character Data", menuName = "Character Data", order = 0)]
+[CreateAssetMenu(fileName = "New Character Data", menuName = "Characters/Character Data", order = 0)]
 public class CharacterDataSO : ScriptableObject
 {
     [Header("Data")]

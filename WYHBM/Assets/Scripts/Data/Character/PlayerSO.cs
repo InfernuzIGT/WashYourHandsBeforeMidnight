@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Player", menuName = "Player", order = 0)]
+[CreateAssetMenu(fileName = "New Player", menuName = "Characters/Player", order = 1)]
 public class PlayerSO : CharacterSO
 {
     [Header("Player")]

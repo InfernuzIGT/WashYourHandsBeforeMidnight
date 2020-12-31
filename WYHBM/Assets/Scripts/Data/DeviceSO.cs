@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Device", menuName = "Device", order = 0)]
+[CreateAssetMenu(fileName = "New Device", menuName = "Other/Device")]
 public class DeviceSO : ScriptableObject
 {
     [Header("Device Type")]

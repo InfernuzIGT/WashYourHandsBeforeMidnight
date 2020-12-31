@@ -8,7 +8,7 @@ public enum QUEST_STATE
     Complete = 2
 }
 
-[CreateAssetMenu(fileName = "New Quest Data", menuName = "Quest/Data", order = 0)]
+[CreateAssetMenu(fileName = "New Quest Data", menuName = "Quest", order = 0)]
 public class QuestSO : ScriptableObject
 {
     [Header("Quest Data")]

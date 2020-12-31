@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New NPC", menuName = "NPC", order = 0)]
+[CreateAssetMenu(fileName = "New NPC", menuName = "Characters/NPC", order = 2)]
 public class NPCSO : CharacterSO
 {
     [Header("NPC")]
     [SerializeField] private InteractionData[] _data = null;
-    
+
     [Header("IA")]
     [SerializeField] private bool _canMove = true;
     [SerializeField] private bool _useRandomPosition = true;
@@ -28,5 +28,5 @@ public class NPCSO : CharacterSO
     public float Speed { get { return _speed; } }
     public bool CanDetectPlayer { get { return _canDetectPlayer; } }
     public float ViewRadius { get { return _viewRadius; } }
-   
+
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New item", menuName = "Item", order = 0)]
+[CreateAssetMenu(fileName = "New item", menuName = "DEPRECATED/Item")]
 public class ItemSO : ScriptableObject
 {
     [Header("General")]
