@@ -107,11 +107,12 @@ public class PlayerController : MonoBehaviour
         _input.Player.Interaction.performed += ctx => Interaction();
         _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
         _input.Player.Options.performed += ctx => Pause(PAUSE_TYPE.Inventory);
+        _input.Player.DebugMode.performed += ctx => GameData.Instance.SelectNextQuality(true);
 
         _input.Player.Enable();
         _input.UI.Disable();
     }
-
+    
     private void Start()
     {
         _interactionEvent = new InteractionEvent();
@@ -188,6 +189,13 @@ public class PlayerController : MonoBehaviour
         _characterController.enabled = true;
     }
 
+    // private void OnGUI()
+    // {
+    //     GUIStyle guiStyle = new GUIStyle();
+    //     guiStyle.fontSize = 50;
+    //     GUI.Label(new Rect(10, 10, 100, 20), string.Format("Magnitude: {0}", _characterController.velocity.magnitude.ToString()), guiStyle);
+    // }
+
     private void Movement()
     {
         // Stop animation
@@ -203,7 +211,8 @@ public class PlayerController : MonoBehaviour
         // Run / Walk
         if (CheckRun())
         {
-            _isRunning = _inputMovement.x == 0 && _inputMovement.y == 0 || !_characterController.isGrounded ? false : true;
+            _isRunning = true;
+            // _isRunning = _inputMovement.x == 0 && _inputMovement.y == 0 || !_characterController.isGrounded ? false : true;
             _speedHorizontal = _speedRun;
             footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
         }
@@ -238,6 +247,7 @@ public class PlayerController : MonoBehaviour
 
         if (_characterController.velocity.magnitude > _magnitudeFall && !_characterController.isGrounded && !_inIvy)
         {
+            // TODO Mariano: Usar solo el valor de Y para detectar caida
             _animatorController.Falling(true);
         }
 

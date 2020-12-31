@@ -33,6 +33,8 @@ public class GameData : MonoSingleton<GameData>
 	private LocalizationUtility _localizationUtility;
 	private UpdateLanguageEvent _updateLanguageEvent;
 
+	private int _indexQuality;
+
 	protected override void Awake()
 	{
 		base.Awake();
@@ -47,6 +49,8 @@ public class GameData : MonoSingleton<GameData>
 		_localizationUtility = GetComponent<LocalizationUtility>();
 
 		_updateLanguageEvent = new UpdateLanguageEvent();
+
+		_indexQuality = QualitySettings.GetQualityLevel();
 	}
 
 	public void SelectNextLanguage()
@@ -58,6 +62,31 @@ public class GameData : MonoSingleton<GameData>
 	{
 		_updateLanguageEvent.language = language;
 		EventController.TriggerEvent(_updateLanguageEvent);
+	}
+
+	public void SelectNextQuality(bool isNext)
+	{
+		if (isNext)
+		{
+			_indexQuality = _indexQuality < QualitySettings.names.Length - 1 ? _indexQuality + 1 : 0;
+		}
+		else
+		{
+			_indexQuality = _indexQuality > 0 ? _indexQuality - 1 : QualitySettings.names.Length - 1;
+		}
+
+		QualitySettings.SetQualityLevel(_indexQuality, true);
+
+		// TODO Mariano: COMPLETE
+		
+		// Debug.Log($"Current Quality: {QualitySettings.names[_indexQuality]}");
+		
+		// QualitySettings.vSyncCount = 0;
+		
+		// FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
+		// Screen.fullScreenMode = fullScreenMode;
+		
+		// Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, fullScreenMode);
 	}
 
 	public Sprite GetInputIcon(DEVICE device, INPUT_ACTION action)
@@ -228,6 +257,8 @@ public class GameData : MonoSingleton<GameData>
 [Serializable]
 public class SessionData
 {
+	public SessionSettings settings;
+
 	public PlayerSO playerData;
 	public Transform newSpawnPoint;
 
@@ -239,4 +270,11 @@ public class SessionData
 		listQuest = new List<Quest>();
 		listIds = new List<string>();
 	}
+}
+
+[Serializable]
+public struct SessionSettings
+{
+	public int qualitySettings;
+	// TODO Mariano: Complete
 }
