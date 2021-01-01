@@ -34,11 +34,6 @@ namespace Events
         public LADDER_EXIT ladderExit;
     }
 
-    public class ChangePlayerPositionEvent : GameEvent
-    {
-        public Vector3 newPosition;
-    }
-
     public class EnterCombatEvent : GameEvent
     {
         public NPCSO npc;
@@ -56,10 +51,17 @@ namespace Events
 
     public class FadeEvent : GameEvent
     {
-        public bool fadeFast;
+        public bool instant;
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
+    }
+    
+    public class CustomFadeEvent : GameEvent
+    {
+        public bool instant;
+        public bool fadeIn;
+        public TweenCallback callbackFadeIn;
     }
 
     public class CutsceneEvent : GameEvent
@@ -67,6 +69,19 @@ namespace Events
         public PlayableAsset cutscene;
         public bool show;
         public PlayerSO playerData;
+    }
+    
+    public class ChangeSceneEvent : GameEvent
+    {
+        public bool load;
+        public SceneSO sceneData;
+        public Vector3 newPlayerPosition;
+        public bool instantFade;
+    }
+    
+    public class ChangePositionEvent : GameEvent
+    {
+        public Vector3 newPosition;
     }
 
     public class SessionEvent : GameEvent

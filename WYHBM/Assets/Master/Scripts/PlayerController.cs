@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
         _input.Player.Enable();
         _input.UI.Disable();
     }
-    
+
     private void Start()
     {
         _interactionEvent = new InteractionEvent();
@@ -125,15 +125,15 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
-        EventController.AddListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
         EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
+        EventController.AddListener<ChangePositionEvent>(OnChangePosition);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
-        EventController.RemoveListener<ChangePlayerPositionEvent>(OnChangePlayerPosition);
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
+        EventController.RemoveListener<ChangePositionEvent>(OnChangePosition);
     }
 
     private void Pause(PAUSE_TYPE pauseType)
@@ -495,16 +495,18 @@ public class PlayerController : MonoBehaviour
         if (_canMove)
         {
             _input.Player.Enable();
+            _characterController.enabled = true;
         }
         else
         {
             _input.Player.Disable();
+            _characterController.enabled = false;
         }
 
         if (evt.canMove)_interaction = false;
     }
 
-    private void OnChangePlayerPosition(ChangePlayerPositionEvent evt)
+    private void OnChangePosition(ChangePositionEvent evt)
     {
         transform.position = evt.newPosition;
     }

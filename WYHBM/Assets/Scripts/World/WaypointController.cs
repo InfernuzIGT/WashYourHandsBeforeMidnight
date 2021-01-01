@@ -12,6 +12,8 @@ public class WaypointController : MonoBehaviour
     [Range(0f, 1f)]
     public float radius = 0.75f;
 
+#if UNITY_EDITOR
+
     private void OnDrawGizmosSelected()
     {
         if (showDebug && positions.Length != 0)
@@ -24,4 +26,6 @@ public class WaypointController : MonoBehaviour
             }
         }
     }
+
+#endif
 }

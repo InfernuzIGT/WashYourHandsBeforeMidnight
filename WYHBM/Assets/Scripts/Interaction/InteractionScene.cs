@@ -1,19 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Events;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class InteractionScene : Interaction, IInteractable
 {
     [Header("Cutscene")]
-    [SerializeField] private SceneSO sceneData;
+    [SerializeField] private bool _load = false;
+    [SerializeField] private SceneSO sceneData = null;
+    public Vector3 newPlayerPosition;
+    [SerializeField] private bool _instantFade = false;
+    [Space]
+    [SerializeField] private bool _showDebug = false;
+    [SerializeField] private Color _color = new Color(0, 1, 0, 0.5f);
 
     private List<AsyncOperation> _listScenes;
+    private ChangeSceneEvent _changeSceneEvent;
+
+    public bool ShowDebug { get { return _showDebug; } }
 
     private void Start()
     {
         _listScenes = new List<AsyncOperation>();
+
+        _changeSceneEvent = new ChangeSceneEvent();
+        _changeSceneEvent.load = _load;
+        _changeSceneEvent.newPlayerPosition = newPlayerPosition;
+        _changeSceneEvent.sceneData = sceneData;
+        _changeSceneEvent.instantFade = _instantFade;
     }
 
     public void OnInteractionEnter(Collider other)
@@ -36,39 +49,26 @@ public class InteractionScene : Interaction, IInteractable
     {
         EventController.RemoveListener<InteractionEvent>(OnInteractScene);
         
-        // TODO Mariano: Remover Input al comenzar la carga
-        
-        LoadScenes();
+        ShowHint(false);
 
-        // TODO Mariano: Devolver Input al cargar la escena
+        EventController.TriggerEvent(_changeSceneEvent);
     }
 
-    private void LoadScenes()
+    public void ResetPosition()
     {
-        _listScenes.Add(SceneManager.LoadSceneAsync(sceneData.sceneMain));
+        newPlayerPosition = gameObject.transform.position;
+    }
 
-        if (sceneData.scenesAdditive.Length == 0)return;
+#if UNITY_EDITOR
 
-        for (int i = 0; i < sceneData.scenesAdditive.Length; i++)
+    private void OnDrawGizmosSelected()
+    {
+        if (_showDebug)
         {
-            _listScenes.Add(SceneManager.LoadSceneAsync(sceneData.scenesAdditive[i], LoadSceneMode.Additive));
+            Gizmos.color = _color;
+            Gizmos.DrawCube(newPlayerPosition, new Vector3(1, 3.15f, 1));
         }
     }
-    
-    private IEnumerator LoadingProgress ()
-    {
-        float currentProgress = 0;
-        float totalProgress = 0;
-        
-        for (int i = 0; i < _listScenes.Count; i++)
-        {
-            while (!_listScenes[i].isDone)
-            {
-                totalProgress += _listScenes[i].progress;
-                currentProgress = totalProgress/_listScenes.Count;
-                yield return null;
-            }
-        }
-    }
-    
+
+#endif
 }

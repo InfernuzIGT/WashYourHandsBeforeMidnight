@@ -1,6 +1,6 @@
 ﻿public class Tags
 {
-    // Characters
+    // General
     public const string Player = "Player";
 
     // Ground

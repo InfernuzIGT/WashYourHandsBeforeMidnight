@@ -23,7 +23,6 @@ public class GlobalController : MonoBehaviour
 
     [Header("Developer")]
     [SerializeField] private bool _inputDebugMode = true;
-    [SerializeField] private Transform _customSpawnPoint = null;
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
@@ -44,8 +43,6 @@ public class GlobalController : MonoBehaviour
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
     private bool _isInteriorCamera;
-
-    private float _offsetPlayer = 1.505f;
 
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
@@ -124,56 +121,18 @@ public class GlobalController : MonoBehaviour
 
     private void SpawnPlayer()
     {
-        RaycastHit hit;
+        SpawnPoint spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
 
-#if UNITY_EDITOR
-
-        if (_customSpawnPoint != null)
+        if (spawnPoint != null)
         {
-            if (Physics.Raycast(_customSpawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
-            {
-                Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
-            }
-            else
-            {
-                Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
-
-                playerController = Instantiate(playerController, _customSpawnPoint.position, Quaternion.identity);
-            }
+            playerController = Instantiate(playerController, spawnPoint.transform.position, Quaternion.identity);
         }
         else
         {
-            SceneView sceneView = SceneView.lastActiveSceneView;
-            Vector3 sceneCameraPosition = sceneView.pivot - sceneView.camera.transform.position;
+            Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't find a Spawn Point!");
 
-            if (Physics.Raycast(sceneCameraPosition, Vector3.down, out hit, Mathf.Infinity))
-            {
-                Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
-            }
-            else
-            {
-                Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
-
-                playerController = Instantiate(playerController, sceneCameraPosition, Quaternion.identity);
-            }
+            playerController = Instantiate(playerController);
         }
-#else
-
-        if (Physics.Raycast(spawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
-        {
-            Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-            player = Instantiate(player, spawnPosition, Quaternion.identity);
-        }
-        else
-        {
-            Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
-
-            player = Instantiate(player, spawnPoint.position, Quaternion.identity);
-        }
-
-#endif
 
         playerController.SetPlayerData(playerData);
 

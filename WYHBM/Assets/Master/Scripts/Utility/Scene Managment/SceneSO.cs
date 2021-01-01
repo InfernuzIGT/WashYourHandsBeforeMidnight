@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 // using UnityEngine.Rendering.PostProcessing;
 
-[CreateAssetMenu(fileName = "New Scene", menuName = "Scene/Scene")]
+[CreateAssetMenu(fileName = "New Scene Data", menuName = "Scene Data")]
 public class SceneSO : ScriptableObject
 {
     [Header("Information")]
     [TextArea] public string description;
     [Space]
-    public SceneReference sceneMain;
-    public SceneReference[] scenesAdditive;
+    public SceneReference[] scenes;
 
     // TODO Mariano: Review
 

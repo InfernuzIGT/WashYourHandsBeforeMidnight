@@ -79,7 +79,7 @@ public class Interaction : MonoBehaviour, IDialogueable
         ShowHint(false);
     }
 
-    private void ShowHint(bool show)
+    protected void ShowHint(bool show)
     {
         if (!_showHint)return;
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CMBlend World
   m_EditorClassIdentifier: 
   m_CustomBlends:
-  - m_From: CM World
+  - m_From: CM Player
     m_To: '**ANY CAMERA**'
     m_Blend:
       m_Style: 1
@@ -25,7 +25,7 @@ MonoBehaviour:
         m_PostInfinity: 0
         m_RotationOrder: 0
   - m_From: '**ANY CAMERA**'
-    m_To: CM World
+    m_To: CM Player
     m_Blend:
       m_Style: 1
       m_Time: 1

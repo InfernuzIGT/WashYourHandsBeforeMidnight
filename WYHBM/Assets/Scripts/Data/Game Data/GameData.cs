@@ -29,9 +29,20 @@ public class GameData : MonoSingleton<GameData>
 	[Header("Input System")]
 	public DeviceSO[] deviceData;
 
+	private List<AsyncOperation> _listScenes;
+
 	private GlobalController _globalController;
 	private LocalizationUtility _localizationUtility;
+
+	// Scene Managment
+	private bool _load;
+	private SceneSO _sceneData;
+
+	// Events
 	private UpdateLanguageEvent _updateLanguageEvent;
+	private EnableMovementEvent _enableMovementEvent;
+	private ChangePositionEvent _changePositionEvent;
+	private CustomFadeEvent _customFadeEvent;
 
 	private int _indexQuality;
 
@@ -48,9 +59,26 @@ public class GameData : MonoSingleton<GameData>
 	{
 		_localizationUtility = GetComponent<LocalizationUtility>();
 
+		_listScenes = new List<AsyncOperation>();
+
 		_updateLanguageEvent = new UpdateLanguageEvent();
+		_enableMovementEvent = new EnableMovementEvent();
+		_changePositionEvent = new ChangePositionEvent();
+
+		_customFadeEvent = new CustomFadeEvent();
+		_customFadeEvent.callbackFadeIn = ChangeScene;
 
 		_indexQuality = QualitySettings.GetQualityLevel();
+	}
+
+	private void OnEnable()
+	{
+		EventController.AddListener<ChangeSceneEvent>(OnChangeScene);
+	}
+
+	private void OnDisable()
+	{
+		EventController.RemoveListener<ChangeSceneEvent>(OnChangeScene);
 	}
 
 	public void SelectNextLanguage()
@@ -78,14 +106,14 @@ public class GameData : MonoSingleton<GameData>
 		QualitySettings.SetQualityLevel(_indexQuality, true);
 
 		// TODO Mariano: COMPLETE
-		
+
 		// Debug.Log($"Current Quality: {QualitySettings.names[_indexQuality]}");
-		
+
 		// QualitySettings.vSyncCount = 0;
-		
+
 		// FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
 		// Screen.fullScreenMode = fullScreenMode;
-		
+
 		// Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, fullScreenMode);
 	}
 
@@ -102,20 +130,78 @@ public class GameData : MonoSingleton<GameData>
 		return null;
 	}
 
-	public void LoadScene(SCENE_INDEX sceneIndex)
+	#region Scene Managment
+
+	private void OnChangeScene(ChangeSceneEvent evt)
 	{
-		StartCoroutine(LoadYourAsyncScene(sceneIndex));
+		_load = evt.load;
+		_sceneData = evt.sceneData;
+		_changePositionEvent.newPosition = evt.newPlayerPosition;
+		_customFadeEvent.instant = evt.instantFade;
+
+		_customFadeEvent.fadeIn = true;
+		EventController.TriggerEvent(_customFadeEvent);
+
+		_enableMovementEvent.canMove = false;
+		EventController.TriggerEvent(_enableMovementEvent);
 	}
 
-	private IEnumerator LoadYourAsyncScene(SCENE_INDEX index)
+	private void ChangeScene()
 	{
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync((int)index);
-
-		while (!asyncLoad.isDone)
+		if (_load)
 		{
-			yield return null;
+			for (int i = 0; i < _sceneData.scenes.Length; i++)
+			{
+				_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[i], LoadSceneMode.Additive));
+			}
+		}
+		else
+		{
+			for (int i = 0; i < _sceneData.scenes.Length; i++)
+			{
+				_listScenes.Add(SceneManager.UnloadSceneAsync(_sceneData.scenes[i]));
+			}
+		}
+
+		if (_listScenes.Count == 0)
+		{
+			Debug.LogError($"<color=red><b>[ERROR]</b></color> No scenes found in {_sceneData.name}");
+		}
+		else
+		{
+			EventController.TriggerEvent(_changePositionEvent);
+
+			StartCoroutine(LoadingProgress());
 		}
 	}
+
+	private IEnumerator LoadingProgress()
+	{
+		float currentProgress = 0;
+		float totalProgress = 0;
+
+		for (int i = 0; i < _listScenes.Count; i++)
+		{
+			while (!_listScenes[i].isDone)
+			{
+				totalProgress += _listScenes[i].progress;
+				currentProgress = totalProgress / _listScenes.Count;
+				yield return null;
+			}
+		}
+
+		_listScenes.Clear();
+
+		yield return new WaitForSeconds(.5f);
+
+		_customFadeEvent.fadeIn = false;
+		EventController.TriggerEvent(_customFadeEvent);
+
+		_enableMovementEvent.canMove = true;
+		EventController.TriggerEvent(_enableMovementEvent);
+	}
+
+	#endregion
 
 	#region Persistence
 
