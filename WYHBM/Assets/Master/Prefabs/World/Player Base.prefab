@@ -38,7 +38,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 305841180377708712}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
@@ -106,45 +106,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testInput: {fileID: -944628639613478452, guid: 3891028e3cb1643469d5dc6b11210c05,
-    type: 3}
-  testcaca:
-    m_Name: Testcaca
-    m_Id: baf09fe8-8879-42bd-8ab5-b0732f99c0ea
-    m_Asset: {fileID: 0}
-    m_Actions:
-    - m_Name: New action
-      m_Type: 1
-      m_ExpectedControlType: Button
-      m_Id: 274c57f7-d025-44e4-981f-2f2853fc30db
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-    m_Bindings:
-    - m_Name: 
-      m_Id: aabd7617-2ced-4a5e-9c16-03167450b147
-      m_Path: 
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: New action
-      m_Flags: 0
   _playerData: {fileID: 0}
+  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
+  _fmodConfig: {fileID: 11400000, guid: 5097b5a2954f5f3489abec2ef11985a4, type: 2}
   _inZipline: 0
   endPos: {x: 0, y: 0, z: 0}
-  Climbable:
-    serializedVersion: 2
-    m_Bits: 4096
   ledgeDetected: 0
   wallCheck: {fileID: 6335019193980573163}
   ledgeCheck: {fileID: 7148576689432955027}
   wallCheckDistance: 1
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 65536
   footstepSound: {fileID: 4696537044046352187}
   breathingSound: {fileID: 1859904522748835540}
-  _lookMovement: {x: 0, y: 0}
 --- !u!143 &1255290931
 CharacterController:
   m_ObjectHideFlags: 0

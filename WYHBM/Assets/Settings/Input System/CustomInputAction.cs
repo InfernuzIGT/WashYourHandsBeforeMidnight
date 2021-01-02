@@ -89,6 +89,30 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""13740944-d7b5-4e20-b7be-3979b0465244"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Listen Mode"",
+                    ""type"": ""Button"",
+                    ""id"": ""18725fcf-6b4e-447b-a558-5631689a2271"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""bde9c4a2-d848-4e90-bed7-b36f49141a85"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -480,7 +504,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""4a4769ad-8faa-4e42-8474-6093467da0ae"",
-                    ""path"": ""<XInputController>/buttonEast"",
+                    ""path"": ""<XInputController>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XboxOne"",
@@ -491,7 +515,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""214e9d52-4b22-4a76-9518-7ae136a6c335"",
-                    ""path"": ""<DualShockGamepad>/buttonEast"",
+                    ""path"": ""<DualShockGamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PS4"",
@@ -567,6 +591,17 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""c18acb8c-7cd6-4f77-8cd4-f6621f11bdb8"",
+                    ""path"": ""<XInputController>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""ba71543c-275c-497b-97f9-6db972c30428"",
                     ""path"": ""<DualShockGamepad>/rightStickPress"",
                     ""interactions"": """",
@@ -584,6 +619,116 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""PC"",
                     ""action"": ""Reset Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""97e20cf1-18cb-46d5-8bf6-b77f663279c0"",
+                    ""path"": ""<XInputController>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Reset Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea79e5bc-e06d-45d0-a6d0-2267e75f6e40"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1580cd3-6131-43c1-a6c6-b2decfaae453"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfd22d73-0018-4c41-9083-51cd92d12fb2"",
+                    ""path"": ""<DualShockGamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec789987-d2dc-4c47-8b1e-a297e0aa382a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Listen Mode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""90a62602-f723-4905-b7e9-7c250684eab4"",
+                    ""path"": ""<DualShockGamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Listen Mode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""236f1119-2462-49ea-ba2f-e821fea50b8e"",
+                    ""path"": ""<XInputController>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Listen Mode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""738586c6-571e-4bf3-988e-ed30c35f961d"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b6dcb32-95e9-4923-aebe-9e73b70e7f0f"",
+                    ""path"": ""<DualShockGamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""072885bd-ea72-4617-b3dd-4c2740bb6867"",
+                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -967,11 +1112,22 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d46f6c40-ca81-413e-bcb0-40a17151159e"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""id"": ""d1299f41-e512-4e43-9e46-72b12a4d9449"",
+                    ""path"": ""<DualShockGamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""PS4;XboxOne;Switch"",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd2e6a43-3e15-46e7-a968-5694f49deba6"",
+                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
                     ""action"": ""Submit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1000,11 +1156,22 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""dd3cc64d-a21c-4925-8670-339288beb0ff"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""id"": ""3643abb8-1159-41ef-aa1a-5b4a39b3d272"",
+                    ""path"": ""<DualShockGamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""XboxOne;Switch;PS4"",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69051904-3d5c-4463-a0f2-daf8846c0063"",
+                    ""path"": ""<XInputController>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1033,6 +1200,17 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""a4c9879c-6515-4891-9ddc-f81dafe56ac8"",
+                    ""path"": ""<XInputController>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""396e6411-c04d-4f2a-bb40-01f2f710651e"",
                     ""path"": ""<DualShockGamepad>/rightStickPress"",
                     ""interactions"": """",
@@ -1049,6 +1227,17 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
+                    ""action"": ""Reset Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6793d932-bd12-40b0-87ee-e3071063cb20"",
+                    ""path"": ""<XInputController>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
                     ""action"": ""Reset Camera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1125,6 +1314,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         m_Player_Options = m_Player.FindAction("Options", throwIfNotFound: true);
         m_Player_DebugMode = m_Player.FindAction("DebugMode", throwIfNotFound: true);
         m_Player_ResetCamera = m_Player.FindAction("Reset Camera", throwIfNotFound: true);
+        m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
+        m_Player_ListenMode = m_Player.FindAction("Listen Mode", throwIfNotFound: true);
+        m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Look = m_UI.FindAction("Look", throwIfNotFound: true);
@@ -1190,6 +1382,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Options;
     private readonly InputAction m_Player_DebugMode;
     private readonly InputAction m_Player_ResetCamera;
+    private readonly InputAction m_Player_Crouch;
+    private readonly InputAction m_Player_ListenMode;
+    private readonly InputAction m_Player_Run;
     public struct PlayerActions
     {
         private @CustomInputAction m_Wrapper;
@@ -1203,6 +1398,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         public InputAction @Options => m_Wrapper.m_Player_Options;
         public InputAction @DebugMode => m_Wrapper.m_Player_DebugMode;
         public InputAction @ResetCamera => m_Wrapper.m_Player_ResetCamera;
+        public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
+        public InputAction @ListenMode => m_Wrapper.m_Player_ListenMode;
+        public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1239,6 +1437,15 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @ResetCamera.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
                 @ResetCamera.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
                 @ResetCamera.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
+                @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                @ListenMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnListenMode;
+                @ListenMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnListenMode;
+                @ListenMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnListenMode;
+                @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1270,6 +1477,15 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @ResetCamera.started += instance.OnResetCamera;
                 @ResetCamera.performed += instance.OnResetCamera;
                 @ResetCamera.canceled += instance.OnResetCamera;
+                @Crouch.started += instance.OnCrouch;
+                @Crouch.performed += instance.OnCrouch;
+                @Crouch.canceled += instance.OnCrouch;
+                @ListenMode.started += instance.OnListenMode;
+                @ListenMode.performed += instance.OnListenMode;
+                @ListenMode.canceled += instance.OnListenMode;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
             }
         }
     }
@@ -1395,6 +1611,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         void OnOptions(InputAction.CallbackContext context);
         void OnDebugMode(InputAction.CallbackContext context);
         void OnResetCamera(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
+        void OnListenMode(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
