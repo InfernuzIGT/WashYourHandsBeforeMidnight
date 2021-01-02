@@ -12,7 +12,6 @@ namespace Events
     {
         public bool isStart;
         public Vector3 lastPlayerPosition;
-        public bool isRunning;
     }
 
     public class EnableDialogEvent : GameEvent

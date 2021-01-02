@@ -7,20 +7,20 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController), typeof(DeviceUtility))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, ReadOnly] private PlayerSO _playerData;
+    [SerializeField, ReadOnly] private PlayerSO _playerData = null;
+    [SerializeField] private PlayerConfig _playerConfig = null;
+    // [SerializeField] private FMODConfig _fmodConfig = null;
 
     [Header("Review")]
+    [SerializeField, ReadOnly] private MOVEMENT_STATE _movementState = MOVEMENT_STATE.Walk;
     public bool _inZipline = false;
     public Vector3 endPos;
-    public LayerMask Climbable;
     public bool ledgeDetected;
     public Transform wallCheck;
     public Transform ledgeCheck;
     public float wallCheckDistance;
 
     [Header("FMOD")]
-    public LayerMask layerMask;
-    [Space]
     public StudioEventEmitter footstepSound;
     public StudioEventEmitter breathingSound;
 
@@ -35,25 +35,20 @@ public class PlayerController : MonoBehaviour
     private PauseEvent _pauseEvent;
 
     // Movement 
+    private MOVEMENT_STATE _lastMovementState;
     private Vector2 _inputMovement;
     private Vector2 _inputMovementAux;
+    private Vector3 _crouchHeight;
     private Vector3 _movement;
-    private float _speedRun = 15f;
     private bool _canMove = true;
-    private bool _isRunning;
     private float _speedHorizontal;
     private float _speedVertical;
     private bool _isDetectingGround;
-    private bool _interaction;
-
-    // Walk
-    private float _speedWalk = 3.5f;
-    // private bool _isWalking;
+    private bool _isInteracting;
+    private bool _isCrouching;
 
     //Jump
     // private float _jump = 9.81f;
-    private float _gravity = 39.24f;
-    private float _magnitudeFall = 20f;
     private bool _isJumping;
 
     // Ivy
@@ -62,14 +57,10 @@ public class PlayerController : MonoBehaviour
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
 
-    // Zipline
-    // private float _speedZipline = .35f;
-
     // Ledge
     private Vector3 newPos;
 
     private Vector3 _lastPosition;
-    private float _axisLimit = 0.7f;
 
     // Footstep
     private RaycastHit _hit;
@@ -103,11 +94,15 @@ public class PlayerController : MonoBehaviour
         _input = new CustomInputAction();
 
         _input.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        _input.Player.Jump.started += ctx => Jump();
+        // _input.Player.Jump.performed += ctx => Jump();
         _input.Player.Interaction.performed += ctx => Interaction();
         _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
         _input.Player.Options.performed += ctx => Pause(PAUSE_TYPE.Inventory);
-        _input.Player.DebugMode.performed += ctx => GameData.Instance.SelectNextQuality(true);
+        _input.Player.Crouch.performed += ctx => Crouch();
+        _input.Player.Run.started += ctx => Run(true);
+        _input.Player.Run.canceled += ctx => Run(false);
+
+        // _input.Player.DebugMode.performed += ctx => GameData.Instance.SelectNextQuality(true);
 
         _input.Player.Enable();
         _input.UI.Disable();
@@ -118,6 +113,8 @@ public class PlayerController : MonoBehaviour
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
         _pauseEvent = new PauseEvent();
+
+        _crouchHeight = new Vector3(0, -(_playerConfig.height / 2) / 2, 0);
 
         _deviceUtility.DetectDevice();
     }
@@ -146,27 +143,7 @@ public class PlayerController : MonoBehaviour
     {
         Movement();
         // IvyMovement();
-        // MovementZipline();
     }
-
-    // private void MovementZipline()
-    // {
-    //     if (_inZipline)
-    //     {
-    //         _animatorController.MovementZipline(true);
-
-    //         _gravity = 0;
-
-    //         transform.position = Vector3.MoveTowards(transform.position, endPos, _speedZipline);
-
-    //         if (Vector3.Distance(transform.position, endPos) < 1)
-    //         {
-    //             _animatorController.MovementZipline(false);
-    //             _inZipline = false;
-    //             _gravity = 39.24f;
-    //         }
-    //     }
-    // }
 
     private void StartClimb()
     {
@@ -193,7 +170,7 @@ public class PlayerController : MonoBehaviour
     // {
     //     GUIStyle guiStyle = new GUIStyle();
     //     guiStyle.fontSize = 50;
-    //     GUI.Label(new Rect(10, 10, 100, 20), string.Format("Magnitude: {0}", _characterController.velocity.magnitude.ToString()), guiStyle);
+    //     GUI.Label(new Rect(10, 10, 100, 20), string.Format("Velocity Y: {0}", _characterController.velocity.y.ToString()), guiStyle);
     // }
 
     private void Movement()
@@ -205,59 +182,94 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        switch (_movementState)
+        {
+            case MOVEMENT_STATE.Walk:
+                if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
+                {
+                    _speedHorizontal = _playerConfig.speedJogging;
+
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+
+                    _animatorController.Walk(false);
+                }
+                else
+                {
+                    _speedHorizontal = _playerConfig.speedWalk;
+
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+
+                    _animatorController.Walk(true);
+                }
+                break;
+
+            case MOVEMENT_STATE.Run:
+                _speedHorizontal = _playerConfig.speedRun;
+                footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+                break;
+
+            case MOVEMENT_STATE.Crouch:
+                if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
+                {
+                    _speedHorizontal = _playerConfig.speedWalk;
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                }
+                else if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimitCrouch || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimitCrouch)
+                {
+                    _speedHorizontal = _playerConfig.speedCrouchFast;
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                }
+                else
+                {
+                    _speedHorizontal = _playerConfig.speedCrouch;
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                }
+                break;
+
+            case MOVEMENT_STATE.Jump:
+
+                break;
+
+            default:
+                break;
+        }
+
         // Ladder
-        if (_inIvy) { return; }
-
-        // Run / Walk
-        if (CheckRun())
-        {
-            _isRunning = true;
-            // _isRunning = _inputMovement.x == 0 && _inputMovement.y == 0 || !_characterController.isGrounded ? false : true;
-            _speedHorizontal = _speedRun;
-            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
-        }
-
-        else
-        {
-            _isRunning = false;
-            _speedHorizontal = _speedWalk;
-            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
-        }
+        // if (_inIvy) { return; }
 
         // Jump
         if (_characterController.isGrounded)
         {
             _speedVertical = -1;
 
-            if (_isJumping)
-            {
-                // _speedVertical = _jump;
-                _isJumping = false;
+            // if (_isJumping)
+            // {
+            //     // _speedVertical = _jump;
+            //     _isJumping = false;
 
-            }
+            // }
 
             // Add movement
             _inputMovementAux = _inputMovement.normalized;
+
             _movement.x = (_inputMovement.x != 0 ? _inputMovementAux.x : 0) * _speedHorizontal;
             _movement.z = (_inputMovement.y != 0 ? _inputMovementAux.y : 0) * _speedHorizontal;
             _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
 
             _animatorController.Falling(false);
         }
-
-        if (_characterController.velocity.magnitude > _magnitudeFall && !_characterController.isGrounded && !_inIvy)
+        else if (Mathf.Abs(_characterController.velocity.y) > _playerConfig.magnitudeFall)
         {
-            // TODO Mariano: Usar solo el valor de Y para detectar caida
             _animatorController.Falling(true);
         }
 
         // Move
-        _speedVertical -= _gravity * Time.deltaTime;
+        _speedVertical -= _playerConfig.gravity * Time.deltaTime;
         _movement.y = _speedVertical;
         _characterController.Move(_movement * Time.deltaTime);
 
         // Animation       
-        _animatorController.Movement(_movement, _isRunning, true);
+        _animatorController.Movement(_movement, _movementState);
 
         //Sound
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
@@ -269,95 +281,135 @@ public class PlayerController : MonoBehaviour
         _inputMovement = Vector2.zero;
         _inputMovementAux = _inputMovement;
 
-        _isRunning = false;
-        _animatorController.Movement(Vector3.zero, _isRunning, _characterController.isGrounded);
+        _animatorController.Movement(_movement, _movementState);
     }
 
-    private bool CheckRun()
+    private void Interaction()
     {
-        return /* !_isWalking && */ Mathf.Abs(_inputMovement.x) > _axisLimit || /* !_isWalking  && */ Mathf.Abs(_inputMovement.y) > _axisLimit;
+        _isInteracting = !_isInteracting;
+
+        _interactionEvent.isStart = _isInteracting;
+        _interactionEvent.lastPlayerPosition = transform.position;
+        EventController.TriggerEvent(_interactionEvent);
     }
 
-    private void Jump()
+    private void Run(bool active)
     {
-        if (_characterController.isGrounded)
+        if (_characterController.isGrounded && active)
         {
-            _isJumping = true;
-
-            // if !canMove drop 4 raycast 
-            if (_isJumping)
-            {
-
-                if (Physics.Raycast(wallCheck.transform.position, Vector3.right, out RaycastHit hitWallFront, wallCheckDistance, Climbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.right, out RaycastHit hitLedgeFront, wallCheckDistance, Climbable)
-                    /*Physics.Raycast(wallCheck.transform.position, Vector3.forward, out RaycastHit hitWallLeft, wallCheckDistance, Climbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.forward, out RaycastHit hitLedgeLeft, wallCheckDistance, Climbable)*/
-                )
-                {
-                    if (hitWallFront.collider.tag == "Climbable" && hitLedgeFront.collider.tag == "Climbable" && !ledgeDetected)
-                    {
-                        SetNewPosition(transform.position.x + .5f, hitLedgeFront.collider.bounds.size.y, transform.position.z);
-
-                        newPos = new Vector3(.7f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
-                            hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2,
-                            hitLedgeFront.transform.position.z);
-
-                        Debug.Log($"<b> {newPos} </b>");
-
-                        ledgeDetected = true;
-
-                        StartClimb();
-
-                        FMODUnity.RuntimeManager.PlayOneShot("event:/Player/Climbing", GetComponent<Transform>().position);
-                    }
-
-                    //     if (hitWallLeft.collider.tag == "Climbable" && hitLedgeLeft.collider.tag == "Climbable" && !ledgeDetected)
-                    //     {
-                    //         _inLedge = true;
-
-                    //         newPos = hitLedgeFront.collider.gameObject.transform.GetChild(0).transform.position;
-
-                    //         ledgeDetected = true;
-
-                    //         StartCoroutine(AnimClimb());
-
-                    //     }
-                    // }
-                }
-
-                else
-                {
-                    if (Physics.Raycast(wallCheck.transform.position, Vector3.left, out RaycastHit hitWallBack, wallCheckDistance, Climbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.left, out RaycastHit hitLedgeBack, wallCheckDistance, Climbable)
-                        /*Physics.Raycast(wallCheck.transform.position, Vector3.back, out RaycastHit hitWallRight, wallCheckDistance, Climbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.back, out RaycastHit hitLedgeRight, wallCheckDistance, Climbable)*/
-                    )
-                    {
-                        if (hitWallBack.collider.tag == "Climbable" && hitLedgeBack.collider.tag == "Climbable" && !ledgeDetected)
-                        {
-                            SetNewPosition(transform.position.x - .5f, hitLedgeBack.collider.bounds.size.y + .5f, transform.position.z);
-
-                            newPos = new Vector3(-.7f + hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / 2,
-                                hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / 2,
-                                hitLedgeBack.transform.position.z);
-
-                            ledgeDetected = true;
-
-                            StartClimb();
-                        }
-
-                        // if (hitWallRight.collider.tag == "Climbable" && hitLedgeRight.collider.tag == "Climbable" && !ledgeDetected)
-                        // {
-                        //     _inLedge = true;
-
-                        //     newPos = hitLedgeBack.collider.gameObject.transform.GetChild(0).transform.position;
-
-                        //     ledgeDetected = true;
-
-                        //     StartCoroutine(AnimClimb());
-
-                        // }
-                    }
-                }
-            }
+            Crouch(true);
+            ChangeMovementState(MOVEMENT_STATE.Run);
+        }
+        else
+        {
+            ChangeMovementState();
         }
     }
+
+    private void Crouch(bool cancel = false)
+    {
+        if (cancel)_isCrouching = true;
+
+        _isCrouching = !_isCrouching;
+
+        if (_characterController.isGrounded && _isCrouching)
+        {
+            ChangeMovementState(MOVEMENT_STATE.Crouch);
+
+            _characterController.height = _playerConfig.height / 2;
+            _characterController.center = _crouchHeight;
+        }
+        else
+        {
+            ChangeMovementState();
+
+            _characterController.height = _playerConfig.height;
+            _characterController.center = Vector3.zero;
+        }
+    }
+
+    // private void Jump()
+    // {
+    //     if (_characterController.isGrounded)
+    //     {
+    //         ChangeMovementState(MOVEMENT_STATE.Jump);
+
+    //         _isJumping = true;
+
+    //         // if !canMove drop 4 raycast 
+    //         if (_isJumping)
+    //         {
+
+    //             if (Physics.Raycast(wallCheck.transform.position, Vector3.right, out RaycastHit hitWallFront, wallCheckDistance, _playerConfig.layerClimbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.right, out RaycastHit hitLedgeFront, wallCheckDistance, _playerConfig.layerClimbable)
+    //                 /*Physics.Raycast(wallCheck.transform.position, Vector3.forward, out RaycastHit hitWallLeft, wallCheckDistance, Climbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.forward, out RaycastHit hitLedgeLeft, wallCheckDistance, Climbable)*/
+    //             )
+    //             {
+    //                 if (hitWallFront.collider.CompareTag(Tags.Climbable) && hitLedgeFront.collider.CompareTag(Tags.Climbable) && !ledgeDetected)
+    //                 {
+    //                     SetNewPosition(transform.position.x + .5f, hitLedgeFront.collider.bounds.size.y, transform.position.z);
+
+    //                     newPos = new Vector3(.7f + hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / hitLedgeFront.transform.position.x - hitLedgeFront.collider.bounds.size.x / 2,
+    //                         hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / hitLedgeFront.transform.position.y + hitLedgeFront.collider.bounds.size.y / 2,
+    //                         hitLedgeFront.transform.position.z);
+
+    //                     Debug.Log($"<b> {newPos} </b>");
+
+    //                     ledgeDetected = true;
+
+    //                     StartClimb();
+
+    //                     FMODUnity.RuntimeManager.PlayOneShot(_fmodConfig.climbing, transform.position);
+    //                 }
+
+    //                 //     if (hitWallLeft.collider.tag == "Climbable" && hitLedgeLeft.collider.tag == "Climbable" && !ledgeDetected)
+    //                 //     {
+    //                 //         _inLedge = true;
+
+    //                 //         newPos = hitLedgeFront.collider.gameObject.transform.GetChild(0).transform.position;
+
+    //                 //         ledgeDetected = true;
+
+    //                 //         StartCoroutine(AnimClimb());
+
+    //                 //     }
+    //                 // }
+    //             }
+
+    //             else
+    //             {
+    //                 if (Physics.Raycast(wallCheck.transform.position, Vector3.left, out RaycastHit hitWallBack, wallCheckDistance, _playerConfig.layerClimbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.left, out RaycastHit hitLedgeBack, wallCheckDistance, _playerConfig.layerClimbable)
+    //                     /*Physics.Raycast(wallCheck.transform.position, Vector3.back, out RaycastHit hitWallRight, wallCheckDistance, Climbable) && Physics.Raycast(ledgeCheck.transform.position, Vector3.back, out RaycastHit hitLedgeRight, wallCheckDistance, Climbable)*/
+    //                 )
+    //                 {
+    //                     if (hitWallBack.collider.CompareTag(Tags.Climbable) && hitLedgeBack.collider.CompareTag(Tags.Climbable) && !ledgeDetected)
+    //                     {
+    //                         SetNewPosition(transform.position.x - .5f, hitLedgeBack.collider.bounds.size.y + .5f, transform.position.z);
+
+    //                         newPos = new Vector3(-.7f + hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / hitLedgeBack.transform.position.x + hitLedgeBack.collider.bounds.size.x / 2,
+    //                             hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / hitLedgeBack.transform.position.y + hitLedgeBack.collider.bounds.size.y / 2,
+    //                             hitLedgeBack.transform.position.z);
+
+    //                         ledgeDetected = true;
+
+    //                         StartClimb();
+    //                     }
+
+    //                     // if (hitWallRight.collider.tag == "Climbable" && hitLedgeRight.collider.tag == "Climbable" && !ledgeDetected)
+    //                     // {
+    //                     //     _inLedge = true;
+
+    //                     //     newPos = hitLedgeBack.collider.gameObject.transform.GetChild(0).transform.position;
+
+    //                     //     ledgeDetected = true;
+
+    //                     //     StartCoroutine(AnimClimb());
+
+    //                     // }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     // private void IvyMovement()
     // {
@@ -378,42 +430,43 @@ public class PlayerController : MonoBehaviour
     //     _animatorController.Movement(_movement, _isRunning, _characterController.isGrounded);
     // }
 
-    private void DetectBot()
+    // private void DetectBot()
+    // {
+    //     if (_characterController.isGrounded && !_inIvy)
+    //     {
+    //         _animatorController.PreClimbLadder(false);
+    //     }
+
+    //     else
+    //     {
+    //         _animatorController.PreClimbLadder(true);
+    //     }
+
+    //     // _botPosition = new Vector3(
+    //     //     transform.position.x,
+    //     //     transform.position.y - _characterController.height / 2 - _characterController.center.y,
+    //     //     transform.position.z);
+
+    //     // if (Physics.Raycast(_botPosition, Vector3.down, out _hitBot, .1f))
+    //     // {
+    //     //     if (_hitBot.collider.tag == "Interaction")
+    //     //     {
+    //     //         _inLadder = false;
+    //     //         _ladderEvent.ladderExit = LADDER_EXIT.Bot;
+    //     //         EventController.TriggerEvent(_ladderEvent);
+    //     //     }
+    //     // }
+    // }
+
+    private void ChangeMovementState()
     {
-        if (_characterController.isGrounded && !_inIvy)
-        {
-            _animatorController.PreClimbLadder(false);
-        }
-
-        else
-        {
-            _animatorController.PreClimbLadder(true);
-        }
-
-        // _botPosition = new Vector3(
-        //     transform.position.x,
-        //     transform.position.y - _characterController.height / 2 - _characterController.center.y,
-        //     transform.position.z);
-
-        // if (Physics.Raycast(_botPosition, Vector3.down, out _hitBot, .1f))
-        // {
-        //     if (_hitBot.collider.tag == "Interaction")
-        //     {
-        //         _inLadder = false;
-        //         _ladderEvent.ladderExit = LADDER_EXIT.Bot;
-        //         EventController.TriggerEvent(_ladderEvent);
-        //     }
-        // }
+        _movementState = _lastMovementState;
     }
 
-    private void Interaction()
+    private void ChangeMovementState(MOVEMENT_STATE newState)
     {
-        _interaction = !_interaction;
-
-        _interactionEvent.isStart = _interaction;
-        _interactionEvent.lastPlayerPosition = transform.position;
-        _interactionEvent.isRunning = _isRunning;
-        EventController.TriggerEvent(_interactionEvent);
+        _lastMovementState = _movementState;
+        _movementState = newState;
     }
 
     public void SetPlayerData(PlayerSO data)
@@ -451,7 +504,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!_canPlayFootstep)return;
 
-        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 2, layerMask))
+        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 2, _playerConfig.layerGround))
         {
             switch (_hit.collider.gameObject.tag)
             {
@@ -503,7 +556,12 @@ public class PlayerController : MonoBehaviour
             _characterController.enabled = false;
         }
 
-        if (evt.canMove)_interaction = false;
+        if (evt.canMove)
+        {
+            _isInteracting = false;
+
+            // Crouch(true);
+        }
     }
 
     private void OnChangePosition(ChangePositionEvent evt)

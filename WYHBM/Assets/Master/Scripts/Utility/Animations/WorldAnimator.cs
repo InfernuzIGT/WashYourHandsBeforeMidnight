@@ -6,22 +6,16 @@ public class WorldAnimator : AnimatorController
 
     private bool _isFlipped;
 
-    public bool isFlipped { get {return _isFlipped; } }
+    public bool isFlipped { get { return _isFlipped; } }
 
-    private void Start()
-    {
-        _animModeCombat.Execute(_animator, false);
-    }
-
-    public void Movement(Vector3 movement, bool isRunning = false, bool isGrounded = true)
+    public void Movement(Vector3 movement, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
     {
         FlipSprite(movement);
 
         _animValueX.Execute(_animator, movement.x);
         _animValueY.Execute(_animator, movement.z);
         _animValueZ.Execute(_animator, movement.y);
-        _animIsRunning.Execute(_animator, isRunning);
-        _animIsGrounded.Execute(_animator, isGrounded);
+        _animMovementType.Execute(_animator, (int)movementState);
     }
 
     private void FlipSprite(Vector3 movement)
@@ -37,10 +31,15 @@ public class WorldAnimator : AnimatorController
 
         _spriteRenderer.flipX = _isFlipped;
     }
-    
-    public void MovementZipline(bool canZipline)
+
+    public void Walk(bool active)
     {
-        _animCanZipLine.Execute(_animator, canZipline);
+        _animIsWalking.Execute(_animator, active);
+    }
+
+    public void Falling(bool isFalling)
+    {
+        _animIsFalling.Execute(_animator, isFalling);
     }
 
     public void ClimbLedge(bool value)
@@ -53,8 +52,4 @@ public class WorldAnimator : AnimatorController
         _animCanClimbLadder.Execute(_animator, canClimbLadder);
     }
 
-    public void Falling(bool isFalling)
-    {
-        _animFall.Execute(_animator, isFalling);
-    }
 }

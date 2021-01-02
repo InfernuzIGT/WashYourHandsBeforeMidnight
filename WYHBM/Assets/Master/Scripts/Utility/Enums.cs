@@ -17,6 +17,14 @@ public enum COMBAT_STATE
     Wait = 4
 }
 
+public enum MOVEMENT_STATE
+{
+    Walk = 0,
+    Run = 1,
+    Crouch = 2,
+    Jump = 3,
+}
+
 public enum EMOTION
 {
     None = 0,
