@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Note", menuName = "Note", order = 0)]
+[CreateAssetMenu(fileName = "New Note", menuName = "DEPRECATED/Note")]
 public class NoteSO : ScriptableObject
 {
     public int noteId;

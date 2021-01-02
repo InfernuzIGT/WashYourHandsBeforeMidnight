@@ -4,7 +4,6 @@ using UnityEngine;
 [CustomEditor(typeof(GameData))]
 public class GameDataEditor : Editor
 {
-
     private GameData _controller;
     private GUIStyle _styleButtons;
 
@@ -34,7 +33,7 @@ public class GameDataEditor : Editor
         {
             _controller.Load();
         }
-        
+
         if (GUILayout.Button("Delete All", _styleButtons))
         {
             _controller.DeleteAll();

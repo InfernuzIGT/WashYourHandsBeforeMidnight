@@ -42,8 +42,8 @@ public class MenuController : MonoBehaviour
         sliderMusic.onValueChanged.AddListener(VolumeMusic);
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.fadeFast = true;
-        _fadeEvent.callbackMid = ChangeScene;
+        _fadeEvent.instant = true;
+        // _fadeEvent.callbackMid = ChangeScene;
 
         // if (GameData.Data.isDataLoaded)
         // {
@@ -54,11 +54,6 @@ public class MenuController : MonoBehaviour
         mainPanel.SetActive(true);
 
         _menuMusic.Play();
-    }
-
-    private void ChangeScene()
-    {
-        GameData.Instance.LoadScene(SCENE_INDEX.Master);
     }
 
     private void OnEnable()

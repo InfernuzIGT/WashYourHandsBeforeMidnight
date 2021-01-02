@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: CMBlend World
   m_EditorClassIdentifier: 
   m_CustomBlends:
-  - m_From: CM World
-    m_To: CM Cutscene
+  - m_From: CM Player
+    m_To: '**ANY CAMERA**'
     m_Blend:
       m_Style: 1
       m_Time: 3
@@ -24,30 +24,8 @@ MonoBehaviour:
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 0
-  - m_From: CM World
-    m_To: CM Cutscene Extra
-    m_Blend:
-      m_Style: 1
-      m_Time: 3
-      m_CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: CM Cutscene
-    m_To: CM World
-    m_Blend:
-      m_Style: 1
-      m_Time: 1
-      m_CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: CM Cutscene Extra
-    m_To: CM World
+  - m_From: '**ANY CAMERA**'
+    m_To: CM Player
     m_Blend:
       m_Style: 1
       m_Time: 1

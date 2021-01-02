@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfac75a99f82384294a97a7ff9a5d7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _eventSystem: {fileID: 5209792940349021516}
+  _inputUIModule: {fileID: 1511372582687467037}
 --- !u!114 &5209792940349021516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,19 +76,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
-  m_ActionsAsset: {fileID: -944628639613478452, guid: 3891028e3cb1643469d5dc6b11210c05,
+  m_ActionsAsset: {fileID: -944628639613478452, guid: 9dd3ef8e7a4fcb745a60839884d5d026,
     type: 3}
-  m_PointAction: {fileID: -3303244171447324440, guid: 3891028e3cb1643469d5dc6b11210c05,
+  m_PointAction: {fileID: 1629495682181241972, guid: 9dd3ef8e7a4fcb745a60839884d5d026,
     type: 3}
-  m_MoveAction: {fileID: -4185955134734139790, guid: 3891028e3cb1643469d5dc6b11210c05,
+  m_MoveAction: {fileID: -1315871314755982991, guid: 9dd3ef8e7a4fcb745a60839884d5d026,
     type: 3}
-  m_SubmitAction: {fileID: -425498529290843648, guid: 3891028e3cb1643469d5dc6b11210c05,
+  m_SubmitAction: {fileID: 8390566645049358314, guid: 9dd3ef8e7a4fcb745a60839884d5d026,
     type: 3}
-  m_CancelAction: {fileID: 3076292541289502039, guid: 3891028e3cb1643469d5dc6b11210c05,
+  m_CancelAction: {fileID: -179533363901994512, guid: 9dd3ef8e7a4fcb745a60839884d5d026,
     type: 3}
   m_LeftClickAction: {fileID: -1259673172950436973, guid: 3891028e3cb1643469d5dc6b11210c05,
     type: 3}
-  m_MiddleClickAction: {fileID: -3774810693187906070, guid: 3891028e3cb1643469d5dc6b11210c05,
+  m_MiddleClickAction: {fileID: 1129367170298724220, guid: 9dd3ef8e7a4fcb745a60839884d5d026,
     type: 3}
   m_RightClickAction: {fileID: 2256477907517947067, guid: 3891028e3cb1643469d5dc6b11210c05,
     type: 3}
@@ -96,5 +98,5 @@ MonoBehaviour:
     type: 3}
   m_TrackedDeviceOrientationAction: {fileID: 9195748450549407269, guid: 3891028e3cb1643469d5dc6b11210c05,
     type: 3}
-  m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 0
+  m_DeselectOnBackgroundClick: 0
+  m_PointerBehavior: 1

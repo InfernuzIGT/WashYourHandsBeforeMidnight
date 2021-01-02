@@ -15,7 +15,7 @@ public class Fade : MonoBehaviour
 
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
-    private bool _fadeFast;
+    private bool _fadeInstant;
     private bool _show;
     private float _letterboxSize;
 
@@ -34,24 +34,26 @@ public class Fade : MonoBehaviour
     {
         EventController.AddListener<FadeEvent>(OnFade);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
+        EventController.AddListener<CustomFadeEvent>(OnCustomFade);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<FadeEvent>(OnFade);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+        EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
     }
 
     private void OnFade(FadeEvent evt)
     {
-        _fadeFast = evt.fadeFast;
+        _fadeInstant = evt.instant;
         _callbackMid = evt.callbackMid;
         _callbackEnd = evt.callbackEnd;
 
         evt.callbackStart?.Invoke();
 
         _fadeImg
-            .DOFade(1, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(1, _fadeInstant ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnKill(FadeIn);
 
         SetCanvas(true);
@@ -62,14 +64,27 @@ public class Fade : MonoBehaviour
         _callbackMid?.Invoke();
 
         _fadeImg
-            .DOFade(0, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(0, _fadeInstant ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnComplete(() => SetCanvas(false))
-            .OnKill(FadeOut);
+            .OnKill(() => _callbackEnd?.Invoke());
     }
 
-    private void FadeOut()
+    private void OnCustomFade(CustomFadeEvent evt)
     {
-        _callbackEnd?.Invoke();
+        if (evt.fadeIn)
+        {
+            _fadeImg
+                .DOFade(1, evt.instant ? 0 : 1)
+                .OnComplete(() => evt.callbackFadeIn?.Invoke());
+
+            SetCanvas(true);
+        }
+        else
+        {
+            _fadeImg
+                .DOFade(0, evt.instant ? 0 : 1)
+                .OnComplete(() => SetCanvas(false));
+        }
     }
 
     private void SetCanvas(bool isEnabled)

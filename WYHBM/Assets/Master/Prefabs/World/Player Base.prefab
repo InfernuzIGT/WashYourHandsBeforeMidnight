@@ -38,7 +38,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 305841180377708712}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 5454344177718044526}
   - component: {fileID: 4106246413456115067}
   m_Layer: 19
-  m_Name: Player
+  m_Name: Player Base
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,19 +106,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb4133b741add646a3dce88abd2746f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
+  _playerData: {fileID: 0}
+  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
+  _fmodConfig: {fileID: 11400000, guid: 5097b5a2954f5f3489abec2ef11985a4, type: 2}
   _inZipline: 0
   endPos: {x: 0, y: 0, z: 0}
-  Climbable:
-    serializedVersion: 2
-    m_Bits: 4096
   ledgeDetected: 0
   wallCheck: {fileID: 6335019193980573163}
   ledgeCheck: {fileID: 7148576689432955027}
   wallCheckDistance: 1
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 65536
   footstepSound: {fileID: 4696537044046352187}
   breathingSound: {fileID: 1859904522748835540}
 --- !u!143 &1255290931
