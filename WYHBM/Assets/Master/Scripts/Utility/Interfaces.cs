@@ -15,3 +15,10 @@ public interface IDialogueable
     bool DDHaveQuest();
     void DDFinish();
 }
+
+public interface IHoldeable
+{
+    void OnStart();
+    void OnCancel();
+    void OnFinish();
+}

@@ -2,14 +2,17 @@
 using Events;
 using UnityEngine;
 
-public class InteractionScene : Interaction, IInteractable
+public class InteractionScene : Interaction, IInteractable, IHoldeable
 {
     [Header("Cutscene")]
-    [SerializeField] private bool _load = false;
-    [SerializeField] private SceneSO sceneData = null;
     public Vector3 newPlayerPosition;
+    [SerializeField] private bool _load = false;
     [SerializeField] private bool _instantFade = false;
-    [Space]
+
+    [SerializeField] private SceneSO sceneData = null;
+    [SerializeField] private InputHoldUtility _holdUtility;
+
+    [Header("Debug")]
     [SerializeField] private bool _showDebug = false;
     [SerializeField] private Color _color = new Color(0, 1, 0, 0.5f);
 
@@ -27,6 +30,13 @@ public class InteractionScene : Interaction, IInteractable
         _changeSceneEvent.newPlayerPosition = newPlayerPosition;
         _changeSceneEvent.sceneData = sceneData;
         _changeSceneEvent.instantFade = _instantFade;
+
+        if (_holdUtility != null)
+        {
+            _holdUtility.OnStarted.AddListener(OnStart);
+            _holdUtility.OnCanceled.AddListener(OnCancel);
+            _holdUtility.OnFinished.AddListener(OnFinish);
+        }
     }
 
     public void OnInteractionEnter(Collider other)
@@ -47,17 +57,47 @@ public class InteractionScene : Interaction, IInteractable
 
     private void OnInteractScene(InteractionEvent evt)
     {
-        EventController.RemoveListener<InteractionEvent>(OnInteractScene);
-        
-        ShowHint(false);
+        if (evt.isStart)
+        {
+            _holdUtility.OnStart();
+        }
+        else
+        {
+            _holdUtility.OnCancel();
+        }
 
-        EventController.TriggerEvent(_changeSceneEvent);
+        // EventController.RemoveListener<InteractionEvent>(OnInteractScene);
+
+        // ShowHint(false);
+
+        // EventController.TriggerEvent(_changeSceneEvent);
     }
 
     public void ResetPosition()
     {
         newPlayerPosition = gameObject.transform.position;
     }
+
+    #region Hold System
+
+    public void OnStart()
+    {
+        ShowHint(false);
+    }
+
+    public void OnCancel()
+    {
+        ShowHint(true);
+    }
+
+    public void OnFinish()
+    {
+        EventController.RemoveListener<InteractionEvent>(OnInteractScene);
+
+        EventController.TriggerEvent(_changeSceneEvent);
+    }
+
+    #endregion
 
 #if UNITY_EDITOR
 
