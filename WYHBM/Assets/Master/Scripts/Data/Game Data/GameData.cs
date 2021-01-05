@@ -24,6 +24,7 @@ public enum SESSION_OPTION
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Session Data")]
+	public int sessionIndex;
 	public SessionData sessionData;
 
 	[Header("Input System")]
@@ -276,7 +277,9 @@ public class GameData : MonoSingleton<GameData>
 	{
 		bool valid = false;
 
-		string data = PlayerPrefs.GetString("data", "");
+		string fileName = string.Format("data_{0}", sessionIndex);
+
+		string data = PlayerPrefs.GetString(fileName, "");
 		if (data != "")
 		{
 			bool success = DESEncryption.TryDecrypt(data, out string original);
@@ -301,11 +304,15 @@ public class GameData : MonoSingleton<GameData>
 	public bool Save()
 	{
 		bool valid = false;
+		
+		sessionData.sessionIndex = sessionIndex;
+
+		string fileName = string.Format("data_{0}", sessionIndex);
 
 		try
 		{
 			string result = DESEncryption.Encrypt(JsonUtility.ToJson(sessionData));
-			PlayerPrefs.SetString("data", result);
+			PlayerPrefs.SetString(fileName, result);
 			PlayerPrefs.Save();
 			valid = true;
 		}
@@ -343,6 +350,8 @@ public class GameData : MonoSingleton<GameData>
 [Serializable]
 public class SessionData
 {
+	public int sessionIndex;
+
 	public SessionSettings settings;
 
 	public PlayerSO playerData;
@@ -353,6 +362,8 @@ public class SessionData
 
 	public SessionData()
 	{
+		sessionIndex = 0;
+
 		listQuest = new List<Quest>();
 		listIds = new List<string>();
 	}
