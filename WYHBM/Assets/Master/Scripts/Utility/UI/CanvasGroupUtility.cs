@@ -28,7 +28,7 @@ public class CanvasGroupUtility : MonoBehaviour
         SetProperties(true);
     }
 
-    public void Show(bool isShowing)
+    public void Show(bool isShowing, float delay = 0)
     {
         _isShowing = isShowing;
 
@@ -36,6 +36,7 @@ public class CanvasGroupUtility : MonoBehaviour
         {
             _canvasGroup
                 .DOFade(1, fadeDuration)
+                .SetDelay(delay)
                 .OnComplete(() => CallEvent(true));
 
             SetCanvas(true);
@@ -44,6 +45,7 @@ public class CanvasGroupUtility : MonoBehaviour
         {
             _canvasGroup
                 .DOFade(0, fadeDuration)
+                .SetDelay(delay)
                 .OnComplete(() => SetCanvas(false));
         }
     }
@@ -51,6 +53,16 @@ public class CanvasGroupUtility : MonoBehaviour
     public void ShowInstant(bool isShowing)
     {
         _isShowing = isShowing;
+
+        if (_isShowing)
+        {
+            _canvasGroup.alpha = 1;
+            CallEvent(true);
+        }
+        else
+        {
+            _canvasGroup.alpha = 0;
+        }
 
         SetCanvas(isShowing);
     }
@@ -81,6 +93,11 @@ public class CanvasGroupUtility : MonoBehaviour
         {
             OnHide.Invoke();
         }
+    }
+
+    public void SetCanvasCamera()
+    {
+        _canvas.worldCamera = Camera.main;
     }
 
 }
