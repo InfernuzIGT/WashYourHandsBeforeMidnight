@@ -5,6 +5,8 @@ public class DeviceSO : ScriptableObject
 {
     [Header("Device Type")]
     public DEVICE type;
+    public string deviceName;
+    [PreviewTexture(48)] public Sprite deviceIcon;
 
     [Header("Icons")]
     [PreviewTexture(48)] public Sprite iconNone;

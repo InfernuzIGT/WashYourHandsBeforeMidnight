@@ -102,6 +102,7 @@ namespace Events
 
     public class DeviceChangeEvent : GameEvent
     {
+        public bool showPopup;
         public DEVICE device;
         public Gamepad gamepad;
     }

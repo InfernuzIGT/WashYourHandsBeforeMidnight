@@ -19,6 +19,7 @@ public enum SESSION_OPTION
 /// - Interaction
 /// - Interaction Cutscene
 /// - NPCController
+/// - InputInfo
 /// </summary>
 
 [RequireComponent(typeof(LocalizationUtility))]
@@ -137,6 +138,18 @@ public class GameData : MonoSingleton<GameData>
 		}
 
 		return null;
+	}
+
+	public void SetDeviceInfo(DEVICE device, ref TMPro.TextMeshProUGUI text, ref UnityEngine.UI.Image image)
+	{
+		for (int i = 0; i < deviceData.Length; i++)
+		{
+			if (deviceData[i].type == device)
+			{
+				text.text = deviceData[i].deviceName;
+				image.sprite = deviceData[i].deviceIcon;
+			}
+		}
 	}
 
 	#region Rumble
