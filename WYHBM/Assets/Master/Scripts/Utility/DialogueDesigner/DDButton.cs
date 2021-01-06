@@ -33,7 +33,7 @@ public class DDButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 
         _text.text = text;
 
-        _canvasUtility.Show(true);
+        _canvasUtility.ShowInstant(true);
 
         _selectionImg.enabled = false;
     }

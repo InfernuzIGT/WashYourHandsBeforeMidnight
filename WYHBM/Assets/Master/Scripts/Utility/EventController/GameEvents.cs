@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
 namespace Events
@@ -55,7 +56,7 @@ namespace Events
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
     }
-    
+
     public class CustomFadeEvent : GameEvent
     {
         public bool instant;
@@ -69,7 +70,7 @@ namespace Events
         public bool show;
         public PlayerSO playerData;
     }
-    
+
     public class ChangeSceneEvent : GameEvent
     {
         public bool load;
@@ -77,7 +78,7 @@ namespace Events
         public Vector3 newPlayerPosition;
         public bool instantFade;
     }
-    
+
     public class ChangePositionEvent : GameEvent
     {
         public Vector3 newPosition;
@@ -101,7 +102,9 @@ namespace Events
 
     public class DeviceChangeEvent : GameEvent
     {
+        public bool showPopup;
         public DEVICE device;
+        public Gamepad gamepad;
     }
 
     public class PauseEvent : GameEvent

@@ -280,7 +280,9 @@ public class PlayerController : MonoBehaviour
     {
         _inputMovement = Vector2.zero;
         _inputMovementAux = _inputMovement;
+        _movement = Vector3.zero;
 
+        _animatorController.Walk(true);
         _animatorController.Movement(_movement, _movementState);
     }
 
@@ -554,6 +556,7 @@ public class PlayerController : MonoBehaviour
         {
             _input.Player.Disable();
             _characterController.enabled = false;
+            StopMovement();
         }
 
         if (evt.canMove)

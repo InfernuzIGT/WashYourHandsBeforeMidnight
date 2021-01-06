@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Events;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public enum SESSION_OPTION
@@ -18,12 +19,14 @@ public enum SESSION_OPTION
 /// - Interaction
 /// - Interaction Cutscene
 /// - NPCController
+/// - InputInfo
 /// </summary>
 
 [RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Session Data")]
+	public int sessionIndex;
 	public SessionData sessionData;
 
 	[Header("Input System")]
@@ -37,6 +40,11 @@ public class GameData : MonoSingleton<GameData>
 	// Scene Managment
 	private bool _load;
 	private SceneSO _sceneData;
+
+	// Input System
+	private Gamepad _gamepad;
+	private Coroutine _coroutineRumble;
+	private float _rumbleFrequency;
 
 	// Events
 	private UpdateLanguageEvent _updateLanguageEvent;
@@ -74,11 +82,13 @@ public class GameData : MonoSingleton<GameData>
 	private void OnEnable()
 	{
 		EventController.AddListener<ChangeSceneEvent>(OnChangeScene);
+		EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
 	}
 
 	private void OnDisable()
 	{
 		EventController.RemoveListener<ChangeSceneEvent>(OnChangeScene);
+		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
 	}
 
 	public void SelectNextLanguage()
@@ -129,6 +139,50 @@ public class GameData : MonoSingleton<GameData>
 
 		return null;
 	}
+
+	public void SetDeviceInfo(DEVICE device, ref TMPro.TextMeshProUGUI text, ref UnityEngine.UI.Image image)
+	{
+		for (int i = 0; i < deviceData.Length; i++)
+		{
+			if (deviceData[i].type == device)
+			{
+				text.text = deviceData[i].deviceName;
+				image.sprite = deviceData[i].deviceIcon;
+			}
+		}
+	}
+
+	#region Rumble
+
+	private void OnDeviceChange(DeviceChangeEvent evt)
+	{
+		_gamepad = evt.gamepad;
+	}
+
+	public void Rumble(float frequency)
+	{
+		if (_gamepad == null)return;
+
+		_rumbleFrequency = frequency;
+
+		_coroutineRumble = StartCoroutine(ActivateRumble());
+	}
+
+	private IEnumerator ActivateRumble()
+	{
+		float currentDuration = 0;
+
+		while (currentDuration < 1)
+		{
+			currentDuration += Time.deltaTime;
+			_gamepad.SetMotorSpeeds(_rumbleFrequency, _rumbleFrequency);
+			yield return null;
+		}
+
+		_gamepad.SetMotorSpeeds(0, 0);
+	}
+
+	#endregion
 
 	#region Scene Managment
 
@@ -276,7 +330,9 @@ public class GameData : MonoSingleton<GameData>
 	{
 		bool valid = false;
 
-		string data = PlayerPrefs.GetString("data", "");
+		string fileName = string.Format("data_{0}", sessionIndex);
+
+		string data = PlayerPrefs.GetString(fileName, "");
 		if (data != "")
 		{
 			bool success = DESEncryption.TryDecrypt(data, out string original);
@@ -302,10 +358,14 @@ public class GameData : MonoSingleton<GameData>
 	{
 		bool valid = false;
 
+		sessionData.sessionIndex = sessionIndex;
+
+		string fileName = string.Format("data_{0}", sessionIndex);
+
 		try
 		{
 			string result = DESEncryption.Encrypt(JsonUtility.ToJson(sessionData));
-			PlayerPrefs.SetString("data", result);
+			PlayerPrefs.SetString(fileName, result);
 			PlayerPrefs.Save();
 			valid = true;
 		}
@@ -343,6 +403,8 @@ public class GameData : MonoSingleton<GameData>
 [Serializable]
 public class SessionData
 {
+	public int sessionIndex;
+
 	public SessionSettings settings;
 
 	public PlayerSO playerData;
@@ -353,6 +415,8 @@ public class SessionData
 
 	public SessionData()
 	{
+		sessionIndex = 0;
+
 		listQuest = new List<Quest>();
 		listIds = new List<string>();
 	}
