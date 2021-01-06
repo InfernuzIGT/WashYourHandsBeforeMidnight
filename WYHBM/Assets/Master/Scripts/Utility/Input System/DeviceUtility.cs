@@ -37,6 +37,7 @@ public class DeviceUtility : MonoBehaviour
 
         _deviceEvent = new DeviceChangeEvent();
         _deviceEvent.device = _currentDevice;
+        _deviceEvent.gamepad = InputUtility.GetCurrentGamepad();
         EventController.TriggerEvent(_deviceEvent);
 
         InputSystem.onDeviceChange +=
@@ -105,6 +106,7 @@ public class DeviceUtility : MonoBehaviour
                 }
 
                 _deviceEvent.device = _currentDevice;
+                _deviceEvent.gamepad = InputUtility.GetCurrentGamepad();
                 EventController.TriggerEvent(_deviceEvent);
 
             };

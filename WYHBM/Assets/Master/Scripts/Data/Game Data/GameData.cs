@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Events;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public enum SESSION_OPTION
@@ -38,6 +39,11 @@ public class GameData : MonoSingleton<GameData>
 	// Scene Managment
 	private bool _load;
 	private SceneSO _sceneData;
+
+	// Input System
+	private Gamepad _gamepad;
+	private Coroutine _coroutineRumble;
+	private float _rumbleFrequency;
 
 	// Events
 	private UpdateLanguageEvent _updateLanguageEvent;
@@ -75,11 +81,13 @@ public class GameData : MonoSingleton<GameData>
 	private void OnEnable()
 	{
 		EventController.AddListener<ChangeSceneEvent>(OnChangeScene);
+		EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
 	}
 
 	private void OnDisable()
 	{
 		EventController.RemoveListener<ChangeSceneEvent>(OnChangeScene);
+		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
 	}
 
 	public void SelectNextLanguage()
@@ -130,6 +138,38 @@ public class GameData : MonoSingleton<GameData>
 
 		return null;
 	}
+
+	#region Rumble
+
+	private void OnDeviceChange(DeviceChangeEvent evt)
+	{
+		_gamepad = evt.gamepad;
+	}
+
+	public void Rumble(float frequency)
+	{
+		if (_gamepad == null)return;
+
+		_rumbleFrequency = frequency;
+
+		_coroutineRumble = StartCoroutine(ActivateRumble());
+	}
+
+	private IEnumerator ActivateRumble()
+	{
+		float currentDuration = 0;
+
+		while (currentDuration < 1)
+		{
+			currentDuration += Time.deltaTime;
+			_gamepad.SetMotorSpeeds(_rumbleFrequency, _rumbleFrequency);
+			yield return null;
+		}
+
+		_gamepad.SetMotorSpeeds(0, 0);
+	}
+
+	#endregion
 
 	#region Scene Managment
 
@@ -304,7 +344,7 @@ public class GameData : MonoSingleton<GameData>
 	public bool Save()
 	{
 		bool valid = false;
-		
+
 		sessionData.sessionIndex = sessionIndex;
 
 		string fileName = string.Format("data_{0}", sessionIndex);

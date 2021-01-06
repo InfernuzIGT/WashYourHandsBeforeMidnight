@@ -91,6 +91,11 @@ public static class InputUtility
         PrintStartDevice(DEVICE.PC);
         return DEVICE.PC;
     }
+    
+    public static Gamepad GetCurrentGamepad()
+    {
+        return Gamepad.current;
+    }
 
     public static DEVICE GetCurrentDevice()
     {
