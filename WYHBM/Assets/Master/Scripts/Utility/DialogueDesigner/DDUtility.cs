@@ -4,6 +4,9 @@ using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
 using UnityEngine.UI;
 
 public class DDUtility : MonoBehaviour
@@ -26,6 +29,7 @@ public class DDUtility : MonoBehaviour
     [SerializeField, Range(0, .1f)] private float timeSpeed = .05f;
 
     [Header("References")]
+    [SerializeField] private LocalizedStringTable _tableDD;
     [SerializeField] private InputActionReference _actionCancel = null;
     [Space]
     [SerializeField] private Button _dialogPanelBtn = null;
@@ -45,6 +49,7 @@ public class DDUtility : MonoBehaviour
     private int _totalVisibleCharacters;
     private int _counter;
     private int _visibleCount;
+    private long _nodeTitleParsed;
     // private CharacterSO _currentCharacter;
     // private PlayerSO _currentPlayer;
     // private string _currentName = "DDUtility";
@@ -53,6 +58,8 @@ public class DDUtility : MonoBehaviour
     private Coroutine _coroutineWrite;
     private WaitForSeconds _waitStart;
     private WaitForSeconds _waitSpeed;
+
+    private StringTable _stringTableDD;
 
     private CanvasGroupUtility _canvasUtility;
 
@@ -121,8 +128,15 @@ public class DDUtility : MonoBehaviour
         // //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
     }
 
+    private void LoadStrings(StringTable stringTable)
+    {
+        _stringTableDD = stringTable;
+    }
+
     private void OnEnable()
     {
+        _tableDD.TableChanged += LoadStrings;
+
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
         EventController.AddListener<UpdateLanguageEvent>(OnUpdateLanguage);
 
@@ -133,6 +147,8 @@ public class DDUtility : MonoBehaviour
 
     private void OnDisable()
     {
+        _tableDD.TableChanged -= LoadStrings;
+
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
         EventController.RemoveListener<UpdateLanguageEvent>(OnUpdateLanguage);
 
@@ -267,11 +283,21 @@ public class DDUtility : MonoBehaviour
 
     private void OnShowMessage(DialoguePlayer sender, ShowMessageNode node)
     {
+        // TODO Mariano: Implement Localization
+
+        // if (!long.TryParse(node.Title, out _nodeTitleParsed))
+        // {
+        //     _nodeTitleParsed = 16107016192;
+        //     Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{node.Title}\"", gameObject);
+        // }
+
+        // _currentDialog = _stringTableDD.GetEntry(_nodeTitleParsed).GetLocalizedString();
+
         _currentDialog = node.GetText(_currentLanguage);
         _dialogTxt.text = _currentDialog;
 
         UpdateNode(node);
-        
+
         // UpdateUI();
 
         _lastIndexButton = 0;
@@ -407,6 +433,8 @@ public class DDUtility : MonoBehaviour
 
     private void OnUpdateLanguage(UpdateLanguageEvent evt)
     {
+        // TODO Mariano: Implement Localization
+
         _currentLanguage = evt.language;
 
         if (_dialoguePlayer == null || _showMessageNode == null)return;

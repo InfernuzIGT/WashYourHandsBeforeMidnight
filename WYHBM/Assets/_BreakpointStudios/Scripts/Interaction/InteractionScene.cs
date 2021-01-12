@@ -51,6 +51,8 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
+            _holdUtility.OnCancel();
+
             EventController.RemoveListener<InteractionEvent>(OnInteractScene);
         }
     }
@@ -65,12 +67,6 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         {
             _holdUtility.OnCancel();
         }
-
-        // EventController.RemoveListener<InteractionEvent>(OnInteractScene);
-
-        // ShowHint(false);
-
-        // EventController.TriggerEvent(_changeSceneEvent);
     }
 
     public void ResetPosition()
