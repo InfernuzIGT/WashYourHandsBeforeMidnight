@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using UnityEngine.Playables;
 
 namespace Events
@@ -127,6 +128,7 @@ namespace Events
     public class UpdateLanguageEvent : GameEvent
     {
         public string language;
+        public Locale locale;
     }
 
     public class ChangeInputEvent : GameEvent

@@ -20,11 +20,16 @@ public enum SESSION_OPTION
 /// - Interaction Cutscene
 /// - NPCController
 /// - InputInfo
+/// - DDDialog
 /// </summary>
 
 [RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
+	[Header("Developer")]
+	public bool inputDebugMode = false;
+	public bool dialogueDesignerDebugMode = false;
+
 	[Header("Session Data")]
 	public int sessionIndex;
 	public SessionData sessionData;
@@ -47,7 +52,6 @@ public class GameData : MonoSingleton<GameData>
 	private float _rumbleFrequency;
 
 	// Events
-	private UpdateLanguageEvent _updateLanguageEvent;
 	private EnableMovementEvent _enableMovementEvent;
 	private ChangePositionEvent _changePositionEvent;
 	private CustomFadeEvent _customFadeEvent;
@@ -56,6 +60,12 @@ public class GameData : MonoSingleton<GameData>
 
 	protected override void Awake()
 	{
+#if UNITY_EDITOR
+
+		if (inputDebugMode)InputUtility.debugMode = true;
+
+#endif
+
 		base.Awake();
 
 		_globalController = GameObject.FindObjectOfType<GlobalController>();
@@ -69,7 +79,6 @@ public class GameData : MonoSingleton<GameData>
 
 		_listScenes = new List<AsyncOperation>();
 
-		_updateLanguageEvent = new UpdateLanguageEvent();
 		_enableMovementEvent = new EnableMovementEvent();
 		_changePositionEvent = new ChangePositionEvent();
 
@@ -89,42 +98,6 @@ public class GameData : MonoSingleton<GameData>
 	{
 		EventController.RemoveListener<ChangeSceneEvent>(OnChangeScene);
 		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
-	}
-
-	public void SelectNextLanguage()
-	{
-		_localizationUtility.SelectNextLanguage(true);
-	}
-
-	public void UpdateLanguage(string language)
-	{
-		_updateLanguageEvent.language = language;
-		EventController.TriggerEvent(_updateLanguageEvent);
-	}
-
-	public void SelectNextQuality(bool isNext)
-	{
-		if (isNext)
-		{
-			_indexQuality = _indexQuality < QualitySettings.names.Length - 1 ? _indexQuality + 1 : 0;
-		}
-		else
-		{
-			_indexQuality = _indexQuality > 0 ? _indexQuality - 1 : QualitySettings.names.Length - 1;
-		}
-
-		QualitySettings.SetQualityLevel(_indexQuality, true);
-
-		// TODO Mariano: COMPLETE
-
-		// Debug.Log($"Current Quality: {QualitySettings.names[_indexQuality]}");
-
-		// QualitySettings.vSyncCount = 0;
-
-		// FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
-		// Screen.fullScreenMode = fullScreenMode;
-
-		// Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, fullScreenMode);
 	}
 
 	public Sprite GetInputIcon(DEVICE device, INPUT_ACTION action)
@@ -151,6 +124,40 @@ public class GameData : MonoSingleton<GameData>
 			}
 		}
 	}
+
+	#region Settings
+
+	public void SettingNextLanguage(bool isNext)
+	{
+		_localizationUtility.SelectNextLanguage(isNext);
+	}
+
+	public void SettingsNextQuality(bool isNext)
+	{
+		if (isNext)
+		{
+			_indexQuality = _indexQuality < QualitySettings.names.Length - 1 ? _indexQuality + 1 : 0;
+		}
+		else
+		{
+			_indexQuality = _indexQuality > 0 ? _indexQuality - 1 : QualitySettings.names.Length - 1;
+		}
+
+		QualitySettings.SetQualityLevel(_indexQuality, true);
+
+		// TODO Mariano: COMPLETE
+
+		// Debug.Log($"Current Quality: {QualitySettings.names[_indexQuality]}");
+
+		// QualitySettings.vSyncCount = 0;
+
+		// FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
+		// Screen.fullScreenMode = fullScreenMode;
+
+		// Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, fullScreenMode);
+	}
+
+	#endregion
 
 	#region Rumble
 

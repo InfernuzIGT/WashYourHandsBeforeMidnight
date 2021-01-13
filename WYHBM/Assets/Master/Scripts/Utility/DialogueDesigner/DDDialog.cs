@@ -5,11 +5,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 using UnityEngine.UI;
 
-public class DDUtility : MonoBehaviour
+public class DDDialog : MonoBehaviour
 {
     public enum DIALOG_STATE
     {
@@ -23,6 +22,7 @@ public class DDUtility : MonoBehaviour
     [SerializeField, ReadOnly] private NPCController _currentNPC = null;
     [SerializeField, ReadOnly] private string _currentLanguage = "";
     [SerializeField, ReadOnly] private DIALOG_STATE _dialogState = DIALOG_STATE.Done;
+    [SerializeField, ReadOnly] private bool _debugMode = false;
 
     [Header("Settings")]
     [SerializeField, Range(0, 1f)] private float timeStart = 0.5f;
@@ -49,7 +49,6 @@ public class DDUtility : MonoBehaviour
     private int _totalVisibleCharacters;
     private int _counter;
     private int _visibleCount;
-    private long _nodeTitleParsed;
     // private CharacterSO _currentCharacter;
     // private PlayerSO _currentPlayer;
     // private string _currentName = "DDUtility";
@@ -60,6 +59,9 @@ public class DDUtility : MonoBehaviour
     private WaitForSeconds _waitSpeed;
 
     private StringTable _stringTableDD;
+    private long _nodeTitleParsed;
+    private long _nodeConditionParsed;
+    private Locale _currentLocale;
 
     private CanvasGroupUtility _canvasUtility;
 
@@ -126,11 +128,8 @@ public class DDUtility : MonoBehaviour
         // //m_dialoguePlayer.OverrideOnShowMessage += OnShowMessageSpecial;
         // //m_dialoguePlayer.OverrideOnEvaluateCondition += OnEvaluateConditionSpecial;
         // //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
-    }
 
-    private void LoadStrings(StringTable stringTable)
-    {
-        _stringTableDD = stringTable;
+        _debugMode = GameData.Instance.dialogueDesignerDebugMode;
     }
 
     private void OnEnable()
@@ -160,6 +159,11 @@ public class DDUtility : MonoBehaviour
     public void SetInteraction(bool canInteract)
     {
         _canInteract = canInteract;
+    }
+
+    private void LoadStrings(StringTable stringTable)
+    {
+        _stringTableDD = stringTable;
     }
 
     private void OnEnableDialog(EnableDialogEvent evt)
@@ -283,17 +287,8 @@ public class DDUtility : MonoBehaviour
 
     private void OnShowMessage(DialoguePlayer sender, ShowMessageNode node)
     {
-        // TODO Mariano: Implement Localization
+        UpdateString(node);
 
-        // if (!long.TryParse(node.Title, out _nodeTitleParsed))
-        // {
-        //     _nodeTitleParsed = 16107016192;
-        //     Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{node.Title}\"", gameObject);
-        // }
-
-        // _currentDialog = _stringTableDD.GetEntry(_nodeTitleParsed).GetLocalizedString();
-
-        _currentDialog = node.GetText(_currentLanguage);
         _dialogTxt.text = _currentDialog;
 
         UpdateNode(node);
@@ -308,6 +303,29 @@ public class DDUtility : MonoBehaviour
         _dialogState = DIALOG_STATE.Ready;
 
         Play();
+    }
+
+    private void UpdateString(ShowMessageNode node)
+    {
+        if (_debugMode)
+        {
+            _currentDialog = node.GetText(_currentLanguage);
+        }
+        else
+        {
+            if (!long.TryParse(node.Title, out _nodeTitleParsed))
+            {
+                _nodeTitleParsed = 16107016192;
+                Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{node.Title}\"", gameObject);
+            }
+
+            // LocalizationSettings.StringDatabase.GetLocalizedStringAsync(_tableDDNew, _currentLocale).Completed += (AsyncOperationHandle<string> op) =>
+            // {
+            //     _currentDialog = op.Result;
+            // };
+
+            _currentDialog = _stringTableDD.GetEntry(_nodeTitleParsed).GetLocalizedString();
+        }
     }
 
     private void Play()
@@ -369,10 +387,30 @@ public class DDUtility : MonoBehaviour
 
         if (_choiceNode != null)
         {
-            for (int i = 0; i < _choiceNode.Choices.Length; i++)
+            if (_debugMode)
             {
-                _ddButtons[i].Show(_choiceNode.GetChoiceText(i, _currentLanguage));
-                _lastIndexButton = i;
+                for (int i = 0; i < _choiceNode.Choices.Length; i++)
+                {
+                    _ddButtons[i].Show(_choiceNode.GetChoiceText(i, _currentLanguage));
+                    _lastIndexButton = i;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _choiceNode.Choices.Length; i++)
+                {
+                    _nodeConditionParsed = 0;
+
+                    if (!long.TryParse(_choiceNode.Choices[i].Condition, out _nodeConditionParsed))
+                    {
+                        _nodeConditionParsed = 16107016192;
+                        Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{_choiceNode.Choices[i].Condition}\"", gameObject);
+                    }
+
+                    _ddButtons[i].Show(_stringTableDD.GetEntry(_nodeConditionParsed).GetLocalizedString());
+                    _lastIndexButton = i;
+                }
+
             }
 
             _ddButtons[_lastIndexButton].SetInput();
@@ -433,22 +471,57 @@ public class DDUtility : MonoBehaviour
 
     private void OnUpdateLanguage(UpdateLanguageEvent evt)
     {
-        // TODO Mariano: Implement Localization
-
         _currentLanguage = evt.language;
+        _currentLocale = evt.locale;
 
         if (_dialoguePlayer == null || _showMessageNode == null)return;
 
-        _currentDialog = _showMessageNode.GetText(_currentLanguage);
+        StartCoroutine(UpdateLanguage());
+    }
+
+    private IEnumerator UpdateLanguage()
+    {
+        UpdateString(_showMessageNode);
+
+        // _dialogTxt.alpha = 0;
+
         _dialogTxt.text = _currentDialog;
+
+        yield return new WaitForSeconds(0.1f);
+
+        // _dialogTxt.alpha = 1;
+
+        _totalVisibleCharacters = _dialogTxt.textInfo.characterCount;
+
+        _dialogTxt.maxVisibleCharacters = _totalVisibleCharacters;
 
         if (_choiceNode != null)
         {
-            for (int i = 0; i < _choiceNode.Choices.Length; i++)
+            if (_debugMode)
             {
-                _ddButtons[i].UpdateText(_choiceNode.GetChoiceText(i, _currentLanguage));
+                for (int i = 0; i < _choiceNode.Choices.Length; i++)
+                {
+                    _ddButtons[i].UpdateText(_choiceNode.GetChoiceText(i, _currentLanguage));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _choiceNode.Choices.Length; i++)
+                {
+                    _nodeConditionParsed = 0;
+
+                    if (!long.TryParse(_choiceNode.Choices[i].Condition, out _nodeConditionParsed))
+                    {
+                        _nodeConditionParsed = 16107016192;
+                        Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{_choiceNode.Choices[i].Condition}\"", gameObject);
+                    }
+
+                    _ddButtons[i].UpdateText(_stringTableDD.GetEntry(_nodeConditionParsed).GetLocalizedString());
+                }
+
             }
         }
+
     }
 
     private bool OnEvaluateCondition(DialoguePlayer sender, string script)

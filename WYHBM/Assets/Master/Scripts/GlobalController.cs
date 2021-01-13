@@ -1,6 +1,5 @@
 ﻿using Cinemachine;
 using Events;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -21,8 +20,6 @@ public class GlobalController : MonoBehaviour
     [Space]
     public SessionData sessionData;
 
-    [Header("Developer")]
-    [SerializeField] private bool _inputDebugMode = true;
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
@@ -47,17 +44,6 @@ public class GlobalController : MonoBehaviour
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
     private EnableDialogEvent _interactionDialogEvent;
-
-    private void Awake()
-    {
-
-#if UNITY_EDITOR
-
-        if (_inputDebugMode)InputUtility.debugMode = true;
-
-#endif
-
-    }
 
     private void Start()
     {

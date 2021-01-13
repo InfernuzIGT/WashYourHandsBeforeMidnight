@@ -43,7 +43,6 @@ public class PlayerController : MonoBehaviour
     private bool _canMove = true;
     private float _speedHorizontal;
     private float _speedVertical;
-    private bool _isDetectingGround;
     private bool _isInteracting;
     private bool _isCrouching;
 
@@ -75,7 +74,9 @@ public class PlayerController : MonoBehaviour
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
 
-    public bool IsDetectingGround { get => _isDetectingGround; set => _isDetectingGround = value; }
+    private bool _isDetectingGround;
+    public bool IsDetectingGround { get { return _isDetectingGround; } set { _isDetectingGround = value; } }
+
     public PlayerSO PlayerData { get { return _playerData; } }
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();

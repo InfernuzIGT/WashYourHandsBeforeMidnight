@@ -29,6 +29,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     private float _distanceToTarget;
     private Vector3 _dirFromAngle;
 
+    private PlayerSO _playerData;
     private Coroutine _coroutinePatrol;
     private WaitForSeconds _waitForSeconds;
     private WaitForSeconds _delay;
@@ -40,8 +41,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private float _viewAngle = 360;
     public float ViewAngle { get { return _viewAngle; } }
-
-    private PlayerSO _playerData;
 
     public NPCSO Data { get { return _data; } }
 
