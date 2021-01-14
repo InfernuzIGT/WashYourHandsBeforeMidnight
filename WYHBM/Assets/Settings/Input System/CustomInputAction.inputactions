@@ -14,6 +14,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Zoom",
+                    "type": "PassThrough",
+                    "id": "1ef7928e-52fa-4265-8873-372080fa91ce",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Move",
                     "type": "PassThrough",
                     "id": "a6308b3b-88f0-4626-9ab6-dfaaa9a15719",
@@ -553,6 +561,28 @@
                     "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a84a9973-8a74-4ed9-9e22-de6fef809087",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c5e0710c-30fd-40e1-a2ff-eb10cf6f5415",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;PS4;XboxOne;Switch",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -563,7 +593,15 @@
                 {
                     "name": "Look",
                     "type": "PassThrough",
-                    "id": "7d59fd98-47ee-4bc6-8d04-ff14aa15efe7",
+                    "id": "c7de2782-b087-42b4-9b3a-baddfbc30ba0",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Zoom",
+                    "type": "PassThrough",
+                    "id": "f24ba896-5a14-4d7a-a432-f63dd3b1d850",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
@@ -868,28 +906,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e7dafd5a-c1c7-4e69-bb67-5cf34666ab05",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f5b414f9-f3f5-4946-af17-145c48eb96fc",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Generic;PS4;XboxOne;Switch",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7a0fb1a6-099e-4753-a0ff-225714cc6634",
                     "path": "<Mouse>/middleButton",
                     "interactions": "",
@@ -907,6 +923,50 @@
                     "processors": "",
                     "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Reset Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6b6b739-12c5-4b31-aed6-3d1b4aec5ac1",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2371b8d2-ed71-4d03-9e5e-fd8ec09db006",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;PS4;XboxOne;Switch",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6eda83e5-bb06-4e88-b2f0-d330f6dd89a1",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d7b602a9-c69f-4b6a-a6d5-610a0720578d",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;PS4;XboxOne;Switch",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -12,15 +12,17 @@ public class CinemachineFreeLookUtility : MonoBehaviour
     private CinemachineFreeLook _cinemachineFreeLook;
     private CinemachineOrbitalTransposer[] _cinemachineOrbitalTransposers;
     private Vector3[] _cinemachineDamping;
-    private Vector2 _lookMovement;
+    private Vector2 _lookVector;
+    private Vector2 _zoomVector;
     private bool _invertY;
     private Vector2 _originalCameraPosition;
     private PlayerController _player;
+    private DEVICE _currentDevice;
 
     private void Awake()
     {
         _cinemachineFreeLook = GetComponent<CinemachineFreeLook>();
-        
+
         _cinemachineOrbitalTransposers = new CinemachineOrbitalTransposer[3];
         _cinemachineDamping = new Vector3[3];
 
@@ -30,20 +32,69 @@ public class CinemachineFreeLookUtility : MonoBehaviour
 
             _cinemachineDamping[i] = new Vector3(_cinemachineOrbitalTransposers[i].m_XDamping, _cinemachineOrbitalTransposers[i].m_YDamping, _cinemachineOrbitalTransposers[i].m_ZDamping);
         }
-        
+
         _originalCameraPosition = new Vector2(0, 0.5f);
     }
 
     private void OnEnable()
     {
         EventController.AddListener<CustomFadeEvent>(OnCustomFade);
+        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
 
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
+        EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
     }
+
+    public void Init(PlayerController target, InputSystemUIInputModule InputUIModule)
+    {
+        _player = target;
+
+        _player.Input.Player.Look.performed += ctx => _lookVector = ctx.ReadValue<Vector2>().normalized;
+        InputUIModule.point.action.performed += ctx => _lookVector = ctx.ReadValue<Vector2>().normalized;
+
+        _player.Input.Player.Zoom.performed += ctx => _zoomVector = ctx.ReadValue<Vector2>().normalized;
+        InputUIModule.scrollWheel.action.performed += ctx => _zoomVector = ctx.ReadValue<Vector2>().normalized;
+
+        _player.Input.Player.ResetCamera.performed += ctx => ResetCamera();
+        InputUIModule.middleClick.action.performed += ctx => ResetCamera();
+
+        _cinemachineFreeLook.m_Follow = _player.transform;
+        _cinemachineFreeLook.m_LookAt = _player.transform;
+    }
+
+    private void Update()
+    {
+        _cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled = Mathf.Abs(_lookVector.x) < 0.9f;
+
+        _cinemachineFreeLook.m_XAxis.Value += _lookVector.x * _lookSpeedX * Time.deltaTime;
+
+        if (_currentDevice != DEVICE.PC)
+        {
+            _lookVector.y = _invertY ? -_lookVector.y : _lookVector.y;
+
+            _cinemachineFreeLook.m_YAxis.Value += _lookVector.y * _lookSpeedY * Time.deltaTime;
+        }
+        else
+        {
+            _zoomVector.y = _invertY ? -_zoomVector.y : _zoomVector.y;
+
+            _cinemachineFreeLook.m_YAxis.Value += _zoomVector.y * _lookSpeedY * Time.deltaTime;
+        }
+    }
+
+    private void ResetCamera()
+    {
+        _lookVector = _originalCameraPosition;
+
+        _cinemachineFreeLook.m_XAxis.Value = _lookVector.x;
+        _cinemachineFreeLook.m_YAxis.Value = _lookVector.y;
+    }
+
+    #region Events
 
     private void OnCustomFade(CustomFadeEvent evt)
     {
@@ -55,40 +106,10 @@ public class CinemachineFreeLookUtility : MonoBehaviour
         }
     }
 
-    public void Init(PlayerController target, InputSystemUIInputModule InputUIModule)
+    private void OnDeviceChange(DeviceChangeEvent evt)
     {
-        _player = target;
-
-        _player.Input.Player.Look.performed += ctx => _lookMovement = ctx.ReadValue<Vector2>().normalized;
-        InputUIModule.point.action.performed += ctx => _lookMovement = ctx.ReadValue<Vector2>().normalized;
-
-        _player.Input.Player.ResetCamera.performed += ctx => ResetCamera();
-        InputUIModule.middleClick.action.performed += ctx => ResetCamera();
-
-        _cinemachineFreeLook.m_Follow = _player.transform;
-        _cinemachineFreeLook.m_LookAt = _player.transform;
+        _currentDevice = evt.device;
     }
 
-    private void Update()
-    {
-        OnLook();
-    }
-
-    private void OnLook()
-    {
-        _cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled = Mathf.Abs(_lookMovement.x) < 0.9f;
-
-        _lookMovement.y = _invertY ? -_lookMovement.y : _lookMovement.y;
-
-        _cinemachineFreeLook.m_XAxis.Value += _lookMovement.x * _lookSpeedX * Time.deltaTime;
-        _cinemachineFreeLook.m_YAxis.Value += _lookMovement.y * _lookSpeedY * Time.deltaTime;
-    }
-
-    private void ResetCamera()
-    {
-        _lookMovement = _originalCameraPosition;
-
-        _cinemachineFreeLook.m_XAxis.Value = _lookMovement.x;
-        _cinemachineFreeLook.m_YAxis.Value = _lookMovement.y;
-    }
+    #endregion
 }
