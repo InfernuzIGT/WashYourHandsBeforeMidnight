@@ -100,8 +100,8 @@ public class PlayerController : MonoBehaviour
         _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
         _input.Player.Options.performed += ctx => Pause(PAUSE_TYPE.Inventory);
         _input.Player.Crouch.performed += ctx => Crouch();
-        _input.Player.Run.started += ctx => Run(true);
-        _input.Player.Run.canceled += ctx => Run(false);
+        // _input.Player.Run.started += ctx => Run(true);
+        // _input.Player.Run.canceled += ctx => Run(false);
 
         // _input.Player.DebugMode.performed += ctx => GameData.Instance.SelectNextQuality(true);
 
@@ -186,22 +186,30 @@ public class PlayerController : MonoBehaviour
         switch (_movementState)
         {
             case MOVEMENT_STATE.Walk:
-                if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
-                {
-                    _speedHorizontal = _playerConfig.speedJogging;
 
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+                _speedHorizontal = _playerConfig.speedJogging;
 
-                    _animatorController.Walk(false);
-                }
-                else
-                {
-                    _speedHorizontal = _playerConfig.speedWalk;
+                footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                _animatorController.Walk(false);
 
-                    _animatorController.Walk(true);
-                }
+                // TODO Mariano: Enable
+                // if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
+                // {
+                //     _speedHorizontal = _playerConfig.speedJogging;
+
+                //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+
+                //     _animatorController.Walk(false);
+                // }
+                // else
+                // {
+                //     _speedHorizontal = _playerConfig.speedWalk;
+
+                //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+
+                //     _animatorController.Walk(true);
+                // }
                 break;
 
             case MOVEMENT_STATE.Run:
