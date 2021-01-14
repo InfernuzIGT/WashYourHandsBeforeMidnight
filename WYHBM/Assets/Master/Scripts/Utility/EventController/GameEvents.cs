@@ -135,6 +135,11 @@ namespace Events
     {
         public bool enable;
     }
+    
+    public class CurrentInteractEvent : GameEvent
+    {
+        public Interaction currentInteraction;
+    }
 
     public class ShowInteractionHintEvent : GameEvent
     {

@@ -13,16 +13,6 @@ public enum SESSION_OPTION
 	Delete = 2,
 }
 
-/// <summary>
-/// Used by:
-/// - GlobalController
-/// - Interaction
-/// - Interaction Cutscene
-/// - NPCController
-/// - InputInfo
-/// - DDDialog
-/// </summary>
-
 [RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
@@ -57,6 +47,10 @@ public class GameData : MonoSingleton<GameData>
 	private CustomFadeEvent _customFadeEvent;
 
 	private int _indexQuality;
+
+	// Properties
+	public PlayerController Player { get { return _globalController.playerController; } }
+	public PlayerSO PlayerData { get { return _globalController.playerData; } }
 
 	protected override void Awake()
 	{

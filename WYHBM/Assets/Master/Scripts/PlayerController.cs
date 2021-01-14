@@ -66,6 +66,9 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
+    
+    // Interaction
+    private Interaction _currentInteraction;
 
     // Properties
     private CustomInputAction _input;
@@ -78,6 +81,7 @@ public class PlayerController : MonoBehaviour
     public bool IsDetectingGround { get { return _isDetectingGround; } set { _isDetectingGround = value; } }
 
     public PlayerSO PlayerData { get { return _playerData; } }
+    public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
@@ -125,6 +129,7 @@ public class PlayerController : MonoBehaviour
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.AddListener<ChangePositionEvent>(OnChangePosition);
+        EventController.AddListener<CurrentInteractEvent>(OnCurrentInteraction);
     }
 
     private void OnDisable()
@@ -132,6 +137,7 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.RemoveListener<ChangePositionEvent>(OnChangePosition);
+        EventController.RemoveListener<CurrentInteractEvent>(OnCurrentInteraction);
     }
 
     private void Pause(PAUSE_TYPE pauseType)
@@ -579,6 +585,11 @@ public class PlayerController : MonoBehaviour
     private void OnChangePosition(ChangePositionEvent evt)
     {
         transform.position = evt.newPosition;
+    }
+
+    private void OnCurrentInteraction(CurrentInteractEvent evt)
+    {
+        _currentInteraction = evt.currentInteraction;
     }
 
     private void OnDeviceChange(DeviceChangeEvent evt)

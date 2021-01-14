@@ -46,7 +46,7 @@ public class InteractionCutscene : Interaction, IInteractable
         }
 
         _cutsceneEvent.cutscene = cutscene;
-        _cutsceneEvent.playerData = PlayerData;
+        _cutsceneEvent.playerData = GameData.Instance.PlayerData;
 
         EventController.TriggerEvent(_cutsceneEvent);
         EventController.TriggerEvent(_changeInputEvent);

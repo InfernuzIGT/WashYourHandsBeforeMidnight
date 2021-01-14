@@ -23,7 +23,6 @@ public class Interaction : MonoBehaviour, IDialogueable
     [SerializeField] private InteractionUnityEvent onEnter = null;
     [SerializeField] private InteractionUnityEvent onExit = null;
 
-    protected PlayerSO _playerData;
     protected bool _showHint = true;
 
     private SpriteRenderer _hintSprite;
@@ -31,8 +30,7 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     private QuestEvent _questEvent;
     private ShowInteractionHintEvent _showInteractionHintEvent;
-
-    protected PlayerSO PlayerData { get { return _playerData; } }
+    private CurrentInteractEvent _currentInteractionEvent;
 
     public virtual void Awake()
     {
@@ -41,7 +39,8 @@ public class Interaction : MonoBehaviour, IDialogueable
         _hintSprite.enabled = false;
 
         _questEvent = new QuestEvent();
-        _showInteractionHintEvent = new ShowInteractionHintEvent();;
+        _showInteractionHintEvent = new ShowInteractionHintEvent();
+        _currentInteractionEvent = new CurrentInteractEvent();
     }
 
     private void OnEnable()
@@ -65,7 +64,12 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         if (!_canInteract)return;
 
-        if (other.gameObject.CompareTag(Tags.Player) && _playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
+        if (GameData.Instance.Player.CurrentInteraction != null)return;
+
+        // if (GameData.Instance.Player.CurrentInteraction != this)return;
+
+        _currentInteractionEvent.currentInteraction = this;
+        EventController.TriggerEvent(_currentInteractionEvent);
 
         onEnter.Invoke(other);
         ShowHint(true);
@@ -74,6 +78,11 @@ public class Interaction : MonoBehaviour, IDialogueable
     private void OnTriggerExit(Collider other)
     {
         if (!_canInteract)return;
+
+        if (GameData.Instance.Player.CurrentInteraction != this)return;
+
+        _currentInteractionEvent.currentInteraction = null;
+        EventController.TriggerEvent(_currentInteractionEvent);
 
         onExit.Invoke(other);
         ShowHint(false);
@@ -91,17 +100,17 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public TextAsset GetDialogData()
     {
-        return data[_playerData.ID].dialogDD;
+        return data[GameData.Instance.PlayerData.ID].dialogDD;
     }
 
     public QuestSO GetQuestData()
     {
-        return data[_playerData.ID].quest;
+        return data[GameData.Instance.PlayerData.ID].quest;
     }
 
     public QUEST_STATE GetQuestState()
     {
-        return questState[_playerData.ID];
+        return questState[GameData.Instance.PlayerData.ID];
     }
 
     #endregion

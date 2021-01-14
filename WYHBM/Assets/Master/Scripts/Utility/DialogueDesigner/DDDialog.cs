@@ -49,6 +49,7 @@ public class DDDialog : MonoBehaviour
     private int _totalVisibleCharacters;
     private int _counter;
     private int _visibleCount;
+    private bool _ddError;
     // private CharacterSO _currentCharacter;
     // private PlayerSO _currentPlayer;
     // private string _currentName = "DDUtility";
@@ -283,10 +284,18 @@ public class DDDialog : MonoBehaviour
         EventController.TriggerEvent(_showInteractionHintEvent);
         EventController.TriggerEvent(_changeInputEvent);
         EventController.TriggerEvent(_enableMovementEvent);
+
     }
 
     private void OnShowMessage(DialoguePlayer sender, ShowMessageNode node)
     {
+        if (_ddError)
+        {
+            OnDialogueEnded(sender);
+            _ddError = false;
+            return;
+        }
+
         UpdateString(node);
 
         _dialogTxt.text = _currentDialog;
@@ -315,16 +324,20 @@ public class DDDialog : MonoBehaviour
         {
             if (!long.TryParse(node.Title, out _nodeTitleParsed))
             {
-                _nodeTitleParsed = 16107016192;
+                _currentDialog = string.Format("ERROR: {0}", node.Title);
                 Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{node.Title}\"", gameObject);
+                _ddError = true;
+            }
+            else
+            {
+                // LocalizationSettings.StringDatabase.GetLocalizedStringAsync(_tableDDNew, _currentLocale).Completed += (AsyncOperationHandle<string> op) =>
+                // {
+                //     _currentDialog = op.Result;
+                // };
+
+                _currentDialog = _stringTableDD.GetEntry(_nodeTitleParsed).GetLocalizedString();
             }
 
-            // LocalizationSettings.StringDatabase.GetLocalizedStringAsync(_tableDDNew, _currentLocale).Completed += (AsyncOperationHandle<string> op) =>
-            // {
-            //     _currentDialog = op.Result;
-            // };
-
-            _currentDialog = _stringTableDD.GetEntry(_nodeTitleParsed).GetLocalizedString();
         }
     }
 
@@ -403,12 +416,17 @@ public class DDDialog : MonoBehaviour
 
                     if (!long.TryParse(_choiceNode.Choices[i].Condition, out _nodeConditionParsed))
                     {
-                        _nodeConditionParsed = 16107016192;
+                        _currentDialog = string.Format("ERROR: {0}", _choiceNode.Choices[i].Condition);
                         Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{_choiceNode.Choices[i].Condition}\"", gameObject);
-                    }
+                        _ddError = true;
+                        break;
 
-                    _ddButtons[i].Show(_stringTableDD.GetEntry(_nodeConditionParsed).GetLocalizedString());
-                    _lastIndexButton = i;
+                    }
+                    else
+                    {
+                        _ddButtons[i].Show(_stringTableDD.GetEntry(_nodeConditionParsed).GetLocalizedString());
+                        _lastIndexButton = i;
+                    }
                 }
 
             }
@@ -512,11 +530,15 @@ public class DDDialog : MonoBehaviour
 
                     if (!long.TryParse(_choiceNode.Choices[i].Condition, out _nodeConditionParsed))
                     {
-                        _nodeConditionParsed = 16107016192;
+                        _currentDialog = string.Format("ERROR: {0}", _choiceNode.Choices[i].Condition);
                         Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't parse \"{_choiceNode.Choices[i].Condition}\"", gameObject);
+                        _ddError = true;
+                        break;
                     }
-
-                    _ddButtons[i].UpdateText(_stringTableDD.GetEntry(_nodeConditionParsed).GetLocalizedString());
+                    else
+                    {
+                        _ddButtons[i].UpdateText(_stringTableDD.GetEntry(_nodeConditionParsed).GetLocalizedString());
+                    }
                 }
 
             }

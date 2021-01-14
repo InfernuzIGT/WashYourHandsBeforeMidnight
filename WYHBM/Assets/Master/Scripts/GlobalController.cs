@@ -47,6 +47,8 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Persistent"));
+
         CheckGameData();
 
         _enableMovementEvent = new EnableMovementEvent();
@@ -60,7 +62,6 @@ public class GlobalController : MonoBehaviour
         SpawnPlayer();
         CheckCamera();
         SpawnUI();
-        // SetCamera();
         // AddItems();
 
         playableDirector.stopped += OnCutsceneStop;
@@ -69,8 +70,10 @@ public class GlobalController : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        // TODO Mariano: REORDER OBJECTS IN HIERARCHY
-        // TODO Mariano: RENAME OBJECTS IN HIERARCHY
+        worldUI.gameObject.name = "Canvas (World)";
+        combatUI.gameObject.name = "Canvas (Combat)";
+        fadeUI.gameObject.name = "Canvas (Fade)";
+        eventSystemUtility.gameObject.name = "Event System";
 #else
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -144,17 +147,6 @@ public class GlobalController : MonoBehaviour
         worldUI.Show(!inCombat);
         combatUI.Show(inCombat);
     }
-
-    // private void SetCamera()
-    // {
-    //     exteriorCamera.m_Follow = playerController.transform;
-    //     exteriorCamera.m_LookAt = playerController.transform;
-
-    //     interiorCamera.m_Follow = playerController.transform;
-    //     interiorCamera.m_LookAt = playerController.transform;
-
-    //     _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
-    // }
 
     // public void ChangeWorldCamera()
     // {
