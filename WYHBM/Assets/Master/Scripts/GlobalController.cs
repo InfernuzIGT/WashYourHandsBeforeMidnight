@@ -2,6 +2,8 @@
 using Events;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 [System.Serializable]
 public class Quest
@@ -10,6 +12,7 @@ public class Quest
     public int currentStep = 0;
 }
 
+[RequireComponent(typeof(Volume), typeof(PlayableDirector))]
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
@@ -37,6 +40,14 @@ public class GlobalController : MonoBehaviour
     public Fade fadeUI;
     public EventSystemUtility eventSystemUtility;
 
+    // PostProcess
+    private ColorAdjustments _ppColorAdjustments;
+    private LensDistortion _ppLensDistortion;
+    private DepthOfField _ppDepthOfField;
+    private Vignette _ppVignette;
+    private Color _colorVigneteInactive = new Color(0.025f, 0, 0.25f, 1);
+    private Color _colorVigneteActive = new Color(0.1f, 0.1f, 0.1f, 1);
+
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
     private bool _isInteriorCamera;
@@ -60,8 +71,9 @@ public class GlobalController : MonoBehaviour
         _cutsceneEvent.show = false;
 
         SpawnPlayer();
-        CheckCamera();
         SpawnUI();
+
+        CheckCamera();
         // AddItems();
 
         playableDirector.stopped += OnCutsceneStop;
@@ -126,6 +138,26 @@ public class GlobalController : MonoBehaviour
         playerController.SetPlayerData(playerData);
 
         sessionData.playerData = playerData;
+
+        playerController.Input.Player.ListenMode.started += ctx => ListenMode(true);
+        playerController.Input.Player.ListenMode.canceled += ctx => ListenMode(false);
+    }
+
+    private void ListenMode(bool active)
+    {
+        if (!playerController.IsCrouching)return;
+
+        // TODO Mariano: Add animation with Lerp
+
+        _ppColorAdjustments.saturation.value = active ? -50f : 0;
+        _ppLensDistortion.intensity.value = active ? 0.15f : 0;
+        _ppDepthOfField.gaussianStart.value = active ? 20 : 22.5f;
+        _ppDepthOfField.gaussianEnd.value = active ? 22.5f : 60;
+        _ppVignette.color.value = active ? _colorVigneteActive : _colorVigneteInactive;
+        _ppVignette.intensity.value = active ? 0.5f : 0.2f;
+        _ppVignette.smoothness.value = active ? 0.5f : 1;
+
+        playerCamera.SetFOV(active ? 45 : 40);
     }
 
     private void CheckCamera()
@@ -134,6 +166,12 @@ public class GlobalController : MonoBehaviour
 
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(playerController.transform);
+
+        Volume volume = GetComponent<Volume>();
+        volume.profile.TryGet(out _ppColorAdjustments);
+        volume.profile.TryGet(out _ppLensDistortion);
+        volume.profile.TryGet(out _ppVignette);
+        volume.profile.TryGet(out _ppDepthOfField);
     }
 
     private void SpawnUI()

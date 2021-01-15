@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
-    
+
     // Interaction
     private Interaction _currentInteraction;
 
@@ -80,8 +80,10 @@ public class PlayerController : MonoBehaviour
     private bool _isDetectingGround;
     public bool IsDetectingGround { get { return _isDetectingGround; } set { _isDetectingGround = value; } }
 
-    public PlayerSO PlayerData { get { return _playerData; } }
+    public bool IsCrouching { get { return _isCrouching; } }
     public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
+    public PlayerSO PlayerData { get { return _playerData; } }
+
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
@@ -344,6 +346,8 @@ public class PlayerController : MonoBehaviour
             _characterController.center = Vector3.zero;
         }
     }
+
+   
 
     // private void Jump()
     // {
