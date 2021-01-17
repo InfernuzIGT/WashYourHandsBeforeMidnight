@@ -36,6 +36,14 @@ public enum EMOTION
     Sleep = 6
 }
 
+public enum DIRECTION
+{
+    UP = 0,
+    DOWN = 1,
+    LEFT = 2,
+    RIGHT = 3
+}
+
 // public enum TIER
 // {
 //     none = 0,

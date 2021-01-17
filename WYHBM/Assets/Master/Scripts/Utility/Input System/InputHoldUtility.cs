@@ -9,6 +9,7 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     [Header("Hold System")]
     [SerializeField, Range(0f, 10f)] private float _duration = 3;
     [SerializeField] private Image _fillImage;
+    [SerializeField] private Ease _easeAnimation = Ease.Linear;
 
     private CanvasGroupUtility _canvasGroupUtility;
     private Tween _fillAnimation;
@@ -16,10 +17,14 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     // Properties
     private UnityEvent _onStarted = new UnityEvent();
     public UnityEvent OnStarted { get { return _onStarted; } }
+
     private UnityEvent _onCanceled = new UnityEvent();
     public UnityEvent OnCanceled { get { return _onCanceled; } }
+
     private UnityEvent _onFinished = new UnityEvent();
     public UnityEvent OnFinished { get { return _onFinished; } }
+
+    public float Duration { get { return _duration; } set { _duration = value; } }
 
     private void Start()
     {
@@ -31,18 +36,19 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     {
         _canvasGroupUtility.ShowInstant(true);
         _fillImage.fillAmount = 0;
-        
+
         _onStarted.Invoke();
 
         _fillAnimation = _fillImage
             .DOFillAmount(1, _duration)
+            .SetEase(_easeAnimation)
             .OnComplete(() => OnFinish());
     }
 
     public void OnCancel()
     {
         _canvasGroupUtility.Show(false);
-        
+
         _fillAnimation.Kill();
 
         _fillImage.fillAmount = 0;
@@ -53,7 +59,9 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     public void OnFinish()
     {
         _canvasGroupUtility.Show(false, 1f);
-        
+
+        _fillAnimation.Kill();
+
         _fillImage.fillAmount = 1;
 
         _onFinished.Invoke();

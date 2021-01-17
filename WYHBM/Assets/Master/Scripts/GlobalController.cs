@@ -26,19 +26,19 @@ public class GlobalController : MonoBehaviour
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
-    [Header("References (Scene)")]
-    public Camera mainCamera;
-    public CinemachineFreeLookUtility playerCamera;
-
-    [Header("References (Project)")]
-    public GameData gameData;
-    public PlayerController playerController;
+    [Header("References")]
+    [SerializeField] private bool ShowReferences = true;
+    [ConditionalHide]public Camera mainCamera;
+    [ConditionalHide]public CinemachineFreeLookUtility playerCamera;
     [Space]
-    public PlayableDirector playableDirector;
-    public GameMode.World.UIManager worldUI;
-    public GameMode.Combat.UIManager combatUI;
-    public Fade fadeUI;
-    public EventSystemUtility eventSystemUtility;
+    [ConditionalHide]public GameData gameData;
+    [ConditionalHide]public PlayerController playerController;
+    [Space]
+    [ConditionalHide]public PlayableDirector playableDirector;
+    [ConditionalHide]public GameMode.World.UIManager worldUI;
+    [ConditionalHide]public GameMode.Combat.UIManager combatUI;
+    [ConditionalHide]public Fade fadeUI;
+    [ConditionalHide]public EventSystemUtility eventSystemUtility;
 
     // PostProcess
     private ColorAdjustments _ppColorAdjustments;
