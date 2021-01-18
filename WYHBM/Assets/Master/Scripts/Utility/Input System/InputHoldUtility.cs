@@ -8,11 +8,17 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 {
     [Header("Hold System")]
     [SerializeField, Range(0f, 10f)] private float _duration = 3;
-    [SerializeField] private Image _fillImage;
     [SerializeField] private Ease _easeAnimation = Ease.Linear;
 
-    private CanvasGroupUtility _canvasGroupUtility;
+    [Header("References")]
+    [SerializeField] private bool ShowReferences = true;
+    [SerializeField, ConditionalHide] private HoldIconSO _iconData = null;
+    [SerializeField, ConditionalHide] private Image _iconImg = null;
+    [SerializeField, ConditionalHide] private Image _fillImg = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasGroupUtility = null;
+
     private Tween _fillAnimation;
+    private Tween _fillColor;
 
     // Properties
     private UnityEvent _onStarted = new UnityEvent();
@@ -28,41 +34,58 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
     private void Start()
     {
-        _canvasGroupUtility = GetComponent<CanvasGroupUtility>();
+        _iconData.SetIconStart(ref _iconImg);
+
         _canvasGroupUtility.SetCanvasCamera();
         _canvasGroupUtility.ShowInstant(false);
     }
     public void OnStart()
     {
+        _iconData.SetIconStart(ref _iconImg);
+
         _canvasGroupUtility.ShowInstant(true);
-        _fillImage.fillAmount = 0;
+        
+        _fillImg.fillAmount = 0;
+        _fillImg.color = _iconData.colorStart;
 
         _onStarted.Invoke();
 
-        _fillAnimation = _fillImage
+        _fillAnimation = _fillImg
             .DOFillAmount(1, _duration)
             .SetEase(_easeAnimation)
             .OnComplete(() => OnFinish());
+
+        _fillColor = _fillImg
+            .DOColor(_iconData.colorFinish, _duration)
+            .SetEase(_easeAnimation);
     }
 
     public void OnCancel()
     {
+        _iconData.SetIconCancel(ref _iconImg);
+
         _canvasGroupUtility.Show(false);
 
         _fillAnimation.Kill();
+        _fillColor.Kill();
 
-        _fillImage.fillAmount = 0;
+        _fillImg.fillAmount = 0;
+        _fillImg.color = _iconData.colorStart;
 
         _onCanceled.Invoke();
     }
 
     public void OnFinish()
     {
+        _iconData.SetIconFinish(ref _iconImg);
+
         _canvasGroupUtility.Show(false, 1f);
 
         _fillAnimation.Kill();
+        _fillColor.Kill();
 
-        _fillImage.fillAmount = 1;
+        _fillImg.fillAmount = 1;
+        _fillImg.color = _iconData.colorFinish;
 
         _onFinished.Invoke();
     }
