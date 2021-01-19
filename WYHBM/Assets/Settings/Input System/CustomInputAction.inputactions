@@ -14,6 +14,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Zoom",
+                    "type": "PassThrough",
+                    "id": "1ef7928e-52fa-4265-8873-372080fa91ce",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Move",
                     "type": "PassThrough",
                     "id": "a6308b3b-88f0-4626-9ab6-dfaaa9a15719",
@@ -159,7 +167,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "USB Joystick",
+                    "name": "Gamepad",
                     "id": "09aeb8e1-d7ff-435b-9b11-f9cf8363ec65",
                     "path": "2DVector(mode=2)",
                     "interactions": "",
@@ -172,10 +180,10 @@
                 {
                     "name": "up",
                     "id": "a5df94b9-9399-47e8-973e-2b382e4454a0",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/up",
+                    "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -183,10 +191,10 @@
                 {
                     "name": "down",
                     "id": "569b2ace-ba78-40d4-bb5e-67e5869a87aa",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/down",
+                    "path": "<Gamepad>/leftStick/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -194,10 +202,10 @@
                 {
                     "name": "left",
                     "id": "87d14744-3182-4234-ae97-044605cb36d9",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/left",
+                    "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -205,120 +213,10 @@
                 {
                     "name": "right",
                     "id": "de2a8144-a131-45aa-adc2-6c99353b0646",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/right",
+                    "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "PS4 Controller",
-                    "id": "4e3b2bb9-2592-4c24-9abc-588444351b90",
-                    "path": "2DVector(mode=2)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "26baf961-8423-455c-a140-a5a46e6833ad",
-                    "path": "<DualShockGamepad>/leftStick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "48735338-d159-42b1-aa30-2688a78d9e7a",
-                    "path": "<DualShockGamepad>/leftStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "83118d3e-4fc5-4d94-a404-338c9cb10ed3",
-                    "path": "<DualShockGamepad>/leftStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "7aa01dc0-eb21-4304-b6c7-c42faca7e247",
-                    "path": "<DualShockGamepad>/leftStick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Xbox Controller",
-                    "id": "2bb6518a-02f5-4666-9536-909ff2919c17",
-                    "path": "2DVector(mode=2)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "4b7f4972-b8f1-4343-9eb4-28c8f10c3dd0",
-                    "path": "<XInputController>/leftStick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "ea85ce34-37d2-475d-b1e7-d1be8524762b",
-                    "path": "<XInputController>/leftStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "82a405de-cfdf-488f-b8ae-5fb87bf8d43d",
-                    "path": "<XInputController>/leftStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "6016905d-3649-4204-ac75-7653ab30080d",
-                    "path": "<XInputController>/leftStick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -326,7 +224,7 @@
                 {
                     "name": "",
                     "id": "c2f3478d-6bad-4fc9-97e1-07e77c6fff21",
-                    "path": "<HID::Microntek              USB Joystick          >/button3",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Generic",
@@ -370,10 +268,10 @@
                 {
                     "name": "",
                     "id": "8cce47fb-c4e6-4bbb-ab22-6f1be92fe3fd",
-                    "path": "<HID::Microntek              USB Joystick          >/button10",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
+                    "groups": "Generic;Switch;XboxOne;PS4",
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -385,28 +283,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "aa133e45-50a3-4f66-ba6e-c072af588608",
-                    "path": "<XInputController>/start",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5796334b-a810-406b-b2ab-b3dcb22c1b2d",
-                    "path": "<DualShockGamepad>/start",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -425,32 +301,10 @@
                 {
                     "name": "",
                     "id": "6a5fc1e5-514b-43d2-bb02-dffbe02956a5",
-                    "path": "<HID::Microntek              USB Joystick          >/button9",
+                    "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
-                    "action": "Options",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2696d2a4-91ed-4cba-9d62-5d16f68fdec2",
-                    "path": "<XInputController>/select",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Options",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d3793e74-88fe-4de5-b16e-7c8d85c44ff7",
-                    "path": "<DualShockGamepad>/select",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Options",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -468,11 +322,11 @@
                 },
                 {
                     "name": "",
-                    "id": "594ab89f-86e6-4aa8-8a98-20b02aace634",
-                    "path": "<DualShockGamepad>/dpad/down",
+                    "id": "6fba1139-96f3-41cc-b55f-e9f27efde05e",
+                    "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "DebugMode",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -480,7 +334,7 @@
                 {
                     "name": "",
                     "id": "8fd8880c-3dea-4bfa-bab7-d470bd419e5b",
-                    "path": "<HID::Microntek              USB Joystick          >/button2",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Generic",
@@ -535,7 +389,7 @@
                 {
                     "name": "",
                     "id": "f4c444fa-609d-432e-b930-d8f2076f723f",
-                    "path": "<HID::Microntek              USB Joystick          >/button4",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Generic",
@@ -578,34 +432,12 @@
                 },
                 {
                     "name": "",
-                    "id": "13ae3cd1-cd31-438c-a915-8d65e5a14ce5",
-                    "path": "<DualShockGamepad>/rightStick",
+                    "id": "4e423f2d-addf-4753-aacd-c9cb1d07c16f",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c18acb8c-7cd6-4f77-8cd4-f6621f11bdb8",
-                    "path": "<XInputController>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ba71543c-275c-497b-97f9-6db972c30428",
-                    "path": "<DualShockGamepad>/rightStickPress",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Reset Camera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -622,11 +454,11 @@
                 },
                 {
                     "name": "",
-                    "id": "97e20cf1-18cb-46d5-8bf6-b77f663279c0",
-                    "path": "<XInputController>/rightStickPress",
+                    "id": "0e9eef91-3204-4015-b4d7-a285bf58e54d",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
-                    "groups": "XboxOne",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Reset Camera",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -666,6 +498,28 @@
                 },
                 {
                     "name": "",
+                    "id": "26d067ad-24a4-4897-985b-cdc4da39187c",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxOne",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c0123517-f285-419d-bf44-3ee80a5470e3",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "ec789987-d2dc-4c47-8b1e-a297e0aa382a",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
@@ -677,22 +531,11 @@
                 },
                 {
                     "name": "",
-                    "id": "90a62602-f723-4905-b7e9-7c250684eab4",
-                    "path": "<DualShockGamepad>/leftTrigger",
+                    "id": "29a32d1a-e203-423b-85a8-9ecde8b80446",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
-                    "action": "Listen Mode",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "236f1119-2462-49ea-ba2f-e821fea50b8e",
-                    "path": "<XInputController>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Listen Mode",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -710,23 +553,34 @@
                 },
                 {
                     "name": "",
-                    "id": "9b6dcb32-95e9-4923-aebe-9e73b70e7f0f",
-                    "path": "<DualShockGamepad>/rightTrigger",
+                    "id": "d09e5812-b4d2-445b-b236-2848455a129c",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PS4",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "072885bd-ea72-4617-b3dd-4c2740bb6867",
-                    "path": "<XInputController>/rightTrigger",
+                    "id": "a84a9973-8a74-4ed9-9e22-de6fef809087",
+                    "path": "<Mouse>/scroll",
                     "interactions": "",
                     "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Run",
+                    "groups": "PC",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c5e0710c-30fd-40e1-a2ff-eb10cf6f5415",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;PS4;XboxOne;Switch",
+                    "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -739,7 +593,15 @@
                 {
                     "name": "Look",
                     "type": "PassThrough",
-                    "id": "7d59fd98-47ee-4bc6-8d04-ff14aa15efe7",
+                    "id": "c7de2782-b087-42b4-9b3a-baddfbc30ba0",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Zoom",
+                    "type": "PassThrough",
+                    "id": "f24ba896-5a14-4d7a-a432-f63dd3b1d850",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
@@ -779,105 +641,6 @@
             ],
             "bindings": [
                 {
-                    "name": "USB Joystick",
-                    "id": "f640f169-098f-45b6-aaf9-263541383830",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Navigate",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "03c780ea-f360-4817-9d18-a899ddba5e98",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "up",
-                    "id": "8475efa8-9afa-41be-af5e-5131329f2f12",
-                    "path": "<HID::Microntek              USB Joystick          >/hat/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "8d955d95-093a-4ebf-9d99-216795102546",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "b9f65e55-201c-4a7e-ac58-2f202d32c7b7",
-                    "path": "<HID::Microntek              USB Joystick          >/hat/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "78eee479-321f-4721-b074-5122212bf912",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "926605e0-1cc7-4673-86a6-fcd4602121cb",
-                    "path": "<HID::Microntek              USB Joystick          >/hat/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "9c8feced-9f9c-45f9-bab3-af11bfe0cd3c",
-                    "path": "<HID::Microntek              USB Joystick          >/stick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "05edd1c2-ba4a-46ac-8e8a-1b4cb3ce4952",
-                    "path": "<HID::Microntek              USB Joystick          >/hat/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Joystick;Generic",
-                    "action": "Navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "Gamepad",
                     "id": "ac042ccc-4846-4f81-8487-412d52ff13d7",
                     "path": "2DVector",
@@ -894,7 +657,7 @@
                     "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;PS4;Switch",
+                    "groups": "Joystick;XboxOne;PS4;Switch;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -905,7 +668,7 @@
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;Switch;PS4",
+                    "groups": "Joystick;XboxOne;Switch;PS4;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -916,7 +679,7 @@
                     "path": "<Gamepad>/leftStick/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;Switch;PS4",
+                    "groups": "Joystick;XboxOne;Switch;PS4;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -927,7 +690,7 @@
                     "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;PS4;Switch",
+                    "groups": "Joystick;XboxOne;PS4;Switch;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -938,7 +701,7 @@
                     "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;PS4;Switch",
+                    "groups": "Joystick;XboxOne;PS4;Switch;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -949,7 +712,7 @@
                     "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;PS4;Switch",
+                    "groups": "Joystick;XboxOne;PS4;Switch;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -960,7 +723,7 @@
                     "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;PS4;Switch",
+                    "groups": "Joystick;XboxOne;PS4;Switch;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -971,7 +734,7 @@
                     "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Joystick;XboxOne;PS4;Switch",
+                    "groups": "Joystick;XboxOne;PS4;Switch;Generic",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -1089,10 +852,21 @@
                 {
                     "name": "",
                     "id": "9134c747-4b25-4d6c-bcea-74c1608efada",
-                    "path": "<HID::Microntek              USB Joystick          >/button2",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
+                    "groups": "Generic;PS4;XboxOne;Switch",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e15ee034-1da0-4277-b6fc-dddb59a1f042",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1110,55 +884,11 @@
                 },
                 {
                     "name": "",
-                    "id": "d1299f41-e512-4e43-9e46-72b12a4d9449",
-                    "path": "<DualShockGamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Submit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "15bba2ce-4dc7-48ae-942c-da2824b8973b",
-                    "path": "<DualShockGamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Submit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "dd2e6a43-3e15-46e7-a968-5694f49deba6",
-                    "path": "<XInputController>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Submit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b2982a9d-689c-4853-b9cf-31a9f3df6fd3",
-                    "path": "<XInputController>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Submit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1f3b461e-c3d0-4ea0-bafa-334568edd142",
-                    "path": "<HID::Microntek              USB Joystick          >/trigger",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1176,72 +906,6 @@
                 },
                 {
                     "name": "",
-                    "id": "3643abb8-1159-41ef-aa1a-5b4a39b3d272",
-                    "path": "<DualShockGamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "69051904-3d5c-4463-a0f2-daf8846c0063",
-                    "path": "<XInputController>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e7dafd5a-c1c7-4e69-bb67-5cf34666ab05",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c1c96c9f-bd0d-42b3-809e-4caa939138d7",
-                    "path": "<DualShockGamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a4c9879c-6515-4891-9ddc-f81dafe56ac8",
-                    "path": "<XInputController>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XboxOne",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "396e6411-c04d-4f2a-bb40-01f2f710651e",
-                    "path": "<DualShockGamepad>/rightStickPress",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PS4",
-                    "action": "Reset Camera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7a0fb1a6-099e-4753-a0ff-225714cc6634",
                     "path": "<Mouse>/middleButton",
                     "interactions": "",
@@ -1253,12 +917,56 @@
                 },
                 {
                     "name": "",
-                    "id": "6793d932-bd12-40b0-87ee-e3071063cb20",
-                    "path": "<XInputController>/rightStickPress",
+                    "id": "e789da19-0995-4b90-b540-ab68ee566df0",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
-                    "groups": "XboxOne",
+                    "groups": "Generic;PS4;XboxOne;Switch",
                     "action": "Reset Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6b6b739-12c5-4b31-aed6-3d1b4aec5ac1",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2371b8d2-ed71-4d03-9e5e-fd8ec09db006",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;PS4;XboxOne;Switch",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6eda83e5-bb06-4e88-b2f0-d330f6dd89a1",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d7b602a9-c69f-4b6a-a6d5-610a0720578d",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;PS4;XboxOne;Switch",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1283,6 +991,11 @@
             "devices": [
                 {
                     "devicePath": "<Joystick>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Gamepad>",
                     "isOptional": false,
                     "isOR": false
                 }

@@ -1,8 +1,9 @@
 ﻿using Cinemachine;
 using Events;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 [System.Serializable]
 public class Quest
@@ -11,6 +12,7 @@ public class Quest
     public int currentStep = 0;
 }
 
+[RequireComponent(typeof(Volume), typeof(PlayableDirector))]
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
@@ -21,24 +23,30 @@ public class GlobalController : MonoBehaviour
     [Space]
     public SessionData sessionData;
 
-    [Header("Developer")]
-    [SerializeField] private bool _inputDebugMode = true;
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
-    [Header("References (Scene)")]
-    public Camera mainCamera;
-    public CinemachineFreeLookUtility playerCamera;
-
-    [Header("References (Project)")]
-    public GameData gameData;
-    public PlayerController playerController;
+    [Header("References")]
+    [SerializeField] private bool ShowReferences = true;
+    [ConditionalHide]public Camera mainCamera;
+    [ConditionalHide]public CinemachineFreeLookUtility playerCamera;
     [Space]
-    public PlayableDirector playableDirector;
-    public GameMode.World.UIManager worldUI;
-    public GameMode.Combat.UIManager combatUI;
-    public Fade fadeUI;
-    public EventSystemUtility eventSystemUtility;
+    [ConditionalHide]public GameData gameData;
+    [ConditionalHide]public PlayerController playerController;
+    [Space]
+    [ConditionalHide]public PlayableDirector playableDirector;
+    [ConditionalHide]public GameMode.World.UIManager worldUI;
+    [ConditionalHide]public GameMode.Combat.UIManager combatUI;
+    [ConditionalHide]public Fade fadeUI;
+    [ConditionalHide]public EventSystemUtility eventSystemUtility;
+
+    // PostProcess
+    private ColorAdjustments _ppColorAdjustments;
+    private LensDistortion _ppLensDistortion;
+    private DepthOfField _ppDepthOfField;
+    private Vignette _ppVignette;
+    private Color _colorVigneteInactive = new Color(0.025f, 0, 0.25f, 1);
+    private Color _colorVigneteActive = new Color(0.1f, 0.1f, 0.1f, 1);
 
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
@@ -48,19 +56,10 @@ public class GlobalController : MonoBehaviour
     private CutsceneEvent _cutsceneEvent;
     private EnableDialogEvent _interactionDialogEvent;
 
-    private void Awake()
-    {
-
-#if UNITY_EDITOR
-
-        if (_inputDebugMode)InputUtility.debugMode = true;
-
-#endif
-
-    }
-
     private void Start()
     {
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Persistent"));
+
         CheckGameData();
 
         _enableMovementEvent = new EnableMovementEvent();
@@ -72,9 +71,9 @@ public class GlobalController : MonoBehaviour
         _cutsceneEvent.show = false;
 
         SpawnPlayer();
-        CheckCamera();
         SpawnUI();
-        // SetCamera();
+
+        CheckCamera();
         // AddItems();
 
         playableDirector.stopped += OnCutsceneStop;
@@ -83,8 +82,10 @@ public class GlobalController : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        // TODO Mariano: REORDER OBJECTS IN HIERARCHY
-        // TODO Mariano: RENAME OBJECTS IN HIERARCHY
+        worldUI.gameObject.name = "Canvas (World)";
+        combatUI.gameObject.name = "Canvas (Combat)";
+        fadeUI.gameObject.name = "Canvas (Fade)";
+        eventSystemUtility.gameObject.name = "Event System";
 #else
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -137,6 +138,26 @@ public class GlobalController : MonoBehaviour
         playerController.SetPlayerData(playerData);
 
         sessionData.playerData = playerData;
+
+        playerController.Input.Player.ListenMode.started += ctx => ListenMode(true);
+        playerController.Input.Player.ListenMode.canceled += ctx => ListenMode(false);
+    }
+
+    private void ListenMode(bool active)
+    {
+        if (!playerController.IsCrouching)return;
+
+        // TODO Mariano: Add animation with Lerp
+
+        _ppColorAdjustments.saturation.value = active ? -50f : 0;
+        _ppLensDistortion.intensity.value = active ? 0.15f : 0;
+        _ppDepthOfField.gaussianStart.value = active ? 20 : 22.5f;
+        _ppDepthOfField.gaussianEnd.value = active ? 22.5f : 60;
+        _ppVignette.color.value = active ? _colorVigneteActive : _colorVigneteInactive;
+        _ppVignette.intensity.value = active ? 0.5f : 0.2f;
+        _ppVignette.smoothness.value = active ? 0.5f : 1;
+
+        playerCamera.SetFOV(active ? 45 : 40);
     }
 
     private void CheckCamera()
@@ -145,6 +166,12 @@ public class GlobalController : MonoBehaviour
 
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(playerController.transform);
+
+        Volume volume = GetComponent<Volume>();
+        volume.profile.TryGet(out _ppColorAdjustments);
+        volume.profile.TryGet(out _ppLensDistortion);
+        volume.profile.TryGet(out _ppVignette);
+        volume.profile.TryGet(out _ppDepthOfField);
     }
 
     private void SpawnUI()
@@ -158,17 +185,6 @@ public class GlobalController : MonoBehaviour
         worldUI.Show(!inCombat);
         combatUI.Show(inCombat);
     }
-
-    // private void SetCamera()
-    // {
-    //     exteriorCamera.m_Follow = playerController.transform;
-    //     exteriorCamera.m_LookAt = playerController.transform;
-
-    //     interiorCamera.m_Follow = playerController.transform;
-    //     interiorCamera.m_LookAt = playerController.transform;
-
-    //     _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
-    // }
 
     // public void ChangeWorldCamera()
     // {

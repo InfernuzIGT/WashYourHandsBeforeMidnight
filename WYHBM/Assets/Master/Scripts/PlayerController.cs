@@ -43,7 +43,6 @@ public class PlayerController : MonoBehaviour
     private bool _canMove = true;
     private float _speedHorizontal;
     private float _speedVertical;
-    private bool _isDetectingGround;
     private bool _isInteracting;
     private bool _isCrouching;
 
@@ -68,6 +67,9 @@ public class PlayerController : MonoBehaviour
     // Quest
     private bool _isOpenDiary;
 
+    // Interaction
+    private Interaction _currentInteraction;
+
     // Properties
     private CustomInputAction _input;
     public CustomInputAction Input { get { return _input; } set { _input = value; } }
@@ -75,8 +77,13 @@ public class PlayerController : MonoBehaviour
     private bool _canPlayFootstep;
     public bool CanPlayFootstep { get { return _canPlayFootstep; } }
 
-    public bool IsDetectingGround { get => _isDetectingGround; set => _isDetectingGround = value; }
+    private bool _isDetectingGround;
+    public bool IsDetectingGround { get { return _isDetectingGround; } set { _isDetectingGround = value; } }
+
+    public bool IsCrouching { get { return _isCrouching; } }
+    public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
     public PlayerSO PlayerData { get { return _playerData; } }
+
 
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
@@ -99,8 +106,8 @@ public class PlayerController : MonoBehaviour
         _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
         _input.Player.Options.performed += ctx => Pause(PAUSE_TYPE.Inventory);
         _input.Player.Crouch.performed += ctx => Crouch();
-        _input.Player.Run.started += ctx => Run(true);
-        _input.Player.Run.canceled += ctx => Run(false);
+        // _input.Player.Run.started += ctx => Run(true);
+        // _input.Player.Run.canceled += ctx => Run(false);
 
         // _input.Player.DebugMode.performed += ctx => GameData.Instance.SelectNextQuality(true);
 
@@ -124,6 +131,7 @@ public class PlayerController : MonoBehaviour
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.AddListener<ChangePositionEvent>(OnChangePosition);
+        EventController.AddListener<CurrentInteractEvent>(OnCurrentInteraction);
     }
 
     private void OnDisable()
@@ -131,6 +139,7 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.RemoveListener<ChangePositionEvent>(OnChangePosition);
+        EventController.RemoveListener<CurrentInteractEvent>(OnCurrentInteraction);
     }
 
     private void Pause(PAUSE_TYPE pauseType)
@@ -185,22 +194,30 @@ public class PlayerController : MonoBehaviour
         switch (_movementState)
         {
             case MOVEMENT_STATE.Walk:
-                if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
-                {
-                    _speedHorizontal = _playerConfig.speedJogging;
 
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+                _speedHorizontal = _playerConfig.speedJogging;
 
-                    _animatorController.Walk(false);
-                }
-                else
-                {
-                    _speedHorizontal = _playerConfig.speedWalk;
+                footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                _animatorController.Walk(false);
 
-                    _animatorController.Walk(true);
-                }
+                // TODO Mariano: Enable
+                // if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
+                // {
+                //     _speedHorizontal = _playerConfig.speedJogging;
+
+                //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+
+                //     _animatorController.Walk(false);
+                // }
+                // else
+                // {
+                //     _speedHorizontal = _playerConfig.speedWalk;
+
+                //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+
+                //     _animatorController.Walk(true);
+                // }
                 break;
 
             case MOVEMENT_STATE.Run:
@@ -329,6 +346,8 @@ public class PlayerController : MonoBehaviour
             _characterController.center = Vector3.zero;
         }
     }
+
+   
 
     // private void Jump()
     // {
@@ -570,6 +589,11 @@ public class PlayerController : MonoBehaviour
     private void OnChangePosition(ChangePositionEvent evt)
     {
         transform.position = evt.newPosition;
+    }
+
+    private void OnCurrentInteraction(CurrentInteractEvent evt)
+    {
+        _currentInteraction = evt.currentInteraction;
     }
 
     private void OnDeviceChange(DeviceChangeEvent evt)

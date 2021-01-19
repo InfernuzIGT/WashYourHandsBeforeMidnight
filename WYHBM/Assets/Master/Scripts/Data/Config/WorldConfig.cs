@@ -11,15 +11,15 @@ public class WorldConfig : ScriptableObject
     public float timeStart = 0.5f;
     public float timeSpace = 1f;
 
-
     [Header("Fade")]
     public float fadeCutsceneDuration = 1;
     public float fadeFastDuration = 1.5f;
     public float fadeSlowDuration = 3;
 
     [Header("Layers")]
-    public LayerMask layerEnemyTarget;
-    public LayerMask layerEnemyObstacle;
+    public LayerMask layerFOVTarget;
+    public LayerMask layerFOVObstacle;
+    [Space]
     public LayerMask layerOcclusionMask;
 
     [Header("References")]
