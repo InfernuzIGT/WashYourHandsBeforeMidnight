@@ -218,6 +218,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7222876601119083809, guid: 91e3eab5bc2b28e41aab94fa5dd126f3,
+        type: 3}
+      propertyPath: dialogueDesignerDebugMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91e3eab5bc2b28e41aab94fa5dd126f3, type: 3}
 --- !u!20 &1115156866 stripped
@@ -326,7 +331,7 @@ PrefabInstance:
     - target: {fileID: 3572255221697695743, guid: 8403060f023a2be4b8c8f8d97072773d,
         type: 3}
       propertyPath: far clip plane
-      value: 5000
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 3572255221697695743, guid: 8403060f023a2be4b8c8f8d97072773d,
         type: 3}
@@ -588,6 +593,11 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 1485802959}
+    - target: {fileID: 3409396407064783239, guid: 78b64f82a91cbe64e93bc7ac437d612e,
+        type: 3}
+      propertyPath: ShowReferences
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3409396407064783239, guid: 78b64f82a91cbe64e93bc7ac437d612e,
         type: 3}
       propertyPath: freeLookCamera
