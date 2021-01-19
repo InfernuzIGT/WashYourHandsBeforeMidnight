@@ -98,6 +98,12 @@ public class Interaction : MonoBehaviour, IDialogueable
         EventController.TriggerEvent(_showInteractionHintEvent);
     }
 
+    protected void ForceCleanInteraction()
+    {
+        _currentInteractionEvent.currentInteraction = null;
+        EventController.TriggerEvent(_currentInteractionEvent);
+    }
+
     public TextAsset GetDialogData()
     {
         return data[GameData.Instance.PlayerData.ID].dialogDD;
