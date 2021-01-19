@@ -84,7 +84,6 @@ public class PlayerController : MonoBehaviour
     public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
     public PlayerSO PlayerData { get { return _playerData; } }
 
-
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
@@ -325,7 +324,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Crouch(bool cancel = false)
+    public void Crouch(bool cancel = false)
     {
         if (cancel)_isCrouching = true;
 
@@ -346,8 +345,6 @@ public class PlayerController : MonoBehaviour
             _characterController.center = Vector3.zero;
         }
     }
-
-   
 
     // private void Jump()
     // {

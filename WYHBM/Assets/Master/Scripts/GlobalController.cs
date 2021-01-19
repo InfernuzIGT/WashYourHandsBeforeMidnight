@@ -28,17 +28,22 @@ public class GlobalController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private bool ShowReferences = true;
-    [ConditionalHide]public Camera mainCamera;
-    [ConditionalHide]public CinemachineFreeLookUtility playerCamera;
+    [ConditionalHide] public Camera mainCamera;
+    [ConditionalHide] public CinemachineFreeLookUtility playerCamera;
     [Space]
-    [ConditionalHide]public GameData gameData;
-    [ConditionalHide]public PlayerController playerController;
+    [ConditionalHide] public GameData gameData;
+    [ConditionalHide] public PlayerController playerController;
     [Space]
-    [ConditionalHide]public PlayableDirector playableDirector;
-    [ConditionalHide]public GameMode.World.UIManager worldUI;
-    [ConditionalHide]public GameMode.Combat.UIManager combatUI;
-    [ConditionalHide]public Fade fadeUI;
-    [ConditionalHide]public EventSystemUtility eventSystemUtility;
+    [ConditionalHide] public PlayableDirector playableDirector;
+    [ConditionalHide] public GameMode.World.UIManager worldUI;
+    [ConditionalHide] public GameMode.Combat.UIManager combatUI;
+    [ConditionalHide] public Fade fadeUI;
+    [ConditionalHide] public EventSystemUtility eventSystemUtility;
+    [Space]
+    [ConditionalHide] public Material materialFOV;
+
+    // Shaders
+    private int hash_IsVisible = Shader.PropertyToID("_IsVisible");
 
     // PostProcess
     private ColorAdjustments _ppColorAdjustments;
@@ -145,7 +150,7 @@ public class GlobalController : MonoBehaviour
 
     private void ListenMode(bool active)
     {
-        if (!playerController.IsCrouching)return;
+        if (!playerController.IsCrouching)playerController.Crouch();
 
         // TODO Mariano: Add animation with Lerp
 
@@ -158,6 +163,8 @@ public class GlobalController : MonoBehaviour
         _ppVignette.smoothness.value = active ? 0.5f : 1;
 
         playerCamera.SetFOV(active ? 45 : 40);
+
+        materialFOV.SetFloat(hash_IsVisible, active ? 0.35f : 0);
     }
 
     private void CheckCamera()
