@@ -10,6 +10,8 @@ public class WorldConfig : ScriptableObject
     public float messageLifetime = 3f;
     public float timeStart = 0.5f;
     public float timeSpace = 1f;
+    [Space]
+    public float fovTime = 1f;
 
     [Header("Fade")]
     public float fadeCutsceneDuration = 1;

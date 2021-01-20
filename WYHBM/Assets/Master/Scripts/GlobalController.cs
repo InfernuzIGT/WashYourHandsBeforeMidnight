@@ -1,4 +1,6 @@
-﻿using Cinemachine;
+﻿using System.Collections;
+using Cinemachine;
+using DG.Tweening;
 using Events;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -28,6 +30,7 @@ public class GlobalController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private bool ShowReferences = true;
+    [ConditionalHide] public WorldConfig worldConfig;
     [ConditionalHide] public Camera mainCamera;
     [ConditionalHide] public CinemachineFreeLookUtility playerCamera;
     [Space]
@@ -56,7 +59,10 @@ public class GlobalController : MonoBehaviour
 
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
+    private Coroutine _coroutineListenMode;
     private bool _isInteriorCamera;
+    private bool _fovIsActive;
+    private float _fovCurrentTime = 0;
 
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
@@ -154,22 +160,62 @@ public class GlobalController : MonoBehaviour
 
     private void ListenMode(bool active)
     {
+        _fovIsActive = active;
+
         if (!playerController.IsCrouching)playerController.Crouch();
 
-        // TODO Mariano: Add animation with Lerp
+        if (_coroutineListenMode != null)
+        {
+            StopCoroutine(_coroutineListenMode);
+            _coroutineListenMode = null;
+        }
 
-        _ppColorAdjustments.saturation.value = active ? -50f : 0;
-        _ppLensDistortion.intensity.value = active ? 0.15f : 0;
-        _ppDepthOfField.gaussianStart.value = active ? 20 : 22.5f;
-        _ppDepthOfField.gaussianEnd.value = active ? 22.5f : 60;
-        _ppVignette.color.value = active ? _colorVigneteActive : _colorVigneteInactive;
-        _ppVignette.intensity.value = active ? 0.5f : 0.2f;
-        _ppVignette.smoothness.value = active ? 0.5f : 1;
+        _coroutineListenMode = StartCoroutine(ChangeListenMode());
+    }
 
-        playerCamera.SetFOV(active ? 45 : 40);
+    private IEnumerator ChangeListenMode()
+    {
+        if (_fovIsActive)
+        {
+            while (_fovCurrentTime < worldConfig.fovTime)
+            {
+                SetValuesListenMode();
 
-        materialFOV.SetFloat(hash_IsVisible, active ? 0.35f : 0);
-        materialDitherNPC.SetFloat(hash_IsVisible, active ? 0.15f : 0);
+                _fovCurrentTime += Time.deltaTime;
+
+                yield return null;
+            }
+        }
+        else
+        {
+            while (_fovCurrentTime > 0)
+            {
+                SetValuesListenMode();
+
+                _fovCurrentTime -= Time.deltaTime;
+
+                yield return null;
+            }
+        }
+
+        _fovCurrentTime = _fovIsActive ? worldConfig.fovTime : 0;
+    }
+
+    private void SetValuesListenMode()
+    {
+        _ppColorAdjustments.saturation.value = Mathf.Lerp(0, -50, (_fovCurrentTime / worldConfig.fovTime));
+        _ppLensDistortion.intensity.value = Mathf.Lerp(0, 0.15f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(22.5f, 20, (_fovCurrentTime / worldConfig.fovTime));
+        _ppDepthOfField.gaussianEnd.value = Mathf.Lerp(60, 22.5f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppVignette.intensity.value = Mathf.Lerp(0.2f, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppVignette.smoothness.value = Mathf.Lerp(1, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
+
+        _ppVignette.color.value = Color.Lerp(_colorVigneteInactive, _colorVigneteActive, (_fovCurrentTime / worldConfig.fovTime));
+
+        playerCamera.SetFOV(Mathf.Lerp(40, 45, (_fovCurrentTime / worldConfig.fovTime)));
+
+        materialFOV.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.35f, (_fovCurrentTime / worldConfig.fovTime)));
+        materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.15f, (_fovCurrentTime / worldConfig.fovTime)));
     }
 
     private void CheckCamera()
