@@ -41,6 +41,7 @@ public class GlobalController : MonoBehaviour
     [ConditionalHide] public EventSystemUtility eventSystemUtility;
     [Space]
     [ConditionalHide] public Material materialFOV;
+    [ConditionalHide] public Material materialDitherNPC;
 
     // Shaders
     private int hash_IsVisible = Shader.PropertyToID("_IsVisible");
@@ -82,6 +83,9 @@ public class GlobalController : MonoBehaviour
         // AddItems();
 
         playableDirector.stopped += OnCutsceneStop;
+
+        materialFOV.SetFloat(hash_IsVisible, 0);
+        materialDitherNPC.SetFloat(hash_IsVisible, 0);
 
 #if UNITY_EDITOR
         Cursor.visible = true;
@@ -165,6 +169,7 @@ public class GlobalController : MonoBehaviour
         playerCamera.SetFOV(active ? 45 : 40);
 
         materialFOV.SetFloat(hash_IsVisible, active ? 0.35f : 0);
+        materialDitherNPC.SetFloat(hash_IsVisible, active ? 0.15f : 0);
     }
 
     private void CheckCamera()
