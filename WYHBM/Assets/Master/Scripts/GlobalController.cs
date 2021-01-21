@@ -1,84 +1,91 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
+﻿using Cinemachine;
 using Events;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
+[System.Serializable]
+public class Quest
+{
+    public QuestSO data;
+    public int currentStep = 0;
+}
+
+[RequireComponent(typeof(Volume), typeof(PlayableDirector))]
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
+    public PlayerSO playerData;
+    [Space]
     public bool isPaused;
     public bool inCombat;
     [Space]
-    [SerializeField, ReadOnly] private NPCSO _currentNPC = null;
+    public SessionData sessionData;
 
-    [Header("Developer")]
-    [SerializeField] private bool _inputDebugMode = true;
-    [Space]
-    [SerializeField] private Transform _customSpawnPoint = null;
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
-    [Header("Player")]
-    public PlayerSO playerData;
-    public PlayerController playerController;
+    [Header("References")]
+    [SerializeField] private bool ShowReferences = true;
+    [ConditionalHide]public Camera mainCamera;
+    [ConditionalHide]public CinemachineFreeLookUtility playerCamera;
+    [Space]
+    [ConditionalHide]public GameData gameData;
+    [ConditionalHide]public PlayerController playerController;
+    [Space]
+    [ConditionalHide]public PlayableDirector playableDirector;
+    [ConditionalHide]public GameMode.World.UIManager worldUI;
+    [ConditionalHide]public GameMode.Combat.UIManager combatUI;
+    [ConditionalHide]public Fade fadeUI;
+    [ConditionalHide]public EventSystemUtility eventSystemUtility;
 
-    [Header("Camera")]
-    public Camera mainCamera;
-    public CinemachineVirtualCamera worldCamera;
-
-    [Header("UI")]
-    public GameMode.World.UIManager worldUI;
-    public GameMode.Combat.UIManager combatUI;
-    public Fade fadeUI;
-    public EventSystemUtility eventSystemUtility;
-
-    [Header("-DEPRECATED-")]
-    public CinemachineVirtualCamera exteriorCamera;
-    public CinemachineVirtualCamera interiorCamera;
-    public CinemachineVirtualCamera cutscene;
-
-    private DDUtility _ddUtility;
+    // PostProcess
+    private ColorAdjustments _ppColorAdjustments;
+    private LensDistortion _ppLensDistortion;
+    private DepthOfField _ppDepthOfField;
+    private Vignette _ppVignette;
+    private Color _colorVigneteInactive = new Color(0.025f, 0, 0.25f, 1);
+    private Color _colorVigneteActive = new Color(0.1f, 0.1f, 0.1f, 1);
 
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
     private bool _isInteriorCamera;
 
-    private float _offsetPlayer = 1.505f;
-
     private EnableMovementEvent _enableMovementEvent;
-
-    private void Awake()
-    {
-
-#if UNITY_EDITOR
-
-        if (_inputDebugMode)InputUtility.debugMode = true;
-
-#endif
-
-    }
+    private CutsceneEvent _cutsceneEvent;
+    private EnableDialogEvent _interactionDialogEvent;
 
     private void Start()
     {
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Persistent"));
+
+        CheckGameData();
+
         _enableMovementEvent = new EnableMovementEvent();
 
+        _interactionDialogEvent = new EnableDialogEvent();
+        _interactionDialogEvent.enable = false;
+
+        _cutsceneEvent = new CutsceneEvent();
+        _cutsceneEvent.show = false;
+
         SpawnPlayer();
-        SpawnCameras();
         SpawnUI();
-        // SetCamera();
+
+        CheckCamera();
         // AddItems();
+
+        playableDirector.stopped += OnCutsceneStop;
 
 #if UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        // TODO Mariano: REORDER OBJECTS IN HIERARCHY
-        // TODO Mariano: RENAME OBJECTS IN HIERARCHY
+        worldUI.gameObject.name = "Canvas (World)";
+        combatUI.gameObject.name = "Canvas (Combat)";
+        fadeUI.gameObject.name = "Canvas (Fade)";
+        eventSystemUtility.gameObject.name = "Event System";
 #else
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -89,81 +96,82 @@ public class GlobalController : MonoBehaviour
     private void OnEnable()
     {
         EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<QuestEvent>(OnQuest);
         EventController.AddListener<ChangeInputEvent>(OnChangeInput);
+        EventController.AddListener<SessionEvent>(OnSession);
+        EventController.AddListener<CutsceneEvent>(OnCutscene);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<QuestEvent>(OnQuest);
         EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
+        EventController.RemoveListener<SessionEvent>(OnSession);
+        EventController.RemoveListener<CutsceneEvent>(OnCutscene);
     }
 
-    private void SpawnCameras()
+    private void CheckGameData()
     {
-        mainCamera = Instantiate(mainCamera);
-        worldCamera = Instantiate(worldCamera);
+        GameData tempGamedata = GameObject.FindObjectOfType<GameData>();
 
-        worldCamera.m_Follow = playerController.transform;
-        worldCamera.m_LookAt = playerController.transform;
+        gameData = tempGamedata != null ? tempGamedata : Instantiate(gameData);
 
-        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
-        detectTargetBehind.SetTarget(playerController.transform);
+        sessionData = gameData.LoadSession();
     }
 
     private void SpawnPlayer()
     {
-        RaycastHit hit;
+        SpawnPoint spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
 
-#if UNITY_EDITOR
-
-        if (_customSpawnPoint != null)
+        if (spawnPoint != null)
         {
-            if (Physics.Raycast(_customSpawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
-            {
-                Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
-            }
-            else
-            {
-                Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
-
-                playerController = Instantiate(playerController, _customSpawnPoint.position, Quaternion.identity);
-            }
+            playerController = Instantiate(playerController, spawnPoint.transform.position, Quaternion.identity);
         }
         else
         {
-            SceneView sceneView = SceneView.lastActiveSceneView;
-            Vector3 sceneCameraPosition = sceneView.pivot - sceneView.camera.transform.position;
+            Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't find a Spawn Point!");
 
-            if (Physics.Raycast(sceneCameraPosition, Vector3.down, out hit, Mathf.Infinity))
-            {
-                Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-                playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
-            }
-            else
-            {
-                Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
-
-                playerController = Instantiate(playerController, sceneCameraPosition, Quaternion.identity);
-            }
+            playerController = Instantiate(playerController);
         }
-#else
-
-        if (Physics.Raycast(spawnPoint.position, Vector3.down, out hit, Mathf.Infinity))
-        {
-            Vector3 spawnPosition = hit.point + new Vector3(0, _offsetPlayer, 0);
-            player = Instantiate(player, spawnPosition, Quaternion.identity);
-        }
-        else
-        {
-            Debug.LogWarning($"<color=yellow><b>[WARNING]</b></color> Can't detect surface to spawn!");
-
-            player = Instantiate(player, spawnPoint.position, Quaternion.identity);
-        }
-
-#endif
 
         playerController.SetPlayerData(playerData);
+
+        sessionData.playerData = playerData;
+
+        playerController.Input.Player.ListenMode.started += ctx => ListenMode(true);
+        playerController.Input.Player.ListenMode.canceled += ctx => ListenMode(false);
+    }
+
+    private void ListenMode(bool active)
+    {
+        if (!playerController.IsCrouching)return;
+
+        // TODO Mariano: Add animation with Lerp
+
+        _ppColorAdjustments.saturation.value = active ? -50f : 0;
+        _ppLensDistortion.intensity.value = active ? 0.15f : 0;
+        _ppDepthOfField.gaussianStart.value = active ? 20 : 22.5f;
+        _ppDepthOfField.gaussianEnd.value = active ? 22.5f : 60;
+        _ppVignette.color.value = active ? _colorVigneteActive : _colorVigneteInactive;
+        _ppVignette.intensity.value = active ? 0.5f : 0.2f;
+        _ppVignette.smoothness.value = active ? 0.5f : 1;
+
+        playerCamera.SetFOV(active ? 45 : 40);
+    }
+
+    private void CheckCamera()
+    {
+        playerCamera.Init(playerController, eventSystemUtility.InputUIModule);
+
+        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
+        detectTargetBehind.SetTarget(playerController.transform);
+
+        Volume volume = GetComponent<Volume>();
+        volume.profile.TryGet(out _ppColorAdjustments);
+        volume.profile.TryGet(out _ppLensDistortion);
+        volume.profile.TryGet(out _ppVignette);
+        volume.profile.TryGet(out _ppDepthOfField);
     }
 
     private void SpawnUI()
@@ -176,35 +184,17 @@ public class GlobalController : MonoBehaviour
 
         worldUI.Show(!inCombat);
         combatUI.Show(inCombat);
-
-        _ddUtility = worldUI.DDUtility;
     }
 
-    private void SetCamera()
-    {
-        exteriorCamera.m_Follow = playerController.transform;
-        exteriorCamera.m_LookAt = playerController.transform;
-        // exteriorCamera.transform.position = player.transform.position;
+    // public void ChangeWorldCamera()
+    // {
+    //     _isInteriorCamera = !_isInteriorCamera;
 
-        interiorCamera.m_Follow = playerController.transform;
-        interiorCamera.m_LookAt = playerController.transform;
-        // interiorCamera.transform.position = player.transform.position;
+    //     _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
 
-        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
-
-        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
-        detectTargetBehind.SetTarget(playerController.transform);
-    }
-
-    public void ChangeWorldCamera()
-    {
-        _isInteriorCamera = !_isInteriorCamera;
-
-        _worldCamera = _isInteriorCamera ? interiorCamera : exteriorCamera;
-
-        exteriorCamera.gameObject.SetActive(!_isInteriorCamera);
-        interiorCamera.gameObject.SetActive(_isInteriorCamera);
-    }
+    //     exteriorCamera.gameObject.SetActive(!_isInteriorCamera);
+    //     interiorCamera.gameObject.SetActive(_isInteriorCamera);
+    // }
 
     public void ChangeToCombatCamera(CinemachineVirtualCamera combatCamera)
     {
@@ -220,6 +210,13 @@ public class GlobalController : MonoBehaviour
             _worldCamera.gameObject.SetActive(false);
             _combatCamera = combatCamera;
         }
+    }
+
+    private void OnCutsceneStop(PlayableDirector pd)
+    {
+        EnableMovement(true);
+
+        EventController.TriggerEvent(_cutsceneEvent);
     }
 
     // private void AddItems()
@@ -255,19 +252,15 @@ public class GlobalController : MonoBehaviour
         playerController.gameObject.SetActive(!isHiding);
     }
 
-    private void ChangeInput(bool enable)
+    private void EnableMovement(bool enable)
     {
-        if (enable)
-        {
-            playerController.Input.Player.Enable();
-        }
-        else
-        {
-            playerController.Input.Player.Disable();
-        }
-
         _enableMovementEvent.canMove = enable;
         EventController.TriggerEvent(_enableMovementEvent);
+    }
+
+    private void CompleteQuest(int index)
+    {
+        sessionData.listQuest[index].currentStep = sessionData.listQuest[index].data.steps;
     }
 
     #region Events
@@ -276,14 +269,12 @@ public class GlobalController : MonoBehaviour
     {
         if (evt.enable)
         {
-            _currentNPC = evt.data;
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
         }
         else
         {
-            _currentNPC = null;
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
-            ChangeInput(true);
+            EnableMovement(true);
         }
     }
 
@@ -291,13 +282,113 @@ public class GlobalController : MonoBehaviour
     {
         if (!evt.isStart)return;
 
-        ChangeInput(false);
+        EnableMovement(false);
     }
 
     private void OnChangeInput(ChangeInputEvent evt)
     {
-        ChangeInput(evt.enable);
+        EnableMovement(evt.enable);
     }
+
+    private void OnCutscene(CutsceneEvent evt)
+    {
+        playableDirector.playableAsset = evt.cutscene;
+        playableDirector.Play();
+    }
+
+    private void OnSession(SessionEvent evt)
+    {
+        if (gameData == null)
+        {
+            Debug.LogError($"<color=red><b>[ERROR]</b></color> GameData NULL");
+            return;
+        }
+
+        switch (evt.option)
+        {
+            case SESSION_OPTION.Save:
+                gameData.SaveSession(sessionData);
+                break;
+
+            case SESSION_OPTION.Load:
+                sessionData = gameData.LoadSession();
+                break;
+
+            case SESSION_OPTION.Delete:
+                gameData.DeleteAll();
+                break;
+        }
+    }
+
+    private void OnQuest(QuestEvent evt)
+    {
+        switch (evt.state)
+        {
+            case QUEST_STATE.New:
+                for (int i = 0; i < sessionData.listQuest.Count; i++)
+                {
+                    if (sessionData.listQuest[i].data = evt.data)return;
+                }
+
+                Quest newQuest = new Quest();
+                newQuest.data = evt.data;
+                newQuest.currentStep = 0;
+
+                sessionData.listQuest.Add(newQuest);
+
+                gameData.SaveSession(sessionData);
+                return;
+
+            case QUEST_STATE.Update:
+                for (int i = 0; i < sessionData.listQuest.Count; i++)
+                {
+                    if (sessionData.listQuest[i].data = evt.data)
+                    {
+                        sessionData.listQuest[i].currentStep++;
+
+                        if (sessionData.listQuest[i].currentStep >= evt.data.steps)CompleteQuest(i);
+
+                        return;
+                    }
+                }
+                return;
+
+            case QUEST_STATE.Complete:
+                for (int i = 0; i < sessionData.listQuest.Count; i++)
+                {
+                    if (sessionData.listQuest[i].data = evt.data)
+                    {
+                        CompleteQuest(i);
+                        return;
+                    }
+                }
+                return;
+        }
+
+        Debug.LogError($"<color=red><b>[ERROR]</b></color> OnQuest fail! Quest: {evt.data.name}, State: {evt.state}");
+    }
+
+    #endregion
+
+    #region  Editor
+
+#if UNITY_EDITOR
+
+    public void EditorSave()
+    {
+        SessionEvent sessionEvent = new SessionEvent();
+        sessionEvent.option = SESSION_OPTION.Save;
+        EventController.TriggerEvent(sessionEvent);
+    }
+
+    public void EditorLoad()
+    {
+        SessionEvent sessionEvent = new SessionEvent();
+        sessionEvent.option = SESSION_OPTION.Load;
+        EventController.TriggerEvent(sessionEvent);
+    }
+
+#endif
 
     #endregion
 

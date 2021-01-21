@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
+using Events;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class LocalizationUtility : MonoBehaviour
 {
-    [SerializeField, ReadOnly] private string _language = "en";
+    [SerializeField, ReadOnly] private string _language = "";
     public string Language { get { return _language; } }
-    [Space]
-    [SerializeField] private UnityEvent OnUpdateLanguage = null;
-    
 
     private AsyncOperationHandle m_InitializeOperation;
     private List<Locale> _listLocales;
     private int _index;
 
+    private UpdateLanguageEvent _updateLanguageEvent;
+
     private void Start()
     {
+        _updateLanguageEvent = new UpdateLanguageEvent();
+
         m_InitializeOperation = LocalizationSettings.SelectedLocaleAsync;
 
         if (m_InitializeOperation.IsDone)
@@ -45,12 +46,11 @@ public class LocalizationUtility : MonoBehaviour
     {
         LocalizationSettings.SelectedLocale = locale;
 
-        // _language = locale.name;
         _language = locale.Identifier.Code;
 
-        // Debug.Log($"Update Locale: {locale.name} [{locale.Identifier.Code}]");
-
-        OnUpdateLanguage.Invoke();
+        _updateLanguageEvent.language = _language;
+        _updateLanguageEvent.locale = locale;
+        EventController.TriggerEvent(_updateLanguageEvent);
     }
 
     public void SelectNextLanguage(bool isNext)

@@ -13,7 +13,7 @@ Material:
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ALPHATEST_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 1
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -58,7 +58,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Boolean_9528281E: 0
+    - Vector1_7382D406: -1.5
+    - Vector1_87133D74: 1
     - Vector1_A2EF1BC6: 0.483
+    - Vector1_F17E83DC: -0.4
     - Vector1_F5E91C4C: 12.5
     - _AlphaClip: 1
     - _Blend: 0
@@ -75,6 +78,7 @@ Material:
     - _OcclusionStrength: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Rotation: 0
     - _Shininess: 0
     - _Smoothness: 0.5
     - _SmoothnessSource: 0
@@ -86,10 +90,12 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
+    - Color_2186B00E: {r: 0, g: 0, b: 0, a: 0}
     - Vector3_D2E421A4: {r: 1, g: 0, b: 0, a: 0}
     - Vector3_EB4A25D: {r: 1, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _Emission: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999987, g: 0.19999987, b: 0.19999987, a: 0.5}
 --- !u!114 &7706954962473244541

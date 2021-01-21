@@ -17,6 +17,14 @@ public enum COMBAT_STATE
     Wait = 4
 }
 
+public enum MOVEMENT_STATE
+{
+    Walk = 0,
+    Run = 1,
+    Crouch = 2,
+    Jump = 3,
+}
+
 public enum EMOTION
 {
     None = 0,
@@ -26,6 +34,14 @@ public enum EMOTION
     Surprise = 4,
     Curious = 5,
     Sleep = 6
+}
+
+public enum DIRECTION
+{
+    UP = 0,
+    DOWN = 1,
+    LEFT = 2,
+    RIGHT = 3
 }
 
 // public enum TIER
@@ -85,14 +101,6 @@ public enum MENU_TYPE
     Back = 6,
     Exit = 7,
     YesPopup = 8,
-}
-
-public enum QUEST_STATE
-{
-    None = 0,
-    Ready = 1,
-    InProgress = 2,
-    Completed = 3
 }
 
 public enum DIALOG_TYPE

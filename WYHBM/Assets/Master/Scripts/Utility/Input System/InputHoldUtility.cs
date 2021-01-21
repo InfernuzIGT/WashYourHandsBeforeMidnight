@@ -3,54 +3,91 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class InputHoldUtility : MonoBehaviour
+[RequireComponent(typeof(CanvasGroupUtility))]
+public class InputHoldUtility : MonoBehaviour, IHoldeable
 {
-    [Header("General")]
-    [SerializeField] private float duration = 5;
-    [SerializeField] private Image image = null;
+    [Header("Hold System")]
+    [SerializeField, Range(0f, 10f)] private float _duration = 3;
+    [SerializeField] private Ease _easeAnimation = Ease.Linear;
 
-    [Header("Events")]
-    [SerializeField] private UnityEvent OnStarted = null;
-    [SerializeField] private UnityEvent OnFinish = null;
-    [SerializeField] private UnityEvent OnCanceled = null;
+    [Header("References")]
+    [SerializeField] private bool ShowReferences = true;
+    [SerializeField, ConditionalHide] private HoldIconSO _iconData = null;
+    [SerializeField, ConditionalHide] private Image _iconImg = null;
+    [SerializeField, ConditionalHide] private Image _fillImg = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasGroupUtility = null;
 
-    private bool _success;
     private Tween _fillAnimation;
+    private Tween _fillColor;
 
-    public void StartHold()
+    // Properties
+    private UnityEvent _onStarted = new UnityEvent();
+    public UnityEvent OnStarted { get { return _onStarted; } }
+
+    private UnityEvent _onCanceled = new UnityEvent();
+    public UnityEvent OnCanceled { get { return _onCanceled; } }
+
+    private UnityEvent _onFinished = new UnityEvent();
+    public UnityEvent OnFinished { get { return _onFinished; } }
+
+    public float Duration { get { return _duration; } set { _duration = value; } }
+
+    private void Start()
     {
-        OnStarted.Invoke();
+        _iconData.SetIconStart(ref _iconImg);
 
-        _success = false;
+        _canvasGroupUtility.SetCanvasCamera();
+        _canvasGroupUtility.ShowInstant(false);
+    }
+    public void OnStart()
+    {
+        _iconData.SetIconStart(ref _iconImg);
 
-        _fillAnimation = image
-            .DOFillAmount(1, duration)
-            .OnComplete(() => Finish(true));
+        _canvasGroupUtility.ShowInstant(true);
+        
+        _fillImg.fillAmount = 0;
+        _fillImg.color = _iconData.colorStart;
+
+        _onStarted.Invoke();
+
+        _fillAnimation = _fillImg
+            .DOFillAmount(1, _duration)
+            .SetEase(_easeAnimation)
+            .OnComplete(() => OnFinish());
+
+        _fillColor = _fillImg
+            .DOColor(_iconData.colorFinish, _duration)
+            .SetEase(_easeAnimation);
     }
 
-    public void StopHold()
+    public void OnCancel()
     {
+        _iconData.SetIconCancel(ref _iconImg);
+
+        _canvasGroupUtility.Show(false);
+
         _fillAnimation.Kill();
+        _fillColor.Kill();
 
-        Finish(false);
+        _fillImg.fillAmount = 0;
+        _fillImg.color = _iconData.colorStart;
+
+        _onCanceled.Invoke();
     }
 
-    private void Finish(bool success)
+    public void OnFinish()
     {
-        if (_success)return;
+        _iconData.SetIconFinish(ref _iconImg);
 
-        _success = success;
+        _canvasGroupUtility.Show(false, 1f);
 
-        if (_success)
-        {
-            OnFinish.Invoke();
-            image.fillAmount = 1;
-        }
-        else
-        {
-            OnCanceled.Invoke();
-            image.fillAmount = 0;
-        }
+        _fillAnimation.Kill();
+        _fillColor.Kill();
+
+        _fillImg.fillAmount = 1;
+        _fillImg.color = _iconData.colorFinish;
+
+        _onFinished.Invoke();
     }
 
 }

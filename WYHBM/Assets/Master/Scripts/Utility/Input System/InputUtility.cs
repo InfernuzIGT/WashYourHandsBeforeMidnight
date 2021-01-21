@@ -91,6 +91,11 @@ public static class InputUtility
         PrintStartDevice(DEVICE.PC);
         return DEVICE.PC;
     }
+    
+    public static Gamepad GetCurrentGamepad()
+    {
+        return Gamepad.current;
+    }
 
     public static DEVICE GetCurrentDevice()
     {
@@ -182,19 +187,11 @@ public static class InputUtility
         return DEVICE.PC;
     }
 
-    public static void DeviceRebind(DEVICE device, InputActions inputAction)
+    public static void DeviceRebind(DEVICE device, CustomInputAction inputAction)
     {
         inputAction.bindingMask = InputBinding.MaskByGroup(device.ToString());
     }
-
-    public static void DeviceRebind(DEVICE device, params InputActions[] inputActions)
-    {
-        for (int i = 0; i < inputActions.Length; i++)
-        {
-            inputActions[i].bindingMask = InputBinding.MaskByGroup(device.ToString());
-        }
-    }
-
+    
     private static void PrintStartDevice(DEVICE device, InputDevice data = null, string description = null)
     {
 

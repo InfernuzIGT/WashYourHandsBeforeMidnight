@@ -36,8 +36,21 @@ public class DeviceUtility : MonoBehaviour
         }
 
         _deviceEvent = new DeviceChangeEvent();
+        _deviceEvent.showPopup = false;
         _deviceEvent.device = _currentDevice;
+        _deviceEvent.gamepad = InputUtility.GetCurrentGamepad();
         EventController.TriggerEvent(_deviceEvent);
+        
+        // InputSystem.onActionChange += (obj, change) =>
+        // {
+        //     if (change == InputActionChange.ActionStarted)
+        //     {
+        //         var inputAction = (InputAction)obj;
+        //         var lastDevice = inputAction.activeControl.device;
+
+        //         Debug.Log($"Device: {lastDevice.displayName}");
+        //     }
+        // };
 
         InputSystem.onDeviceChange +=
             (device, change) =>
@@ -104,9 +117,12 @@ public class DeviceUtility : MonoBehaviour
                         break;
                 }
 
+                _deviceEvent.showPopup = true;
                 _deviceEvent.device = _currentDevice;
+                _deviceEvent.gamepad = InputUtility.GetCurrentGamepad();
                 EventController.TriggerEvent(_deviceEvent);
 
             };
+
     }
 }

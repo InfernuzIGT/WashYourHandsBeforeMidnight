@@ -4,28 +4,19 @@ public abstract class AnimationCommand
 {
     // General
     protected readonly int hash_IsAlive = Animator.StringToHash("isAlive"); // Bool
-    protected readonly int hash_IsRunning = Animator.StringToHash("isRunning"); // Bool
+    protected readonly int hash_MovementType = Animator.StringToHash("movementType"); // Int
+    protected readonly int hash_IsWalking = Animator.StringToHash("isWalking"); // Bool
     protected readonly int hash_IsGrounded = Animator.StringToHash("isGrounded"); // Bool
-    protected readonly int hash_ModeCombat = Animator.StringToHash("modeCombat"); // Bool
-    protected readonly int hash_ValueY = Animator.StringToHash("valueY"); // Float
+    protected readonly int hash_isFalling = Animator.StringToHash("isFalling"); // Bool
     protected readonly int hash_ValueX = Animator.StringToHash("valueX"); // Float
-    protected readonly int hash_valueZ = Animator.StringToHash("valueZ"); // Float
+    protected readonly int hash_ValueY = Animator.StringToHash("valueY"); // Float
+    protected readonly int hash_ValueZ = Animator.StringToHash("valueZ"); // Float
+    protected readonly int hash_ClimbType = Animator.StringToHash("climbType"); // Int
 
     // Combat
     protected readonly int hash_ActionType = Animator.StringToHash("actionType"); // Int
 
-    // Interaction
-    protected readonly int hash_InteractionBool = Animator.StringToHash("interactionBool"); // Bool
-    protected readonly int hash_InteractionTrigger = Animator.StringToHash("interactionTrigger"); // Trigger
-
-    // Door
-    protected readonly int hash_DoorIsOpening = Animator.StringToHash("isOpening"); // Bool
-    protected readonly int hash_DoorIsRunning = Animator.StringToHash("isRunning"); // Bool
-    protected readonly int hash_DoorIsLocked = Animator.StringToHash("isLocked"); // Trigger
-
     // Systems
-    protected readonly int hash_isFalling = Animator.StringToHash("isFalling"); // Bool
-    protected readonly int hash_CanZipline = Animator.StringToHash("canZipline"); // Bool
     protected readonly int hash_CanClimbLedge = Animator.StringToHash("canClimbLedge"); // Bool
     protected readonly int hash_CanClimbLadder = Animator.StringToHash("canClimbLadder"); // Bool
 
@@ -71,11 +62,19 @@ public class AnimIsAlive : AnimationCommandBool
     }
 }
 
-public class AnimIsRunning : AnimationCommandBool
+public class AnimMovementType : AnimationCommandInt
+{
+    public override void Execute(Animator anim, int value)
+    {
+        anim.SetInteger(hash_MovementType, value);
+    }
+}
+
+public class AnimIsWalking : AnimationCommandBool
 {
     public override void Execute(Animator anim, bool value)
     {
-        anim.SetBool(hash_IsRunning, value);
+        anim.SetBool(hash_IsWalking, value);
     }
 }
 
@@ -87,11 +86,11 @@ public class AnimIsGrounded : AnimationCommandBool
     }
 }
 
-public class AnimModeCombat : AnimationCommandBool
+public class AnimIsFalling : AnimationCommandBool
 {
     public override void Execute(Animator anim, bool value)
     {
-        anim.SetBool(hash_ModeCombat, value);
+        anim.SetBool(hash_isFalling, value);
     }
 }
 
@@ -115,7 +114,15 @@ public class AnimValueZ : AnimationCommandFloat
 {
     public override void Execute(Animator anim, float value)
     {
-        anim.SetFloat(hash_valueZ, value);
+        anim.SetFloat(hash_ValueZ, value);
+    }
+}
+
+public class AnimClimbType : AnimationCommandInt
+{
+    public override void Execute(Animator anim, int value)
+    {
+        anim.SetInteger(hash_ClimbType, value);
     }
 }
 
@@ -133,63 +140,8 @@ public class AnimActionType : AnimationCommandInt
 
 #endregion
 
-#region Interaction
+#region Systems
 
-public class AnimInteractionBool : AnimationCommandBool
-{
-    public override void Execute(Animator anim, bool value)
-    {
-        anim.SetBool(hash_InteractionBool, value);
-    }
-}
-
-public class AnimInteractionTrigger : AnimationCommandTrigger
-{
-    public override void Execute(Animator anim)
-    {
-        anim.SetTrigger(hash_InteractionTrigger);
-    }
-}
-
-#endregion
-
-#region Door
-
-public class AnimDoorIsOpening : AnimationCommandBool
-{
-    public override void Execute(Animator anim, bool value)
-    {
-        anim.SetBool(hash_DoorIsOpening, value);
-    }
-}
-
-public class AnimDoorIsRunning : AnimationCommandBool
-{
-    public override void Execute(Animator anim, bool value)
-    {
-        anim.SetBool(hash_DoorIsRunning, value);
-    }
-}
-
-public class AnimDoorIsLocked : AnimationCommandTrigger
-{
-    public override void Execute(Animator anim)
-    {
-        anim.SetTrigger(hash_DoorIsLocked);
-    }
-}
-
-#endregion
-
-#region  Systems
-
-public class AnimCanZipline : AnimationCommandBool
-{
-    public override void Execute(Animator anim, bool value)
-    {
-        anim.SetBool(hash_CanZipline, value);
-    }
-}
 public class AnimCanClimbLedge : AnimationCommandBool
 {
     public override void Execute(Animator anim, bool value)
@@ -206,11 +158,4 @@ public class AnimCanClimbLadder : AnimationCommandBool
     }
 }
 
-public class AnimFall : AnimationCommandBool
-{
-    public override void Execute(Animator anim, bool value)
-    {
-        anim.SetBool(hash_isFalling, value);
-    }
-}
 #endregion

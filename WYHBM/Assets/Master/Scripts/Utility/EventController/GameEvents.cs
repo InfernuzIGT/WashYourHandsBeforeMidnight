@@ -1,5 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using UnityEngine.Playables;
 
 namespace Events
@@ -12,14 +14,15 @@ namespace Events
     {
         public bool isStart;
         public Vector3 lastPlayerPosition;
-        public bool isRunning;
     }
 
     public class EnableDialogEvent : GameEvent
     {
-        public NPCController npc;
-        public NPCSO data;
         public bool enable;
+        public NPCController npc;
+        public TextAsset dialogue;
+        public IDialogueable dialogueable;
+        public PlayerSO playerData;
     }
 
     public class EnableMovementEvent : GameEvent
@@ -30,11 +33,6 @@ namespace Events
     public class LadderEvent : GameEvent
     {
         public LADDER_EXIT ladderExit;
-    }
-
-    public class ChangePlayerPositionEvent : GameEvent
-    {
-        public Vector3 newPosition;
     }
 
     public class EnterCombatEvent : GameEvent
@@ -54,18 +52,48 @@ namespace Events
 
     public class FadeEvent : GameEvent
     {
-        public bool fadeFast;
+        public bool instant;
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
     }
 
+    public class CustomFadeEvent : GameEvent
+    {
+        public bool instant;
+        public bool fadeIn;
+        public TweenCallback callbackFadeIn;
+    }
+
     public class CutsceneEvent : GameEvent
     {
-        public bool isTriggered;
         public PlayableAsset cutscene;
+        public bool show;
+        public PlayerSO playerData;
+    }
 
-        public int index;
+    public class ChangeSceneEvent : GameEvent
+    {
+        public bool load;
+        public SceneSO sceneData;
+        public Vector3 newPlayerPosition;
+        public bool instantFade;
+    }
+
+    public class ChangePositionEvent : GameEvent
+    {
+        public Vector3 newPosition;
+    }
+
+    public class SessionEvent : GameEvent
+    {
+        public SESSION_OPTION option;
+    }
+
+    public class QuestEvent : GameEvent
+    {
+        public QuestSO data;
+        public QUEST_STATE state;
     }
 
     public class MainMenuEvent : GameEvent
@@ -75,9 +103,11 @@ namespace Events
 
     public class DeviceChangeEvent : GameEvent
     {
+        public bool showPopup;
         public DEVICE device;
+        public Gamepad gamepad;
     }
-    
+
     public class PauseEvent : GameEvent
     {
         public PAUSE_TYPE pauseType;
@@ -89,21 +119,31 @@ namespace Events
         public Vector2 position;
         public Color color;
     }
-    
+
     public class EventSystemEvent : GameEvent
     {
         public GameObject objectSelected;
     }
-    
+
+    public class UpdateLanguageEvent : GameEvent
+    {
+        public string language;
+        public Locale locale;
+    }
+
     public class ChangeInputEvent : GameEvent
     {
         public bool enable;
     }
     
+    public class CurrentInteractEvent : GameEvent
+    {
+        public Interaction currentInteraction;
+    }
+
     public class ShowInteractionHintEvent : GameEvent
     {
         public bool show;
     }
-
 
 }

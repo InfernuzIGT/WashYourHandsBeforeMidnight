@@ -13,6 +13,8 @@ public class DebugInteraction : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider>();
     }
 
+#if UNITY_EDITOR
+
     private void OnDrawGizmosSelected()
     {
         if (showDebug)
@@ -21,4 +23,6 @@ public class DebugInteraction : MonoBehaviour
             Gizmos.DrawCube(_boxCollider.center + transform.position, _boxCollider.size);
         }
     }
+
+#endif
 }

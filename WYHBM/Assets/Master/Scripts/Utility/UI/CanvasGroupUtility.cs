@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
 public class CanvasGroupUtility : MonoBehaviour
@@ -14,17 +15,20 @@ public class CanvasGroupUtility : MonoBehaviour
     private bool _isShowing;
     private Canvas _canvas;
     private CanvasGroup _canvasGroup;
+    private LayoutElement _layoutElement;
 
     private void Awake()
     {
         _canvas = GetComponent<Canvas>();
         _canvasGroup = GetComponent<CanvasGroup>();
+        _layoutElement = GetComponent<LayoutElement>();
+
         _isShowing = _canvasGroup.alpha == 1 ? true : false;
 
         SetProperties(true);
     }
 
-    public void Show(bool isShowing)
+    public void Show(bool isShowing, float delay = 0)
     {
         _isShowing = isShowing;
 
@@ -32,22 +36,17 @@ public class CanvasGroupUtility : MonoBehaviour
         {
             _canvasGroup
                 .DOFade(1, fadeDuration)
+                .SetDelay(delay)
                 .OnComplete(() => CallEvent(true));
 
-
-            // _canvasGroup
-            //     .DOFade(1, fadeDuration)
-            //     .OnComplete(() => SetProperties(true));
-            
             SetCanvas(true);
         }
         else
         {
             _canvasGroup
                 .DOFade(0, fadeDuration)
+                .SetDelay(delay)
                 .OnComplete(() => SetCanvas(false));
-
-            // SetProperties(false);
         }
     }
 
@@ -55,13 +54,25 @@ public class CanvasGroupUtility : MonoBehaviour
     {
         _isShowing = isShowing;
 
+        if (_isShowing)
+        {
+            _canvasGroup.alpha = 1;
+            CallEvent(true);
+        }
+        else
+        {
+            _canvasGroup.alpha = 0;
+        }
+
         SetCanvas(isShowing);
-        // SetProperties(isShowing);
     }
 
     private void SetCanvas(bool isEnabled)
     {
         _canvas.enabled = isEnabled;
+        _canvasGroup.interactable = isEnabled;
+
+        if (_layoutElement != null)_layoutElement.ignoreLayout = !isEnabled;
 
         if (!isEnabled)CallEvent(false);
     }
@@ -82,6 +93,11 @@ public class CanvasGroupUtility : MonoBehaviour
         {
             OnHide.Invoke();
         }
+    }
+
+    public void SetCanvasCamera()
+    {
+        _canvas.worldCamera = Camera.main;
     }
 
 }
