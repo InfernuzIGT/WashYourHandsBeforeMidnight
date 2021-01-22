@@ -199,6 +199,9 @@ public class GlobalController : MonoBehaviour
         }
 
         _fovCurrentTime = _fovIsActive ? worldConfig.fovTime : 0;
+
+        materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
+        materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
     }
 
     private void SetValuesListenMode()
@@ -215,7 +218,7 @@ public class GlobalController : MonoBehaviour
         playerCamera.SetFOV(Mathf.Lerp(40, 45, (_fovCurrentTime / worldConfig.fovTime)));
 
         materialFOV.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.35f, (_fovCurrentTime / worldConfig.fovTime)));
-        materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.15f, (_fovCurrentTime / worldConfig.fovTime)));
+        materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 1f, (_fovCurrentTime / worldConfig.fovTime)));
     }
 
     private void CheckCamera()
