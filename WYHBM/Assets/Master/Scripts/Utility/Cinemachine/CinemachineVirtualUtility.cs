@@ -11,17 +11,16 @@ public class CinemachineVirtualUtility : MonoBehaviour
     [Range(0, 100), SerializeField] private float _lookSpeed = 30f;
     [Range(0, 10), SerializeField] private float _limit = 5f;
     [Space]
-    [SerializeField] private int _startIndexZoom = 2;
-    [Range(0, 10), SerializeField] private float _zoomSpeedY = 2f;
+    [ReadOnly, SerializeField] private int _startIndexZoom = 1;
 
     private CinemachineVirtualCamera _cinemachineVirtual;
     private CinemachineFramingTransposer _cinemachineFramingTransposer;
 
     private Vector2 _lookVector;
-    private Vector2 _zoomVector;
-    // private bool _invertY;
+    private Vector2 _mouseVector;
     private PlayerController _player;
     private DEVICE _currentDevice;
+    private Camera _camera;
 
     private float _originalX;
     private float _originalZ;
@@ -50,17 +49,15 @@ public class CinemachineVirtualUtility : MonoBehaviour
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
     }
 
-    public void Init(PlayerController target, InputSystemUIInputModule InputUIModule)
+    public void Init(PlayerController target, Camera camera, InputSystemUIInputModule InputUIModule)
     {
         _player = target;
+        _camera = camera;
 
         _player.Input.Player.Look.performed += ctx => _lookVector = ctx.ReadValue<Vector2>();
         InputUIModule.point.action.performed += ctx => _lookVector = ctx.ReadValue<Vector2>();
 
-        _player.Input.Player.Zoom.performed += ctx => _zoomVector = ctx.ReadValue<Vector2>().normalized;
-        InputUIModule.scrollWheel.action.performed += ctx => _zoomVector = ctx.ReadValue<Vector2>().normalized;
-
-        _player.Input.Player.ResetCamera.performed += ctx => ChangeZoom();
+        _player.Input.Player.Zoom.performed += ctx => ChangeZoom();
         InputUIModule.middleClick.action.performed += ctx => ChangeZoom();
 
         _cinemachineVirtual.m_Follow = _player.transform;
@@ -71,27 +68,24 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
     private void Update()
     {
-        if (_isFade)return;
+        if (_isFade)
+        {
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX + _lookVector.x * _lookSpeed * Time.deltaTime;
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ + _lookVector.y * _lookSpeed * Time.deltaTime;
+            return;
+        }
 
         if (_currentDevice != DEVICE.PC)
         {
-            // TODO Mariano: Add Invert option
-
-            UpdateValueX();
-            UpdateValueZ();
+            UpdateValuesGamepad();
         }
         else
         {
-            // TODO Mariano: Add PC Input
-            // _cinemachineVirtual.m_RecenterToTargetHeading.m_enabled = false;
-
-            // _zoomVector.y = _invertY ? -_zoomVector.y : _zoomVector.y;
-
-            // _cinemachineVirtual.m_YAxis.Value += _zoomVector.y * _zoomSpeedY * Time.deltaTime;
+            UpdateValuesMouse();
         }
     }
 
-    private void UpdateValueX()
+    private void UpdateValuesGamepad()
     {
         if (_lookVector.x > _playerConfig.stickDeadZone)
         {
@@ -107,10 +101,6 @@ public class CinemachineVirtualUtility : MonoBehaviour
             _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX + _lookVector.x * _lookSpeed * Time.deltaTime;
         }
 
-    }
-
-    private void UpdateValueZ()
-    {
         if (_lookVector.y > _playerConfig.stickDeadZone)
         {
             _cinemachineFramingTransposer.m_TrackedObjectOffset.z = Mathf.Lerp(_originalZ, _originalZ + _limit, _lookVector.y);
@@ -122,6 +112,30 @@ public class CinemachineVirtualUtility : MonoBehaviour
         else
         {
             _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ + _lookVector.y * _lookSpeed * Time.deltaTime;
+        }
+    }
+
+    private void UpdateValuesMouse()
+    {
+        _mouseVector = _camera.ScreenToViewportPoint(_lookVector);
+        _mouseVector -= _playerConfig.mouseOffset;
+
+        if (_mouseVector.x > 0)
+        {
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.x = Mathf.Lerp(_originalX, _originalX + _limit, _mouseVector.x);
+        }
+        else if (_mouseVector.x < 0)
+        {
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.x = Mathf.Lerp(_originalX, _originalX - _limit, Mathf.Abs(_mouseVector.x));
+        }
+
+        if (_mouseVector.y > 0)
+        {
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.z = Mathf.Lerp(_originalZ, _originalZ + _limit, _mouseVector.y);
+        }
+        else if (_mouseVector.y < 0)
+        {
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.z = Mathf.Lerp(_originalZ, _originalZ - _limit, Mathf.Abs(_mouseVector.y));
         }
     }
 

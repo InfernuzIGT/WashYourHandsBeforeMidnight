@@ -21,16 +21,16 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": ""Look"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""4f5254e5-949c-4ff4-b7d7-b1ee28cdb2dc"",
+                    ""id"": ""850be69b-ce51-4d14-b9e6-ac7dc81e61bd"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
                     ""name"": ""Zoom"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""1ef7928e-52fa-4265-8873-372080fa91ce"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""type"": ""Button"",
+                    ""id"": ""9377efe5-7dc2-4b98-828f-b930ce4e4e58"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
@@ -86,14 +86,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""name"": ""DebugMode"",
                     ""type"": ""Button"",
                     ""id"": ""68b6befc-e8bc-4370-9652-08060962ccd4"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Reset Camera"",
-                    ""type"": ""Button"",
-                    ""id"": ""9377efe5-7dc2-4b98-828f-b930ce4e4e58"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -434,50 +426,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d1298364-4bb6-492a-9d9d-151a806e247b"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4e423f2d-addf-4753-aacd-c9cb1d07c16f"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3156c280-359b-44b1-875f-dc0d8c25124a"",
-                    ""path"": ""<Mouse>/middleButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Reset Camera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0e9eef91-3204-4015-b4d7-a285bf58e54d"",
-                    ""path"": ""<Gamepad>/rightStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
-                    ""action"": ""Reset Camera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ea79e5bc-e06d-45d0-a6d0-2267e75f6e40"",
                     ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
@@ -577,8 +525,30 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a84a9973-8a74-4ed9-9e22-de6fef809087"",
-                    ""path"": ""<Mouse>/scroll"",
+                    ""id"": ""c4277961-7dca-4b9b-bf7f-4ae8dc53dd88"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f6863f6-2d3b-4d95-a410-e8f512a137a3"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3156c280-359b-44b1-875f-dc0d8c25124a"",
+                    ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
@@ -588,8 +558,8 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c5e0710c-30fd-40e1-a2ff-eb10cf6f5415"",
-                    ""path"": ""<Gamepad>/rightStick"",
+                    ""id"": ""0e9eef91-3204-4015-b4d7-a285bf58e54d"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Generic;PS4;XboxOne;Switch"",
@@ -613,9 +583,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Zoom"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""f24ba896-5a14-4d7a-a432-f63dd3b1d850"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""type"": ""Button"",
+                    ""id"": ""c15d5937-019c-4a45-851b-78ee81b317f1"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
@@ -941,30 +911,8 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e6b6b739-12c5-4b31-aed6-3d1b4aec5ac1"",
-                    ""path"": ""<Mouse>/scroll"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2371b8d2-ed71-4d03-9e5e-fd8ec09db006"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""6eda83e5-bb06-4e88-b2f0-d330f6dd89a1"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
@@ -980,6 +928,28 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Generic;PS4;XboxOne;Switch"",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a7db7095-70fe-4cd2-bcca-766e804a9a26"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ac43955c-7253-40f8-bad2-5350b78e4654"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1060,7 +1030,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Options = m_Player.FindAction("Options", throwIfNotFound: true);
         m_Player_DebugMode = m_Player.FindAction("DebugMode", throwIfNotFound: true);
-        m_Player_ResetCamera = m_Player.FindAction("Reset Camera", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_ListenMode = m_Player.FindAction("Listen Mode", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
@@ -1130,7 +1099,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Options;
     private readonly InputAction m_Player_DebugMode;
-    private readonly InputAction m_Player_ResetCamera;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_ListenMode;
     private readonly InputAction m_Player_Run;
@@ -1147,7 +1115,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Options => m_Wrapper.m_Player_Options;
         public InputAction @DebugMode => m_Wrapper.m_Player_DebugMode;
-        public InputAction @ResetCamera => m_Wrapper.m_Player_ResetCamera;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @ListenMode => m_Wrapper.m_Player_ListenMode;
         public InputAction @Run => m_Wrapper.m_Player_Run;
@@ -1187,9 +1154,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @DebugMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
                 @DebugMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
                 @DebugMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
-                @ResetCamera.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
-                @ResetCamera.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
-                @ResetCamera.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetCamera;
                 @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
@@ -1230,9 +1194,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @DebugMode.started += instance.OnDebugMode;
                 @DebugMode.performed += instance.OnDebugMode;
                 @DebugMode.canceled += instance.OnDebugMode;
-                @ResetCamera.started += instance.OnResetCamera;
-                @ResetCamera.performed += instance.OnResetCamera;
-                @ResetCamera.canceled += instance.OnResetCamera;
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
@@ -1375,7 +1336,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnOptions(InputAction.CallbackContext context);
         void OnDebugMode(InputAction.CallbackContext context);
-        void OnResetCamera(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnListenMode(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);

@@ -60,7 +60,7 @@ public class CinemachineFreeLookUtility : MonoBehaviour
         _player.Input.Player.Zoom.performed += ctx => _zoomVector = ctx.ReadValue<Vector2>().normalized;
         InputUIModule.scrollWheel.action.performed += ctx => _zoomVector = ctx.ReadValue<Vector2>().normalized;
 
-        _player.Input.Player.ResetCamera.performed += ctx => ResetCamera();
+        _player.Input.Player.Zoom.performed += ctx => ResetCamera();
         InputUIModule.middleClick.action.performed += ctx => ResetCamera();
 
         _cinemachineFreeLook.m_Follow = _player.transform;

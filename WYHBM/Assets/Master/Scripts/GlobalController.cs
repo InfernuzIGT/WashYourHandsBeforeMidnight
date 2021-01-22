@@ -222,7 +222,7 @@ public class GlobalController : MonoBehaviour
 
     private void CheckCamera()
     {
-        playerCamera.Init(playerController, eventSystemUtility.InputUIModule);
+        playerCamera.Init(playerController, mainCamera, eventSystemUtility.InputUIModule);
 
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(playerController.transform);
