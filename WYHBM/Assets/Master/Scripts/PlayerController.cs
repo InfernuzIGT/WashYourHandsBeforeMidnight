@@ -11,8 +11,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerConfig _playerConfig = null;
     // [SerializeField] private FMODConfig _fmodConfig = null;
 
-    [Header("Review")]
+    [Header("General")]
     [SerializeField, ReadOnly] private MOVEMENT_STATE _movementState = MOVEMENT_STATE.Walk;
+
+    [Header("Review")]
     public bool _inZipline = false;
     public Vector3 endPos;
     public bool ledgeDetected;
@@ -24,10 +26,12 @@ public class PlayerController : MonoBehaviour
     public StudioEventEmitter footstepSound;
     public StudioEventEmitter breathingSound;
 
-    // References
-    private CharacterController _characterController;
-    private WorldAnimator _animatorController;
-    private DeviceUtility _deviceUtility;
+    [Header("References")]
+    [SerializeField] private bool ShowReferences = true;
+    [SerializeField, ConditionalHide] private MeshRenderer _shadow;
+    [SerializeField, ConditionalHide] private CharacterController _characterController;
+    [SerializeField, ConditionalHide] private WorldAnimator _animatorController;
+    [SerializeField, ConditionalHide] private DeviceUtility _deviceUtility;
 
     // Events
     private InteractionEvent _interactionEvent;
@@ -84,16 +88,11 @@ public class PlayerController : MonoBehaviour
     public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
     public PlayerSO PlayerData { get { return _playerData; } }
 
-
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
     {
         CreateInput();
-
-        _characterController = GetComponent<CharacterController>();
-        _animatorController = GetComponent<WorldAnimator>();
-        _deviceUtility = GetComponent<DeviceUtility>();
     }
 
     private void CreateInput()
@@ -325,7 +324,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Crouch(bool cancel = false)
+    public void Crouch(bool cancel = false)
     {
         if (cancel)_isCrouching = true;
 
@@ -346,8 +345,6 @@ public class PlayerController : MonoBehaviour
             _characterController.center = Vector3.zero;
         }
     }
-
-   
 
     // private void Jump()
     // {
@@ -525,8 +522,12 @@ public class PlayerController : MonoBehaviour
     {
         if (!_canPlayFootstep)return;
 
-        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 2, _playerConfig.layerGround))
+        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 3, _playerConfig.layerGround))
         {
+            _shadow.enabled = true;
+
+            _shadow.transform.position = new Vector3(transform.position.x, _hit.point.y + 0.1f, transform.position.z - 1);
+
             switch (_hit.collider.gameObject.tag)
             {
                 case Tags.Ground_Grass:
@@ -553,6 +554,10 @@ public class PlayerController : MonoBehaviour
                     footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
                     break;
             }
+        }
+        else
+        {
+            _shadow.enabled = false;
         }
 
         footstepSound.Play();
