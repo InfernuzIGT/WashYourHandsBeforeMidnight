@@ -39,7 +39,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""a6308b3b-88f0-4626-9ab6-dfaaa9a15719"",
                     ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
+                    ""processors"": ""AxisDeadzone(min=0.05,max=0.95)"",
                     ""interactions"": """"
                 },
                 {

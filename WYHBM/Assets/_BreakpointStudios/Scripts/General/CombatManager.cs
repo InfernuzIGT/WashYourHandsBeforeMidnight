@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
+    public GameObject placeholder;
+
     [SerializeField] private WorldConfig _worldConfig = null;
     [SerializeField] private CombatConfig _combatConfig = null;
 
@@ -74,7 +76,7 @@ public class CombatManager : MonoBehaviour
         int indexCombat = 0;
 
         _combatAreaContainer = Instantiate(
-            _worldConfig.emptyObject,
+            placeholder,
             combatArea.transform.position,
             combatArea.transform.rotation);
 
@@ -82,7 +84,7 @@ public class CombatManager : MonoBehaviour
         {
             Player player = Instantiate(
                 combatPlayers[i],
-                combatArea.playerPosition[i].position + _worldConfig.playerBaseOffset,
+                combatArea.playerPosition[i].position,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 
@@ -101,7 +103,7 @@ public class CombatManager : MonoBehaviour
         {
             Enemy enemy = Instantiate(
                 combatEnemies[i],
-                combatArea.enemyPosition[i].position + _worldConfig.playerBaseOffset,
+                combatArea.enemyPosition[i].position,
                 Quaternion.identity,
                 _combatAreaContainer.transform);
 

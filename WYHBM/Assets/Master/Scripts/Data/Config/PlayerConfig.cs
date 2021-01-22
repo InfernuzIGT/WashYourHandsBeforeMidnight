@@ -18,7 +18,9 @@ public class PlayerConfig : ScriptableObject
 
     [Header("Input System")]
     public float axisLimit = 0.7f;
-    public float axisLimitCrouch = 0.4f;
+    public float axisLimitCrouch = 0.5f;
+    public float stickDeadZone = 0.05f;
+    public float[] zoomValues;
 
     [Header("Layers")]
     public LayerMask layerGround;

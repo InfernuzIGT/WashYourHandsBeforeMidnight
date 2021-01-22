@@ -71,7 +71,7 @@ public class CinemachineFreeLookUtility : MonoBehaviour
     {
         if (_currentDevice != DEVICE.PC)
         {
-            // _cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled = Mathf.Abs(_lookVector.x) < 0.9f;
+            _cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled = Mathf.Abs(_lookVector.x) < 0.9f;
 
             _lookVector.y = _invertY ? -_lookVector.y : _lookVector.y;
 
@@ -86,7 +86,7 @@ public class CinemachineFreeLookUtility : MonoBehaviour
             _cinemachineFreeLook.m_YAxis.Value += _zoomVector.y * _zoomSpeedY * Time.deltaTime;
         }
 
-        // _cinemachineFreeLook.m_XAxis.Value += _lookVector.x * _lookSpeedX * Time.deltaTime;
+        _cinemachineFreeLook.m_XAxis.Value += _lookVector.x * _lookSpeedX * Time.deltaTime;
     }
 
     private void ResetCamera()

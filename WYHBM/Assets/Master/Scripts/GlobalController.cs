@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Cinemachine;
-using DG.Tweening;
 using Events;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -32,7 +31,7 @@ public class GlobalController : MonoBehaviour
     [SerializeField] private bool ShowReferences = true;
     [ConditionalHide] public WorldConfig worldConfig;
     [ConditionalHide] public Camera mainCamera;
-    [ConditionalHide] public CinemachineFreeLookUtility playerCamera;
+    [ConditionalHide] public CinemachineVirtualUtility playerCamera;
     [Space]
     [ConditionalHide] public GameData gameData;
     [ConditionalHide] public PlayerController playerController;
@@ -208,14 +207,14 @@ public class GlobalController : MonoBehaviour
     {
         _ppColorAdjustments.saturation.value = Mathf.Lerp(0, -50, (_fovCurrentTime / worldConfig.fovTime));
         _ppLensDistortion.intensity.value = Mathf.Lerp(0, 0.15f, (_fovCurrentTime / worldConfig.fovTime));
-        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(22.5f, 20, (_fovCurrentTime / worldConfig.fovTime));
-        _ppDepthOfField.gaussianEnd.value = Mathf.Lerp(60, 22.5f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(22.5f, 24, (_fovCurrentTime / worldConfig.fovTime));
+        _ppDepthOfField.gaussianEnd.value = Mathf.Lerp(60, 30f, (_fovCurrentTime / worldConfig.fovTime));
         _ppVignette.intensity.value = Mathf.Lerp(0.2f, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
         _ppVignette.smoothness.value = Mathf.Lerp(1, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
 
         _ppVignette.color.value = Color.Lerp(_colorVigneteInactive, _colorVigneteActive, (_fovCurrentTime / worldConfig.fovTime));
 
-        playerCamera.SetFOV(Mathf.Lerp(40, 45, (_fovCurrentTime / worldConfig.fovTime)));
+        playerCamera.SetFOV(Mathf.Lerp(40, 35, (_fovCurrentTime / worldConfig.fovTime)));
 
         materialFOV.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.35f, (_fovCurrentTime / worldConfig.fovTime)));
         materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 1f, (_fovCurrentTime / worldConfig.fovTime)));
