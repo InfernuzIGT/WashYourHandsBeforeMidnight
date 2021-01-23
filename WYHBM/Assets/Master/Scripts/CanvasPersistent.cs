@@ -4,28 +4,35 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Canvas))]
-public class Fade : MonoBehaviour
+public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 {
-    [Header("Fade")]
+    [Header("General")]
     [SerializeField] private WorldConfig _worldConfig = null;
-    [Space]
+
+    [Header("Fade")]
     [SerializeField] private Image _fadeImg = null;
     [SerializeField] private Image _letterboxTopImg = null;
     [SerializeField] private Image _letterboxBotImg = null;
 
+    [Header("Save")]
+    [SerializeField] private Image _saveImg = null;
+    [SerializeField] private Animator _animatorSave = null;
+
+    // Fade
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
     private bool _fadeInstant;
     private bool _show;
     private float _letterboxSize;
 
-    private Canvas _canvas;
-    private CanvasGroup _canvasGroup;
+    // Save
+    protected readonly int hash_IsSaving = Animator.StringToHash("isSaving");
 
-    private void Awake()
+    private Canvas _canvas;
+
+    private void Start()
     {
         _canvas = GetComponent<Canvas>();
-        _canvasGroup = GetComponent<CanvasGroup>();
 
         _letterboxSize = _letterboxTopImg.rectTransform.sizeDelta.y;
     }
@@ -33,6 +40,7 @@ public class Fade : MonoBehaviour
     private void OnEnable()
     {
         EventController.AddListener<FadeEvent>(OnFade);
+        EventController.AddListener<SaveAnimationEvent>(OnSaveAnimation);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
         EventController.AddListener<CustomFadeEvent>(OnCustomFade);
     }
@@ -40,6 +48,7 @@ public class Fade : MonoBehaviour
     private void OnDisable()
     {
         EventController.RemoveListener<FadeEvent>(OnFade);
+        EventController.RemoveListener<SaveAnimationEvent>(OnSaveAnimation);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
         EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
     }
@@ -113,6 +122,16 @@ public class Fade : MonoBehaviour
         if (_show)return;
 
         SetCanvas(false);
+    }
+
+    private void OnSaveAnimation(SaveAnimationEvent evt)
+    {
+        ShowSaveAnimation();
+    }
+    
+    public void ShowSaveAnimation()
+    {
+        _animatorSave.SetTrigger(hash_IsSaving);
     }
 
 }
