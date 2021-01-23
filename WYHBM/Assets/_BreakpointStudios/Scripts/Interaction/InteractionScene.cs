@@ -10,7 +10,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
     [SerializeField] private bool _instantFade = false;
 
     [SerializeField] private SceneSO sceneData = null;
-    [SerializeField] private InputHoldUtility _holdUtility;
+    [SerializeField] private InputHoldUtility _holdUtility = null;
 
     [Header("Debug")]
     [SerializeField] private bool _showDebug = false;

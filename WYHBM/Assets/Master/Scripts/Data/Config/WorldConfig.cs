@@ -15,5 +15,9 @@ public class WorldConfig : ScriptableObject
     public LayerMask layerFOVTarget;
     public LayerMask layerFOVObstacle;
     [Space]
+    public LayerMask layerGround;
+    public LayerMask layerClimbable;
+    public LayerMask layerNPC;
+    [Space]
     public LayerMask layerOcclusionMask;
 }

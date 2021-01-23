@@ -20,15 +20,14 @@ MonoBehaviour:
   speedCrouch: 2
   gravity: 39.24
   magnitudeFall: 5
+  soundRadiusRun: 25
+  soundRadiusJogging: 15
+  soundRadiusWalk: 5
+  soundRadiusCrouch: 1
   axisLimit: 0.7
   axisLimitCrouch: 0.5
   stickDeadZone: 0.05
+  mouseOffset: {x: 0.5, y: 0.5}
   zoomValues:
   - 3
   - 10
-  layerGround:
-    serializedVersion: 2
-    m_Bits: 65536
-  layerClimbable:
-    serializedVersion: 2
-    m_Bits: 4096
