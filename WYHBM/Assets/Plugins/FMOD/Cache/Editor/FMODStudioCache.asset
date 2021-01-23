@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: event:/NPC/Guardia herido/Sigh
   guid: c01a1c553de8954a971f7de9cdf15573
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -92,6 +92,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &-8412903028779593951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Menu Music/Credits
+  m_EditorClassIdentifier: 
+  Name: Credits
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &-8344295662513245364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +159,7 @@ MonoBehaviour:
   Path: event:/Victory
   guid: 7172659ce986d041808fc0e0e109d3aa
   Banks:
-  - {fileID: 2297792395988974722}
+  - {fileID: 7272094585114236980}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -168,6 +185,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &-8106458779249569872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Buttons/UI
+  m_EditorClassIdentifier: 
+  Name: UI
+  Min: 0
+  Max: 5
+  Default: 1
+  Exists: 1
 --- !u!114 &-7961976796481843858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,7 +303,7 @@ MonoBehaviour:
   Path: event:/NPC/Zombi 1 y 2/Zombi Attack
   guid: dfad171b2acad94a9697a35cdeeae5c6
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -346,6 +380,29 @@ MonoBehaviour:
   Max: 2
   Default: 0
   Exists: 0
+--- !u!114 &-6926680324778560198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Zombi 1 y 2/Zombi Death
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Zombi 1 y 2/Zombi Death
+  guid: d9c2fbb729acaf4fa052399adf51ba1c
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3552
 --- !u!114 &-6735194410662328023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,7 +418,7 @@ MonoBehaviour:
   Path: event:/Interactables/Doors/Close Door
   guid: c615a0508aa27e43ace0eb267a7e5792
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -422,6 +479,64 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &-6463060378657632439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Game Over
+  m_EditorClassIdentifier: 
+  Path: event:/Game Over
+  guid: dda16093b3805b4688b02fc99a987b66
+  Banks:
+  - {fileID: -6257395989729278164}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 9464
+--- !u!114 &-6284057152165128675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps/Ground Type
+  m_EditorClassIdentifier: 
+  Name: Ground Type
+  Min: 0
+  Max: 4
+  Default: 0
+  Exists: 1
+--- !u!114 &-6257395989729278164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Music.bank
+  SubDir: 
+  lastModified: 637307574077687091
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &-6204844118129377142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +606,29 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 0
+--- !u!114 &-5913621910997817597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Interactables/Doors/Door Locked
+  m_EditorClassIdentifier: 
+  Path: event:/Interactables/Doors/Door Locked
+  guid: 5c396e71851cdb4e8c7d4c24e56d58ae
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 45
+  Length: 646
 --- !u!114 &-5694041613154116402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,7 +661,7 @@ MonoBehaviour:
   Path: event:/Player/Combat/Sam Hurt
   guid: bb0592fde49482469caaa121ce90704c
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -531,6 +669,23 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 0
+--- !u!114 &-5664828016045217672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps/Sprint
+  m_EditorClassIdentifier: 
+  Name: Sprint
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 1
 --- !u!114 &-5618762019783319127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,6 +720,46 @@ MonoBehaviour:
   Max: 5
   Default: 1
   Exists: 0
+--- !u!114 &-5526085211487624289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: Map-Battle
+  m_EditorClassIdentifier: 
+  Name: Map-Battle
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 1
+--- !u!114 &-5523313485030196874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Stinger
+  m_EditorClassIdentifier: 
+  Path: event:/Stinger
+  guid: b9c955c4ba6d4545a704da0106c7eec6
+  Banks:
+  - {fileID: -6257395989729278164}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 2040
 --- !u!114 &-5479859177351121999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,7 +809,7 @@ MonoBehaviour:
   Path: event:/NPC/Bandido 1/Band1 Laugh
   guid: 3d1cf4db697a6e4095ac2bc4fcfff8ca
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -724,7 +919,7 @@ MonoBehaviour:
   Path: event:/Music
   guid: 1b88a88b83efc1409d7f787039417df0
   Banks:
-  - {fileID: 2297792395988974722}
+  - {fileID: 7272094585114236980}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -732,6 +927,24 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 252742
+--- !u!114 &-5040860767266971393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637318330307668864
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &-4924897446349547143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -764,7 +977,7 @@ MonoBehaviour:
   Path: event:/NPC/Zombi 1 y 2/Zombi Hit
   guid: 24664c1ba5a1344697fc75c98afb828e
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -789,6 +1002,26 @@ MonoBehaviour:
   Max: 1
   Default: 1
   Exists: 0
+--- !u!114 &-4651102704404799705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.strings.bank
+  SubDir: 
+  lastModified: 637318330307668864
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 2974
+  Exists: 1
 --- !u!114 &-4600435799619391416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -804,16 +1037,34 @@ MonoBehaviour:
   Path: event:/Player/Footsteps
   guid: 4afabe8f43643b4391f697127eae1c25
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: -1555026335626107033}
-  - {fileID: -2025645925168865910}
+  - {fileID: -5664828016045217672}
+  - {fileID: 9112225448915458937}
   MinDistance: 1
   MaxDistance: 60
   Length: 406
+--- !u!114 &-4486928189237427222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637318330307668864
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &-4463331317847167495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,6 +1100,29 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &-4299616520578863555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Bandido 2/Band2 Attack
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Bandido 2/Band2 Attack
+  guid: a8cf741386aa1047bffef2256057acb5
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 446
 --- !u!114 &-4219618501497133103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -918,6 +1192,29 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &-3831345626895812925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Bandido 1/Band1 Death
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Bandido 1/Band1 Death
+  guid: 2bf925b5de0d07408f1d675266f69b6d
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1300
 --- !u!114 &-3826037466622662846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -985,7 +1282,7 @@ MonoBehaviour:
   Path: event:/NPC/Bandido 1/Band1 Hurt
   guid: b3daa63f4ed1f04dbc77d85933fed1de
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1010,6 +1307,29 @@ MonoBehaviour:
   Max: 2
   Default: 0
   Exists: 1
+--- !u!114 &-3342385962090256341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Interactables/Doors/Close Door
+  m_EditorClassIdentifier: 
+  Path: event:/Interactables/Doors/Close Door
+  guid: c615a0508aa27e43ace0eb267a7e5792
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 45
+  Length: 1788
 --- !u!114 &-3216135838987419646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1024,12 +1344,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637318290575949192
+  lastModified: 637318330307668864
   LoadResult: 0
   FileSizes:
   - Name: Desktop
     Value: 2974
   Exists: 1
+--- !u!114 &-2877799680450718963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Guardia herido/Sigh
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Guardia herido/Sigh
+  guid: c01a1c553de8954a971f7de9cdf15573
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1724
 --- !u!114 &-2851596297516704162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1062,7 +1405,7 @@ MonoBehaviour:
   Path: event:/Player/Climbing
   guid: 5c5a21a1d9999749bf6902732e838910
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1104,6 +1447,29 @@ MonoBehaviour:
   Max: 2
   Default: 0
   Exists: 0
+--- !u!114 &-2626248277476111828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Bandido 2/Band2 Death
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Bandido 2/Band2 Death
+  guid: 3143419b8273d345bd13d390a2064ce8
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2580
 --- !u!114 &-2386153155456680500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1119,7 +1485,7 @@ MonoBehaviour:
   Path: event:/Player/Breathing
   guid: 2b9de84123590243a2d87d28538cc66d
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1193,7 +1559,7 @@ MonoBehaviour:
   Path: event:/Interactables/Doors/Open Door
   guid: b82b6badbfa00444b9372ef1e5f90037
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1339,6 +1705,30 @@ MonoBehaviour:
   Max: 4
   Default: 0
   Exists: 1
+--- !u!114 &-1921927490413291850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Buttons
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Buttons
+  guid: ecd8730645ac984bbb72f0f19ec95fd7
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -8106458779249569872}
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &-1769436178459022794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1395,6 +1785,29 @@ MonoBehaviour:
   Max: 5
   Default: 1
   Exists: 1
+--- !u!114 &-1655392850215051669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Combat/Sam Hurt
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Combat/Sam Hurt
+  guid: bb0592fde49482469caaa121ce90704c
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &-1634841817450259251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1427,7 +1840,7 @@ MonoBehaviour:
   Path: event:/Game Over
   guid: dda16093b3805b4688b02fc99a987b66
   Banks:
-  - {fileID: 2297792395988974722}
+  - {fileID: 7272094585114236980}
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
@@ -1450,12 +1863,12 @@ MonoBehaviour:
   Path: event:/UI/Buttons
   guid: ecd8730645ac984bbb72f0f19ec95fd7
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters:
-  - {fileID: -2851596297516704162}
+  - {fileID: 7426382285113074676}
   MinDistance: 0
   MaxDistance: 0
   Length: 0
@@ -1560,7 +1973,7 @@ MonoBehaviour:
   Path: event:/NPC/Zombi 1 y 2/Zombi Roam
   guid: 574eab92d4d99f468d96b24aa2fd174d
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1568,6 +1981,24 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2089
+--- !u!114 &-1077841617713634737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/SFX.bank
+  SubDir: 
+  lastModified: 637318330308925532
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &-1048204046836080007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1600,7 +2031,7 @@ MonoBehaviour:
   Path: event:/Interactables/Doors/Door Locked
   guid: 5c396e71851cdb4e8c7d4c24e56d58ae
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1643,6 +2074,31 @@ MonoBehaviour:
   Max: 4
   Default: 0
   Exists: 0
+--- !u!114 &-735467478871931578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Footsteps
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Footsteps
+  guid: 4afabe8f43643b4391f697127eae1c25
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4629694796585239828}
+  - {fileID: -6284057152165128675}
+  MinDistance: 1
+  MaxDistance: 60
+  Length: 406
 --- !u!114 &-557529542836028314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1779,7 +2235,7 @@ MonoBehaviour:
   Path: event:/NPC/Zombi 1 y 2/Zombi Hurt
   guid: c68e5b9728b407418bd6f5fa9719175d
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1802,15 +2258,32 @@ MonoBehaviour:
   Path: event:/Menu Music
   guid: 2c78dbcd21922a4faa80a2a0bdb6caa7
   Banks:
-  - {fileID: 2297792395988974722}
+  - {fileID: 7272094585114236980}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: -2744689267197432670}
+  - {fileID: -8412903028779593951}
   MinDistance: 0
   MaxDistance: 0
   Length: 237954
+--- !u!114 &-147143990444551183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: MusicSlider
+  m_EditorClassIdentifier: 
+  Name: MusicSlider
+  Min: 0
+  Max: 1
+  Default: 1
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1824,49 +2297,49 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: -3216135838987419646}
-  - {fileID: 8328401496409966451}
-  - {fileID: 2297792395988974722}
-  - {fileID: -8609591533469826875}
+  - {fileID: -4651102704404799705}
+  - {fileID: -5040860767266971393}
+  - {fileID: -6257395989729278164}
+  - {fileID: -1077841617713634737}
   EditorEvents:
-  - {fileID: -5045095234816484638}
-  - {fileID: -165407105335246772}
-  - {fileID: 5144380040900727393}
-  - {fileID: -8259686508274323100}
-  - {fileID: 863241329343577054}
-  - {fileID: -1580073884735188295}
-  - {fileID: -4746426098011388050}
-  - {fileID: -2386153155456680500}
-  - {fileID: 8675635082041290482}
-  - {fileID: 4459775537616707707}
-  - {fileID: -5347675393851655736}
-  - {fileID: -4600435799619391416}
-  - {fileID: -1098591367561455413}
-  - {fileID: -1043097202812964870}
-  - {fileID: 5960851298751621291}
-  - {fileID: 2768973230669938362}
-  - {fileID: 3941827839584028052}
-  - {fileID: 2703589626029385268}
-  - {fileID: -3612394785404956970}
-  - {fileID: -2291399838810161627}
-  - {fileID: -9065363357893666480}
-  - {fileID: -6735194410662328023}
-  - {fileID: -378260253299306472}
-  - {fileID: 2285624590982761921}
-  - {fileID: -7525329867221511764}
-  - {fileID: -1560451148592854097}
-  - {fileID: -2845761891350723787}
-  - {fileID: 5786353218625530781}
-  - {fileID: -5682574680958599942}
+  - {fileID: 7816891509764140995}
+  - {fileID: 7094118155549374348}
+  - {fileID: 1420792981175965499}
+  - {fileID: 1441074988471477365}
+  - {fileID: -5523313485030196874}
+  - {fileID: -6463060378657632439}
+  - {fileID: 1167731494230109578}
+  - {fileID: 1973607735386932870}
+  - {fileID: -3831345626895812925}
+  - {fileID: -2626248277476111828}
+  - {fileID: 9077120817544663572}
+  - {fileID: -735467478871931578}
+  - {fileID: 1160120253514558352}
+  - {fileID: -5913621910997817597}
+  - {fileID: 8420836430812765054}
+  - {fileID: 1154994090366176900}
+  - {fileID: 8564859157602923102}
+  - {fileID: 8660932386281082302}
+  - {fileID: -4299616520578863555}
+  - {fileID: 2527402205565512868}
+  - {fileID: 6639786560899278981}
+  - {fileID: -1655392850215051669}
+  - {fileID: -2877799680450718963}
+  - {fileID: -3342385962090256341}
+  - {fileID: 7336893019945770608}
+  - {fileID: -6926680324778560198}
+  - {fileID: 1922466284982908749}
+  - {fileID: -1921927490413291850}
+  - {fileID: 659817230941623961}
   EditorParameters:
-  - {fileID: -8344295662513245364}
-  - {fileID: -2295957471599146196}
-  - {fileID: 6385828587289620572}
+  - {fileID: 8957063585576300903}
+  - {fileID: 3266099095328195813}
+  - {fileID: -147143990444551183}
   MasterBanks:
-  - {fileID: 8328401496409966451}
+  - {fileID: -5040860767266971393}
   StringsBanks:
-  - {fileID: -3216135838987419646}
-  stringsBankWriteTime: 637318290575949192
+  - {fileID: -4651102704404799705}
+  stringsBankWriteTime: 637318330307668864
   cacheVersion: 3
 --- !u!114 &12452479048967617
 MonoBehaviour:
@@ -2005,6 +2478,29 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 1
+--- !u!114 &659817230941623961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Combat/Sam Attack Melee
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Combat/Sam Attack Melee
+  guid: fcf7fac8d6eeb949bd28c17edadabe78
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &722817361290344827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2038,7 +2534,7 @@ MonoBehaviour:
   Path: event:/Stinger
   guid: b9c955c4ba6d4545a704da0106c7eec6
   Banks:
-  - {fileID: 2297792395988974722}
+  - {fileID: 7272094585114236980}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -2082,6 +2578,75 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &1154994090366176900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/AFX/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/AFX/Ambience
+  guid: 70beb57976c0e94d98a03a64451ecad9
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 132179
+--- !u!114 &1160120253514558352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Zombi 1 y 2/Zombi Roam
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Zombi 1 y 2/Zombi Roam
+  guid: 574eab92d4d99f468d96b24aa2fd174d
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2089
+--- !u!114 &1167731494230109578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Zombi 1 y 2/Zombi Hit
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Zombi 1 y 2/Zombi Hit
+  guid: 24664c1ba5a1344697fc75c98afb828e
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1367
 --- !u!114 &1352528149591185950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2099,6 +2664,52 @@ MonoBehaviour:
   Max: 1
   Default: 0
   Exists: 0
+--- !u!114 &1420792981175965499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Battle Music
+  m_EditorClassIdentifier: 
+  Path: event:/Battle Music
+  guid: 32ebd7309b69f84795ba6a4e499a68f1
+  Banks:
+  - {fileID: -6257395989729278164}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 128000
+--- !u!114 &1441074988471477365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Victory
+  m_EditorClassIdentifier: 
+  Path: event:/Victory
+  guid: 7172659ce986d041808fc0e0e109d3aa
+  Banks:
+  - {fileID: -6257395989729278164}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 5753
 --- !u!114 &1652151917894441930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2169,6 +2780,52 @@ MonoBehaviour:
   Max: 5
   Default: 1
   Exists: 0
+--- !u!114 &1922466284982908749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Zombi 1 y 2/Zombi Attack
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Zombi 1 y 2/Zombi Attack
+  guid: dfad171b2acad94a9697a35cdeeae5c6
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1071
+--- !u!114 &1973607735386932870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Breathing
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Breathing
+  guid: 2b9de84123590243a2d87d28538cc66d
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 35
+  Length: 8000
 --- !u!114 &2285624590982761921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2184,7 +2841,7 @@ MonoBehaviour:
   Path: event:/NPC/Zombi 1 y 2/Zombi Death
   guid: d9c2fbb729acaf4fa052399adf51ba1c
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -2210,6 +2867,29 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &2527402205565512868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Bandido 1/Band1 Hurt
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Bandido 1/Band1 Hurt
+  guid: b3daa63f4ed1f04dbc77d85933fed1de
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 663
 --- !u!114 &2703589626029385268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2225,7 +2905,7 @@ MonoBehaviour:
   Path: event:/NPC/Bandido 2/Band2 Attack
   guid: a8cf741386aa1047bffef2256057acb5
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -2248,7 +2928,7 @@ MonoBehaviour:
   Path: event:/NPC/Bandido 2/Band2 Hurt
   guid: 93ae11860a40584aa65b86c67e74f19b
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -2309,6 +2989,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &3266099095328195813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: Map-Battle
+  m_EditorClassIdentifier: 
+  Name: Map-Battle
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 1
 --- !u!114 &3358116213427227258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2395,7 +3092,7 @@ MonoBehaviour:
   Path: event:/NPC/Bandido 1/Band1 Attack
   guid: 95805da86ad12b49a69fad36f140a48d
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -2470,7 +3167,7 @@ MonoBehaviour:
   Path: event:/NPC/Bandido 2/Band2 Death
   guid: 3143419b8273d345bd13d390a2064ce8
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -2495,6 +3192,23 @@ MonoBehaviour:
   Max: 1
   Default: 1
   Exists: 0
+--- !u!114 &4629694796585239828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps/Sprint
+  m_EditorClassIdentifier: 
+  Name: Sprint
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 1
 --- !u!114 &4688190154733236626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2546,7 +3260,7 @@ MonoBehaviour:
   Path: event:/Battle Music
   guid: 32ebd7309b69f84795ba6a4e499a68f1
   Banks:
-  - {fileID: 2297792395988974722}
+  - {fileID: 7272094585114236980}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -2554,6 +3268,23 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 128000
+--- !u!114 &5299797621716670163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: MusicSlider
+  m_EditorClassIdentifier: 
+  Name: MusicSlider
+  Min: 0
+  Max: 1
+  Default: 1
+  Exists: 1
 --- !u!114 &5328460915072691190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2589,6 +3320,24 @@ MonoBehaviour:
   Max: 5
   Default: 1
   Exists: 0
+--- !u!114 &5443835825858775403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/SFX.bank
+  SubDir: 
+  lastModified: 637318330308925532
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &5491421772350738766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2638,7 +3387,7 @@ MonoBehaviour:
   Path: event:/Player/Combat/Sam Attack Melee
   guid: fcf7fac8d6eeb949bd28c17edadabe78
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -2661,7 +3410,7 @@ MonoBehaviour:
   Path: event:/AFX/Ambience
   guid: 70beb57976c0e94d98a03a64451ecad9
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -2760,6 +3509,29 @@ MonoBehaviour:
   Max: 4
   Default: 0
   Exists: 0
+--- !u!114 &6639786560899278981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Interactables/Doors/Open Door
+  m_EditorClassIdentifier: 
+  Path: event:/Interactables/Doors/Open Door
+  guid: b82b6badbfa00444b9372ef1e5f90037
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 45
+  Length: 1643
 --- !u!114 &6656948084969115469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2812,6 +3584,23 @@ MonoBehaviour:
   Max: 4
   Default: 0
   Exists: 0
+--- !u!114 &6939984721531550342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Menu Music/Credits
+  m_EditorClassIdentifier: 
+  Name: Credits
+  Min: 0
+  Max: 1
+  Default: 0
+  Exists: 1
 --- !u!114 &6977364386036610049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2846,6 +3635,30 @@ MonoBehaviour:
   Max: 1
   Default: 1
   Exists: 0
+--- !u!114 &7094118155549374348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Menu Music
+  m_EditorClassIdentifier: 
+  Path: event:/Menu Music
+  guid: 2c78dbcd21922a4faa80a2a0bdb6caa7
+  Banks:
+  - {fileID: -6257395989729278164}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 6939984721531550342}
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 237954
 --- !u!114 &7181601891012456581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2863,6 +3676,64 @@ MonoBehaviour:
   Max: 2
   Default: 0
   Exists: 0
+--- !u!114 &7235542657200131478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: SoundsSlider
+  m_EditorClassIdentifier: 
+  Name: SoundsSlider
+  Min: 0
+  Max: 1
+  Default: 1
+  Exists: 1
+--- !u!114 &7272094585114236980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Settings/FMOD/The First Night/Build/Desktop/Music.bank
+  SubDir: 
+  lastModified: 637307574077687091
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &7336893019945770608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Zombi 1 y 2/Zombi Hurt
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Zombi 1 y 2/Zombi Hurt
+  guid: c68e5b9728b407418bd6f5fa9719175d
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1071
 --- !u!114 &7343749149259197012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2898,6 +3769,23 @@ MonoBehaviour:
   Max: 2
   Default: 0
   Exists: 0
+--- !u!114 &7426382285113074676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Buttons/UI
+  m_EditorClassIdentifier: 
+  Name: UI
+  Min: 0
+  Max: 5
+  Default: 1
+  Exists: 1
 --- !u!114 &7516202775575479776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2949,6 +3837,29 @@ MonoBehaviour:
   Max: 2
   Default: 0
   Exists: 0
+--- !u!114 &7816891509764140995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music
+  m_EditorClassIdentifier: 
+  Path: event:/Music
+  guid: 1b88a88b83efc1409d7f787039417df0
+  Banks:
+  - {fileID: -6257395989729278164}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 252742
 --- !u!114 &7942895111812287186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3018,6 +3929,29 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &8420836430812765054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Climbing
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Climbing
+  guid: 5c5a21a1d9999749bf6902732e838910
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 40
+  Length: 2000
 --- !u!114 &8483815919915305412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3036,6 +3970,29 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &8564859157602923102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Bandido 2/Band2 Hurt
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Bandido 2/Band2 Hurt
+  guid: 93ae11860a40584aa65b86c67e74f19b
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 738
 --- !u!114 &8567848713149012406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3053,6 +4010,29 @@ MonoBehaviour:
   Max: 1
   Default: 1
   Exists: 0
+--- !u!114 &8660932386281082302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Bandido 1/Band1 Attack
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Bandido 1/Band1 Attack
+  guid: 95805da86ad12b49a69fad36f140a48d
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 189
 --- !u!114 &8675635082041290482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3068,7 +4048,7 @@ MonoBehaviour:
   Path: event:/NPC/Bandido 1/Band1 Death
   guid: 2bf925b5de0d07408f1d675266f69b6d
   Banks:
-  - {fileID: -8609591533469826875}
+  - {fileID: 5443835825858775403}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -3129,6 +4109,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &8957063585576300903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: SoundsSlider
+  m_EditorClassIdentifier: 
+  Name: SoundsSlider
+  Min: 0
+  Max: 1
+  Default: 1
+  Exists: 1
 --- !u!114 &9075093203700345522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3144,5 +4141,45 @@ MonoBehaviour:
   Name: Map-Battle
   Min: 0
   Max: 2
+  Default: 0
+  Exists: 1
+--- !u!114 &9077120817544663572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NPC/Bandido 1/Band1 Laugh
+  m_EditorClassIdentifier: 
+  Path: event:/NPC/Bandido 1/Band1 Laugh
+  guid: 3d1cf4db697a6e4095ac2bc4fcfff8ca
+  Banks:
+  - {fileID: -1077841617713634737}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2321
+--- !u!114 &9112225448915458937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps/Ground Type
+  m_EditorClassIdentifier: 
+  Name: Ground Type
+  Min: 0
+  Max: 4
   Default: 0
   Exists: 1

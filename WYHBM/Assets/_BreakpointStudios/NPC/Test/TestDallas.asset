@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036b42f3713f2e14594d971d498cf1b4, type: 3}
+  m_Name: TestDallas
+  m_EditorClassIdentifier: 
+  _name: Dallas
+  _sprite: {fileID: -1165399278658134991, guid: 9a3cc0d00c940a647a5cf6299987fcc3,
+    type: 3}
+  _animatorController: {fileID: 22100000, guid: 64fd9ff476eecf34f83c6b1a80e3c7a3,
+    type: 2}
+  iconNone: {fileID: 21300000, guid: 6017d1c02847773499eab008495c93fd, type: 3}
+  iconHappy: {fileID: 21300000, guid: 6807acbba527bd14e8f8e57803098e2c, type: 3}
+  iconSad: {fileID: 21300000, guid: e19a197e5c222d84d99bdd9ad519c059, type: 3}
+  iconAngry: {fileID: 0}
+  iconSurprise: {fileID: 0}
+  iconCurious: {fileID: 0}
+  iconSleep: {fileID: 0}
+  _data:
+  - dialogDD: {fileID: 4900000, guid: 775d7969b8539e245bee8f18e763dbd9, type: 3}
+    quest: {fileID: 11400000, guid: 586bb04ab73fb444ba68eccc01aa1029, type: 2}
+  _canMove: 0
+  _speedMovement: 5
+  _speedRotation: 180
+  _useRandomPosition: 0
+  _waitTime: 1
+  _detectPlayer: 0
+  _timeToDetect: 1
+  _viewRadius: 50
+  _viewAngle: 135
+  combatEnemies: []
