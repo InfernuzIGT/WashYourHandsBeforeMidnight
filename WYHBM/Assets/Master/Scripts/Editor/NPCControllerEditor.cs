@@ -104,6 +104,10 @@ public class NPCControllerEditor : Editor
         }
         else
         {
+            if (_controller.Data == null)return;
+
+            if (!_controller.Data.DetectPlayer)return;
+
             Handles.color = Color.red;
 
             foreach (Transform visibleTarget in _fov.VisibleTargets)

@@ -411,6 +411,8 @@ public class PlayerController : MonoBehaviour
 
     private void FootstepSound()
     {
+        if (GameData.Instance.silentSteps)return;
+
         _targetsInSoundRadius = Physics.OverlapSphere(_groundPosition, _currentSoundRadius, _worldConfig.layerNPC);
 
         for (int i = 0; i < _targetsInSoundRadius.Length; i++)
@@ -421,11 +423,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(_groundPosition, _currentSoundRadius);
-    }
+    // private void OnDrawGizmos()
+    // {
+    //     Gizmos.color = Color.green;
+    //     Gizmos.DrawWireSphere(_groundPosition, _currentSoundRadius);
+    // }
 
     // private void Jump()
     // {

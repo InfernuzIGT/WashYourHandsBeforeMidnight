@@ -17,12 +17,12 @@ public class Quest
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
-    public PlayerSO playerData;
+    [SerializeField, ReadOnly] private PlayerSO playerData;
     [Space]
-    public bool isPaused;
-    public bool inCombat;
+    [SerializeField, ReadOnly] private bool _isPaused;
+    [SerializeField, ReadOnly] private bool _inCombat;
     [Space]
-    public SessionData sessionData;
+    [SerializeField, ReadOnly] private SessionData sessionData;
 
     private bool skipEncounters = true;
     // public ItemSO[] items;
@@ -32,6 +32,7 @@ public class GlobalController : MonoBehaviour
     [ConditionalHide] public WorldConfig worldConfig;
     [ConditionalHide] public Camera mainCamera;
     [ConditionalHide] public CinemachineVirtualUtility playerCamera;
+    [ConditionalHide] public CanvasPersistent persistentUI;
     [Space]
     [ConditionalHide] public GameData gameData;
     [ConditionalHide] public PlayerController playerController;
@@ -39,7 +40,6 @@ public class GlobalController : MonoBehaviour
     [ConditionalHide] public PlayableDirector playableDirector;
     [ConditionalHide] public GameMode.World.UIManager worldUI;
     [ConditionalHide] public GameMode.Combat.UIManager combatUI;
-    [ConditionalHide] public Fade fadeUI;
     [ConditionalHide] public EventSystemUtility eventSystemUtility;
     [Space]
     [ConditionalHide] public Material materialFOV;
@@ -67,6 +67,8 @@ public class GlobalController : MonoBehaviour
     private CutsceneEvent _cutsceneEvent;
     private EnableDialogEvent _interactionDialogEvent;
 
+    public SessionData SessionData { get { return sessionData; } set { sessionData = value; } }
+    public PlayerSO PlayerData { get { return playerData; } }
     private void Start()
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Persistent"));
@@ -98,7 +100,6 @@ public class GlobalController : MonoBehaviour
 
         worldUI.gameObject.name = "Canvas (World)";
         combatUI.gameObject.name = "Canvas (Combat)";
-        fadeUI.gameObject.name = "Canvas (Fade)";
         eventSystemUtility.gameObject.name = "Event System";
 #else
         Cursor.visible = false;
@@ -114,6 +115,7 @@ public class GlobalController : MonoBehaviour
         EventController.AddListener<ChangeInputEvent>(OnChangeInput);
         EventController.AddListener<SessionEvent>(OnSession);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
+        EventController.AddListener<PauseEvent>(OnPause);
     }
 
     private void OnDisable()
@@ -123,6 +125,37 @@ public class GlobalController : MonoBehaviour
         EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
         EventController.RemoveListener<SessionEvent>(OnSession);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+        EventController.RemoveListener<PauseEvent>(OnPause);
+    }
+
+    private void OnPause(PauseEvent evt)
+    {
+        _isPaused = !_isPaused;
+
+        if (_isPaused)
+        {
+            ListenModeInstant(false);
+
+            // switch (evt.pauseType)
+            // {
+            //     case PAUSE_TYPE.PauseMenu:
+
+            //         break;
+
+            //     default:
+            //         break;
+            // }
+        }
+        // else
+        // {
+
+        // }
+
+        _ppColorAdjustments.saturation.value = _isPaused ? -80 : 0;
+        _ppDepthOfField.gaussianStart.value = _isPaused ? 0 : 22.5f;
+        _ppDepthOfField.gaussianEnd.value = _isPaused ? 0 : 60;
+
+        Time.timeScale = _isPaused ? 0 : 1;
     }
 
     private void CheckGameData()
@@ -170,6 +203,24 @@ public class GlobalController : MonoBehaviour
         }
 
         _coroutineListenMode = StartCoroutine(ChangeListenMode());
+    }
+
+    private void ListenModeInstant(bool active)
+    {
+        _fovIsActive = active;
+
+        if (_coroutineListenMode != null)
+        {
+            StopCoroutine(_coroutineListenMode);
+            _coroutineListenMode = null;
+        }
+
+        _fovCurrentTime = _fovIsActive ? worldConfig.fovTime : 0;
+
+        materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
+        materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
+
+        SetValuesListenMode();
     }
 
     private IEnumerator ChangeListenMode()
@@ -236,14 +287,13 @@ public class GlobalController : MonoBehaviour
 
     private void SpawnUI()
     {
-        fadeUI = Instantiate(fadeUI);
         eventSystemUtility = Instantiate(eventSystemUtility);
 
         worldUI = Instantiate(worldUI);
         combatUI = Instantiate(combatUI);
 
-        worldUI.Show(!inCombat);
-        combatUI.Show(inCombat);
+        worldUI.Show(!_inCombat);
+        combatUI.Show(_inCombat);
     }
 
     // public void ChangeWorldCamera()
