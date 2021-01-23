@@ -12,6 +12,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     [Header("Field of View")]
     [SerializeField] private DIRECTION _startLookDirection = DIRECTION.UP;
     [SerializeField, Range(0, 30)] private float _viewRadius = 7.5f;
+    [SerializeField, Range(0, 30)] private float _hearRadius = 12f;
     [SerializeField, Range(0, 360)] private float _viewAngle = 135f;
 
     [Header("References")]
@@ -23,15 +24,22 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private WorldAnimator _animatorController;
     private NavMeshAgent _agent;
+
+    private Vector3 _originalPosition;
+    private Quaternion _originalRotation;
+    private Vector3 _lastDestination;
+    private Quaternion _lookRotation;
     private bool _canMove;
     private bool _isMoving;
+    private bool _hearSound;
+    private bool _backToStart;
     private int _positionIndex = 0;
-    private Quaternion _lookRotation;
 
     private PlayerSO _playerData;
     private Coroutine _coroutinePatrol;
     private WaitForSeconds _waitForSeconds;
     private WaitUntil _waitUntilIsMoving;
+    private WaitUntil _waitUntilCanMove;
 
     // Events
     private QuestEvent _questEvent;
@@ -69,12 +77,16 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
         _waitForSeconds = new WaitForSeconds(_data.WaitTime);
         _waitUntilIsMoving = new WaitUntil(() => _isMoving);
+        _waitUntilCanMove = new WaitUntil(() => _canMove);
 
         _agent.updateRotation = false;
 
         if (_data.DetectPlayer)
         {
-            _fieldOfView.transform.rotation = Quaternion.Euler(0, GetLookDirection(_startLookDirection), 0);
+            _originalPosition = transform.position;
+            _originalRotation = Quaternion.Euler(0, GetLookDirection(_startLookDirection), 0);
+
+            _fieldOfView.transform.rotation = _originalRotation;
 
             _fieldOfView.Init(_data.TimeToDetect, _viewRadius, _viewAngle);
 
@@ -82,7 +94,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _holdUtility.OnFinished.AddListener(OnFinish);
         }
 
-        if (_canMove)_coroutinePatrol = StartCoroutine(MovementAgent());
+        _coroutinePatrol = StartCoroutine(MovementAgent());
     }
 
     private void OnEnable()
@@ -115,9 +127,32 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         }
         else
         {
-            _animatorController.Movement(Vector3.zero);
-            _agent.ResetPath();
-            _isMoving = false;
+            if (_backToStart)
+            {
+                _backToStart = false;
+                _fieldOfView.transform.rotation = _originalRotation;
+                _canMove = GetCanMove();
+            }
+
+            if (_hearSound)
+            {
+                _hearSound = false;
+                _holdUtility.SoundDetect(false);
+                _fieldOfView.UpdateView(_data.TimeToDetect, _viewRadius, _viewAngle);
+
+                _agent.ResetPath();
+                _lastDestination = _originalPosition;
+                _agent.SetDestination(_lastDestination);
+
+                _backToStart = true;
+                _isMoving = true;
+            }
+            else
+            {
+                _animatorController.Movement(Vector3.zero);
+                _agent.ResetPath();
+                _isMoving = false;
+            }
         }
     }
 
@@ -132,8 +167,10 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private IEnumerator MovementAgent()
     {
-        while (_data.CanMove)
+        while (true)
         {
+            yield return _waitUntilCanMove;
+
             ChangeDestination();
 
             yield return _waitUntilIsMoving;
@@ -155,8 +192,24 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
                 _positionIndex = _positionIndex < _waypoints.positions.Length - 1 ? _positionIndex + 1 : 0;
             }
 
-            _agent.SetDestination(_waypoints.positions[_positionIndex]);
+            _lastDestination = _waypoints.positions[_positionIndex];
+            _agent.SetDestination(_lastDestination);
             _isMoving = true;
+        }
+    }
+
+    public void SetDestination(Vector3 newDestination)
+    {
+        if (_data.DetectPlayer && _agent.isOnNavMesh)
+        {
+            _agent.SetDestination(newDestination);
+            _isMoving = true;
+
+            _hearSound = true;
+            _holdUtility.SoundDetect(true);
+            _fieldOfView.UpdateView(_data.TimeToDetect, _hearRadius, _viewAngle);
+
+            _canMove = true;
         }
     }
 
@@ -188,10 +241,12 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     {
         _fieldOfView.SetState(false);
 
-        if (_data.CanMove)_agent.isStopped = true;
-        _animatorController.Movement(Vector3.zero);
+        _isMoving = false;
+        _canMove = false;
+        _agent.isStopped = true;
 
         // TODO Mariano: Animation Detected
+        _animatorController.Movement(Vector3.zero);
 
         _enableMovementEvent.canMove = false;
         EventController.TriggerEvent(_enableMovementEvent);
@@ -210,7 +265,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
             if (_agent.isOnNavMesh)_agent.isStopped = true;
 
-                _canMove = false;
+            _canMove = false;
 
             if (_playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
 

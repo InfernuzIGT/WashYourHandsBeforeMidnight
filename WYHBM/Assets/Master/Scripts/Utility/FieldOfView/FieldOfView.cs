@@ -56,15 +56,19 @@ public class FieldOfView : MonoBehaviour
 
         _viewMesh = new Mesh();
         _viewMeshFilter.mesh = _viewMesh;
-
-        _duration = duration;
-        _viewRadius = radius;
-        _viewAngle = angle;
+        
+        UpdateView(duration, radius, angle);
 
         _waitForSeconds = new WaitForSeconds(.25f);
         _coroutineFindTarget = StartCoroutine(FindTargetsWithDelay());
 
         _enable = true;
+    }
+    public void UpdateView(float duration, float radius, float angle)
+    {
+        _duration = duration;
+        _viewRadius = radius;
+        _viewAngle = angle;
     }
 
     private IEnumerator FindTargetsWithDelay()

@@ -26,6 +26,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private float _originalZ;
     private bool _isFade;
     private int _indexZoom;
+    private bool _canMove = true;
 
     private void Awake()
     {
@@ -40,13 +41,14 @@ public class CinemachineVirtualUtility : MonoBehaviour
     {
         EventController.AddListener<CustomFadeEvent>(OnCustomFade);
         EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
-
+        EventController.AddListener<EnableMovementEvent>(OnStopMovement);
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
+        EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
     }
 
     public void Init(PlayerController target, Camera camera, InputSystemUIInputModule InputUIModule)
@@ -55,7 +57,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
         _camera = camera;
 
         _player.Input.Player.Look.performed += ctx => _lookVector = ctx.ReadValue<Vector2>();
-        InputUIModule.point.action.performed += ctx => _lookVector = ctx.ReadValue<Vector2>();
+        // InputUIModule.point.action.performed += ctx => _lookVector = ctx.ReadValue<Vector2>();
 
         _player.Input.Player.Zoom.performed += ctx => ChangeZoom();
         InputUIModule.middleClick.action.performed += ctx => ChangeZoom();
@@ -68,10 +70,10 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
     private void Update()
     {
-        if (_isFade)
+        if (_isFade || !_canMove)
         {
-            _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX + _lookVector.x * _lookSpeed * Time.deltaTime;
-            _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ + _lookVector.y * _lookSpeed * Time.deltaTime;
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
+            _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;
             return;
         }
 
@@ -161,6 +163,11 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
         _currentDevice = evt.device;
+    }
+
+    private void OnStopMovement(EnableMovementEvent evt)
+    {
+        _canMove = evt.canMove;
     }
 
     #endregion

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField, ReadOnly] private PlayerSO _playerData = null;
     [SerializeField] private PlayerConfig _playerConfig = null;
+    [SerializeField] private WorldConfig _worldConfig = null;
     // [SerializeField] private FMODConfig _fmodConfig = null;
 
     [Header("General")]
@@ -50,6 +51,13 @@ public class PlayerController : MonoBehaviour
     private bool _isInteracting;
     private bool _isCrouching;
 
+    // Footstep
+    private RaycastHit _hit;
+    private Collider[] _targetsInSoundRadius;
+    private float _currentSoundRadius;
+    private Vector3 _groundPosition;
+    private NPCController _currentNPC;
+
     //Jump
     // private float _jump = 9.81f;
     private bool _isJumping;
@@ -64,9 +72,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 newPos;
 
     private Vector3 _lastPosition;
-
-    // Footstep
-    private RaycastHit _hit;
 
     // Quest
     private bool _isOpenDiary;
@@ -193,7 +198,7 @@ public class PlayerController : MonoBehaviour
         switch (_movementState)
         {
             case MOVEMENT_STATE.Walk:
-
+                _currentSoundRadius = _playerConfig.soundRadiusJogging;
                 _speedHorizontal = _playerConfig.speedJogging;
 
                 footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
@@ -203,6 +208,7 @@ public class PlayerController : MonoBehaviour
                 // TODO Mariano: Enable
                 // if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
                 // {
+                // _currentSoundRadius = _playerConfig.soundRadiusJogging;
                 //     _speedHorizontal = _playerConfig.speedJogging;
 
                 //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
@@ -211,6 +217,7 @@ public class PlayerController : MonoBehaviour
                 // }
                 // else
                 // {
+                // _currentSoundRadius = _playerConfig.soundRadiusWalk;
                 //     _speedHorizontal = _playerConfig.speedWalk;
 
                 //     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
@@ -220,11 +227,14 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case MOVEMENT_STATE.Run:
+                _currentSoundRadius = _playerConfig.soundRadiusRun;
                 _speedHorizontal = _playerConfig.speedRun;
                 footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
                 break;
 
             case MOVEMENT_STATE.Crouch:
+                _currentSoundRadius = _playerConfig.soundRadiusCrouch;
+
                 if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
                 {
                     _speedHorizontal = _playerConfig.speedWalk;
@@ -345,6 +355,79 @@ public class PlayerController : MonoBehaviour
             _characterController.center = Vector3.zero;
         }
     }
+
+    public void Footstep()
+    {
+        if (!_canPlayFootstep)return;
+
+        FootstepDetection();
+        FootstepSound();
+    }
+
+    private void FootstepDetection()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 3, _worldConfig.layerGround))
+        {
+            _shadow.enabled = true;
+
+            _groundPosition = new Vector3(transform.position.x, _hit.point.y + 0.1f, transform.position.z - 1);
+
+            _shadow.transform.position = _groundPosition;
+
+            switch (_hit.collider.gameObject.tag)
+            {
+                case Tags.Ground_Grass:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 2);
+                    break;
+
+                case Tags.Ground_Dirt:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
+                    break;
+
+                case Tags.Ground_Wood:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
+                    break;
+
+                case Tags.Ground_Cement:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
+                    break;
+
+                case Tags.Ground_Ceramic:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
+                    break;
+
+                default:
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
+                    break;
+            }
+        }
+        else
+        {
+            _shadow.enabled = false;
+        }
+
+        footstepSound.Play();
+    }
+
+    private void FootstepSound()
+    {
+        if (GameData.Instance.silentSteps)return;
+
+        _targetsInSoundRadius = Physics.OverlapSphere(_groundPosition, _currentSoundRadius, _worldConfig.layerNPC);
+
+        for (int i = 0; i < _targetsInSoundRadius.Length; i++)
+        {
+            _currentNPC = _targetsInSoundRadius[i].GetComponent<NPCController>();
+
+            if (_currentNPC != null)_currentNPC.SetDestination(transform.position);
+        }
+    }
+
+    // private void OnDrawGizmos()
+    // {
+    //     Gizmos.color = Color.green;
+    //     Gizmos.DrawWireSphere(_groundPosition, _currentSoundRadius);
+    // }
 
     // private void Jump()
     // {
@@ -515,55 +598,6 @@ public class PlayerController : MonoBehaviour
     {
         return _characterController.isGrounded && _canMove && !_isJumping && !_inIvy && _movement.magnitude > 0.1f;
     }
-
-    #region FMOD
-
-    public void FMODPlayFootstep()
-    {
-        if (!_canPlayFootstep)return;
-
-        if (Physics.Raycast(transform.position, Vector3.down, out _hit, 3, _playerConfig.layerGround))
-        {
-            _shadow.enabled = true;
-
-            _shadow.transform.position = new Vector3(transform.position.x, _hit.point.y + 0.1f, transform.position.z - 1);
-
-            switch (_hit.collider.gameObject.tag)
-            {
-                case Tags.Ground_Grass:
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 2);
-                    break;
-
-                case Tags.Ground_Dirt:
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
-                    break;
-
-                case Tags.Ground_Wood:
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
-                    break;
-
-                case Tags.Ground_Cement:
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
-                    break;
-
-                case Tags.Ground_Ceramic:
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
-                    break;
-
-                default:
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
-                    break;
-            }
-        }
-        else
-        {
-            _shadow.enabled = false;
-        }
-
-        footstepSound.Play();
-    }
-
-    #endregion
 
     #region Events
 

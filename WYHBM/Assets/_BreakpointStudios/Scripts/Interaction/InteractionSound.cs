@@ -1,36 +1,25 @@
-﻿using System.Collections.Generic;
-using Events;
+﻿using Events;
 using UnityEngine;
 
-public class InteractionScene : Interaction, IInteractable, IHoldeable
+public class InteractionSound : Interaction, IInteractable, IHoldeable
 {
-    [Header("Cutscene")]
-    public Vector3 newPlayerPosition;
-    [SerializeField] private bool _load = false;
-    [SerializeField] private bool _instantFade = false;
-
-    [SerializeField] private SceneSO sceneData = null;
+    [Header("Sound")]
+    [SerializeField, Range(0, 50)] private float _soundRadius = 10;
+    [SerializeField] private bool _doOnce = false;
+    [Space]
+    [SerializeField] private WorldConfig _worldConfig = null;
     [SerializeField] private InputHoldUtility _holdUtility = null;
 
     [Header("Debug")]
     [SerializeField] private bool _showDebug = false;
     [SerializeField] private Color _color = new Color(0, 1, 0, 0.5f);
 
-    private List<AsyncOperation> _listScenes;
-    private ChangeSceneEvent _changeSceneEvent;
-
-    public bool ShowDebug { get { return _showDebug; } }
+    private bool _used;
+    private Collider[] _targetsInSoundRadius;
+    private NPCController _currentNPC;
 
     private void Start()
     {
-        _listScenes = new List<AsyncOperation>();
-
-        _changeSceneEvent = new ChangeSceneEvent();
-        _changeSceneEvent.load = _load;
-        _changeSceneEvent.newPlayerPosition = newPlayerPosition;
-        _changeSceneEvent.sceneData = sceneData;
-        _changeSceneEvent.instantFade = _instantFade;
-
         if (_holdUtility != null)
         {
             _holdUtility.OnStarted.AddListener(OnStart);
@@ -41,23 +30,27 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
     public void OnInteractionEnter(Collider other)
     {
+        if (_doOnce && _used)return;
+
         if (other.gameObject.CompareTag(Tags.Player))
         {
-            EventController.AddListener<InteractionEvent>(OnInteractScene);
+            EventController.AddListener<InteractionEvent>(OnInteractSound);
         }
     }
 
     public void OnInteractionExit(Collider other)
     {
+        if (_doOnce && _used)return;
+
         if (other.gameObject.CompareTag(Tags.Player))
         {
             _holdUtility.OnCancel();
 
-            EventController.RemoveListener<InteractionEvent>(OnInteractScene);
+            EventController.RemoveListener<InteractionEvent>(OnInteractSound);
         }
     }
 
-    private void OnInteractScene(InteractionEvent evt)
+    private void OnInteractSound(InteractionEvent evt)
     {
         if (evt.isStart)
         {
@@ -67,11 +60,6 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         {
             _holdUtility.OnCancel();
         }
-    }
-
-    public void ResetPosition()
-    {
-        newPlayerPosition = gameObject.transform.position + new Vector3(1,0,1);
     }
 
     #region Hold System
@@ -88,10 +76,17 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
     public void OnFinish()
     {
-        EventController.RemoveListener<InteractionEvent>(OnInteractScene);
+        _used = true;
 
-        EventController.TriggerEvent(_changeSceneEvent);
-        
+        _targetsInSoundRadius = Physics.OverlapSphere(transform.position, _soundRadius, _worldConfig.layerNPC);
+
+        for (int i = 0; i < _targetsInSoundRadius.Length; i++)
+        {
+            _currentNPC = _targetsInSoundRadius[i].GetComponent<NPCController>();
+
+            if (_currentNPC != null)_currentNPC.SetDestination(transform.position);
+        }
+
         ForceCleanInteraction();
     }
 
@@ -104,7 +99,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         if (_showDebug)
         {
             Gizmos.color = _color;
-            Gizmos.DrawCube(newPlayerPosition, new Vector3(1, 3.15f, 1));
+            Gizmos.DrawWireSphere(transform.position, _soundRadius);
         }
     }
 
