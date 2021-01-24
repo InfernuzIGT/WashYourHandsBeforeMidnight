@@ -1,15 +1,10 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "New WorldConfig", menuName = "Config/WorldConfig", order = 0)]
 public class WorldConfig : ScriptableObject
 {
     [Header("General")]
-    public Vector3 playerBaseOffset = new Vector3(0, 2.08f, 0);
-    [Space]
-    public float messageLifetime = 3f;
-    public float timeStart = 0.5f;
-    public float timeSpace = 1f;
+    public float fovTime = 1f;
 
     [Header("Fade")]
     public float fadeCutsceneDuration = 1;
@@ -20,19 +15,9 @@ public class WorldConfig : ScriptableObject
     public LayerMask layerFOVTarget;
     public LayerMask layerFOVObstacle;
     [Space]
+    public LayerMask layerGround;
+    public LayerMask layerClimbable;
+    public LayerMask layerNPC;
+    [Space]
     public LayerMask layerOcclusionMask;
-
-    [Header("References")]
-    public Slot slotPrefab;
-    public InteractionItem itemPrefab;
-    public QuestTitle questTitlePrefab;
-    public QuestDescription questDescriptionPrefab;
-    public TextMeshProUGUI questObjetivePrefab;
-
-    [Header("Placeholder")]
-    public GameObject emptyObject;
-    public Sprite spriteEmptyUI;
-
-    [Header("Dialogs")]
-    public Sprite samIcon;
 }

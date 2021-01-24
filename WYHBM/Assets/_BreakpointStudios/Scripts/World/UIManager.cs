@@ -11,6 +11,11 @@ namespace GameMode.World
     [RequireComponent(typeof(CanvasGroupUtility))]
     public class UIManager : MonoBehaviour
     {
+        [Header("NEW")]
+        [SerializeField, ReadOnly] private bool _isPaused;
+        [SerializeField] private GameObject _panelPause;
+        
+        
         [Header("General")]
         public Popup popup;
         public Image progressImg;
@@ -89,8 +94,8 @@ namespace GameMode.World
             // buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
             // buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
 
-            sliderSound.onValueChanged.AddListener(VolumeSound);
-            sliderMusic.onValueChanged.AddListener(VolumeMusic);
+            // sliderSound.onValueChanged.AddListener(VolumeSound);
+            // sliderMusic.onValueChanged.AddListener(VolumeMusic);
 
             // buttonLeft.interactable = false;
             // buttonRight.interactable = false;
@@ -100,6 +105,23 @@ namespace GameMode.World
             // _waitDeactivateUI = new WaitForSeconds(GameData.Instance.worldConfig.messageLifetime);
 
             // GameData.Instance.persistenceItem
+        }
+
+        private void OnEnable()
+        {
+            EventController.AddListener<PauseEvent>(OnPause);
+        }
+
+        private void OnDisable()
+        {
+            EventController.RemoveListener<PauseEvent>(OnPause);
+        }
+
+        private void OnPause(PauseEvent evt)
+        {
+            _isPaused = !_isPaused;
+            
+            _panelPause.SetActive(_isPaused);
         }
 
         // public void UpdateStamina(float value)

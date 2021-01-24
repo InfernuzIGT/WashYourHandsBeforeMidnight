@@ -15,13 +15,17 @@ public class PlayerConfig : ScriptableObject
     [Space]
     public float gravity = 39.24f;
     public float magnitudeFall = 20f;
+    [Space]
+    public float soundRadiusRun = 16f;
+    public float soundRadiusJogging = 12f;
+    public float soundRadiusWalk = 5f;
+    public float soundRadiusCrouch = 0;
 
     [Header("Input System")]
     public float axisLimit = 0.7f;
-    public float axisLimitCrouch = 0.4f;
-
-    [Header("Layers")]
-    public LayerMask layerGround;
-    public LayerMask layerClimbable;
+    public float axisLimitCrouch = 0.5f;
+    public float stickDeadZone = 0.05f;
+    public Vector2 mouseOffset = new Vector2(0.5f, 0.5f);
+    public float[] zoomValues;
 
 }

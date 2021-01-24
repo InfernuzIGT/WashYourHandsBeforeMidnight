@@ -38,9 +38,9 @@ public class FieldOfView : MonoBehaviour
     private Coroutine _coroutineFindTarget;
     private WaitForSeconds _waitForSeconds;
 
-    private Tween _fillAnimation;
+    // private Tween _fillAnimation;
 
-    private int hash_IsDetected = Shader.PropertyToID("_IsDetected");
+    // private int hash_IsDetected = Shader.PropertyToID("_IsDetected");
 
     // Properties
     private List<Transform> _visibleTargets;
@@ -56,15 +56,19 @@ public class FieldOfView : MonoBehaviour
 
         _viewMesh = new Mesh();
         _viewMeshFilter.mesh = _viewMesh;
-
-        _duration = duration;
-        _viewRadius = radius;
-        _viewAngle = angle;
+        
+        UpdateView(duration, radius, angle);
 
         _waitForSeconds = new WaitForSeconds(.25f);
         _coroutineFindTarget = StartCoroutine(FindTargetsWithDelay());
 
         _enable = true;
+    }
+    public void UpdateView(float duration, float radius, float angle)
+    {
+        _duration = duration;
+        _viewRadius = radius;
+        _viewAngle = angle;
     }
 
     private IEnumerator FindTargetsWithDelay()
@@ -116,7 +120,7 @@ public class FieldOfView : MonoBehaviour
 
                         _visibleTargets.Add(_target);
 
-                        _fillAnimation = _viewMeshRenderer.material.DOFloat(1, hash_IsDetected, _duration);
+                        // _fillAnimation = _viewMeshRenderer.material.DOFloat(1, hash_IsDetected, _duration);
 
                         OnFindTarget.Invoke(_targetLastPosition);
                     }
@@ -131,8 +135,8 @@ public class FieldOfView : MonoBehaviour
         {
             _targetDetected = false;
 
-            _fillAnimation.Kill();
-            _viewMeshRenderer.material.SetFloat(hash_IsDetected, 0);
+            // _fillAnimation.Kill();
+            // _viewMeshRenderer.material.SetFloat(hash_IsDetected, 0);
 
             OnLossTarget.Invoke(_targetLastPosition);
         }
@@ -144,11 +148,11 @@ public class FieldOfView : MonoBehaviour
 
         stepCount = Mathf.RoundToInt(_viewAngle * meshResolution);
         float stepAngleSize = _viewAngle / stepCount;
-        
+
         _viewPoints.Clear();
-        
+
         ViewCastInfo oldViewCast = new ViewCastInfo();
-        
+
         for (int i = 0; i <= stepCount; i++)
         {
             float angle = transform.eulerAngles.y - _viewAngle / 2 + (_viewAngle / stepCount) * i;
@@ -157,16 +161,16 @@ public class FieldOfView : MonoBehaviour
             if (i > 0)
             {
                 bool edgeDstThresholdExceeded = Mathf.Abs(oldViewCast.dst - newViewCast.dst) > _edgeDstThreshold;
-                
+
                 if (oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDstThresholdExceeded))
                 {
                     EdgeInfo edge = FindEdge(oldViewCast, newViewCast);
-                    
+
                     if (edge.pointA != Vector3.zero)
                     {
                         _viewPoints.Add(edge.pointA);
                     }
-                    
+
                     if (edge.pointB != Vector3.zero)
                     {
                         _viewPoints.Add(edge.pointB);

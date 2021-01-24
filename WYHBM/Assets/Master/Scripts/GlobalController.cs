@@ -1,4 +1,5 @@
-﻿using Cinemachine;
+﻿using System.Collections;
+using Cinemachine;
 using Events;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -16,29 +17,36 @@ public class Quest
 public class GlobalController : MonoBehaviour
 {
     [Header("General")]
-    public PlayerSO playerData;
+    [SerializeField, ReadOnly] private PlayerSO playerData;
     [Space]
-    public bool isPaused;
-    public bool inCombat;
+    [SerializeField, ReadOnly] private bool _isPaused;
+    [SerializeField, ReadOnly] private bool _inCombat;
     [Space]
-    public SessionData sessionData;
+    [SerializeField, ReadOnly] private SessionData sessionData;
 
     private bool skipEncounters = true;
     // public ItemSO[] items;
 
     [Header("References")]
     [SerializeField] private bool ShowReferences = true;
-    [ConditionalHide]public Camera mainCamera;
-    [ConditionalHide]public CinemachineFreeLookUtility playerCamera;
+    [ConditionalHide] public WorldConfig worldConfig;
+    [ConditionalHide] public Camera mainCamera;
+    [ConditionalHide] public CinemachineVirtualUtility playerCamera;
+    [ConditionalHide] public CanvasPersistent persistentUI;
     [Space]
-    [ConditionalHide]public GameData gameData;
-    [ConditionalHide]public PlayerController playerController;
+    [ConditionalHide] public GameData gameData;
+    [ConditionalHide] public PlayerController playerController;
     [Space]
-    [ConditionalHide]public PlayableDirector playableDirector;
-    [ConditionalHide]public GameMode.World.UIManager worldUI;
-    [ConditionalHide]public GameMode.Combat.UIManager combatUI;
-    [ConditionalHide]public Fade fadeUI;
-    [ConditionalHide]public EventSystemUtility eventSystemUtility;
+    [ConditionalHide] public PlayableDirector playableDirector;
+    [ConditionalHide] public GameMode.World.UIManager worldUI;
+    [ConditionalHide] public GameMode.Combat.UIManager combatUI;
+    [ConditionalHide] public EventSystemUtility eventSystemUtility;
+    [Space]
+    [ConditionalHide] public Material materialFOV;
+    [ConditionalHide] public Material materialDitherNPC;
+
+    // Shaders
+    private int hash_IsVisible = Shader.PropertyToID("_IsVisible");
 
     // PostProcess
     private ColorAdjustments _ppColorAdjustments;
@@ -50,12 +58,17 @@ public class GlobalController : MonoBehaviour
 
     private CinemachineVirtualCamera _worldCamera;
     private CinemachineVirtualCamera _combatCamera;
+    private Coroutine _coroutineListenMode;
     private bool _isInteriorCamera;
+    private bool _fovIsActive;
+    private float _fovCurrentTime = 0;
 
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
     private EnableDialogEvent _interactionDialogEvent;
 
+    public SessionData SessionData { get { return sessionData; } set { sessionData = value; } }
+    public PlayerSO PlayerData { get { return playerData; } }
     private void Start()
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Persistent"));
@@ -78,13 +91,15 @@ public class GlobalController : MonoBehaviour
 
         playableDirector.stopped += OnCutsceneStop;
 
+        materialFOV.SetFloat(hash_IsVisible, 0);
+        materialDitherNPC.SetFloat(hash_IsVisible, 0);
+
 #if UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
         worldUI.gameObject.name = "Canvas (World)";
         combatUI.gameObject.name = "Canvas (Combat)";
-        fadeUI.gameObject.name = "Canvas (Fade)";
         eventSystemUtility.gameObject.name = "Event System";
 #else
         Cursor.visible = false;
@@ -100,6 +115,7 @@ public class GlobalController : MonoBehaviour
         EventController.AddListener<ChangeInputEvent>(OnChangeInput);
         EventController.AddListener<SessionEvent>(OnSession);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
+        EventController.AddListener<PauseEvent>(OnPause);
     }
 
     private void OnDisable()
@@ -109,6 +125,37 @@ public class GlobalController : MonoBehaviour
         EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
         EventController.RemoveListener<SessionEvent>(OnSession);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+        EventController.RemoveListener<PauseEvent>(OnPause);
+    }
+
+    private void OnPause(PauseEvent evt)
+    {
+        _isPaused = !_isPaused;
+
+        if (_isPaused)
+        {
+            ListenModeInstant(false);
+
+            // switch (evt.pauseType)
+            // {
+            //     case PAUSE_TYPE.PauseMenu:
+
+            //         break;
+
+            //     default:
+            //         break;
+            // }
+        }
+        // else
+        // {
+
+        // }
+
+        _ppColorAdjustments.saturation.value = _isPaused ? -80 : 0;
+        _ppDepthOfField.gaussianStart.value = _isPaused ? 0 : 22.5f;
+        _ppDepthOfField.gaussianEnd.value = _isPaused ? 0 : 60;
+
+        Time.timeScale = _isPaused ? 0 : 1;
     }
 
     private void CheckGameData()
@@ -145,24 +192,88 @@ public class GlobalController : MonoBehaviour
 
     private void ListenMode(bool active)
     {
-        if (!playerController.IsCrouching)return;
+        _fovIsActive = active;
 
-        // TODO Mariano: Add animation with Lerp
+        if (!playerController.IsCrouching)playerController.Crouch();
 
-        _ppColorAdjustments.saturation.value = active ? -50f : 0;
-        _ppLensDistortion.intensity.value = active ? 0.15f : 0;
-        _ppDepthOfField.gaussianStart.value = active ? 20 : 22.5f;
-        _ppDepthOfField.gaussianEnd.value = active ? 22.5f : 60;
-        _ppVignette.color.value = active ? _colorVigneteActive : _colorVigneteInactive;
-        _ppVignette.intensity.value = active ? 0.5f : 0.2f;
-        _ppVignette.smoothness.value = active ? 0.5f : 1;
+        if (_coroutineListenMode != null)
+        {
+            StopCoroutine(_coroutineListenMode);
+            _coroutineListenMode = null;
+        }
 
-        playerCamera.SetFOV(active ? 45 : 40);
+        _coroutineListenMode = StartCoroutine(ChangeListenMode());
+    }
+
+    private void ListenModeInstant(bool active)
+    {
+        _fovIsActive = active;
+
+        if (_coroutineListenMode != null)
+        {
+            StopCoroutine(_coroutineListenMode);
+            _coroutineListenMode = null;
+        }
+
+        _fovCurrentTime = _fovIsActive ? worldConfig.fovTime : 0;
+
+        materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
+        materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
+
+        SetValuesListenMode();
+    }
+
+    private IEnumerator ChangeListenMode()
+    {
+        if (_fovIsActive)
+        {
+            while (_fovCurrentTime < worldConfig.fovTime)
+            {
+                SetValuesListenMode();
+
+                _fovCurrentTime += Time.deltaTime;
+
+                yield return null;
+            }
+        }
+        else
+        {
+            while (_fovCurrentTime > 0)
+            {
+                SetValuesListenMode();
+
+                _fovCurrentTime -= Time.deltaTime;
+
+                yield return null;
+            }
+        }
+
+        _fovCurrentTime = _fovIsActive ? worldConfig.fovTime : 0;
+
+        materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
+        materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
+    }
+
+    private void SetValuesListenMode()
+    {
+        _ppColorAdjustments.saturation.value = Mathf.Lerp(0, -50, (_fovCurrentTime / worldConfig.fovTime));
+        _ppLensDistortion.intensity.value = Mathf.Lerp(0, 0.15f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(22.5f, 24, (_fovCurrentTime / worldConfig.fovTime));
+        _ppDepthOfField.gaussianEnd.value = Mathf.Lerp(60, 30f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppVignette.intensity.value = Mathf.Lerp(0.2f, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppVignette.smoothness.value = Mathf.Lerp(1, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
+
+        _ppVignette.color.value = Color.Lerp(_colorVigneteInactive, _colorVigneteActive, (_fovCurrentTime / worldConfig.fovTime));
+
+        playerCamera.SetFOV(Mathf.Lerp(40, 35, (_fovCurrentTime / worldConfig.fovTime)));
+
+        materialFOV.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.35f, (_fovCurrentTime / worldConfig.fovTime)));
+        materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 1f, (_fovCurrentTime / worldConfig.fovTime)));
     }
 
     private void CheckCamera()
     {
-        playerCamera.Init(playerController, eventSystemUtility.InputUIModule);
+        playerCamera.Init(playerController, mainCamera, eventSystemUtility.InputUIModule);
 
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(playerController.transform);
@@ -176,14 +287,13 @@ public class GlobalController : MonoBehaviour
 
     private void SpawnUI()
     {
-        fadeUI = Instantiate(fadeUI);
         eventSystemUtility = Instantiate(eventSystemUtility);
 
         worldUI = Instantiate(worldUI);
         combatUI = Instantiate(combatUI);
 
-        worldUI.Show(!inCombat);
-        combatUI.Show(inCombat);
+        worldUI.Show(!_inCombat);
+        combatUI.Show(_inCombat);
     }
 
     // public void ChangeWorldCamera()

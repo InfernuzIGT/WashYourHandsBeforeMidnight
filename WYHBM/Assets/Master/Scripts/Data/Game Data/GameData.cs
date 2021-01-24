@@ -19,6 +19,7 @@ public class GameData : MonoSingleton<GameData>
 	[Header("Developer")]
 	public bool inputDebugMode = false;
 	public bool dialogueDesignerDebugMode = false;
+	public bool silentSteps = false;
 
 	[Header("Session Data")]
 	public int sessionIndex;
@@ -45,12 +46,13 @@ public class GameData : MonoSingleton<GameData>
 	private EnableMovementEvent _enableMovementEvent;
 	private ChangePositionEvent _changePositionEvent;
 	private CustomFadeEvent _customFadeEvent;
+	private SaveAnimationEvent _saveAnimationEvent;
 
 	private int _indexQuality;
 
 	// Properties
 	public PlayerController Player { get { return _globalController.playerController; } }
-	public PlayerSO PlayerData { get { return _globalController.playerData; } }
+	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
 
 	protected override void Awake()
 	{
@@ -78,6 +80,8 @@ public class GameData : MonoSingleton<GameData>
 
 		_customFadeEvent = new CustomFadeEvent();
 		_customFadeEvent.callbackFadeIn = ChangeScene;
+
+		_saveAnimationEvent = new SaveAnimationEvent();
 
 		_indexQuality = QualitySettings.GetQualityLevel();
 	}
@@ -274,14 +278,14 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool CheckID(string id)
 	{
-		return _globalController.sessionData.listIds.Contains(id);
+		return _globalController.SessionData.listIds.Contains(id);
 	}
 
 	public void WriteID(string id)
 	{
-		if (!_globalController.sessionData.listIds.Contains(id))
+		if (!_globalController.SessionData.listIds.Contains(id))
 		{
-			_globalController.sessionData.listIds.Add(id);
+			_globalController.SessionData.listIds.Add(id);
 			// sessionData.listIds.Add(id);
 			Save();
 		}
@@ -289,11 +293,11 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool CheckAndWriteID(string id)
 	{
-		bool containId = _globalController.sessionData.listIds.Contains(id);
+		bool containId = _globalController.SessionData.listIds.Contains(id);
 
 		if (!containId)
 		{
-			_globalController.sessionData.listIds.Add(id);
+			_globalController.SessionData.listIds.Add(id);
 			// sessionData.listIds.Add(id);
 			Save();
 		}
@@ -303,11 +307,11 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool CheckQuest(QuestSO questData)
 	{
-		for (int i = 0; i < _globalController.sessionData.listQuest.Count; i++)
+		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
-			if (_globalController.sessionData.listQuest[i].data == questData)
+			if (_globalController.SessionData.listQuest[i].data == questData)
 			{
-				return _globalController.sessionData.listQuest[i].currentStep >= questData.steps;
+				return _globalController.SessionData.listQuest[i].currentStep >= questData.steps;
 			}
 		}
 
@@ -316,9 +320,9 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool HaveQuest(QuestSO questData)
 	{
-		for (int i = 0; i < _globalController.sessionData.listQuest.Count; i++)
+		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
-			if (_globalController.sessionData.listQuest[i].data == questData)
+			if (_globalController.SessionData.listQuest[i].data == questData)
 			{
 				return true;
 			}
@@ -357,6 +361,8 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool Save()
 	{
+		EventController.TriggerEvent(_saveAnimationEvent);
+
 		bool valid = false;
 
 		sessionData.sessionIndex = sessionIndex;

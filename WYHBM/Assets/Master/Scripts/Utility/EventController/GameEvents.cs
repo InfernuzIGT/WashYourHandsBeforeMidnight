@@ -89,6 +89,10 @@ namespace Events
     {
         public SESSION_OPTION option;
     }
+    
+    public class SaveAnimationEvent : GameEvent
+    {
+    }
 
     public class QuestEvent : GameEvent
     {

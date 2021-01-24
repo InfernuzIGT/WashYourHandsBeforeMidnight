@@ -17,8 +17,6 @@ public class NPCSO : CharacterSO
     [Header("Field of View")]
     [SerializeField] private bool _detectPlayer = false;
     [SerializeField, Range(0f, 3f)] private float _timeToDetect = 1;
-    [SerializeField, Range(0f, 50f)] private float _viewRadius = 7.5f;
-    [SerializeField, Range(0f, 360f)] private float _viewAngle = 135;
 
     [Header("DEPRECATED")]
     public List<Enemy> combatEnemies;
@@ -33,7 +31,4 @@ public class NPCSO : CharacterSO
     public float SpeedRotation { get { return _speedRotation; } }
     public bool DetectPlayer { get { return _detectPlayer; } }
     public float TimeToDetect { get { return _timeToDetect; } }
-    public float ViewRadius { get { return _viewRadius; } }
-    public float ViewAngle { get { return _viewAngle; } }
-
 }
