@@ -28,7 +28,9 @@ public class PlayerController : MonoBehaviour
     public StudioEventEmitter breathingSound;
 
     [Header("References")]
+#pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
     [SerializeField, ConditionalHide] private MeshRenderer _shadow;
     [SerializeField, ConditionalHide] private CharacterController _characterController;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController;
