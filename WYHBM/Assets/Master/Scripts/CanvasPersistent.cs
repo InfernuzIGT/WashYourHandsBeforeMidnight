@@ -15,7 +15,6 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     [SerializeField] private Image _letterboxBotImg = null;
 
     [Header("Save")]
-    [SerializeField] private Image _saveImg = null;
     [SerializeField] private Animator _animatorSave = null;
 
     // Fade

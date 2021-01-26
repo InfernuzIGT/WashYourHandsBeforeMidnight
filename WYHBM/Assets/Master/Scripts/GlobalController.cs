@@ -28,7 +28,9 @@ public class GlobalController : MonoBehaviour
     // public ItemSO[] items;
 
     [Header("References")]
+#pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
     [ConditionalHide] public WorldConfig worldConfig;
     [ConditionalHide] public Camera mainCamera;
     [ConditionalHide] public CinemachineVirtualUtility playerCamera;

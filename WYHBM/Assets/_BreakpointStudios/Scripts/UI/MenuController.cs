@@ -1,40 +1,56 @@
-﻿using System.Collections;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Events;
 using FMODUnity;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    private FadeEvent _fadeEvent;
+    public enum VERSION
+    {
+        Alpha,
+        Beta,
+        Release
+    }
+
+    [Header("General")]
+    [SerializeField] private Image logoImg = null;
+
+    [Header("Version")]
+    [SerializeField] private bool _isDemo = false;
+    [SerializeField] private VERSION version = VERSION.Alpha;
+    [SerializeField, Range(0, 10)] private int versionReview = 0;
+    [SerializeField] private TextMeshProUGUI versionTxt = null;
+
+    [Header("DEPRECATED")]
     public Image _fadeImg;
-
-    [Header("Cameras")]
-    public GameObject[] cams;
-
-    [Header("Generals")]
     public GameObject mainPanel;
     public GameObject optionsPanel;
     public GameObject creditsPanel;
-    [Space]
     public GameObject Popup;
-
-    [Header("FMOD")]
+    [Space]
     public Slider sliderSound;
     public Slider sliderMusic;
-    // ADD SFX SLIDER
-
-    [Space]
-
     public StudioEventEmitter _buttonSounds;
     public StudioEventEmitter _menuMusic;
 
-    private GameObject _lastCam;
+    private FadeEvent _fadeEvent;
     private GameObject _lastPanel;
+
+    private Vector2 _logoStartSize = new Vector2(600, 600);
+    private float _logoStartY = 50f;
+
+    private Vector2 _logoEndSize = new Vector2(475, 475);
+    private float _logoEndY = 150f;
 
     // private bool _isDataLoaded;
     // public bool IsDataLoaded { get { return _isDataLoaded; } }
+
+    private void Awake()
+    {
+        SetVersion();
+    }
 
     private void Start()
     {
@@ -78,18 +94,12 @@ public class MenuController : MonoBehaviour
         {
             case MENU_TYPE.Continue:
                 Fade();
-                cams[3].SetActive(true);
-
-                _lastCam = cams[0];
 
                 PlayButtonSound(3);
                 break;
 
             case MENU_TYPE.NewGame:
                 Fade();
-                cams[3].SetActive(true);
-
-                _lastCam = cams[0];
 
                 // GameData.Data.isDataLoaded = true;
 
@@ -100,18 +110,12 @@ public class MenuController : MonoBehaviour
                 creditsPanel.SetActive(false);
                 optionsPanel.SetActive(true);
 
-                cams[1].SetActive(true);
-                _lastCam = cams[0];
-
                 PlayButtonSound(1);
                 break;
 
             case MENU_TYPE.Credits:
                 optionsPanel.SetActive(false);
                 creditsPanel.SetActive(true);
-
-                cams[2].SetActive(true);
-                _lastCam = cams[0];
 
                 _menuMusic.EventInstance.setParameterByName(FMODParameters.Credits, 1f);
                 PlayButtonSound(1);
@@ -120,13 +124,6 @@ public class MenuController : MonoBehaviour
             case MENU_TYPE.Back:
 
                 DesactivateAll();
-
-                for (int i = 0; i < cams.Length; i++)
-                {
-                    cams[i].SetActive(false);
-                }
-
-                _lastCam.SetActive(true);
 
                 PlayButtonSound(0);
                 break;
@@ -220,4 +217,24 @@ public class MenuController : MonoBehaviour
     //         buttonSounds.Play();
     //         buttonSounds.EventInstance.setParameterByName("UI", 2f);
     //     }
+
+    public void SetVersion()
+    {
+        versionTxt.text = string.Format("{0}{1}{2}{3}", _isDemo ? "Demo " : "", Application.version, GetVersion(), versionReview == 0 ? "" : versionReview.ToString());
+    }
+
+    private string GetVersion()
+    {
+        switch (version)
+        {
+            case VERSION.Alpha:
+                return "a";
+            case VERSION.Beta:
+                return "b";
+            case VERSION.Release:
+                return "-RC";
+        }
+
+        return ".";
+    }
 }

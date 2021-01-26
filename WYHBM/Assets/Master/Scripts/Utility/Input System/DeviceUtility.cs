@@ -15,8 +15,8 @@ public class DeviceUtility : MonoBehaviour
         switch (Application.platform)
         {
             case RuntimePlatform.Switch:
-                _lastDevice = DEVICE.Switch;
-                _currentDevice = DEVICE.Switch;
+                _lastDevice = DEVICE.SwitchJoyCon;
+                _currentDevice = DEVICE.SwitchJoyCon;
                 break;
 
             case RuntimePlatform.PS4:

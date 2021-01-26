@@ -11,7 +11,9 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     [SerializeField] private Ease _easeAnimation = Ease.Linear;
 
     [Header("References")]
+#pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
     [SerializeField, ConditionalHide] private HoldIconSO _iconData = null;
     [SerializeField, ConditionalHide] private Image _iconImg = null;
     [SerializeField, ConditionalHide] private Image _fillImg = null;
