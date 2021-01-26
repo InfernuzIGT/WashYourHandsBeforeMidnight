@@ -25,9 +25,6 @@ public class GameData : MonoSingleton<GameData>
 	public int sessionIndex;
 	public SessionData sessionData;
 
-	[Header("Input System")]
-	public DeviceSO[] deviceData;
-
 	private List<AsyncOperation> _listScenes;
 
 	private GlobalController _globalController;
@@ -96,31 +93,6 @@ public class GameData : MonoSingleton<GameData>
 	{
 		EventController.RemoveListener<ChangeSceneEvent>(OnChangeScene);
 		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
-	}
-
-	public Sprite GetInputIcon(DEVICE device, INPUT_ACTION action)
-	{
-		for (int i = 0; i < deviceData.Length; i++)
-		{
-			if (deviceData[i].type == device)
-			{
-				return deviceData[i].GetIcon(action);
-			}
-		}
-
-		return null;
-	}
-
-	public void SetDeviceInfo(DEVICE device, ref TMPro.TextMeshProUGUI text, ref UnityEngine.UI.Image image)
-	{
-		for (int i = 0; i < deviceData.Length; i++)
-		{
-			if (deviceData[i].type == device)
-			{
-				text.text = deviceData[i].deviceName;
-				image.sprite = deviceData[i].deviceIcon;
-			}
-		}
 	}
 
 	#region Settings
