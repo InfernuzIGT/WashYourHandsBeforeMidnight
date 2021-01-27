@@ -14,7 +14,6 @@ public class WorldAnimator : AnimatorController
 
         _animValueX.Execute(_animator, movement.x);
         _animValueY.Execute(_animator, movement.y);
-        _animValueZ.Execute(_animator, movement.z);
         _animMovementType.Execute(_animator, (int)movementState);
     }
 
