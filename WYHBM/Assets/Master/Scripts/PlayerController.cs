@@ -97,6 +97,9 @@ public class PlayerController : MonoBehaviour
     public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
     public PlayerSO PlayerData { get { return _playerData; } }
 
+    private bool _devSilentSteps;
+    public bool DevSilentSteps { get { return _devSilentSteps; } set { _devSilentSteps = value; } }
+
     Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
@@ -418,7 +421,7 @@ public class PlayerController : MonoBehaviour
 
     private void FootstepSound()
     {
-        if (GameData.Instance.silentSteps)return;
+        if (_devSilentSteps)return;
 
         _targetsInSoundRadius = Physics.OverlapSphere(_groundPosition, _currentSoundRadius, _worldConfig.layerNPC);
 

@@ -17,9 +17,8 @@ public enum SESSION_OPTION
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Developer")]
-	public bool inputDebugMode = false;
-	public bool dialogueDesignerDebugMode = false;
-	public bool silentSteps = false;
+	[SerializeField] private bool _devPrintInputInfo = false;
+	[SerializeField] private bool _devDDLegacyMode = false;
 
 	[Header("Session Data")]
 	public int sessionIndex;
@@ -27,11 +26,13 @@ public class GameData : MonoSingleton<GameData>
 
 	private List<AsyncOperation> _listScenes;
 
+	private SpawnPoint _lastSpawnPoint;
 	private GlobalController _globalController;
 	private LocalizationUtility _localizationUtility;
 
 	// Scene Managment
 	private bool _load;
+	private bool _isLoadAdditive;
 	private SceneSO _sceneData;
 
 	// Input System
@@ -51,17 +52,19 @@ public class GameData : MonoSingleton<GameData>
 	public PlayerController Player { get { return _globalController.playerController; } }
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
 
+	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } }
+
 	protected override void Awake()
 	{
 #if UNITY_EDITOR
 
-		if (inputDebugMode)InputUtility.debugMode = true;
+		if (_devPrintInputInfo)InputUtility.printInfo = true;
 
 #endif
 
 		base.Awake();
 
-		_globalController = GameObject.FindObjectOfType<GlobalController>();
+		GetSceneReferences();
 
 		// Load();
 	}
@@ -76,11 +79,26 @@ public class GameData : MonoSingleton<GameData>
 		_changePositionEvent = new ChangePositionEvent();
 
 		_customFadeEvent = new CustomFadeEvent();
-		_customFadeEvent.callbackFadeIn = ChangeScene;
 
 		_saveAnimationEvent = new SaveAnimationEvent();
 
 		_indexQuality = QualitySettings.GetQualityLevel();
+	}
+
+	private void GetSceneReferences()
+	{
+		_globalController = GameObject.FindObjectOfType<GlobalController>();
+
+		_lastSpawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+
+		if (_globalController != null && _lastSpawnPoint != null)
+		{
+			_globalController.Init(_lastSpawnPoint.transform.position);
+		}
+		// else
+		// {
+		// 	Debug.LogError($"<color=red><b>[ERROR]</b></color> Missing Scene Reference: GlobalController[{_globalController == null}] / SpawnPoint[{_lastSpawnPoint == null}]");
+		// }
 	}
 
 	private void OnEnable()
@@ -166,11 +184,13 @@ public class GameData : MonoSingleton<GameData>
 	private void OnChangeScene(ChangeSceneEvent evt)
 	{
 		_load = evt.load;
+		_isLoadAdditive = evt.isLoadAdditive;
 		_sceneData = evt.sceneData;
 		_changePositionEvent.newPosition = evt.newPlayerPosition;
-		_customFadeEvent.instant = evt.instantFade;
 
+		_customFadeEvent.instant = evt.instantFade;
 		_customFadeEvent.fadeIn = true;
+		_customFadeEvent.callbackFadeIn = ChangeScene;
 		EventController.TriggerEvent(_customFadeEvent);
 
 		_enableMovementEvent.canMove = false;
@@ -181,10 +201,23 @@ public class GameData : MonoSingleton<GameData>
 	{
 		if (_load)
 		{
-			for (int i = 0; i < _sceneData.scenes.Length; i++)
+			if (_isLoadAdditive)
 			{
-				_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[i], LoadSceneMode.Additive));
+				for (int i = 0; i < _sceneData.scenes.Length; i++)
+				{
+					_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[i], LoadSceneMode.Additive));
+				}
 			}
+			else
+			{
+				_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[0]));
+
+				for (int i = 1; i < _sceneData.scenes.Length; i++)
+				{
+					_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[i], LoadSceneMode.Additive));
+				}
+			}
+
 		}
 		else
 		{
@@ -230,6 +263,9 @@ public class GameData : MonoSingleton<GameData>
 
 		_enableMovementEvent.canMove = true;
 		EventController.TriggerEvent(_enableMovementEvent);
+
+		// TODO Mariano: Fix
+		GetSceneReferences();
 	}
 
 	#endregion

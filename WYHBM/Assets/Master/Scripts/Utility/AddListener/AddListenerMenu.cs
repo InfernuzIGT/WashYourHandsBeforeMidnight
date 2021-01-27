@@ -5,7 +5,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class AddListenerMenu : MonoBehaviour
 {
-    public MENU_TYPE menuType;
+    public UI_TYPE menuType;
 
     private MainMenuEvent _mainMenuEvent;
 

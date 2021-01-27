@@ -28,14 +28,14 @@ public class CanvasGroupUtility : MonoBehaviour
         SetProperties(true);
     }
 
-    public void Show(bool isShowing, float delay = 0)
+    public void Show(bool isShowing, float delay = 0, float duration = 0)
     {
         _isShowing = isShowing;
 
         if (isShowing)
         {
             _canvasGroup
-                .DOFade(1, fadeDuration)
+                .DOFade(1, duration == 0 ? fadeDuration : duration)
                 .SetDelay(delay)
                 .OnComplete(() => CallEvent(true));
 
@@ -44,7 +44,7 @@ public class CanvasGroupUtility : MonoBehaviour
         else
         {
             _canvasGroup
-                .DOFade(0, fadeDuration)
+                .DOFade(0, duration == 0 ? fadeDuration : duration)
                 .SetDelay(delay)
                 .OnComplete(() => SetCanvas(false));
         }

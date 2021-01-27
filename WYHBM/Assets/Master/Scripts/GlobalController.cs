@@ -16,6 +16,10 @@ public class Quest
 [RequireComponent(typeof(Volume), typeof(PlayableDirector))]
 public class GlobalController : MonoBehaviour
 {
+    [Header("Developer")]
+    [SerializeField] private bool _devAutoInit = false;
+    [SerializeField] private bool _devSilentSteps = false;
+
     [Header("General")]
     [SerializeField, ReadOnly] private PlayerSO playerData;
     [Space]
@@ -34,9 +38,9 @@ public class GlobalController : MonoBehaviour
     [ConditionalHide] public WorldConfig worldConfig;
     [ConditionalHide] public Camera mainCamera;
     [ConditionalHide] public CinemachineVirtualUtility playerCamera;
-    [ConditionalHide] public CanvasPersistent persistentUI;
     [Space]
     [ConditionalHide] public GameData gameData;
+    [ConditionalHide] public CanvasPersistent persistentUI;
     [ConditionalHide] public PlayerController playerController;
     [Space]
     [ConditionalHide] public PlayableDirector playableDirector;
@@ -71,11 +75,19 @@ public class GlobalController : MonoBehaviour
 
     public SessionData SessionData { get { return sessionData; } set { sessionData = value; } }
     public PlayerSO PlayerData { get { return playerData; } }
+
     private void Start()
+    {
+        if (!_devAutoInit)return;
+
+        CheckPersistenceObjects();
+    }
+
+    public void Init(Vector3 spawnPosition)
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Persistent"));
 
-        CheckGameData();
+        CheckPersistenceObjects();
 
         _enableMovementEvent = new EnableMovementEvent();
 
@@ -85,7 +97,7 @@ public class GlobalController : MonoBehaviour
         _cutsceneEvent = new CutsceneEvent();
         _cutsceneEvent.show = false;
 
-        SpawnPlayer();
+        SpawnPlayer(spawnPosition);
         SpawnUI();
 
         CheckCamera();
@@ -100,6 +112,7 @@ public class GlobalController : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
+        gameData.gameObject.name = "GameData";
         worldUI.gameObject.name = "Canvas (World)";
         combatUI.gameObject.name = "Canvas (Combat)";
         eventSystemUtility.gameObject.name = "Event System";
@@ -107,7 +120,6 @@ public class GlobalController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 #endif
-
     }
 
     private void OnEnable()
@@ -160,30 +172,24 @@ public class GlobalController : MonoBehaviour
         Time.timeScale = _isPaused ? 0 : 1;
     }
 
-    private void CheckGameData()
+    private void CheckPersistenceObjects()
     {
         GameData tempGamedata = GameObject.FindObjectOfType<GameData>();
 
         gameData = tempGamedata != null ? tempGamedata : Instantiate(gameData);
 
         sessionData = gameData.LoadSession();
+
+        CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
+
+        tempCanvasPersistent = tempCanvasPersistent != null ? tempCanvasPersistent : Instantiate(persistentUI);
     }
 
-    private void SpawnPlayer()
+    private void SpawnPlayer(Vector3 spawnPosition)
     {
-        SpawnPoint spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
 
-        if (spawnPoint != null)
-        {
-            playerController = Instantiate(playerController, spawnPoint.transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Debug.LogError($"<color=red><b>[ERROR]</b></color> Can't find a Spawn Point!");
-
-            playerController = Instantiate(playerController);
-        }
-
+        playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
+        playerController.DevSilentSteps = _devSilentSteps;
         playerController.SetPlayerData(playerData);
 
         sessionData.playerData = playerData;
