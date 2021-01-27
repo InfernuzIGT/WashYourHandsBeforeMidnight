@@ -7,12 +7,9 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController), typeof(DeviceUtility))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, ReadOnly] private PlayerSO _playerData = null;
-    [SerializeField] private PlayerConfig _playerConfig = null;
-    [SerializeField] private WorldConfig _worldConfig = null;
-    // [SerializeField] private FMODConfig _fmodConfig = null;
 
     [Header("General")]
+    [SerializeField, ReadOnly] private PlayerSO _playerData = null;
     [SerializeField, ReadOnly] private MOVEMENT_STATE _movementState = MOVEMENT_STATE.Walk;
 
     [Header("Review")]
@@ -31,10 +28,15 @@ public class PlayerController : MonoBehaviour
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
-    [SerializeField, ConditionalHide] private MeshRenderer _shadow;
-    [SerializeField, ConditionalHide] private CharacterController _characterController;
-    [SerializeField, ConditionalHide] private WorldAnimator _animatorController;
-    [SerializeField, ConditionalHide] private DeviceUtility _deviceUtility;
+    [SerializeField, ConditionalHide] private PlayerConfig _playerConfig = null;
+    [SerializeField, ConditionalHide] private WorldConfig _worldConfig = null;
+    [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
+    // [SerializeField] private FMODConfig _fmodConfig = null;
+    [Space]
+    [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
+    [SerializeField, ConditionalHide] private CharacterController _characterController = null;
+    [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
+    [SerializeField, ConditionalHide] private DeviceUtility _deviceUtility = null;
 
     // Events
     private InteractionEvent _interactionEvent;
@@ -119,6 +121,8 @@ public class PlayerController : MonoBehaviour
 
         _input.Player.Enable();
         _input.UI.Disable();
+
+        _deviceConfig.UpdateDictionary();
     }
 
     private void Start()
@@ -297,7 +301,8 @@ public class PlayerController : MonoBehaviour
         _characterController.Move(_movement * Time.deltaTime);
 
         // Animation       
-        _animatorController.Movement(_movement, _movementState);
+        _animatorController.Movement(_inputMovementAux, _movementState);
+        // _animatorController.Movement(_movement, _movementState);
 
         //Sound
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
