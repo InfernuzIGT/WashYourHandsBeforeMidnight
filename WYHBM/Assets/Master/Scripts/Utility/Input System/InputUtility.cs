@@ -37,7 +37,7 @@ public enum INPUT_ACTION
 public static class InputUtility
 {
 
-    public static bool debugMode = false;
+    public static bool printInfo = false;
 
     public static bool ContainsDeviceName(string name, InputDevice device)
     {
@@ -130,7 +130,8 @@ public static class InputUtility
                 PrintCurrentDevice(DEVICE.Generic, InputSystem.devices[i]);
                 return DEVICE.Generic;
             }
-            if (ContainsDeviceName(Devices.Name.KEYBOARD, InputSystem.devices[i]))
+            if (ContainsDeviceName(Devices.Name.KEYBOARD, InputSystem.devices[i]) ||
+                ContainsDeviceName(Devices.Name.MOUSE, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.PC);
                 return DEVICE.PC;
@@ -161,6 +162,7 @@ public static class InputUtility
                 return DEVICE.Switch;
 
             case Devices.NativeName.Keyboard:
+            case Devices.NativeName.Mouse:
                 PrintCurrentDevice(DEVICE.PC);
                 return DEVICE.PC;
         }
@@ -184,7 +186,8 @@ public static class InputUtility
             PrintCurrentDevice(DEVICE.Generic, device);
             return DEVICE.Generic;
         }
-        if (ContainsDeviceName(Devices.Name.KEYBOARD, device))
+        if (ContainsDeviceName(Devices.Name.KEYBOARD, device) ||
+            ContainsDeviceName(Devices.Name.MOUSE, device))
         {
             PrintCurrentDevice(DEVICE.PC);
             return DEVICE.PC;
@@ -198,7 +201,7 @@ public static class InputUtility
     {
         inputAction.bindingMask = InputBinding.MaskByGroup(device.ToString());
 
-        if (!debugMode)return;
+        if (!printInfo)return;
 
         string color = "orange";
         Debug.Log($"<color={color}><b> Device Rebind: </b></color> {device.ToString()}");
@@ -209,7 +212,7 @@ public static class InputUtility
 
 #if UNITY_EDITOR
 
-        if (!debugMode)return;
+        if (!printInfo)return;
 
         string color = "white";
 
@@ -238,7 +241,7 @@ public static class InputUtility
 
 #if UNITY_EDITOR
 
-        if (!debugMode)return;
+        if (!printInfo)return;
 
         string color = "green";
 
