@@ -10,19 +10,27 @@ public enum DEVICE
     Generic = 1,
     PS4 = 2,
     XboxOne = 3,
-    Switch = 4,
-    // TODO Mariano: Steam? Xbox360?
+    SwitchJoyCon = 4,
+    SwitchPro = 5,
+    Steam = 6,
+    Xbox360 = 7,
+    PS3 = 8
 }
 
 public enum INPUT_ACTION
 {
     None = 0,
-    Interaction = 1,
+    Interact = 1,
     Attack = 2,
     Jump = 3,
-    Cancel = 4,
+    Crouch = 4,
     Pause = 5,
     Options = 6,
+    Select = 7,
+    Back = 8,
+    Move = 9,
+    Look = 10,
+    Zoom = 11,
     // TODO Mariano: Complete
 }
 
@@ -76,8 +84,8 @@ public static class InputUtility
         var switchpro = SwitchProControllerHID.current;
         if (switchpro != null)
         {
-            PrintStartDevice(DEVICE.Switch, switchpro);
-            return DEVICE.Switch;
+            PrintStartDevice(DEVICE.SwitchJoyCon, switchpro);
+            return DEVICE.SwitchJoyCon;
         }
 
         // Generic
@@ -113,8 +121,8 @@ public static class InputUtility
             }
             if (ContainsDeviceName(Devices.Name.SWITCH, InputSystem.devices[i]))
             {
-                PrintCurrentDevice(DEVICE.Switch, InputSystem.devices[i]);
-                return DEVICE.Switch;
+                PrintCurrentDevice(DEVICE.SwitchJoyCon, InputSystem.devices[i]);
+                return DEVICE.SwitchJoyCon;
             }
             if (ContainsDeviceName(Devices.Name.JOYSTICK, InputSystem.devices[i]))
             {
@@ -148,8 +156,8 @@ public static class InputUtility
                 return DEVICE.XboxOne;
 
             case Devices.NativeName.SwitchProControllerHID:
-                PrintCurrentDevice(DEVICE.Switch, device);
-                return DEVICE.Switch;
+                PrintCurrentDevice(DEVICE.SwitchJoyCon, device);
+                return DEVICE.SwitchJoyCon;
 
             case Devices.NativeName.Keyboard:
                 PrintCurrentDevice(DEVICE.PC);
@@ -168,8 +176,8 @@ public static class InputUtility
         }
         if (ContainsDeviceName(Devices.Name.SWITCH, device))
         {
-            PrintCurrentDevice(DEVICE.Switch, device);
-            return DEVICE.Switch;
+            PrintCurrentDevice(DEVICE.SwitchJoyCon, device);
+            return DEVICE.SwitchJoyCon;
         }
         if (ContainsDeviceName(Devices.Name.JOYSTICK, device))
         {

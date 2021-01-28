@@ -62,7 +62,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentDevice: 0
   action: 0
-  infoImg: {fileID: 2611787089490232206}
+  ShowReferences: 0
+  _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
+  _infoImg: {fileID: 2611787089490232206}
+  _localizeStringEvent: {fileID: 563529687438178868}
+  _infoTxt: {fileID: 1596957322149707350}
 --- !u!114 &563529687438178868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,7 +127,7 @@ RectTransform:
   m_GameObject: {fileID: 3780847232392762281}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.6237975, y: 1.6237975, z: 1.6237975}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4845063243548134133}
   m_RootOrder: 1
@@ -131,7 +135,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 253.7262, y: 50}
+  m_SizeDelta: {x: 375, y: 100}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &675972326881920225
 CanvasRenderer:
@@ -162,8 +166,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: InputName
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 99e095328fc21cb44b2ce58798f169e2, type: 2}
-  m_sharedMaterial: {fileID: -2598023274477949928, guid: 99e095328fc21cb44b2ce58798f169e2,
+  m_fontAsset: {fileID: 11400000, guid: fd581770d78e88a44b4748b0fecf8bfa, type: 2}
+  m_sharedMaterial: {fileID: 1326650094145176550, guid: fd581770d78e88a44b4748b0fecf8bfa,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -188,14 +192,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35
+  m_fontSize: 65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
-  m_fontSizeMax: 35
+  m_fontSizeMin: 20
+  m_fontSizeMax: 65
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
