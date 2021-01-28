@@ -18,6 +18,7 @@ public class MenuController : MonoBehaviour
     [Header("General")]
     [SerializeField, ReadOnly] private UI_TYPE _currentUIType = UI_TYPE.None;
     [SerializeField, ReadOnly] private GameObject _lastGameObject = null;
+    [SerializeField, ReadOnly] private SessionSettings _sessionSettings = null;
     [SerializeField] private SceneSO sceneData = null;
 
     [Header("Version")]
@@ -46,15 +47,15 @@ public class MenuController : MonoBehaviour
     [SerializeField, ConditionalHide] private ButtonUI _buttonQuit = null;
     [Space]
     [SerializeField, ConditionalHide] private GameObject _firstSelectOptions = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonLanguage = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonResolution = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonQuality = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonFullscreen = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonVsync = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonMasterVolume = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonSoundEffects = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonMusic = null;
-    [SerializeField, ConditionalHide] private ButtonUI _buttonVibration = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonLanguage = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonResolution = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonQuality = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonFullscreen = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVsync = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMasterVolume = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonSoundEffects = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMusic = null;
+    [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVibration = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonApply = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonBack = null;
     [Space]
@@ -67,6 +68,13 @@ public class MenuController : MonoBehaviour
     [SerializeField, ConditionalHide] private EventSystemUtility _eventSystemUtility = null;
 
     private ChangeSceneEvent _changeSceneEvent;
+
+    // Settings
+    private int _indexResolution;
+    private int _indexQuality;
+    private int _indexMasterVolume = 10;
+    private int _indexSoundEffects = 10;
+    private int _indexMusic = 10;
 
     [Header("DEPRECATED")]
     public Image _fadeImg;
@@ -112,8 +120,8 @@ public class MenuController : MonoBehaviour
         // _menuMusic.Play();
 
         CreateInput();
-
         AddListeners();
+        LoadSettings();
     }
 
     private void CreateInput()
@@ -144,21 +152,50 @@ public class MenuController : MonoBehaviour
         _buttonOptions.AddListener(() => Execute(UI_TYPE.Options));
         _buttonQuit.AddListener(() => Execute(UI_TYPE.Quit));
 
-        // TODO Mariano: Complete
-        //  _buttonLanguage.AddListener();
-        //  _buttonResolution.AddListener();
-        //  _buttonQuality.AddListener();
-        //  _buttonFullscreen.AddListener();
-        //  _buttonVsync.AddListener();
-        //  _buttonMasterVolume.AddListener();
-        //  _buttonSoundEffects.AddListener();
-        //  _buttonMusic.AddListener();
+        _buttonLanguage.AddListenerHorizontal(() => OptionsLanguage(true), () => OptionsLanguage(false));
+        _buttonResolution.AddListenerHorizontal(() => OptionsResolution(true), () => OptionsResolution(false));
+        _buttonQuality.AddListenerHorizontal(() => OptionsQuality(true), () => OptionsQuality(false));
+        _buttonFullscreen.AddListenerHorizontal(() => OptionsFullscreen(true), () => OptionsFullscreen(false));
+        _buttonVsync.AddListenerHorizontal(() => OptionsVsync(true), () => OptionsVsync(false));
+        _buttonMasterVolume.AddListenerHorizontal(() => OptionsMasterVolume(true), () => OptionsMasterVolume(false));
+        _buttonSoundEffects.AddListenerHorizontal(() => OptionsSoundEffects(true), () => OptionsSoundEffects(false));
+        _buttonMusic.AddListenerHorizontal(() => OptionsMusic(true), () => OptionsMusic(false));
         //  _buttonVibration.AddListener();
         _buttonApply.AddListener(() => ExecuteBack(false));
         _buttonBack.AddListener(() => ExecuteBack(true));
 
         _buttonYes.AddListener(() => ExecuteQuit(true));
         _buttonNo.AddListener(() => ExecuteQuit(false));
+    }
+
+    private void LoadSettings()
+    {
+        _buttonLanguage.SetText(GameData.Instance.GetCurrentLanguage());
+
+        _indexResolution = System.Array.IndexOf(Screen.resolutions, Screen.currentResolution);
+        _buttonResolution.SetText(Screen.currentResolution.ToString());
+
+        _indexQuality = QualitySettings.GetQualityLevel();
+        _buttonQuality.SetText(QualitySettings.names[_indexQuality]);
+
+        _buttonFullscreen.SetText(Screen.fullScreen.ToString());
+        _buttonVsync.SetText(QualitySettings.vSyncCount == 0 ? "false" : "true");
+
+        _buttonMasterVolume.SetText(_indexMasterVolume.ToString());
+        _buttonSoundEffects.SetText(_indexSoundEffects.ToString());
+        _buttonMusic.SetText(_indexMusic.ToString());
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<UpdateLanguageEvent>(OnUpdateLanguage);
+        // EventController.AddListener<MainMenuEvent>(MainMenu);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<UpdateLanguageEvent>(OnUpdateLanguage);
+        // EventController.RemoveListener<MainMenuEvent>(MainMenu);
     }
 
     private void Execute(UI_TYPE type)
@@ -194,7 +231,65 @@ public class MenuController : MonoBehaviour
             default:
                 break;
         }
+    }
 
+    private void OptionsLanguage(bool isLeft)
+    {
+        GameData.Instance.SelectNextLanguage(!isLeft);
+    }
+
+    private void OptionsResolution(bool isLeft)
+    {
+        _indexResolution = Utils.GetNextIndex(!isLeft, _indexResolution, Screen.resolutions.Length - 1, false);
+        Screen.SetResolution(Screen.resolutions[_indexResolution].width, Screen.resolutions[_indexResolution].height, Screen.fullScreen);
+
+        _buttonResolution.SetText(Screen.resolutions[_indexResolution].ToString());
+    }
+
+    private void OptionsQuality(bool isLeft)
+    {
+        _indexQuality = Utils.GetNextIndex(!isLeft, _indexQuality, QualitySettings.names.Length - 1, false);
+        QualitySettings.SetQualityLevel(_indexQuality, true);
+
+        _buttonQuality.SetText(QualitySettings.names[_indexQuality]);
+    }
+
+    private void OptionsFullscreen(bool isLeft)
+    {
+        Screen.fullScreen = isLeft;
+
+        _buttonFullscreen.SetText(isLeft.ToString());
+    }
+
+    private void OptionsVsync(bool isLeft)
+    {
+        QualitySettings.vSyncCount = isLeft ? 1 : 0;
+
+        _buttonVsync.SetText(isLeft.ToString());
+    }
+
+    private void OptionsMasterVolume(bool isLeft)
+    {
+        _indexMasterVolume = Utils.GetNextIndex(!isLeft, _indexMasterVolume, 10, false);
+        // TODO Matias: FMOD 
+
+        _buttonMasterVolume.SetText(_indexMasterVolume.ToString());
+    }
+
+    private void OptionsSoundEffects(bool isLeft)
+    {
+        _indexSoundEffects = Utils.GetNextIndex(!isLeft, _indexSoundEffects, 10, false);
+        // TODO Matias: FMOD 
+
+        _buttonSoundEffects.SetText(_indexSoundEffects.ToString());
+    }
+
+    private void OptionsMusic(bool isLeft)
+    {
+        _indexMusic = Utils.GetNextIndex(!isLeft, _indexMusic, 10, false);
+        // TODO Matias: FMOD 
+
+        _buttonMusic.SetText(_indexMusic.ToString());
     }
 
     private void ExecuteBackInput()
@@ -229,10 +324,10 @@ public class MenuController : MonoBehaviour
 
             _currentUIType = UI_TYPE.None;
         }
-        else
-        {
-            // TODO Mariano: Apply Settings
-        }
+        // else
+        // {
+        //     // TODO Mariano: Apply Settings
+        // }
     }
 
     private void ExecuteQuit(bool isYes)
@@ -255,15 +350,12 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    // private void OnEnable()
-    // {
-    //     EventController.AddListener<MainMenuEvent>(MainMenu);
-    // }
+    private void OnUpdateLanguage(UpdateLanguageEvent evt)
+    {
+        string[] splitLanguage = evt.locale.name.Split('(');
 
-    // private void OnDisable()
-    // {
-    //     EventController.RemoveListener<MainMenuEvent>(MainMenu);
-    // }
+        _buttonLanguage.SetText(splitLanguage[0]);
+    }
 
     private void PlayButtonSound(float parameter)
     {

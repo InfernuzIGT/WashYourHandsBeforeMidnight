@@ -113,36 +113,16 @@ public class GameData : MonoSingleton<GameData>
 		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
 	}
 
-	#region Settings
+	#region Localization
 
-	public void SettingNextLanguage(bool isNext)
+	public void SelectNextLanguage(bool isNext)
 	{
 		_localizationUtility.SelectNextLanguage(isNext);
 	}
-
-	public void SettingsNextQuality(bool isNext)
+	
+	public string GetCurrentLanguage()
 	{
-		if (isNext)
-		{
-			_indexQuality = _indexQuality < QualitySettings.names.Length - 1 ? _indexQuality + 1 : 0;
-		}
-		else
-		{
-			_indexQuality = _indexQuality > 0 ? _indexQuality - 1 : QualitySettings.names.Length - 1;
-		}
-
-		QualitySettings.SetQualityLevel(_indexQuality, true);
-
-		// TODO Mariano: COMPLETE
-
-		// Debug.Log($"Current Quality: {QualitySettings.names[_indexQuality]}");
-
-		// QualitySettings.vSyncCount = 0;
-
-		// FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
-		// Screen.fullScreenMode = fullScreenMode;
-
-		// Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, fullScreenMode);
+		return _localizationUtility.Language;
 	}
 
 	#endregion
@@ -438,7 +418,7 @@ public class SessionData
 }
 
 [Serializable]
-public struct SessionSettings
+public class SessionSettings
 {
 	public int qualitySettings;
 	// TODO Mariano: Complete
