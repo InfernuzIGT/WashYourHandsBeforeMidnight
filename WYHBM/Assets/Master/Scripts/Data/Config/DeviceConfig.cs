@@ -81,6 +81,12 @@ public class DeviceConfig : ScriptableObject
 
     public void UpdateDictionary()
     {
+        UpdateDeviceDictionary();
+        UpdateActionDictionary();
+    }
+
+    private void UpdateDeviceDictionary()
+    {
         deviceDictionary = new Dictionary<DEVICE, DeviceInfo>();
 
         for (int i = 0; i < deviceInfo.Length; i++)
@@ -90,7 +96,10 @@ public class DeviceConfig : ScriptableObject
                 deviceDictionary.Add(deviceInfo[i].type, deviceInfo[i]);
             }
         }
+    }
 
+    private void UpdateActionDictionary()
+    {
         actionDictionary = new Dictionary<INPUT_ACTION, DeviceAction>();
 
         for (int i = 0; i < deviceAction.Length; i++)
@@ -100,7 +109,6 @@ public class DeviceConfig : ScriptableObject
                 actionDictionary.Add(deviceAction[i].action, deviceAction[i]);
             }
         }
-
     }
 
 }

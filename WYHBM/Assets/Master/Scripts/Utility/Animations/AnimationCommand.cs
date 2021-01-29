@@ -10,7 +10,6 @@ public abstract class AnimationCommand
     protected readonly int hash_isFalling = Animator.StringToHash("isFalling"); // Bool
     protected readonly int hash_ValueX = Animator.StringToHash("valueX"); // Float
     protected readonly int hash_ValueY = Animator.StringToHash("valueY"); // Float
-    protected readonly int hash_ValueZ = Animator.StringToHash("valueZ"); // Float
     protected readonly int hash_ClimbType = Animator.StringToHash("climbType"); // Int
 
     // Combat
@@ -107,14 +106,6 @@ public class AnimValueY : AnimationCommandFloat
     public override void Execute(Animator anim, float value)
     {
         anim.SetFloat(hash_ValueY, value);
-    }
-}
-
-public class AnimValueZ : AnimationCommandFloat
-{
-    public override void Execute(Animator anim, float value)
-    {
-        anim.SetFloat(hash_ValueZ, value);
     }
 }
 

@@ -13,8 +13,7 @@ public class WorldAnimator : AnimatorController
         FlipSprite(movement);
 
         _animValueX.Execute(_animator, movement.x);
-        _animValueY.Execute(_animator, movement.z);
-        _animValueZ.Execute(_animator, movement.y);
+        _animValueY.Execute(_animator, movement.y);
         _animMovementType.Execute(_animator, (int)movementState);
     }
 
