@@ -14,7 +14,6 @@ public class AnimatorController : MonoBehaviour
     protected AnimationCommandBool _animIsFalling = new AnimIsFalling();
     protected AnimationCommandFloat _animValueX = new AnimValueX();
     protected AnimationCommandFloat _animValueY = new AnimValueY();
-    protected AnimationCommandFloat _animValueZ = new AnimValueZ();
     protected AnimationCommandInt _animClimbType = new AnimClimbType();
 
     // Combat

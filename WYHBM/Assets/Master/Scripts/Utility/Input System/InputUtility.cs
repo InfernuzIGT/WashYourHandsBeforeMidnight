@@ -4,17 +4,17 @@ using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Switch;
 using UnityEngine.InputSystem.XInput;
 
+// The names must match with Controls Schemes!
 public enum DEVICE
 {
     PC = 0,
     Generic = 1,
     PS4 = 2,
     XboxOne = 3,
-    SwitchJoyCon = 4,
-    SwitchPro = 5,
-    Steam = 6,
-    Xbox360 = 7,
-    PS3 = 8
+    Switch = 4,
+    Steam = 5,
+    Xbox360 = 6,
+    PS3 = 7
 }
 
 public enum INPUT_ACTION
@@ -34,10 +34,17 @@ public enum INPUT_ACTION
     // TODO Mariano: Complete
 }
 
+public enum RUMBLE_TYPE
+{
+    None = 0,
+    Options = 1,
+    Attack = 2,
+}
+
 public static class InputUtility
 {
 
-    public static bool debugMode = false;
+    public static bool printInfo = false;
 
     public static bool ContainsDeviceName(string name, InputDevice device)
     {
@@ -84,8 +91,8 @@ public static class InputUtility
         var switchpro = SwitchProControllerHID.current;
         if (switchpro != null)
         {
-            PrintStartDevice(DEVICE.SwitchJoyCon, switchpro);
-            return DEVICE.SwitchJoyCon;
+            PrintStartDevice(DEVICE.Switch, switchpro);
+            return DEVICE.Switch;
         }
 
         // Generic
@@ -99,7 +106,7 @@ public static class InputUtility
         PrintStartDevice(DEVICE.PC);
         return DEVICE.PC;
     }
-    
+
     public static Gamepad GetCurrentGamepad()
     {
         return Gamepad.current;
@@ -119,17 +126,19 @@ public static class InputUtility
                 PrintCurrentDevice(DEVICE.XboxOne, InputSystem.devices[i]);
                 return DEVICE.XboxOne;
             }
+
             if (ContainsDeviceName(Devices.Name.SWITCH, InputSystem.devices[i]))
             {
-                PrintCurrentDevice(DEVICE.SwitchJoyCon, InputSystem.devices[i]);
-                return DEVICE.SwitchJoyCon;
+                PrintCurrentDevice(DEVICE.Switch, InputSystem.devices[i]);
+                return DEVICE.Switch;
             }
             if (ContainsDeviceName(Devices.Name.JOYSTICK, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.Generic, InputSystem.devices[i]);
                 return DEVICE.Generic;
             }
-            if (ContainsDeviceName(Devices.Name.KEYBOARD, InputSystem.devices[i]))
+            if (ContainsDeviceName(Devices.Name.KEYBOARD, InputSystem.devices[i]) ||
+                ContainsDeviceName(Devices.Name.MOUSE, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.PC);
                 return DEVICE.PC;
@@ -156,14 +165,14 @@ public static class InputUtility
                 return DEVICE.XboxOne;
 
             case Devices.NativeName.SwitchProControllerHID:
-                PrintCurrentDevice(DEVICE.SwitchJoyCon, device);
-                return DEVICE.SwitchJoyCon;
+                PrintCurrentDevice(DEVICE.Switch, device);
+                return DEVICE.Switch;
 
             case Devices.NativeName.Keyboard:
+            case Devices.NativeName.Mouse:
                 PrintCurrentDevice(DEVICE.PC);
                 return DEVICE.PC;
         }
-
         if (ContainsDeviceName(Devices.Name.PS4, device))
         {
             PrintCurrentDevice(DEVICE.PS4, device);
@@ -176,16 +185,16 @@ public static class InputUtility
         }
         if (ContainsDeviceName(Devices.Name.SWITCH, device))
         {
-            PrintCurrentDevice(DEVICE.SwitchJoyCon, device);
-            return DEVICE.SwitchJoyCon;
+            PrintCurrentDevice(DEVICE.Switch, device);
+            return DEVICE.Switch;
         }
         if (ContainsDeviceName(Devices.Name.JOYSTICK, device))
         {
             PrintCurrentDevice(DEVICE.Generic, device);
             return DEVICE.Generic;
         }
-
-        if (ContainsDeviceName(Devices.Name.KEYBOARD, device))
+        if (ContainsDeviceName(Devices.Name.KEYBOARD, device) ||
+            ContainsDeviceName(Devices.Name.MOUSE, device))
         {
             PrintCurrentDevice(DEVICE.PC);
             return DEVICE.PC;
@@ -198,14 +207,19 @@ public static class InputUtility
     public static void DeviceRebind(DEVICE device, CustomInputAction inputAction)
     {
         inputAction.bindingMask = InputBinding.MaskByGroup(device.ToString());
+
+        if (!printInfo)return;
+
+        string color = "orange";
+        Debug.Log($"<color={color}><b> Device Rebind: </b></color> {device.ToString()}");
     }
-    
+
     private static void PrintStartDevice(DEVICE device, InputDevice data = null, string description = null)
     {
 
 #if UNITY_EDITOR
 
-        if (!debugMode)return;
+        if (!printInfo)return;
 
         string color = "white";
 
@@ -234,7 +248,7 @@ public static class InputUtility
 
 #if UNITY_EDITOR
 
-        if (!debugMode)return;
+        if (!printInfo)return;
 
         string color = "green";
 

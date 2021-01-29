@@ -6,6 +6,9 @@ using UnityEngine.InputSystem.UI;
 [RequireComponent(typeof(EventSystem), typeof(InputSystemUIInputModule))]
 public class EventSystemUtility : MonoBehaviour
 {
+    [Header("Event System")]
+    [SerializeField] private bool _startEnable = false;
+    [Space]
     [SerializeField] private EventSystem _eventSystem;
     [SerializeField] private InputSystemUIInputModule _inputUIModule;
 
@@ -13,7 +16,7 @@ public class EventSystemUtility : MonoBehaviour
 
     private void Start()
     {
-        _inputUIModule.actionsAsset.Disable();
+        if (!_startEnable)_inputUIModule.actionsAsset.Disable();
     }
 
     private void OnEnable()
@@ -28,15 +31,15 @@ public class EventSystemUtility : MonoBehaviour
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
     }
 
-    private void OnUpdateSelection(EventSystemEvent evt)
+    public void SetSelectedGameObject(GameObject objectSelected)
     {
-        _eventSystem.firstSelectedGameObject = evt.objectSelected;
-        _eventSystem.SetSelectedGameObject(evt.objectSelected);
+        _eventSystem.firstSelectedGameObject = objectSelected;
+        _eventSystem.SetSelectedGameObject(objectSelected);
     }
 
-    private void OnStopMovement(EnableMovementEvent evt)
+    public void DisableInput(bool disable)
     {
-        if (evt.canMove)
+        if (disable)
         {
             _inputUIModule.actionsAsset.Disable();
         }
@@ -45,6 +48,16 @@ public class EventSystemUtility : MonoBehaviour
             _inputUIModule.actionsAsset.Enable();
             _inputUIModule.actionsAsset.actionMaps[0].Disable(); // Player
         }
+    }
+
+    private void OnUpdateSelection(EventSystemEvent evt)
+    {
+        SetSelectedGameObject(evt.objectSelected);
+    }
+
+    private void OnStopMovement(EnableMovementEvent evt)
+    {
+        DisableInput(evt.canMove);
     }
 
 }

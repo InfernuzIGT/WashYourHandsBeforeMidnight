@@ -16,10 +16,14 @@ public enum SESSION_OPTION
 [RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
+
 	[Header("Developer")]
-	public bool inputDebugMode = false;
-	public bool dialogueDesignerDebugMode = false;
-	public bool silentSteps = false;
+	[SerializeField] private bool _devPrintInputInfo = false;
+	[SerializeField] private bool _devDDLegacyMode = false;
+
+	[Header("Configs")]
+	[SerializeField] private PlayerConfig _playerConfig;
+	[SerializeField] private DeviceConfig _deviceConfig;
 
 	[Header("Session Data")]
 	public int sessionIndex;
@@ -27,17 +31,23 @@ public class GameData : MonoSingleton<GameData>
 
 	private List<AsyncOperation> _listScenes;
 
+	private SpawnPoint _lastSpawnPoint;
 	private GlobalController _globalController;
 	private LocalizationUtility _localizationUtility;
 
 	// Scene Managment
 	private bool _load;
+	private bool _isLoadAdditive;
 	private SceneSO _sceneData;
 
 	// Input System
 	private Gamepad _gamepad;
 	private Coroutine _coroutineRumble;
+	private RUMBLE_TYPE _rumbleType;
+	private RumbleValues _currentRumbleValues;
+	private float _rumbleDuration;
 	private float _rumbleFrequency;
+	private float _currentDuration;
 
 	// Events
 	private EnableMovementEvent _enableMovementEvent;
@@ -51,19 +61,29 @@ public class GameData : MonoSingleton<GameData>
 	public PlayerController Player { get { return _globalController.playerController; } }
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
 
+	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } }
+
 	protected override void Awake()
 	{
+		InitializeConfigs();
+
 #if UNITY_EDITOR
 
-		if (inputDebugMode)InputUtility.debugMode = true;
+		if (_devPrintInputInfo)InputUtility.printInfo = true;
 
 #endif
 
 		base.Awake();
 
-		_globalController = GameObject.FindObjectOfType<GlobalController>();
+		GetSceneReferences();
 
 		// Load();
+	}
+
+	private void InitializeConfigs()
+	{
+		_deviceConfig.UpdateDictionary();
+		_playerConfig.UpdateActionDictionary();
 	}
 
 	private void Start()
@@ -76,11 +96,26 @@ public class GameData : MonoSingleton<GameData>
 		_changePositionEvent = new ChangePositionEvent();
 
 		_customFadeEvent = new CustomFadeEvent();
-		_customFadeEvent.callbackFadeIn = ChangeScene;
 
 		_saveAnimationEvent = new SaveAnimationEvent();
 
 		_indexQuality = QualitySettings.GetQualityLevel();
+	}
+
+	private void GetSceneReferences()
+	{
+		_globalController = GameObject.FindObjectOfType<GlobalController>();
+
+		_lastSpawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+
+		if (_globalController != null && _lastSpawnPoint != null)
+		{
+			_globalController.Init(_lastSpawnPoint.transform.position);
+		}
+		// else
+		// {
+		// 	Debug.LogError($"<color=red><b>[ERROR]</b></color> Missing Scene Reference: GlobalController[{_globalController == null}] / SpawnPoint[{_lastSpawnPoint == null}]");
+		// }
 	}
 
 	private void OnEnable()
@@ -95,36 +130,16 @@ public class GameData : MonoSingleton<GameData>
 		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
 	}
 
-	#region Settings
+	#region Localization
 
-	public void SettingNextLanguage(bool isNext)
+	public void SelectNextLanguage(bool isNext)
 	{
 		_localizationUtility.SelectNextLanguage(isNext);
 	}
 
-	public void SettingsNextQuality(bool isNext)
+	public string GetCurrentLanguage()
 	{
-		if (isNext)
-		{
-			_indexQuality = _indexQuality < QualitySettings.names.Length - 1 ? _indexQuality + 1 : 0;
-		}
-		else
-		{
-			_indexQuality = _indexQuality > 0 ? _indexQuality - 1 : QualitySettings.names.Length - 1;
-		}
-
-		QualitySettings.SetQualityLevel(_indexQuality, true);
-
-		// TODO Mariano: COMPLETE
-
-		// Debug.Log($"Current Quality: {QualitySettings.names[_indexQuality]}");
-
-		// QualitySettings.vSyncCount = 0;
-
-		// FullScreenMode fullScreenMode = FullScreenMode.FullScreenWindow;
-		// Screen.fullScreenMode = fullScreenMode;
-
-		// Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, fullScreenMode);
+		return _localizationUtility.Language;
 	}
 
 	#endregion
@@ -136,22 +151,46 @@ public class GameData : MonoSingleton<GameData>
 		_gamepad = evt.gamepad;
 	}
 
-	public void Rumble(float frequency)
+	public void PlayRumble(RUMBLE_TYPE rumbleType)
 	{
 		if (_gamepad == null)return;
 
-		_rumbleFrequency = frequency;
+		_rumbleType = rumbleType;
 
 		_coroutineRumble = StartCoroutine(ActivateRumble());
 	}
 
+	public void StopRumble(bool isStop)
+	{
+		if (_gamepad == null)return;
+
+		if (isStop)
+		{
+			if (_coroutineRumble != null)
+			{
+				StopCoroutine(_coroutineRumble);
+				_coroutineRumble = null;
+			}
+
+			_gamepad.ResetHaptics();
+		}
+		else
+		{
+			_gamepad.ResumeHaptics();
+		}
+	}
+
 	private IEnumerator ActivateRumble()
 	{
-		float currentDuration = 0;
+		_currentRumbleValues = _playerConfig.GetRumbleValues(_rumbleType);
+		_rumbleDuration = _currentRumbleValues.duration;
+		_rumbleFrequency = _currentRumbleValues.frequency;
 
-		while (currentDuration < 1)
+		_currentDuration = 0;
+
+		while (_currentDuration < _rumbleDuration)
 		{
-			currentDuration += Time.deltaTime;
+			_currentDuration += Time.deltaTime;
 			_gamepad.SetMotorSpeeds(_rumbleFrequency, _rumbleFrequency);
 			yield return null;
 		}
@@ -166,11 +205,13 @@ public class GameData : MonoSingleton<GameData>
 	private void OnChangeScene(ChangeSceneEvent evt)
 	{
 		_load = evt.load;
+		_isLoadAdditive = evt.isLoadAdditive;
 		_sceneData = evt.sceneData;
 		_changePositionEvent.newPosition = evt.newPlayerPosition;
-		_customFadeEvent.instant = evt.instantFade;
 
+		_customFadeEvent.instant = evt.instantFade;
 		_customFadeEvent.fadeIn = true;
+		_customFadeEvent.callbackFadeIn = ChangeScene;
 		EventController.TriggerEvent(_customFadeEvent);
 
 		_enableMovementEvent.canMove = false;
@@ -181,10 +222,23 @@ public class GameData : MonoSingleton<GameData>
 	{
 		if (_load)
 		{
-			for (int i = 0; i < _sceneData.scenes.Length; i++)
+			if (_isLoadAdditive)
 			{
-				_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[i], LoadSceneMode.Additive));
+				for (int i = 0; i < _sceneData.scenes.Length; i++)
+				{
+					_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[i], LoadSceneMode.Additive));
+				}
 			}
+			else
+			{
+				_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[0]));
+
+				for (int i = 1; i < _sceneData.scenes.Length; i++)
+				{
+					_listScenes.Add(SceneManager.LoadSceneAsync(_sceneData.scenes[i], LoadSceneMode.Additive));
+				}
+			}
+
 		}
 		else
 		{
@@ -230,6 +284,8 @@ public class GameData : MonoSingleton<GameData>
 
 		_enableMovementEvent.canMove = true;
 		EventController.TriggerEvent(_enableMovementEvent);
+
+		GetSceneReferences();
 	}
 
 	#endregion
@@ -384,8 +440,6 @@ public class SessionData
 {
 	public int sessionIndex;
 
-	public SessionSettings settings;
-
 	public PlayerSO playerData;
 	public Transform newSpawnPoint;
 
@@ -402,8 +456,18 @@ public class SessionData
 }
 
 [Serializable]
-public struct SessionSettings
+public class SessionSettings
 {
 	public int qualitySettings;
 	// TODO Mariano: Complete
+
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonLanguage = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonResolution = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonQuality = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonFullscreen = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVsync = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMasterVolume = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonSoundEffects = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMusic = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVibration = null;
 }

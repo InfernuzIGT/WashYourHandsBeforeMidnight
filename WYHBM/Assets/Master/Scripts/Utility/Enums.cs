@@ -91,16 +91,12 @@ public enum PAUSE_TYPE
     Note = 3,
 }
 
-public enum MENU_TYPE
+public enum UI_TYPE
 {
     None = 0,
-    Continue = 1,
-    NewGame = 2,
-    Options = 3,
-    Credits = 4,
-    Back = 6,
-    Exit = 7,
-    YesPopup = 8,
+    Play = 1,
+    Options = 2,
+    Quit = 3,
 }
 
 public enum DIALOG_TYPE
