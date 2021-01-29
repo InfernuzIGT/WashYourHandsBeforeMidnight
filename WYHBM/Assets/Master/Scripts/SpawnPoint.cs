@@ -10,7 +10,7 @@ public class SpawnPoint : MonoBehaviour
 
     private void Start()
     {
-        _spriteRenderer.enabled = false;
+        // _spriteRenderer.enabled = false;
     }
 
     public void SetSprite()
