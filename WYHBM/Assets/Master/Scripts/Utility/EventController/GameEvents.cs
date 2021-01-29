@@ -75,6 +75,7 @@ namespace Events
     public class ChangeSceneEvent : GameEvent
     {
         public bool load;
+        public bool isLoadAdditive;
         public SceneSO sceneData;
         public Vector3 newPlayerPosition;
         public bool instantFade;
@@ -102,7 +103,7 @@ namespace Events
 
     public class MainMenuEvent : GameEvent
     {
-        public MENU_TYPE menuType;
+        public UI_TYPE menuType;
     }
 
     public class DeviceChangeEvent : GameEvent

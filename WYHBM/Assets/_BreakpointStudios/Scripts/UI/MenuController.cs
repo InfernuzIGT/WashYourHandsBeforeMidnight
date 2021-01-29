@@ -1,223 +1,257 @@
-﻿using System.Collections;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Events;
 using FMODUnity;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    private FadeEvent _fadeEvent;
-    public Image _fadeImg;
+    public enum VERSION
+    {
+        Alpha,
+        Beta,
+        Release
+    }
 
-    [Header("Cameras")]
-    public GameObject[] cams;
+    [Header("General")]
+    [SerializeField, ReadOnly] private UI_TYPE _currentUIType = UI_TYPE.None;
+    [SerializeField, ReadOnly] private GameObject _lastGameObject = null;
+    [SerializeField] private SceneSO sceneData = null;
 
-    [Header("Generals")]
-    public GameObject mainPanel;
-    public GameObject optionsPanel;
-    public GameObject creditsPanel;
-    [Space]
-    public GameObject Popup;
+    [Header("Version")]
+    [SerializeField] private bool _isDemo = false;
+    [SerializeField] private VERSION version = VERSION.Alpha;
+    [SerializeField, Range(0, 10)] private int versionReview = 0;
 
     [Header("FMOD")]
-    public Slider sliderSound;
-    public Slider sliderMusic;
-    // ADD SFX SLIDER
+    [SerializeField] private StudioEventEmitter _buttonSounds;
+    [SerializeField] private StudioEventEmitter _menuMusic;
 
+    [Header("References")]
+#pragma warning disable 0414
+    [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+    [SerializeField, ConditionalHide] private TextMeshProUGUI versionTxt = null;
+    [SerializeField, ConditionalHide] private Image _logoImg = null;
+    [SerializeField, ConditionalHide] private OptionsController _optionsController = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasLogo = null;
+    [SerializeField, ConditionalHide] private InputActionReference _actionAnyButton = null;
+    [SerializeField, ConditionalHide] private InputActionReference _actionBack = null;
     [Space]
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasHome = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasMain = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasOptions = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasExit = null;
+    [Space]
+    [SerializeField, ConditionalHide] private GameObject _firstSelectMain = null;
+    [SerializeField, ConditionalHide] private ButtonUI _buttonPlay = null;
+    [SerializeField, ConditionalHide] private ButtonUI _buttonOptions = null;
+    [SerializeField, ConditionalHide] private ButtonUI _buttonQuit = null;
+    [Space]
+    [SerializeField, ConditionalHide] private GameObject _firstSelectQuit = null;
+    [SerializeField, ConditionalHide] private ButtonUI _buttonYes = null;
+    [SerializeField, ConditionalHide] private ButtonUI _buttonNo = null;
+    [Space]
+    [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
+    [SerializeField, ConditionalHide] private DeviceUtility _deviceUtility = null;
+    [SerializeField, ConditionalHide] private EventSystemUtility _eventSystemUtility = null;
 
-    public StudioEventEmitter _buttonSounds;
-    public StudioEventEmitter _menuMusic;
+    private ChangeSceneEvent _changeSceneEvent;
 
-    private GameObject _lastCam;
+    private FadeEvent _fadeEvent;
     private GameObject _lastPanel;
+
+    private Vector2 _logoStartSize = new Vector2(600, 600);
+    private float _logoStartY = 50f;
+
+    private Vector2 _logoEndSize = new Vector2(475, 475);
+    private float _logoEndY = 150f;
 
     // private bool _isDataLoaded;
     // public bool IsDataLoaded { get { return _isDataLoaded; } }
 
+    private void Awake()
+    {
+        SetVersion();
+        _deviceConfig.UpdateDictionary();
+    }
+
     private void Start()
     {
-        sliderSound.onValueChanged.AddListener(VolumeSound);
-        sliderMusic.onValueChanged.AddListener(VolumeMusic);
+        _changeSceneEvent = new ChangeSceneEvent();
+        _changeSceneEvent.load = true;
+        _changeSceneEvent.isLoadAdditive = false;
+        _changeSceneEvent.sceneData = sceneData;
+        _changeSceneEvent.instantFade = false;
 
-        _fadeEvent = new FadeEvent();
-        _fadeEvent.instant = true;
-        // _fadeEvent.callbackMid = ChangeScene;
+        // _menuMusic.Play();
 
-        // if (GameData.Data.isDataLoaded)
-        // {
-        //     NewGameButton.SetActive(false);
-        //     ContinueButton.SetActive(true);
-        // }
-
-        mainPanel.SetActive(true);
-
-        _menuMusic.Play();
+        CreateInput();
+        AddListeners();
+        _optionsController.LoadSettings();
     }
 
-    private void OnEnable()
+    private void CreateInput()
     {
-        EventController.AddListener<MainMenuEvent>(MainMenu);
+        _actionBack.action.performed += action => ExecuteBackInput();
+
+        _actionAnyButton.action.performed += action => PressAnyButton(action);
+        _actionAnyButton.action.Enable();
     }
 
-    private void OnDisable()
+    private void PressAnyButton(InputAction.CallbackContext action)
     {
-        EventController.RemoveListener<MainMenuEvent>(MainMenu);
+        _deviceUtility.DetectDevice(action.control.device);
+        _actionAnyButton.action.Disable();
+
+        _canvasHome.Show(false);
+        _canvasMain.Show(true, 0.5f);
+        _logoImg.rectTransform.DOLocalMoveY(_logoEndY, 1);
+        _logoImg.rectTransform.DOSizeDelta(_logoEndSize, 1);
+
+        _eventSystemUtility.SetSelectedGameObject(_firstSelectMain);
+        _lastGameObject = _firstSelectMain;
     }
 
-    private void PlayButtonSound(float parameter)
+    private void AddListeners()
     {
-        _buttonSounds.Play();
-        _buttonSounds.EventInstance.setParameterByName(FMODParameters.UI, parameter);
+        _buttonPlay.AddListener(() => Execute(UI_TYPE.Play));
+        _buttonOptions.AddListener(() => Execute(UI_TYPE.Options));
+        _buttonQuit.AddListener(() => Execute(UI_TYPE.Quit));
+
+        _buttonYes.AddListener(() => ExecuteQuit(true));
+        _buttonNo.AddListener(() => ExecuteQuit(false));
+
+        _optionsController.AddListeners(() => ExecuteBack(false), () => ExecuteBack(true));
     }
 
-    public void MainMenu(MainMenuEvent evt)
+    private void Execute(UI_TYPE type)
     {
-        switch (evt.menuType)
+        _currentUIType = type;
+
+        switch (type)
         {
-            case MENU_TYPE.Continue:
-                Fade();
-                cams[3].SetActive(true);
-
-                _lastCam = cams[0];
-
-                PlayButtonSound(3);
+            case UI_TYPE.Play:
+                _buttonSounds.EventInstance.setParameterByName("UI", 3f);
+                _eventSystemUtility.DisableInput(true);
+                EventController.TriggerEvent(_changeSceneEvent);
                 break;
 
-            case MENU_TYPE.NewGame:
-                Fade();
-                cams[3].SetActive(true);
+            case UI_TYPE.Options:
+                _canvasMain.Show(false);
+                _canvasLogo.Show(false);
+                _canvasOptions.Show(true, 0.5f);
 
-                _lastCam = cams[0];
-
-                // GameData.Data.isDataLoaded = true;
-
-                PlayButtonSound(3);
+                _eventSystemUtility.SetSelectedGameObject(_optionsController.FirstSelectOptions);
+                _lastGameObject = _buttonOptions.gameObject;
                 break;
 
-            case MENU_TYPE.Options:
-                creditsPanel.SetActive(false);
-                optionsPanel.SetActive(true);
+            case UI_TYPE.Quit:
+                _canvasMain.Show(false);
+                _canvasLogo.Show(false);
+                _canvasExit.Show(true, 0.5f);
 
-                cams[1].SetActive(true);
-                _lastCam = cams[0];
-
-                PlayButtonSound(1);
+                _eventSystemUtility.SetSelectedGameObject(_firstSelectQuit);
+                _lastGameObject = _buttonQuit.gameObject;
                 break;
 
-            case MENU_TYPE.Credits:
-                optionsPanel.SetActive(false);
-                creditsPanel.SetActive(true);
-
-                cams[2].SetActive(true);
-                _lastCam = cams[0];
-
-                _menuMusic.EventInstance.setParameterByName(FMODParameters.Credits, 1f);
-                PlayButtonSound(1);
-                break;
-
-            case MENU_TYPE.Back:
-
-                DesactivateAll();
-
-                for (int i = 0; i < cams.Length; i++)
-                {
-                    cams[i].SetActive(false);
-                }
-
-                _lastCam.SetActive(true);
-
-                PlayButtonSound(0);
-                break;
-
-            case MENU_TYPE.Exit:
-                DesactivateAll();
-
-                ShowPopup(true);
-                PlayButtonSound(3);
-                break;
-
-            case MENU_TYPE.YesPopup:
-                Application.Quit();
-                PlayButtonSound(3);
+            case UI_TYPE.None:
+            default:
                 break;
         }
     }
 
-    private void Fade()
+    private void ExecuteBackInput()
     {
-        // Change Fade when world is end
-        _fadeImg.DOFade(1, 2f).OnKill(GoToMaster);
+        switch (_currentUIType)
+        {
+            case UI_TYPE.Options:
+                ExecuteBack(true);
+                break;
+
+            case UI_TYPE.Quit:
+                ExecuteQuit(false);
+                break;
+
+            case UI_TYPE.None:
+            default:
+                break;
+        }
 
     }
 
-    private void GoToMaster()
+    private void ExecuteBack(bool isBack)
     {
-        EventController.TriggerEvent(_fadeEvent);
+        if (isBack)
+        {
+            _canvasOptions.Show(false);
+            _canvasMain.Show(true, 0.5f);
+            _canvasLogo.Show(true, 0.5f);
+
+            _eventSystemUtility.SetSelectedGameObject(_lastGameObject);
+            _lastGameObject = _optionsController.FirstSelectOptions;
+
+            _currentUIType = UI_TYPE.None;
+        }
+        // else
+        // {
+        //     // TODO Mariano: Apply Settings
+        // }
     }
 
-    public void ShowPopup(bool _isOpen)
+    private void ExecuteQuit(bool isYes)
     {
-        Popup.SetActive(_isOpen);
+        if (isYes)
+        {
+            FMODPlayButtonSound(0);
+            _buttonSounds.EventInstance.setParameterByName("UI", 0f);
+
+            _eventSystemUtility.DisableInput(true);
+            Application.Quit();
+        }
+        else
+        {
+            _canvasExit.Show(false);
+            _canvasMain.Show(true, 0.5f);
+            _canvasLogo.Show(true, 0.5f);
+
+            _eventSystemUtility.SetSelectedGameObject(_lastGameObject);
+            _lastGameObject = _firstSelectMain;
+
+            _currentUIType = UI_TYPE.None;
+        }
     }
 
-    public void DesactivateAll()
-    {
-        ShowPopup(false);
-        optionsPanel.SetActive(false);
-        creditsPanel.SetActive(false);
+    #region FMOD
 
-        PlayButtonSound(4);
-        _menuMusic.EventInstance.setParameterByName(FMODParameters.Credits, 0f);
+    private void FMODPlayButtonSound(float value)
+    {
+        _buttonSounds.Play();
+        _buttonSounds.EventInstance.setParameterByName(FMODParameters.UI, value);
     }
 
-    public void VolumeSound(float vol)
+    #endregion
+
+    public void SetVersion()
     {
-        RuntimeManager.StudioSystem.setParameterByName("SoundsSlider", vol);
+        versionTxt.text = string.Format("{0}{1}{2}{3}", _isDemo ? "Demo " : "", Application.version, GetVersion(), versionReview == 0 ? "" : versionReview.ToString());
     }
 
-    public void VolumeMusic(float vol)
+    private string GetVersion()
     {
-        RuntimeManager.StudioSystem.setParameterByName("MusicSlider", vol);
+        switch (version)
+        {
+            case VERSION.Alpha:
+                return "a";
+            case VERSION.Beta:
+                return "b";
+            case VERSION.Release:
+                return "-RC";
+        }
+
+        return ".";
     }
-
-    //     public void OnYesButton()
-    //     {
-    //         if (_isQuitting)
-    //         {
-    //             Application.Quit();
-
-    //             buttonSounds.Play();
-    //             buttonSounds.EventInstance.setParameterByName("UI", 0f);
-
-    //         }
-    //         if (_isCreatingNew)
-    //         {
-    //             Debug.Log($"<b> New Game is created </b>");
-
-    //             buttonSounds.Play();
-    //             buttonSounds.EventInstance.setParameterByName("UI", 3f);
-    //             menuMusic.Stop();
-    //             // Save new data in GAMEDATA
-
-    //             LoadScene(SCENE_INDEX.Master);
-    //         }
-
-    //         if (_isContinuing)
-    //         {
-    //             Debug.Log($"<b> Loading Game </b>");
-
-    //             buttonSounds.Play();
-    //             buttonSounds.EventInstance.setParameterByName("UI", 3f);
-    //             menuMusic.Stop();
-    //             // Load demo scene
-    //         }
-    //     }
-
-    //     public void OnNoButton()
-    //     {
-    //         buttonSounds.Play();
-    //         buttonSounds.EventInstance.setParameterByName("UI", 2f);
-    //     }
 }

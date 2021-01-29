@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f207b039e9fd864c876f7586ff51efb, type: 3}
+  m_Name: _NewGame
+  m_EditorClassIdentifier: 
+  description: Escenas que se cargan al comenzar una partida nueva.
+  scenes:
+  - sceneAsset: {fileID: 102900000, guid: d3b76d9ee19478f45882e8690589a880, type: 3}
+    scenePath: Assets/Master/Persistent.unity
+  - sceneAsset: {fileID: 102900000, guid: a9dbbd38a65f57749abedaf1b320277f, type: 3}
+    scenePath: Assets/_BreakpointStudios/Levels/Level Test/Scenes/Level Test.unity

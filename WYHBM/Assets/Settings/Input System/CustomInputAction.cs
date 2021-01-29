@@ -43,6 +43,14 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""13740944-d7b5-4e20-b7be-3979b0465244"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Interaction"",
                     ""type"": ""Button"",
                     ""id"": ""82ecff7d-a405-4943-b24a-59db54305473"",
@@ -83,22 +91,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""interactions"": ""Press""
                 },
                 {
-                    ""name"": ""DebugMode"",
-                    ""type"": ""Button"",
-                    ""id"": ""68b6befc-e8bc-4370-9652-08060962ccd4"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Crouch"",
-                    ""type"": ""Button"",
-                    ""id"": ""13740944-d7b5-4e20-b7be-3979b0465244"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Listen Mode"",
                     ""type"": ""Button"",
                     ""id"": ""18725fcf-6b4e-447b-a558-5631689a2271"",
@@ -110,6 +102,14 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""name"": ""Run"",
                     ""type"": ""Button"",
                     ""id"": ""bde9c4a2-d848-4e90-bed7-b36f49141a85"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""DebugMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""68b6befc-e8bc-4370-9652-08060962ccd4"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -188,7 +188,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Steam;Xbox360;Switch;PS3"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -199,7 +199,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -210,7 +210,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -221,21 +221,10 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;PS3;Xbox360"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c2f3478d-6bad-4fc9-97e1-07e77c6fff21"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic"",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
@@ -250,11 +239,11 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""af49d97e-c699-48e2-aae1-ab5e556bfe1e"",
-                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""id"": ""c2f3478d-6bad-4fc9-97e1-07e77c6fff21"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""XboxOne"",
+                    ""groups"": ""Generic;Xbox360;PS3;Steam"",
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -272,12 +261,23 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8cce47fb-c4e6-4bbb-ab22-6f1be92fe3fd"",
-                    ""path"": ""<Gamepad>/start"",
+                    ""id"": ""af49d97e-c699-48e2-aae1-ab5e556bfe1e"",
+                    ""path"": ""<XInputController>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;Switch;XboxOne;PS4"",
-                    ""action"": ""Pause"",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b0b9aec-772b-4b8a-885c-988ce6430fd3"",
+                    ""path"": ""<SwitchProControllerHID>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Switch"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -288,6 +288,17 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8cce47fb-c4e6-4bbb-ab22-6f1be92fe3fd"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;Switch;XboxOne;PS4;Steam;Xbox360;PS3"",
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -309,41 +320,8 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
                     ""action"": ""Options"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""238cedf1-f9f6-4182-8958-3bffcc3e86e7"",
-                    ""path"": ""<Keyboard>/h"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""DebugMode"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6fba1139-96f3-41cc-b55f-e9f27efde05e"",
-                    ""path"": ""<Gamepad>/dpad/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
-                    ""action"": ""DebugMode"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8fd8880c-3dea-4bfa-bab7-d470bd419e5b"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic"",
-                    ""action"": ""Interaction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -354,6 +332,28 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
+                    ""action"": ""Interaction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fd8880c-3dea-4bfa-bab7-d470bd419e5b"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;Steam;Xbox360;PS3"",
+                    ""action"": ""Interaction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""214e9d52-4b22-4a76-9518-7ae136a6c335"",
+                    ""path"": ""<DualShockGamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
                     ""action"": ""Interaction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -371,11 +371,11 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""214e9d52-4b22-4a76-9518-7ae136a6c335"",
-                    ""path"": ""<DualShockGamepad>/buttonNorth"",
+                    ""id"": ""1a851f4e-ec9e-4ee5-85ba-f329dac1c95c"",
+                    ""path"": ""<SwitchProControllerHID>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""PS4"",
+                    ""groups"": ""Switch"",
                     ""action"": ""Interaction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -397,18 +397,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic"",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3af25df2-d732-4183-a3aa-b632461c1310"",
-                    ""path"": ""<XInputController>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XboxOne"",
+                    ""groups"": ""Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -426,56 +415,23 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ea79e5bc-e06d-45d0-a6d0-2267e75f6e40"",
-                    ""path"": ""<Keyboard>/ctrl"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Crouch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d1580cd3-6131-43c1-a6c6-b2decfaae453"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Crouch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bfd22d73-0018-4c41-9083-51cd92d12fb2"",
-                    ""path"": ""<DualShockGamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PS4"",
-                    ""action"": ""Crouch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""26d067ad-24a4-4897-985b-cdc4da39187c"",
-                    ""path"": ""<XInputController>/buttonEast"",
+                    ""id"": ""3af25df2-d732-4183-a3aa-b632461c1310"",
+                    ""path"": ""<XInputController>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XboxOne"",
-                    ""action"": ""Crouch"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c0123517-f285-419d-bf44-3ee80a5470e3"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""id"": ""b19c2582-248c-4535-a7b3-149e4c72bf11"",
+                    ""path"": ""<SwitchProControllerHID>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic"",
-                    ""action"": ""Crouch"",
+                    ""groups"": ""Switch"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -493,10 +449,10 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""29a32d1a-e203-423b-85a8-9ecde8b80446"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;PS3;Xbox360;Steam"",
                     ""action"": ""Listen Mode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -518,7 +474,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;PS3;Xbox360;Steam"",
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -540,7 +496,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -562,8 +518,96 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
                     ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""238cedf1-f9f6-4182-8958-3bffcc3e86e7"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""DebugMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6fba1139-96f3-41cc-b55f-e9f27efde05e"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;PS3;Xbox360;Steam"",
+                    ""action"": ""DebugMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d1580cd3-6131-43c1-a6c6-b2decfaae453"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea79e5bc-e06d-45d0-a6d0-2267e75f6e40"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0123517-f285-419d-bf44-3ee80a5470e3"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;Steam;Xbox360;PS3"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfd22d73-0018-4c41-9083-51cd92d12fb2"",
+                    ""path"": ""<DualShockGamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""26d067ad-24a4-4897-985b-cdc4da39187c"",
+                    ""path"": ""<XInputController>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ccb1a1da-393d-43db-bfc9-9b273b453757"",
+                    ""path"": ""<SwitchProControllerHID>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Switch"",
+                    ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -614,12 +658,12 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Reset Camera"",
+                    ""name"": ""CustomAnyButton"",
                     ""type"": ""Button"",
-                    ""id"": ""0190e7d9-ff14-4f6d-945d-e0635b23418c"",
+                    ""id"": ""f3e74380-d6d3-4625-b938-bc0d78cbca0f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -640,7 +684,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic"",
+                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -651,7 +695,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;Switch;PS4;Generic"",
+                    ""groups"": ""Joystick;XboxOne;Switch;PS4;Generic;Xbox360;PS3;Steam"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -662,7 +706,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;Switch;PS4;Generic"",
+                    ""groups"": ""Joystick;XboxOne;Switch;PS4;Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -673,7 +717,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic"",
+                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -684,7 +728,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic"",
+                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -695,7 +739,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic"",
+                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -706,7 +750,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic"",
+                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -717,7 +761,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic"",
+                    ""groups"": ""Joystick;XboxOne;PS4;Switch;Generic;Steam;Xbox360;PS3"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -834,30 +878,30 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9134c747-4b25-4d6c-bcea-74c1608efada"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e15ee034-1da0-4277-b6fc-dddb59a1f042"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""efc5e97c-0f75-4e36-aad5-b7b345254607"",
                     ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3791e373-af72-4b31-a39f-fea3efe6ef56"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6702134e-5903-46ab-be15-238d42dffc5d"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
@@ -878,19 +922,19 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1f3b461e-c3d0-4ea0-bafa-334568edd142"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""id"": ""7be171d8-a33d-4e79-8a00-d1fc3746469f"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""PC"",
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7be171d8-a33d-4e79-8a00-d1fc3746469f"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""id"": ""94149419-5483-4cce-8de2-933f42225868"",
+                    ""path"": ""<Keyboard>/backspace"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
@@ -911,28 +955,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7a0fb1a6-099e-4753-a0ff-225714cc6634"",
-                    ""path"": ""<Mouse>/middleButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Reset Camera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e789da19-0995-4b90-b540-ab68ee566df0"",
-                    ""path"": ""<Gamepad>/rightStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
-                    ""action"": ""Reset Camera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""6eda83e5-bb06-4e88-b2f0-d330f6dd89a1"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
@@ -948,7 +970,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -970,8 +992,514 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Generic;PS4;XboxOne;Switch"",
+                    ""groups"": ""Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
                     ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f3b461e-c3d0-4ea0-bafa-334568edd142"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;Steam;Xbox360;PS3"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e20795b-414d-4aca-890f-dd958f227aec"",
+                    ""path"": ""<DualShockGamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2641ce12-6c8c-489d-bd81-8581007eb8d4"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd2475bc-5cf9-443f-9648-27ec096210b9"",
+                    ""path"": ""<SwitchProControllerHID>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Switch"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9134c747-4b25-4d6c-bcea-74c1608efada"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;Steam;Xbox360;PS3"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7b691817-2bec-4156-8da4-a2f7191b4531"",
+                    ""path"": ""<DualShockGamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b305fdac-5900-4b54-b0bc-cc7bb838fb84"",
+                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4d67c652-9f9e-48b7-ab2e-ff673bff40ce"",
+                    ""path"": ""<SwitchProControllerHID>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Switch"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b7e4acf-54e5-4f12-acb8-7ad17235dee5"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b91289b6-42e0-4193-8207-5785c0e008b0"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e44cd879-be7e-4aba-a63c-2022ed4024a1"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9db5526-d5b5-4d34-a125-5efd1960e62a"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f848c3d-6812-454b-be50-59aa6ae0fa2b"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ee12ff3f-da79-4140-87f9-ddc908d10d4c"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7dc26f47-9ee1-4c57-9c87-25397f492039"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""25b1855f-136e-4dd1-b8ca-8c50eb033a04"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""475db692-97f7-461c-b0d8-af9fbf391346"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8286ea5e-1127-4c75-a001-b3e0b8f96ea9"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3bde96be-f833-4ad9-9913-6ff4efae36d8"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bc838d31-9331-4e40-8fd4-f54b7bd594d8"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""048b5fef-db77-486a-972f-01ee788ba1e3"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2aa2c88e-ccb0-4995-a3d7-e1c3f064f638"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1047f65-6349-4f8e-8ab2-b6f2d49b97a3"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a2248711-89c8-4932-9586-076caa1d3bd6"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2de8a21c-c7b1-45e2-957e-dd9f8d9cd1d2"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8499fd4-d3b6-464f-a9e7-1a8e4592371c"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a5a49d29-513c-4b27-9719-a621334000b9"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66ff2a0a-9963-4ab8-a808-2f1bec830e11"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab47fdd9-1db0-4d29-92e4-1459d4805931"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1610bd95-0a0a-4a93-9db8-7e64ec4d4c61"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""83911f2a-12a3-4a03-9c71-42a893be0cba"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0850ea6f-6b24-4a34-938d-c6b89999b2e9"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8cb6eb7-2e40-460e-b92f-eee4606d7dd9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11a6db36-1a5c-47a5-a575-d8455c14ae56"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b954c7b1-897c-4783-988a-f0788b2fd15c"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""17d56edc-4ce9-4651-92d9-0756cbbcd084"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8e98245-2ff5-41d7-8226-c7db26ff3a05"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c79f024-99fb-4f3f-8c0a-eb9dac3d023f"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""016810bc-0ef0-49d8-9a18-beb4dfa44ffe"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5da26fe7-c145-49ca-b345-ddf5cc0a003d"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""410af019-bb0f-4249-a60f-82babb97ca35"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86a32c5a-2a2e-45db-ad28-b906e0ad621f"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""40c2bae0-a337-4946-9805-c6ba06b225b5"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab43987d-56cf-47a4-ac85-68190f69d3d5"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb04470e-94f1-4020-a34d-f5798e78d8c5"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""289f4343-658e-4b62-a2d8-31620a1526b4"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC;Generic;PS4;XboxOne;Switch;Steam;Xbox360;PS3"",
+                    ""action"": ""CustomAnyButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1038,6 +1566,21 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""isOR"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Steam"",
+            ""bindingGroup"": ""Steam"",
+            ""devices"": []
+        },
+        {
+            ""name"": ""Xbox360"",
+            ""bindingGroup"": ""Xbox360"",
+            ""devices"": []
+        },
+        {
+            ""name"": ""PS3"",
+            ""bindingGroup"": ""PS3"",
+            ""devices"": []
         }
     ]
 }");
@@ -1046,15 +1589,15 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Zoom = m_Player.FindAction("Zoom", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Options = m_Player.FindAction("Options", throwIfNotFound: true);
-        m_Player_DebugMode = m_Player.FindAction("DebugMode", throwIfNotFound: true);
-        m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_ListenMode = m_Player.FindAction("Listen Mode", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+        m_Player_DebugMode = m_Player.FindAction("DebugMode", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Look = m_UI.FindAction("Look", throwIfNotFound: true);
@@ -1062,7 +1605,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
-        m_UI_ResetCamera = m_UI.FindAction("Reset Camera", throwIfNotFound: true);
+        m_UI_CustomAnyButton = m_UI.FindAction("CustomAnyButton", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1115,15 +1658,15 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Zoom;
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Interaction;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Options;
-    private readonly InputAction m_Player_DebugMode;
-    private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_ListenMode;
     private readonly InputAction m_Player_Run;
+    private readonly InputAction m_Player_DebugMode;
     public struct PlayerActions
     {
         private @CustomInputAction m_Wrapper;
@@ -1131,15 +1674,15 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Zoom => m_Wrapper.m_Player_Zoom;
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Options => m_Wrapper.m_Player_Options;
-        public InputAction @DebugMode => m_Wrapper.m_Player_DebugMode;
-        public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @ListenMode => m_Wrapper.m_Player_ListenMode;
         public InputAction @Run => m_Wrapper.m_Player_Run;
+        public InputAction @DebugMode => m_Wrapper.m_Player_DebugMode;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1158,6 +1701,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
+                @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @Interaction.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteraction;
                 @Interaction.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteraction;
                 @Interaction.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteraction;
@@ -1173,18 +1719,15 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Options.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOptions;
                 @Options.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOptions;
                 @Options.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOptions;
-                @DebugMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
-                @DebugMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
-                @DebugMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
-                @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
-                @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
-                @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @ListenMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnListenMode;
                 @ListenMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnListenMode;
                 @ListenMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnListenMode;
                 @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                @DebugMode.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
+                @DebugMode.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
+                @DebugMode.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebugMode;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1198,6 +1741,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Crouch.started += instance.OnCrouch;
+                @Crouch.performed += instance.OnCrouch;
+                @Crouch.canceled += instance.OnCrouch;
                 @Interaction.started += instance.OnInteraction;
                 @Interaction.performed += instance.OnInteraction;
                 @Interaction.canceled += instance.OnInteraction;
@@ -1213,18 +1759,15 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Options.started += instance.OnOptions;
                 @Options.performed += instance.OnOptions;
                 @Options.canceled += instance.OnOptions;
-                @DebugMode.started += instance.OnDebugMode;
-                @DebugMode.performed += instance.OnDebugMode;
-                @DebugMode.canceled += instance.OnDebugMode;
-                @Crouch.started += instance.OnCrouch;
-                @Crouch.performed += instance.OnCrouch;
-                @Crouch.canceled += instance.OnCrouch;
                 @ListenMode.started += instance.OnListenMode;
                 @ListenMode.performed += instance.OnListenMode;
                 @ListenMode.canceled += instance.OnListenMode;
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @DebugMode.started += instance.OnDebugMode;
+                @DebugMode.performed += instance.OnDebugMode;
+                @DebugMode.canceled += instance.OnDebugMode;
             }
         }
     }
@@ -1238,7 +1781,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Submit;
     private readonly InputAction m_UI_Cancel;
-    private readonly InputAction m_UI_ResetCamera;
+    private readonly InputAction m_UI_CustomAnyButton;
     public struct UIActions
     {
         private @CustomInputAction m_Wrapper;
@@ -1248,7 +1791,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
-        public InputAction @ResetCamera => m_Wrapper.m_UI_ResetCamera;
+        public InputAction @CustomAnyButton => m_Wrapper.m_UI_CustomAnyButton;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1273,9 +1816,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Cancel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
-                @ResetCamera.started -= m_Wrapper.m_UIActionsCallbackInterface.OnResetCamera;
-                @ResetCamera.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnResetCamera;
-                @ResetCamera.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnResetCamera;
+                @CustomAnyButton.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
+                @CustomAnyButton.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
+                @CustomAnyButton.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1295,9 +1838,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
-                @ResetCamera.started += instance.OnResetCamera;
-                @ResetCamera.performed += instance.OnResetCamera;
-                @ResetCamera.canceled += instance.OnResetCamera;
+                @CustomAnyButton.started += instance.OnCustomAnyButton;
+                @CustomAnyButton.performed += instance.OnCustomAnyButton;
+                @CustomAnyButton.canceled += instance.OnCustomAnyButton;
             }
         }
     }
@@ -1347,20 +1890,47 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
             return asset.controlSchemes[m_SwitchSchemeIndex];
         }
     }
+    private int m_SteamSchemeIndex = -1;
+    public InputControlScheme SteamScheme
+    {
+        get
+        {
+            if (m_SteamSchemeIndex == -1) m_SteamSchemeIndex = asset.FindControlSchemeIndex("Steam");
+            return asset.controlSchemes[m_SteamSchemeIndex];
+        }
+    }
+    private int m_Xbox360SchemeIndex = -1;
+    public InputControlScheme Xbox360Scheme
+    {
+        get
+        {
+            if (m_Xbox360SchemeIndex == -1) m_Xbox360SchemeIndex = asset.FindControlSchemeIndex("Xbox360");
+            return asset.controlSchemes[m_Xbox360SchemeIndex];
+        }
+    }
+    private int m_PS3SchemeIndex = -1;
+    public InputControlScheme PS3Scheme
+    {
+        get
+        {
+            if (m_PS3SchemeIndex == -1) m_PS3SchemeIndex = asset.FindControlSchemeIndex("PS3");
+            return asset.controlSchemes[m_PS3SchemeIndex];
+        }
+    }
     public interface IPlayerActions
     {
         void OnLook(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
         void OnInteraction(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnOptions(InputAction.CallbackContext context);
-        void OnDebugMode(InputAction.CallbackContext context);
-        void OnCrouch(InputAction.CallbackContext context);
         void OnListenMode(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnDebugMode(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1369,6 +1939,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
-        void OnResetCamera(InputAction.CallbackContext context);
+        void OnCustomAnyButton(InputAction.CallbackContext context);
     }
 }

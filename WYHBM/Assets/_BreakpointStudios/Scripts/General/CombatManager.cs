@@ -7,7 +7,6 @@ public class CombatManager : MonoBehaviour
 {
     public GameObject placeholder;
 
-    [SerializeField] private WorldConfig _worldConfig = null;
     [SerializeField] private CombatConfig _combatConfig = null;
 
     [Header("Character - Players")]

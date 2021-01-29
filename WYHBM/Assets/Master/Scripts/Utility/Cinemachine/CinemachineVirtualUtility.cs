@@ -27,6 +27,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private bool _isFade;
     private int _indexZoom;
     private bool _canMove = true;
+    private bool _isInitialized;
 
     private void Awake()
     {
@@ -66,11 +67,13 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
         _indexZoom = _startIndexZoom;
         _cinemachineFramingTransposer.m_CameraDistance = _playerConfig.zoomValues[_indexZoom];
+        
+        _isInitialized = true;
     }
 
     private void Update()
     {
-        if (_isFade || !_canMove)
+        if (_isFade || !_canMove || !_isInitialized)
         {
             _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
             _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;

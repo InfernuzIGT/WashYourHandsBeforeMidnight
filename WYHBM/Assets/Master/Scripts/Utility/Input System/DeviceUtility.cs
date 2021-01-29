@@ -10,7 +10,7 @@ public class DeviceUtility : MonoBehaviour
     private bool _isAdded;
     private bool _isReconnected;
 
-    public void DetectDevice()
+    public void DetectDevice(InputDevice inputDevice = null)
     {
         switch (Application.platform)
         {
@@ -31,7 +31,7 @@ public class DeviceUtility : MonoBehaviour
 
             default:
                 _lastDevice = DEVICE.PC;
-                _currentDevice = InputUtility.GetStartDevice();
+                _currentDevice = inputDevice != null ? InputUtility.GetCurrentDevice(inputDevice) : InputUtility.GetStartDevice();
                 break;
         }
 
@@ -40,7 +40,7 @@ public class DeviceUtility : MonoBehaviour
         _deviceEvent.device = _currentDevice;
         _deviceEvent.gamepad = InputUtility.GetCurrentGamepad();
         EventController.TriggerEvent(_deviceEvent);
-        
+
         // InputSystem.onActionChange += (obj, change) =>
         // {
         //     if (change == InputActionChange.ActionStarted)
@@ -56,7 +56,7 @@ public class DeviceUtility : MonoBehaviour
             (device, change) =>
             {
 
-                if (InputUtility.debugMode)Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
+                if (InputUtility.printInfo)Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
 
                 switch (change)
                 {

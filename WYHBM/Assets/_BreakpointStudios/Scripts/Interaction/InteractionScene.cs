@@ -7,6 +7,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
     [Header("Cutscene")]
     public Vector3 newPlayerPosition;
     [SerializeField] private bool _load = false;
+    [SerializeField] private bool _isLoadAdditive = true;
     [SerializeField] private bool _instantFade = false;
 
     [SerializeField] private SceneSO sceneData = null;
@@ -27,6 +28,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
         _changeSceneEvent = new ChangeSceneEvent();
         _changeSceneEvent.load = _load;
+        _changeSceneEvent.isLoadAdditive = _isLoadAdditive;
         _changeSceneEvent.newPlayerPosition = newPlayerPosition;
         _changeSceneEvent.sceneData = sceneData;
         _changeSceneEvent.instantFade = _instantFade;

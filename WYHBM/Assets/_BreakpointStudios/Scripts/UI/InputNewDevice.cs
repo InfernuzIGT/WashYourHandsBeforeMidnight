@@ -7,9 +7,15 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroupUtility))]
 public class InputNewDevice : MonoBehaviour
 {
-    [Header("Input New Device")]
-    [SerializeField] private TextMeshProUGUI _deviceTxt = null;
-    [SerializeField] private Image _deviceImg = null;
+    [SerializeField, ReadOnly] private DeviceInfo _deviceInfo = null;
+
+    [Header("References")]
+#pragma warning disable 0414
+    [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+    [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
+    [SerializeField, ConditionalHide] private TextMeshProUGUI _deviceTxt = null;
+    [SerializeField, ConditionalHide] private Image _deviceImg = null;
 
     private CanvasGroupUtility _canvasUtility;
     private RectTransform _rectTransform;
@@ -40,7 +46,10 @@ public class InputNewDevice : MonoBehaviour
     {
         if (!evt.showPopup)return;
 
-        GameData.Instance.SetDeviceInfo(evt.device, ref _deviceTxt, ref _deviceImg);
+        _deviceInfo = _deviceConfig.GetDeviceInfo(evt.device);
+
+        _deviceTxt.text = _deviceInfo.name;
+        _deviceImg.sprite = _deviceInfo.icon;
 
         Play();
     }
@@ -56,13 +65,13 @@ public class InputNewDevice : MonoBehaviour
         _rectTransform.anchoredPosition = _originalPosition;
 
         _tweenStart = transform
-            .DOLocalMoveX(-500, .5f)
+            .DOLocalMoveX(-400, .5f)
             .SetEase(Ease.InOutSine)
             .SetRelative()
             .SetLoops(0);
 
         _tweenEnd = transform
-            .DOLocalMoveX(500, .5f)
+            .DOLocalMoveX(400, .5f)
             .SetEase(Ease.InOutSine)
             .SetRelative()
             .SetLoops(0)

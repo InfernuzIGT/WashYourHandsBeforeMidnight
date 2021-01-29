@@ -55,14 +55,7 @@ public class LocalizationUtility : MonoBehaviour
 
     public void SelectNextLanguage(bool isNext)
     {
-        if (isNext)
-        {
-            _index = _index < _listLocales.Count - 1 ? _index + 1 : 0;
-        }
-        else
-        {
-            _index = _index > 0 ? _index - 1 : _listLocales.Count - 1;
-        }
+        _index = Utils.GetNextIndex(isNext, _index, _listLocales.Count - 1);
 
         UpdateLocale(_listLocales[_index]);
     }

@@ -16,8 +16,9 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     [SerializeField, Range(0, 360)] private float _viewAngle = 135f;
 
     [Header("References")]
+#pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
-    [SerializeField, ConditionalHide] private WorldConfig _worldConfig = null;
+#pragma warning restore 0414
     [SerializeField, ConditionalHide] private InteractionNPC _interactionNPC = null;
     [SerializeField, ConditionalHide] private InputHoldUtility _holdUtility = null;
     [SerializeField, ConditionalHide] private FieldOfView _fieldOfView = null;

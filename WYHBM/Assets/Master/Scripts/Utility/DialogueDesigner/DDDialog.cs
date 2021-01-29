@@ -22,7 +22,7 @@ public class DDDialog : MonoBehaviour
     [SerializeField, ReadOnly] private NPCController _currentNPC = null;
     [SerializeField, ReadOnly] private string _currentLanguage = "";
     [SerializeField, ReadOnly] private DIALOG_STATE _dialogState = DIALOG_STATE.Done;
-    [SerializeField, ReadOnly] private bool _debugMode = false;
+    [SerializeField, ReadOnly] private bool _legacyMode = false;
 
     [Header("Settings")]
     [SerializeField, Range(0, 1f)] private float timeStart = 0.5f;
@@ -130,7 +130,7 @@ public class DDDialog : MonoBehaviour
         // //m_dialoguePlayer.OverrideOnEvaluateCondition += OnEvaluateConditionSpecial;
         // //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
 
-        _debugMode = GameData.Instance.dialogueDesignerDebugMode;
+        _legacyMode = GameData.Instance.DevDDLegacyMode;
     }
 
     private void OnEnable()
@@ -316,7 +316,7 @@ public class DDDialog : MonoBehaviour
 
     private void UpdateString(ShowMessageNode node)
     {
-        if (_debugMode)
+        if (_legacyMode)
         {
             _currentDialog = node.GetText(_currentLanguage);
         }
@@ -400,7 +400,7 @@ public class DDDialog : MonoBehaviour
 
         if (_choiceNode != null)
         {
-            if (_debugMode)
+            if (_legacyMode)
             {
                 for (int i = 0; i < _choiceNode.Choices.Length; i++)
                 {
@@ -515,7 +515,7 @@ public class DDDialog : MonoBehaviour
 
         if (_choiceNode != null)
         {
-            if (_debugMode)
+            if (_legacyMode)
             {
                 for (int i = 0; i < _choiceNode.Choices.Length; i++)
                 {

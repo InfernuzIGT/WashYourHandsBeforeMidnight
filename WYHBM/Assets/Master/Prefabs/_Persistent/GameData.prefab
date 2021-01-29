@@ -44,8 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b16d0e33360a94d9849118f2893d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputDebugMode: 0
-  dialogueDesignerDebugMode: 0
+  _devPrintInputInfo: 0
+  _devDDLegacyMode: 0
+  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
+  _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
   sessionIndex: 0
   sessionData:
     sessionIndex: 0
@@ -55,11 +57,6 @@ MonoBehaviour:
     newSpawnPoint: {fileID: 0}
     listQuest: []
     listIds: []
-  deviceData:
-  - {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
-  - {fileID: 11400000, guid: 6893bcf79cdc59244bac89d9c3fbfa19, type: 2}
-  - {fileID: 11400000, guid: 7e3cf72de6efb51459e9cb869088913a, type: 2}
-  - {fileID: 11400000, guid: 584e150e9d0803c439026b42b6ca259d, type: 2}
 --- !u!114 &8947044879963769972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,17 +70,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _language: 
-  OnUpdateLanguage:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7222876601119083809}
-        m_MethodName: UpdateLanguage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2

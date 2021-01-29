@@ -4,6 +4,7 @@ using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.Switch;
 using UnityEngine.InputSystem.XInput;
 
+// The names must match with Controls Schemes!
 public enum DEVICE
 {
     PC = 0,
@@ -11,25 +12,39 @@ public enum DEVICE
     PS4 = 2,
     XboxOne = 3,
     Switch = 4,
-    // TODO Mariano: Steam? Xbox360?
+    Steam = 5,
+    Xbox360 = 6,
+    PS3 = 7
 }
 
 public enum INPUT_ACTION
 {
     None = 0,
-    Interaction = 1,
+    Interact = 1,
     Attack = 2,
     Jump = 3,
-    Cancel = 4,
+    Crouch = 4,
     Pause = 5,
     Options = 6,
+    Select = 7,
+    Back = 8,
+    Move = 9,
+    Look = 10,
+    Zoom = 11,
     // TODO Mariano: Complete
+}
+
+public enum RUMBLE_TYPE
+{
+    None = 0,
+    Options = 1,
+    Attack = 2,
 }
 
 public static class InputUtility
 {
 
-    public static bool debugMode = false;
+    public static bool printInfo = false;
 
     public static bool ContainsDeviceName(string name, InputDevice device)
     {
@@ -91,7 +106,7 @@ public static class InputUtility
         PrintStartDevice(DEVICE.PC);
         return DEVICE.PC;
     }
-    
+
     public static Gamepad GetCurrentGamepad()
     {
         return Gamepad.current;
@@ -111,6 +126,7 @@ public static class InputUtility
                 PrintCurrentDevice(DEVICE.XboxOne, InputSystem.devices[i]);
                 return DEVICE.XboxOne;
             }
+
             if (ContainsDeviceName(Devices.Name.SWITCH, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.Switch, InputSystem.devices[i]);
@@ -121,7 +137,8 @@ public static class InputUtility
                 PrintCurrentDevice(DEVICE.Generic, InputSystem.devices[i]);
                 return DEVICE.Generic;
             }
-            if (ContainsDeviceName(Devices.Name.KEYBOARD, InputSystem.devices[i]))
+            if (ContainsDeviceName(Devices.Name.KEYBOARD, InputSystem.devices[i]) ||
+                ContainsDeviceName(Devices.Name.MOUSE, InputSystem.devices[i]))
             {
                 PrintCurrentDevice(DEVICE.PC);
                 return DEVICE.PC;
@@ -152,10 +169,10 @@ public static class InputUtility
                 return DEVICE.Switch;
 
             case Devices.NativeName.Keyboard:
+            case Devices.NativeName.Mouse:
                 PrintCurrentDevice(DEVICE.PC);
                 return DEVICE.PC;
         }
-
         if (ContainsDeviceName(Devices.Name.PS4, device))
         {
             PrintCurrentDevice(DEVICE.PS4, device);
@@ -176,8 +193,8 @@ public static class InputUtility
             PrintCurrentDevice(DEVICE.Generic, device);
             return DEVICE.Generic;
         }
-
-        if (ContainsDeviceName(Devices.Name.KEYBOARD, device))
+        if (ContainsDeviceName(Devices.Name.KEYBOARD, device) ||
+            ContainsDeviceName(Devices.Name.MOUSE, device))
         {
             PrintCurrentDevice(DEVICE.PC);
             return DEVICE.PC;
@@ -190,14 +207,19 @@ public static class InputUtility
     public static void DeviceRebind(DEVICE device, CustomInputAction inputAction)
     {
         inputAction.bindingMask = InputBinding.MaskByGroup(device.ToString());
+
+        if (!printInfo)return;
+
+        string color = "orange";
+        Debug.Log($"<color={color}><b> Device Rebind: </b></color> {device.ToString()}");
     }
-    
+
     private static void PrintStartDevice(DEVICE device, InputDevice data = null, string description = null)
     {
 
 #if UNITY_EDITOR
 
-        if (!debugMode)return;
+        if (!printInfo)return;
 
         string color = "white";
 
@@ -226,7 +248,7 @@ public static class InputUtility
 
 #if UNITY_EDITOR
 
-        if (!debugMode)return;
+        if (!printInfo)return;
 
         string color = "green";
 

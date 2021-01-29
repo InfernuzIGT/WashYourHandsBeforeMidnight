@@ -18,6 +18,7 @@
             
             // PC
             public const string Keyboard = "Keyboard";
+            public const string Mouse = "Mouse";
         }
 
         public static class Name
@@ -27,6 +28,7 @@
             public const string JOYSTICK = "joystick";
             public const string SWITCH = "switch";
             public const string KEYBOARD = "keyboard";
+            public const string MOUSE = "mouse";
         }
 
     }
