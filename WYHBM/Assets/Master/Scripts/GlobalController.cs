@@ -202,7 +202,7 @@ public class GlobalController : MonoBehaviour
     {
         _fovIsActive = active;
 
-        if (!playerController.IsCrouching)playerController.Crouch();
+        // if (!playerController.IsCrouching)playerController.Crouch();
 
         if (_coroutineListenMode != null)
         {

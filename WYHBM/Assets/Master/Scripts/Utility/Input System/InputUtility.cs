@@ -34,6 +34,13 @@ public enum INPUT_ACTION
     // TODO Mariano: Complete
 }
 
+public enum RUMBLE_TYPE
+{
+    None = 0,
+    Options = 1,
+    Attack = 2,
+}
+
 public static class InputUtility
 {
 

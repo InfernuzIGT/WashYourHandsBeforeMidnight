@@ -16,9 +16,14 @@ public enum SESSION_OPTION
 [RequireComponent(typeof(LocalizationUtility))]
 public class GameData : MonoSingleton<GameData>
 {
+
 	[Header("Developer")]
 	[SerializeField] private bool _devPrintInputInfo = false;
 	[SerializeField] private bool _devDDLegacyMode = false;
+
+	[Header("Configs")]
+	[SerializeField] private PlayerConfig _playerConfig;
+	[SerializeField] private DeviceConfig _deviceConfig;
 
 	[Header("Session Data")]
 	public int sessionIndex;
@@ -38,7 +43,11 @@ public class GameData : MonoSingleton<GameData>
 	// Input System
 	private Gamepad _gamepad;
 	private Coroutine _coroutineRumble;
+	private RUMBLE_TYPE _rumbleType;
+	private RumbleValues _currentRumbleValues;
+	private float _rumbleDuration;
 	private float _rumbleFrequency;
+	private float _currentDuration;
 
 	// Events
 	private EnableMovementEvent _enableMovementEvent;
@@ -56,6 +65,8 @@ public class GameData : MonoSingleton<GameData>
 
 	protected override void Awake()
 	{
+		InitializeConfigs();
+
 #if UNITY_EDITOR
 
 		if (_devPrintInputInfo)InputUtility.printInfo = true;
@@ -67,6 +78,12 @@ public class GameData : MonoSingleton<GameData>
 		GetSceneReferences();
 
 		// Load();
+	}
+
+	private void InitializeConfigs()
+	{
+		_deviceConfig.UpdateDictionary();
+		_playerConfig.UpdateActionDictionary();
 	}
 
 	private void Start()
@@ -119,7 +136,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		_localizationUtility.SelectNextLanguage(isNext);
 	}
-	
+
 	public string GetCurrentLanguage()
 	{
 		return _localizationUtility.Language;
@@ -134,22 +151,46 @@ public class GameData : MonoSingleton<GameData>
 		_gamepad = evt.gamepad;
 	}
 
-	public void Rumble(float frequency)
+	public void PlayRumble(RUMBLE_TYPE rumbleType)
 	{
 		if (_gamepad == null)return;
 
-		_rumbleFrequency = frequency;
+		_rumbleType = rumbleType;
 
 		_coroutineRumble = StartCoroutine(ActivateRumble());
 	}
 
+	public void StopRumble(bool isStop)
+	{
+		if (_gamepad == null)return;
+
+		if (isStop)
+		{
+			if (_coroutineRumble != null)
+			{
+				StopCoroutine(_coroutineRumble);
+				_coroutineRumble = null;
+			}
+
+			_gamepad.ResetHaptics();
+		}
+		else
+		{
+			_gamepad.ResumeHaptics();
+		}
+	}
+
 	private IEnumerator ActivateRumble()
 	{
-		float currentDuration = 0;
+		_currentRumbleValues = _playerConfig.GetRumbleValues(_rumbleType);
+		_rumbleDuration = _currentRumbleValues.duration;
+		_rumbleFrequency = _currentRumbleValues.frequency;
 
-		while (currentDuration < 1)
+		_currentDuration = 0;
+
+		while (_currentDuration < _rumbleDuration)
 		{
-			currentDuration += Time.deltaTime;
+			_currentDuration += Time.deltaTime;
 			_gamepad.SetMotorSpeeds(_rumbleFrequency, _rumbleFrequency);
 			yield return null;
 		}
@@ -244,7 +285,6 @@ public class GameData : MonoSingleton<GameData>
 		_enableMovementEvent.canMove = true;
 		EventController.TriggerEvent(_enableMovementEvent);
 
-		// TODO Mariano: Fix
 		GetSceneReferences();
 	}
 
@@ -400,8 +440,6 @@ public class SessionData
 {
 	public int sessionIndex;
 
-	public SessionSettings settings;
-
 	public PlayerSO playerData;
 	public Transform newSpawnPoint;
 
@@ -422,4 +460,14 @@ public class SessionSettings
 {
 	public int qualitySettings;
 	// TODO Mariano: Complete
+
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonLanguage = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonResolution = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonQuality = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonFullscreen = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVsync = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMasterVolume = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonSoundEffects = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMusic = null;
+	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVibration = null;
 }
