@@ -178,7 +178,7 @@ public class GlobalController : MonoBehaviour
 
         gameData = tempGamedata != null ? tempGamedata : Instantiate(gameData);
 
-        sessionData = gameData.LoadSession();
+        sessionData = gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
 
@@ -429,7 +429,7 @@ public class GlobalController : MonoBehaviour
                 break;
 
             case SESSION_OPTION.Load:
-                sessionData = gameData.LoadSession();
+                sessionData = gameData.LoadSessionData();
                 break;
 
             case SESSION_OPTION.Delete:

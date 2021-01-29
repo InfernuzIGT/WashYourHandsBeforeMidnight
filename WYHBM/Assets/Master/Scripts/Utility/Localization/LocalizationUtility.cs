@@ -7,12 +7,15 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class LocalizationUtility : MonoBehaviour
 {
+    [SerializeField, ReadOnly] private Locale _locale;
     [SerializeField, ReadOnly] private string _language = "";
-    public string Language { get { return _language; } }
 
     private AsyncOperationHandle m_InitializeOperation;
     private List<Locale> _listLocales;
     private int _index;
+    private bool _isForced;
+
+    public string Language { get { return _language; } }
 
     private UpdateLanguageEvent _updateLanguageEvent;
 
@@ -37,7 +40,15 @@ public class LocalizationUtility : MonoBehaviour
         _listLocales = new List<Locale>();
         _listLocales.AddRange(LocalizationSettings.AvailableLocales.Locales);
 
-        _index = 0;
+        if (_isForced)
+        {
+            _isForced = false;
+            _index = LocalizationSettings.AvailableLocales.Locales.IndexOf(_locale);
+        }
+        else
+        {
+            _index = 0;
+        }
 
         UpdateLocale(_listLocales[_index]);
     }
@@ -47,6 +58,7 @@ public class LocalizationUtility : MonoBehaviour
         LocalizationSettings.SelectedLocale = locale;
 
         _language = locale.Identifier.Code;
+        _locale = locale;
 
         _updateLanguageEvent.language = _language;
         _updateLanguageEvent.locale = locale;
@@ -58,6 +70,12 @@ public class LocalizationUtility : MonoBehaviour
         _index = Utils.GetNextIndex(isNext, _index, _listLocales.Count - 1);
 
         UpdateLocale(_listLocales[_index]);
+    }
+
+    public void ForceSetLocale(Locale locale)
+    {
+        _isForced = true;
+        _locale = locale;
     }
 
 }

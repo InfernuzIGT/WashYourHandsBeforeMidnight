@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Events;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 
 public enum SESSION_OPTION
@@ -25,9 +27,10 @@ public class GameData : MonoSingleton<GameData>
 	[SerializeField] private PlayerConfig _playerConfig;
 	[SerializeField] private DeviceConfig _deviceConfig;
 
-	[Header("Session Data")]
+	[Header("Persistence")]
 	public int sessionIndex;
 	public SessionData sessionData;
+	public SessionSettings sessionSettings;
 
 	private List<AsyncOperation> _listScenes;
 
@@ -140,6 +143,11 @@ public class GameData : MonoSingleton<GameData>
 	public string GetCurrentLanguage()
 	{
 		return _localizationUtility.Language;
+	}
+	
+	public void ForceLanguage(Locale locale)
+	{
+		_localizationUtility.ForceSetLocale(locale);
 	}
 
 	#endregion
@@ -298,10 +306,16 @@ public class GameData : MonoSingleton<GameData>
 		return Save();
 	}
 
-	public SessionData LoadSession()
+	public SessionData LoadSessionData()
 	{
 		Load();
 		return sessionData;
+	}
+
+	public SessionSettings LoadSessionSettings()
+	{
+		LoadSettings();
+		return sessionSettings;
 	}
 
 	public bool CheckID(string id)
@@ -412,6 +426,46 @@ public class GameData : MonoSingleton<GameData>
 		return valid;
 	}
 
+	public bool LoadSettings()
+	{
+		bool valid = false;
+
+		string data = PlayerPrefs.GetString("settings", "");
+		if (data != "")
+		{
+			bool success = DESEncryption.TryDecrypt(data, out string original);
+			if (success)
+			{
+				sessionSettings = JsonUtility.FromJson<SessionSettings>(original);
+				valid = true;
+			}
+
+		}
+
+		return valid;
+	}
+
+	public bool SaveSettings(SessionSettings lastSessionSettings)
+	{
+		bool valid = false;
+		
+		sessionSettings = lastSessionSettings;
+
+		try
+		{
+			string result = DESEncryption.Encrypt(JsonUtility.ToJson(sessionSettings));
+			PlayerPrefs.SetString("settings", result);
+			PlayerPrefs.Save();
+			valid = true;
+		}
+		catch (Exception ex)
+		{
+			Debug.LogError($"<color=red><b>[ERROR]</b></color> Save Settings: {ex}");
+		}
+		
+		return valid;
+	}
+
 	public bool DeleteAll()
 	{
 		bool valid = false;
@@ -458,16 +512,13 @@ public class SessionData
 [Serializable]
 public class SessionSettings
 {
-	public int qualitySettings;
-	// TODO Mariano: Complete
-
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonLanguage = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonResolution = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonQuality = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonFullscreen = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVsync = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMasterVolume = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonSoundEffects = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonMusic = null;
-	[SerializeField, ConditionalHide] private ButtonDoubleUI _buttonVibration = null;
+	public Locale language;
+	public Resolution resolution;
+	public int quality;
+	public bool fullScreen;
+	public int vSync;
+	public int masterVolume;
+	public int soundEffects;
+	public int music;
+	public bool vibration;
 }

@@ -4,7 +4,6 @@ using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
@@ -91,7 +90,7 @@ public class MenuController : MonoBehaviour
 
         CreateInput();
         AddListeners();
-        _optionsController.LoadSettings();
+        // _optionsController.LoadSettings();
     }
 
     private void CreateInput()
@@ -195,6 +194,8 @@ public class MenuController : MonoBehaviour
             _lastGameObject = _optionsController.FirstSelectOptions;
 
             _currentUIType = UI_TYPE.None;
+
+            _optionsController.SaveSettings();
         }
         // else
         // {
