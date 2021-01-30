@@ -619,6 +619,9 @@ public class PlayerController : MonoBehaviour
             _input.Player.Disable();
             _characterController.enabled = false;
             StopMovement();
+
+            // TODO Mariano: Enable
+            // if (evt.isDetected)_animatorController.Detected(true);
         }
 
         if (evt.canMove)

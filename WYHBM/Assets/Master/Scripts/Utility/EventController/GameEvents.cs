@@ -37,6 +37,7 @@ namespace Events
     public class EnableMovementEvent : GameEvent
     {
         public bool canMove;
+        public bool isDetected;
     }
 
     public class LadderEvent : GameEvent

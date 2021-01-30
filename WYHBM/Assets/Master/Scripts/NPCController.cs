@@ -239,10 +239,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _canMove = false;
         _agent.isStopped = true;
 
-        // TODO Mariano: Animation Detected
         _animatorController.Movement(Vector3.zero);
+        _animatorController.Detected(true);
 
         _enableMovementEvent.canMove = false;
+        _enableMovementEvent.isDetected = true;
         EventController.TriggerEvent(_enableMovementEvent);
 
         // TODO Mariano: Trigger Combat

@@ -2,7 +2,8 @@
 
 public class WorldAnimator : AnimatorController
 {
-    public bool flipSprite;
+    [Header("World")]
+    [SerializeField] private bool flipSprite;
 
     private bool _isFlipped;
 
@@ -12,9 +13,9 @@ public class WorldAnimator : AnimatorController
     {
         FlipSprite(movement);
 
-        _animValueX.Execute(_animator, movement.x);
-        _animValueY.Execute(_animator, movement.y);
-        _animMovementType.Execute(_animator, (int)movementState);
+        _animValueX.Execute(movement.x);
+        _animValueY.Execute(movement.y);
+        _animMovementType.Execute((int)movementState);
     }
 
     private void FlipSprite(Vector3 movement)
@@ -30,25 +31,30 @@ public class WorldAnimator : AnimatorController
 
         _spriteRenderer.flipX = _isFlipped;
     }
-    
+
     public void Walk(bool active)
     {
-        _animIsWalking.Execute(_animator, active);
+        _animIsWalking.Execute(active);
     }
 
     public void Falling(bool isFalling)
     {
-        _animIsFalling.Execute(_animator, isFalling);
+        _animIsFalling.Execute(isFalling);
     }
 
     public void ClimbLedge(bool value)
     {
-        _animCanClimbLedge.Execute(_animator, value);
+        _animCanClimbLedge.Execute(value);
     }
 
     public void PreClimbLadder(bool canClimbLadder)
     {
-        _animCanClimbLadder.Execute(_animator, canClimbLadder);
+        _animCanClimbLadder.Execute(canClimbLadder);
+    }
+
+    public void Detected(bool isDetected)
+    {
+        _animIsDetected.Execute(isDetected);
     }
 
 }
