@@ -11,6 +11,10 @@ public class WorldConfig : ScriptableObject
     public float fadeFastDuration = 1.5f;
     public float fadeSlowDuration = 3;
 
+    [Header("Text")]
+    public float textTimeStart = 0.5f;
+    public float textTimeSpeed = 0.025f;
+
     [Header("Layers")]
     public LayerMask layerFOVTarget;
     public LayerMask layerFOVObstacle;

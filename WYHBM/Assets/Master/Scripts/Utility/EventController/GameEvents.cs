@@ -16,7 +16,7 @@ namespace Events
         public Vector3 lastPlayerPosition;
     }
 
-    public class EnableDialogEvent : GameEvent
+    public class DialogDesignerEvent : GameEvent
     {
         public bool enable;
         public NPCController npc;
@@ -25,9 +25,19 @@ namespace Events
         public PlayerSO playerData;
     }
 
+    public class DialogSimpleEvent : GameEvent
+    {
+        public bool enable;
+        public LocalizedString localizedString;
+        public QuestSO questData;
+        public QUEST_STATE questState;
+        public string objectName;
+    }
+
     public class EnableMovementEvent : GameEvent
     {
         public bool canMove;
+        public bool isDetected;
     }
 
     public class LadderEvent : GameEvent
@@ -75,6 +85,7 @@ namespace Events
     public class ChangeSceneEvent : GameEvent
     {
         public bool load;
+        public bool useEnableMovementEvent;
         public bool isLoadAdditive;
         public SceneSO sceneData;
         public Vector3 newPlayerPosition;
@@ -90,10 +101,8 @@ namespace Events
     {
         public SESSION_OPTION option;
     }
-    
-    public class SaveAnimationEvent : GameEvent
-    {
-    }
+
+    public class SaveAnimationEvent : GameEvent { }
 
     public class QuestEvent : GameEvent
     {
@@ -115,6 +124,7 @@ namespace Events
 
     public class PauseEvent : GameEvent
     {
+        public bool isPaused;
         public PAUSE_TYPE pauseType;
     }
 
@@ -140,15 +150,15 @@ namespace Events
     {
         public bool enable;
     }
-    
+
     public class CurrentInteractEvent : GameEvent
     {
         public Interaction currentInteraction;
     }
 
-    public class ShowInteractionHintEvent : GameEvent
-    {
-        public bool show;
-    }
+    // public class ShowInteractionHintEvent : GameEvent
+    // {
+    //     public bool show;
+    // }
 
 }

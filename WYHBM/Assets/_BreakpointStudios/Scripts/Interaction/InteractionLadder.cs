@@ -25,21 +25,21 @@ public class InteractionLadder : Interaction, IInteractable
 
     private void OnInteractionLadder(InteractionEvent evt)
     {
-        inLadder = !inLadder;
+        // inLadder = !inLadder;
 
-        GameManager.Instance.globalController.playerController.SwitchLadderMovement(inLadder);
+        // GameManager.Instance.globalController.playerController.SwitchLadderMovement(inLadder);
 
-        if (inLadder)
-        {
-            GameManager.Instance.globalController.playerController.SetNewPosition(
-                transform.position.x,
-                GameManager.Instance.globalController.playerController.transform.position.y + 1, // TODO Mariano: Move To Config (ladderOffsetY)
-                transform.position.z);
-        }
-        else
-        {
-            OnExitLadder(LADDER_EXIT.Interaction);
-        }
+        // if (inLadder)
+        // {
+        //     GameManager.Instance.globalController.playerController.SetNewPosition(
+        //         transform.position.x,
+        //         GameManager.Instance.globalController.playerController.transform.position.y + 1, // TODO Mariano: Move To Config (ladderOffsetY)
+        //         transform.position.z);
+        // }
+        // else
+        // {
+        //     OnExitLadder(LADDER_EXIT.Interaction);
+        // }
     }
 
     private void OnExitLadder(LadderEvent evt)

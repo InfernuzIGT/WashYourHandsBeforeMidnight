@@ -132,49 +132,6 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    public void Pause(PAUSE_TYPE type)
-    {
-        switch (type)
-        {
-            case PAUSE_TYPE.PauseMenu:
-                if (!inCombat)
-                {
-                    isPaused = !isPaused;
-                    Time.timeScale = isPaused ? 0 : 1;
-                    worldUI.Pause(isPaused);
-                }
-                break;
-
-            case PAUSE_TYPE.Inventory:
-                if (!inCombat)
-                {
-                    isPaused = !isPaused;
-                    Time.timeScale = isPaused ? 0 : 1;
-                    // TODO Marcos: Show Inventory 
-                }
-                break;
-
-            case PAUSE_TYPE.Note:
-                isPaused = !isPaused;
-                Time.timeScale = isPaused ? 0 : 1;
-                worldUI.ActiveNote(isPaused);
-                break;
-
-            default:
-                isPaused = !isPaused;
-                Time.timeScale = isPaused ? 0 : 1;
-                break;
-        }
-
-        if (!inCombat)
-        {
-            isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0 : 1;
-            worldUI.Pause(isPaused);
-            // SetPause(false);
-        }
-    }
-
     // private void OpenInventory()
     // {
     //     if (Input.GetKeyDown(KeyCode.I))
@@ -220,7 +177,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void SwitchMovement()
     {
-        globalController.playerController.SwitchMovement();
+        // globalController.playerController.SwitchMovement();
     }
 
     private void StartCombat()
