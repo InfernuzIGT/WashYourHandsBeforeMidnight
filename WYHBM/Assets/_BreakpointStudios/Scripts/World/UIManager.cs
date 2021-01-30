@@ -2,8 +2,8 @@
 using DG.Tweening;
 using Events;
 using FMODUnity;
-using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace GameMode.World
@@ -11,49 +11,54 @@ namespace GameMode.World
     [RequireComponent(typeof(CanvasGroupUtility))]
     public class UIManager : MonoBehaviour
     {
-        [Header("NEW")]
-        [SerializeField, ReadOnly] private bool _isPaused;
-        [SerializeField] private GameObject _panelPause;
-        
-        
         [Header("General")]
+        [SerializeField, ReadOnly] private UI_TYPE _currentUIType = UI_TYPE.Play;
+        [SerializeField, ReadOnly] private GameObject _lastGameObject = null;
+        [SerializeField] private SceneSO sceneData = null;
+
+        // [Header("FMOD")]
+        // [SerializeField] private StudioEventEmitter _buttonSounds;
+
+        [Header("References")]
+#pragma warning disable 0414
+        [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+        [SerializeField, ConditionalHide] private CanvasGroupUtility _panelPause;
+        [SerializeField, ConditionalHide] private OptionsController _optionsController = null;
+        [SerializeField, ConditionalHide] private InputActionReference _actionBack = null;
+        [Space]
+        [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasMain = null;
+        [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasOptions = null;
+        [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasExit = null;
+        [Space]
+        [SerializeField, ConditionalHide] private GameObject _firstSelectMain = null;
+        [SerializeField, ConditionalHide] private ButtonUI _buttonPlay = null;
+        [SerializeField, ConditionalHide] private ButtonUI _buttonOptions = null;
+        [SerializeField, ConditionalHide] private ButtonUI _buttonQuit = null;
+        [Space]
+        [SerializeField, ConditionalHide] private GameObject _firstSelectQuit = null;
+        [SerializeField, ConditionalHide] private ButtonUI _buttonYes = null;
+        [SerializeField, ConditionalHide] private ButtonUI _buttonNo = null;
+
+        [Header("DEPRECATED")]
         public Popup popup;
         public Image progressImg;
         [Space]
-        public GameObject panelPlayer;
-        public GameObject panelPause;
-        public GameObject panelNote;
-
-        [Header("Note")]
-        public TextMeshProUGUI noteTxt;
-
-        [Header("Pause - System")]
         public GameObject system;
         public GameObject systemOptions;
-
-        [Header("Pause - Diary")]
+        [Space]
         public GameObject diary;
         public Transform diaryTitleContainer;
         public Transform diaryDescriptionContainer;
-
-        [Header("Pause - Inventory")]
+        [Space]
         public GameObject inventory;
         public ItemDescription itemDescription;
         public Transform itemParents;
         public Button buttonLeft;
         public Button buttonRight;
-        [Space]
-        public TextMeshProUGUI characterNameTxt;
-        public Image characterImg;
-        public Transform[] characterSlot = new Transform[4];
-
-        [Header("FMOD")]
-        public Slider sliderSound;
-        public Slider sliderMusic;
-        [Space]
 
         // Inventory
-        private int _lastSlot = 0;
+        // private int _lastSlot = 0;
 
         // Diary
         private Dictionary<QuestSO, QuestTitle> dicQuestTitle;
@@ -63,6 +68,7 @@ namespace GameMode.World
         private bool _inventory;
         private bool _diary;
         private bool _isComplete;
+        private bool _canInteract;
 
         private Tween _txtAnimation;
         private Canvas _canvas;
@@ -70,7 +76,8 @@ namespace GameMode.World
         private WaitForSeconds _waitSpace;
         private WaitForSeconds _waitDeactivateUI;
 
-        private EnableMovementEvent _enableMovementEvent;
+        private ChangeSceneEvent _changeSceneEvent;
+        private PauseEvent _pauseEvent;
 
         private CanvasGroupUtility _canvasUtility;
 
@@ -84,27 +91,28 @@ namespace GameMode.World
             dicQuestTitle = new Dictionary<QuestSO, QuestTitle>();
             dicQuestDescription = new Dictionary<QuestSO, QuestDescription>();
 
-            _enableMovementEvent = new EnableMovementEvent();
-            // continueTxt.enabled = false;
+            _pauseEvent = new PauseEvent();
 
-            // _currentQuestSelected = new GameObject();
+            _changeSceneEvent = new ChangeSceneEvent();
+            _changeSceneEvent.load = true;
+            _changeSceneEvent.useEnableMovementEvent = false;
+            _changeSceneEvent.isLoadAdditive = false;
+            _changeSceneEvent.sceneData = sceneData;
+            _changeSceneEvent.instantFade = false;
 
-            // panelDialog.SetActive(false);
+            AddListeners();
+        }
 
-            // buttonLeft.onClick.AddListener(() => GameManager.Instance.NextCharacter(true));
-            // buttonRight.onClick.AddListener(() => GameManager.Instance.NextCharacter(false));
+        private void AddListeners()
+        {
+            _buttonPlay.AddListener(() => Execute(UI_TYPE.Play));
+            _buttonOptions.AddListener(() => Execute(UI_TYPE.Options));
+            _buttonQuit.AddListener(() => Execute(UI_TYPE.Quit));
 
-            // sliderSound.onValueChanged.AddListener(VolumeSound);
-            // sliderMusic.onValueChanged.AddListener(VolumeMusic);
+            _buttonYes.AddListener(() => ExecuteQuit(true));
+            _buttonNo.AddListener(() => ExecuteQuit(false));
 
-            // buttonLeft.interactable = false;
-            // buttonRight.interactable = false;
-
-            // _waitStart = new WaitForSeconds(GameData.Instance.worldConfig.timeStart);
-            // _waitSpace = new WaitForSeconds(GameData.Instance.worldConfig.timeSpace);
-            // _waitDeactivateUI = new WaitForSeconds(GameData.Instance.worldConfig.messageLifetime);
-
-            // GameData.Instance.persistenceItem
+            _optionsController.AddListeners(() => ExecuteBack(false), () => ExecuteBack(true));
         }
 
         private void OnEnable()
@@ -117,73 +125,147 @@ namespace GameMode.World
             EventController.RemoveListener<PauseEvent>(OnPause);
         }
 
-        private void OnPause(PauseEvent evt)
+        private void Execute(UI_TYPE type)
         {
-            _isPaused = !_isPaused;
-            
-            _panelPause.SetActive(_isPaused);
+            if (!_canInteract)return;
+
+            CanInteract(false);
+
+            _currentUIType = type;
+
+            switch (type)
+            {
+                case UI_TYPE.Play:
+                    // _buttonSounds.EventInstance.setParameterByName("UI", 3f);
+                    _pauseEvent.pauseType = PAUSE_TYPE.PauseMenu;
+                    EventController.TriggerEvent(_pauseEvent);
+                    break;
+
+                case UI_TYPE.Options:
+                    _canvasMain.Show(false);
+                    _canvasOptions.Show(true, 0.5f);
+
+                    EventSystemUtility.Instance.SetSelectedGameObject(_optionsController.FirstSelectOptions);
+                    _lastGameObject = _buttonOptions.gameObject;
+                    break;
+
+                case UI_TYPE.Quit:
+                    _canvasMain.Show(false);
+                    _canvasExit.Show(true, 0.5f);
+
+                    EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectQuit);
+                    _lastGameObject = _buttonQuit.gameObject;
+                    break;
+
+                case UI_TYPE.None:
+                default:
+                    break;
+            }
         }
 
-        // public void UpdateStamina(float value)
-        // {
-        //     staminaImg.fillAmount = value;
-        // }
+        private void ExecuteBackInput(InputAction.CallbackContext context)
+        {
+            if (!_canInteract)return;
 
-        // public void EnableCanvas(bool isEnabled)
-        // {
-        //     _canvas.enabled = isEnabled;
-        // }
+            switch (_currentUIType)
+            {
+                case UI_TYPE.Play:
+                    _pauseEvent.pauseType = PAUSE_TYPE.PauseMenu;
+                    EventController.TriggerEvent(_pauseEvent);
+                    break;
+
+                case UI_TYPE.Options:
+                    ExecuteBack(true);
+                    break;
+
+                case UI_TYPE.Quit:
+                    ExecuteQuit(false);
+                    break;
+
+                case UI_TYPE.None:
+                default:
+                    break;
+            }
+
+        }
+
+        private void ExecuteBack(bool isBack)
+        {
+            CanInteract(false);
+
+            if (isBack)
+            {
+                _currentUIType = UI_TYPE.Play;
+
+                _canvasOptions.Show(false);
+                _canvasMain.Show(true, 0.5f);
+
+                EventSystemUtility.Instance.SetSelectedGameObject(_lastGameObject);
+                _lastGameObject = _optionsController.FirstSelectOptions;
+
+                _optionsController.SaveSettings();
+            }
+            // else
+            // {
+            //     // TODO Mariano: Apply Settings
+            // }
+        }
+
+        public void CanInteract(bool canInteract)
+        {
+            _canInteract = canInteract;
+            _optionsController.CanInteract = canInteract;
+        }
+
+        private void ExecuteQuit(bool isYes)
+        {
+            CanInteract(false);
+
+            if (isYes)
+            {
+                // _buttonSounds.EventInstance.setParameterByName("UI", 0f);
+
+                EventSystemUtility.Instance.DisableInput(true);
+                EventController.TriggerEvent(_changeSceneEvent);
+            }
+            else
+            {
+                _canvasExit.Show(false);
+                _canvasMain.Show(true, 0.5f);
+
+                EventSystemUtility.Instance.SetSelectedGameObject(_lastGameObject);
+                _lastGameObject = _firstSelectMain;
+
+                _currentUIType = UI_TYPE.Play;
+            }
+        }
+
+        private void OnPause(PauseEvent evt)
+        {
+            _panelPause.ShowInstant(evt.isPaused);
+
+            EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectMain);
+            _lastGameObject = _firstSelectMain;
+
+            _canInteract = evt.isPaused;
+
+            if (evt.isPaused)
+            {
+                _actionBack.action.performed += ExecuteBackInput;
+            }
+            else
+            {
+                _actionBack.action.performed -= ExecuteBackInput;
+            }
+
+        }
 
         public void Show(bool isShowing)
         {
             _canvasUtility.Show(isShowing);
         }
 
-        public void Pause(bool isPaused)
-        {
-            panelPause.gameObject.SetActive(isPaused);
-        }
-
-        // public void ChangeCharacter(CombatPlayer combatPlayer, int index, bool inLeftLimit = false, bool inRightLimit = false)
-        // {
-        //     characterNameTxt.text = combatPlayer.character.Name;
-        //     characterImg.sprite = combatPlayer.character.PreviewSprite;
-
-        //     characterSlot[_lastSlot].gameObject.SetActive(false);
-        //     characterSlot[index].gameObject.SetActive(true);
-
-        //     _lastSlot = index;
-
-        //     buttonLeft.interactable = !inLeftLimit;
-        //     buttonRight.interactable = !inRightLimit;
-        // }
-
-        public void VolumeSound(float vol)
-        {
-            RuntimeManager.StudioSystem.setParameterByName(FMODParameters.SoundsSlider, vol);
-        }
-
-        public void VolumeMusic(float vol)
-        {
-            RuntimeManager.StudioSystem.setParameterByName(FMODParameters.MusicSlider, vol);
-        }
-
-        public Transform GetSlot()
-        {
-            return characterSlot[_lastSlot];
-        }
-
         #region 
-
-        public void ActiveNote(bool active)
-        {
-            panelNote.SetActive(active);
-        }
-
-        public void SetNoteText(string sentences)
-        {
-            noteTxt.text = sentences;
-        }
 
         #endregion
 
@@ -266,50 +348,5 @@ namespace GameMode.World
             popup.gameObject.SetActive(true);
         }
 
-        public void MenuPause(BUTTON_TYPE buttonType)
-        {
-            switch (buttonType)
-            {
-                case BUTTON_TYPE.Diary:
-                    system.SetActive(false);
-                    systemOptions.SetActive(false);
-                    inventory.SetActive(false);
-
-                    diary.SetActive(true);
-                    break;
-
-                case BUTTON_TYPE.Inventory:
-                    system.SetActive(false);
-                    systemOptions.SetActive(false);
-                    diary.SetActive(false);
-
-                    inventory.SetActive(true);
-                    break;
-
-                case BUTTON_TYPE.System:
-                    diary.SetActive(false);
-                    systemOptions.SetActive(false);
-                    inventory.SetActive(false);
-
-                    system.SetActive(true);
-                    break;
-
-                case BUTTON_TYPE.Resume:
-                    GameManager.Instance.Pause(PAUSE_TYPE.PauseMenu);
-                    break;
-
-                case BUTTON_TYPE.Options:
-                    systemOptions.SetActive(true);
-                    break;
-
-                case BUTTON_TYPE.Quit:
-                    // GameData.Instance.LoadScene(SCENE_INDEX.MainMenu);
-                    Application.Quit();
-                    break;
-
-                default:
-                    break;
-            }
-        }
     }
 }

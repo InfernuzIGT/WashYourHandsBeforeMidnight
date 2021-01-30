@@ -4,8 +4,9 @@ using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using FMODUnity;
+using FMOD.Studio;
 
 public class MenuController : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class MenuController : MonoBehaviour
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasLogo = null;
     [SerializeField, ConditionalHide] private InputActionReference _actionAnyButton = null;
     [SerializeField, ConditionalHide] private InputActionReference _actionBack = null;
+    [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
     [Space]
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasHome = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasMain = null;
@@ -54,10 +56,6 @@ public class MenuController : MonoBehaviour
     [SerializeField, ConditionalHide] private GameObject _firstSelectQuit = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonYes = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonNo = null;
-    [Space]
-    [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
-    [SerializeField, ConditionalHide] private DeviceUtility _deviceUtility = null;
-    [SerializeField, ConditionalHide] private EventSystemUtility _eventSystemUtility = null;
 
     private ChangeSceneEvent _changeSceneEvent;
 
@@ -65,10 +63,14 @@ public class MenuController : MonoBehaviour
     private GameObject _lastPanel;
 
     private Vector2 _logoStartSize = new Vector2(600, 600);
-    private float _logoStartY = 50f;
+    // private float _logoStartY = 50f;
 
     private Vector2 _logoEndSize = new Vector2(475, 475);
     private float _logoEndY = 150f;
+    FMOD.Studio.EventInstance menuMusic;
+    FMOD.Studio.EventInstance scrollSound;
+    FMOD.Studio.EventInstance selectSound;
+    FMOD.Studio.EventInstance backSound;
 
     // private bool _isDataLoaded;
     // public bool IsDataLoaded { get { return _isDataLoaded; } }
@@ -78,33 +80,61 @@ public class MenuController : MonoBehaviour
         SetVersion();
         _deviceConfig.UpdateDictionary();
     }
+    void Update()
+    {
+        // menuMusic = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/Music");
+        // scrollSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/scroll");
+        // selectSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/select");
+        // backSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/back");
+
+    }
 
     private void Start()
     {
+        // menuMusic.start();
+        Debug.Log("START MUSIC");
+        // FMODUnity.RuntimeManager.PlayOneShot("event:/UI/Buttons", GetComponent<Transform>().position);
         _changeSceneEvent = new ChangeSceneEvent();
         _changeSceneEvent.load = true;
+        _changeSceneEvent.useEnableMovementEvent = false;
         _changeSceneEvent.isLoadAdditive = false;
         _changeSceneEvent.sceneData = sceneData;
         _changeSceneEvent.instantFade = false;
 
         // _menuMusic.Play();
 
-        CreateInput();
         AddListeners();
-        _optionsController.LoadSettings();
-    }
 
-    private void CreateInput()
-    {
+        if (GameData.Instance.HomeUsed)
+        {
+            _canvasHome.ShowInstant(false);
+            _canvasMain.ShowInstant(true);
+
+            _logoImg.rectTransform.DOLocalMoveY(_logoEndY, 0);
+            _logoImg.rectTransform.DOSizeDelta(_logoEndSize, 0);
+
+            EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectMain);
+            _lastGameObject = _firstSelectMain;
+
+            EventSystemUtility.Instance.DisableInput(false);
+        }
+        else
+        {
+            GameData.Instance.HomeUsed = true;
+
+            _actionAnyButton.action.performed += action => PressAnyButton(action);
+            _actionAnyButton.action.Enable();
+        }
+
         _actionBack.action.performed += action => ExecuteBackInput();
-
-        _actionAnyButton.action.performed += action => PressAnyButton(action);
-        _actionAnyButton.action.Enable();
     }
 
     private void PressAnyButton(InputAction.CallbackContext action)
     {
-        _deviceUtility.DetectDevice(action.control.device);
+        // selectSound.start();
+        Debug.Log("SELECT SOUND");
+
+        GameData.Instance.DetectDevice(action.control.device);
         _actionAnyButton.action.Disable();
 
         _canvasHome.Show(false);
@@ -112,7 +142,7 @@ public class MenuController : MonoBehaviour
         _logoImg.rectTransform.DOLocalMoveY(_logoEndY, 1);
         _logoImg.rectTransform.DOSizeDelta(_logoEndSize, 1);
 
-        _eventSystemUtility.SetSelectedGameObject(_firstSelectMain);
+        EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectMain);
         _lastGameObject = _firstSelectMain;
     }
 
@@ -135,26 +165,36 @@ public class MenuController : MonoBehaviour
         switch (type)
         {
             case UI_TYPE.Play:
-                _buttonSounds.EventInstance.setParameterByName("UI", 3f);
-                _eventSystemUtility.DisableInput(true);
+                // selectSound.start();
+                Debug.Log("SELECT SOUND");
+
+                EventSystemUtility.Instance.DisableInput(true);
                 EventController.TriggerEvent(_changeSceneEvent);
+                
+                // menuMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 break;
 
             case UI_TYPE.Options:
+                // selectSound.start();
+                Debug.Log("SELECT SOUND");
+
                 _canvasMain.Show(false);
                 _canvasLogo.Show(false);
                 _canvasOptions.Show(true, 0.5f);
 
-                _eventSystemUtility.SetSelectedGameObject(_optionsController.FirstSelectOptions);
+                EventSystemUtility.Instance.SetSelectedGameObject(_optionsController.FirstSelectOptions);
                 _lastGameObject = _buttonOptions.gameObject;
                 break;
 
             case UI_TYPE.Quit:
+                // selectSound.start();
+                Debug.Log("SELECT SOUND");
+
                 _canvasMain.Show(false);
                 _canvasLogo.Show(false);
                 _canvasExit.Show(true, 0.5f);
 
-                _eventSystemUtility.SetSelectedGameObject(_firstSelectQuit);
+                EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectQuit);
                 _lastGameObject = _buttonQuit.gameObject;
                 break;
 
@@ -169,10 +209,14 @@ public class MenuController : MonoBehaviour
         switch (_currentUIType)
         {
             case UI_TYPE.Options:
+                // scrollSound.start();
+                Debug.Log("scroll SOUND");
                 ExecuteBack(true);
                 break;
 
             case UI_TYPE.Quit:
+                // scrollSound.start();
+                Debug.Log("scroll SOUND");
                 ExecuteQuit(false);
                 break;
 
@@ -187,14 +231,19 @@ public class MenuController : MonoBehaviour
     {
         if (isBack)
         {
+            // backSound.start();
+            Debug.Log("back SOUND");
+
             _canvasOptions.Show(false);
             _canvasMain.Show(true, 0.5f);
             _canvasLogo.Show(true, 0.5f);
 
-            _eventSystemUtility.SetSelectedGameObject(_lastGameObject);
+            EventSystemUtility.Instance.SetSelectedGameObject(_lastGameObject);
             _lastGameObject = _optionsController.FirstSelectOptions;
 
             _currentUIType = UI_TYPE.None;
+
+            _optionsController.SaveSettings();
         }
         // else
         // {
@@ -206,34 +255,25 @@ public class MenuController : MonoBehaviour
     {
         if (isYes)
         {
-            FMODPlayButtonSound(0);
-            _buttonSounds.EventInstance.setParameterByName("UI", 0f);
+            // selectSound.start();
+            Debug.Log("select SOUND");
 
-            _eventSystemUtility.DisableInput(true);
+            EventSystemUtility.Instance.DisableInput(true);
             Application.Quit();
         }
         else
         {
+            // backSound.start();
             _canvasExit.Show(false);
             _canvasMain.Show(true, 0.5f);
             _canvasLogo.Show(true, 0.5f);
 
-            _eventSystemUtility.SetSelectedGameObject(_lastGameObject);
+            EventSystemUtility.Instance.SetSelectedGameObject(_lastGameObject);
             _lastGameObject = _firstSelectMain;
 
             _currentUIType = UI_TYPE.None;
         }
     }
-
-    #region FMOD
-
-    private void FMODPlayButtonSound(float value)
-    {
-        _buttonSounds.Play();
-        _buttonSounds.EventInstance.setParameterByName(FMODParameters.UI, value);
-    }
-
-    #endregion
 
     public void SetVersion()
     {

@@ -45,36 +45,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e0f67d7c74265045ab9170ddba87d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoInit: 0
+  _devAutoInit: 0
+  _devSilentSteps: 0
+  _devDDLegacyMode: 0
   playerData: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
   _isPaused: 0
+  _inDialog: 0
   _inCombat: 0
   sessionData:
     sessionIndex: 0
-    settings:
-      qualitySettings: 0
     playerData: {fileID: 0}
     newSpawnPoint: {fileID: 0}
     listQuest: []
     listIds: []
   ShowReferences: 0
-  worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
-  mainCamera: {fileID: 0}
-  playerCamera: {fileID: 0}
-  gameData: {fileID: 7222876601119083809, guid: 91e3eab5bc2b28e41aab94fa5dd126f3,
+  _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
+  _mainCamera: {fileID: 0}
+  _playerCamera: {fileID: 0}
+  _spawnPoint: {fileID: 0}
+  _gameData: {fileID: 7222876601119083809, guid: 91e3eab5bc2b28e41aab94fa5dd126f3,
     type: 3}
-  persistentUI: {fileID: 3161950892634703790, guid: 8ff2349a3e13f3b4cb344c4537a50e6b,
+  _canvasPersistent: {fileID: 3161950892634703790, guid: 8ff2349a3e13f3b4cb344c4537a50e6b,
     type: 3}
-  playerController: {fileID: 5441447954450045000, guid: c852591fc240d4a4fa2ebe65e312a0d9,
+  _playerController: {fileID: 5441447954450045000, guid: c852591fc240d4a4fa2ebe65e312a0d9,
     type: 3}
-  playableDirector: {fileID: 190124564774067418}
-  worldUI: {fileID: 3733784730637442484, guid: ebe2453115239114da0bde694a1753f4, type: 3}
-  combatUI: {fileID: 6695403580233563036, guid: 92423fca7add6c8459569ca94d5016f7,
+  _playableDirector: {fileID: 190124564774067418}
+  _canvasWorld: {fileID: 3733784730637442484, guid: ebe2453115239114da0bde694a1753f4,
     type: 3}
-  eventSystemUtility: {fileID: 8567285740534756541, guid: 69b663abc5585a742a8040601bd61c07,
+  _canvasCombat: {fileID: 6695403580233563036, guid: 92423fca7add6c8459569ca94d5016f7,
     type: 3}
-  materialFOV: {fileID: 2100000, guid: c9112e53dd9e5de4883bd8f643e82b62, type: 2}
-  materialDitherNPC: {fileID: 2100000, guid: a69e816f58c64f2488c557c46994c0bb, type: 2}
+  _materialFOV: {fileID: 2100000, guid: c9112e53dd9e5de4883bd8f643e82b62, type: 2}
+  _materialDitherNPC: {fileID: 2100000, guid: a69e816f58c64f2488c557c46994c0bb, type: 2}
 --- !u!320 &190124564774067418
 PlayableDirector:
   m_ObjectHideFlags: 0

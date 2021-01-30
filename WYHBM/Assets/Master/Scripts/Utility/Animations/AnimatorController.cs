@@ -3,29 +3,49 @@
 [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
 public class AnimatorController : MonoBehaviour
 {
-    protected Animator _animator;
-    protected SpriteRenderer _spriteRenderer;
+    [Header("Animator")]
+#pragma warning disable 0414
+    [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+    [SerializeField, ConditionalHide] protected Animator _animator;
+    [SerializeField, ConditionalHide] protected SpriteRenderer _spriteRenderer;
 
     // General
-    protected AnimationCommandBool _animIsAlive = new AnimIsAlive();
-    protected AnimationCommandInt _animMovementType = new AnimMovementType();
-    protected AnimationCommandBool _animIsWalking = new AnimIsWalking();
-    protected AnimationCommandBool _animIsGrounded = new AnimIsGrounded();
-    protected AnimationCommandBool _animIsFalling = new AnimIsFalling();
-    protected AnimationCommandFloat _animValueX = new AnimValueX();
-    protected AnimationCommandFloat _animValueY = new AnimValueY();
-    protected AnimationCommandInt _animClimbType = new AnimClimbType();
+    protected AnimationCommandBool _animIsAlive;
+    protected AnimationCommandInt _animMovementType;
+    protected AnimationCommandBool _animIsWalking;
+    protected AnimationCommandBool _animIsGrounded;
+    protected AnimationCommandBool _animIsFalling;
+    protected AnimationCommandFloat _animValueX;
+    protected AnimationCommandFloat _animValueY;
+    protected AnimationCommandInt _animClimbType;
 
     // Combat
-    protected AnimationCommandInt _animActionType = new AnimActionType();
-    
+    protected AnimationCommandInt _animActionType;
+    protected AnimationCommandBool _animIsDetected;
+
     // Systems
-    protected AnimationCommandBool _animCanClimbLedge = new AnimCanClimbLedge();
-    protected AnimationCommandBool _animCanClimbLadder = new AnimCanClimbLadder();
+    protected AnimationCommandBool _animCanClimbLedge;
+    protected AnimationCommandBool _animCanClimbLadder;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        // General
+        _animIsAlive = new AnimIsAlive(_animator);
+        _animMovementType = new AnimMovementType(_animator);
+        _animIsWalking = new AnimIsWalking(_animator);
+        _animIsGrounded = new AnimIsGrounded(_animator);
+        _animIsFalling = new AnimIsFalling(_animator);
+        _animValueX = new AnimValueX(_animator);
+        _animValueY = new AnimValueY(_animator);
+        _animClimbType = new AnimClimbType(_animator);
+
+        // Combat
+        _animActionType = new AnimActionType(_animator);
+        _animIsDetected = new AnimIsDetected(_animator);
+
+        // Systems
+        _animCanClimbLedge = new AnimCanClimbLedge(_animator);
+        _animCanClimbLadder = new AnimCanClimbLadder(_animator);
     }
 }

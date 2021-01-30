@@ -12,19 +12,19 @@ public class InteractionHint : MonoBehaviour
         _inputInfo = GetComponentInChildren<InputInfo>();
     }
 
-    private void OnEnable()
-    {
-        EventController.AddListener<ShowInteractionHintEvent>(OnShowInteractionHint);
-    }
+    // private void OnEnable()
+    // {
+    //     EventController.AddListener<ShowInteractionHintEvent>(OnShowInteractionHint);
+    // }
 
-    private void OnDisable()
-    {
-        EventController.RemoveListener<ShowInteractionHintEvent>(OnShowInteractionHint);
-    }
+    // private void OnDisable()
+    // {
+    //     EventController.RemoveListener<ShowInteractionHintEvent>(OnShowInteractionHint);
+    // }
     
-    private void OnShowInteractionHint(ShowInteractionHintEvent evt)
-    {
-        _canvasGroupUtility.Show(evt.show);
-    }
+    // private void OnShowInteractionHint(ShowInteractionHintEvent evt)
+    // {
+    //     _canvasGroupUtility.Show(evt.show);
+    // }
 
 }

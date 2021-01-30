@@ -10,36 +10,26 @@ using UnityEngine.UI;
 
 public class DDDialog : MonoBehaviour
 {
-    public enum DIALOG_STATE
-    {
-        Ready = 0,
-        InProgress = 1,
-        Done = 2
-    }
-
-    // [SerializeField] private CharacterDataSO _characterData = null;
-
     [SerializeField, ReadOnly] private NPCController _currentNPC = null;
-    [SerializeField, ReadOnly] private string _currentLanguage = "";
     [SerializeField, ReadOnly] private DIALOG_STATE _dialogState = DIALOG_STATE.Done;
     [SerializeField, ReadOnly] private bool _legacyMode = false;
 
-    [Header("Settings")]
-    [SerializeField, Range(0, 1f)] private float timeStart = 0.5f;
-    [SerializeField, Range(0, .1f)] private float timeSpeed = .05f;
-
     [Header("References")]
-    [SerializeField] private LocalizedStringTable _tableDD;
-    [SerializeField] private InputActionReference _actionCancel = null;
+#pragma warning disable 0414
+    [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+    [SerializeField, ConditionalHide] private WorldConfig _worldConfig = null;
+    // [SerializeField, ConditionalHide] private LocalizedStringTable _tableDD;
+    [SerializeField, ConditionalHide] private InputActionReference _actionCancel = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasUtility;
     [Space]
-    [SerializeField] private Button _dialogPanelBtn = null;
-    [SerializeField] private TextMeshProUGUI _dialogTxt = null;
-    [SerializeField] private DDButton[] _ddButtons = null;
+    [SerializeField, ConditionalHide] private Button _dialogPanelBtn = null;
+    [SerializeField, ConditionalHide] private TextMeshProUGUI _dialogTxt = null;
+    [SerializeField, ConditionalHide] private DDButton[] _ddButtons = null;
     [Space]
-    [SerializeField] private CanvasGroup _canvasImagePanel = null;
-    [SerializeField] private Image _npcImg = null;
-    [SerializeField] private TextMeshProUGUI _npcTxt = null;
-    [SerializeField] private GameObject _continueImg = null;
+    [SerializeField, ConditionalHide] private Image _npcImg = null;
+    [SerializeField, ConditionalHide] private TextMeshProUGUI _titleTxt = null;
+    [SerializeField, ConditionalHide] private GameObject _continueImg = null;
 
     // Dialogues
     private bool _isReading;
@@ -50,7 +40,7 @@ public class DDDialog : MonoBehaviour
     private int _counter;
     private int _visibleCount;
     private bool _ddError;
-    // private CharacterSO _currentCharacter;
+    private string _legacyLanguage = "es";
     // private PlayerSO _currentPlayer;
     // private string _currentName = "DDUtility";
     // private string _lastName;
@@ -64,12 +54,10 @@ public class DDDialog : MonoBehaviour
     private long _nodeConditionParsed;
     private Locale _currentLocale;
 
-    private CanvasGroupUtility _canvasUtility;
-
     // Events
     private ChangeInputEvent _changeInputEvent;
     private EnableMovementEvent _enableMovementEvent;
-    private ShowInteractionHintEvent _showInteractionHintEvent;
+    // private ShowInteractionHintEvent _showInteractionHintEvent;
     private EventSystemEvent _eventSystemEvent;
 
     #region  Dialogue Designer
@@ -101,10 +89,8 @@ public class DDDialog : MonoBehaviour
 
     private void Start()
     {
-        _canvasUtility = GetComponent<CanvasGroupUtility>();
-
-        _waitStart = new WaitForSeconds(timeStart);
-        _waitSpeed = new WaitForSeconds(timeSpeed);
+        _waitStart = new WaitForSeconds(_worldConfig.textTimeStart);
+        _waitSpeed = new WaitForSeconds(_worldConfig.textTimeSpeed);
 
         _changeInputEvent = new ChangeInputEvent();
         _changeInputEvent.enable = true;
@@ -112,7 +98,7 @@ public class DDDialog : MonoBehaviour
         _enableMovementEvent = new EnableMovementEvent();
         _enableMovementEvent.canMove = true;
 
-        _showInteractionHintEvent = new ShowInteractionHintEvent();;
+        // _showInteractionHintEvent = new ShowInteractionHintEvent();;
         _eventSystemEvent = new EventSystemEvent();
 
         for (int i = 0; i < _ddButtons.Length; i++)
@@ -123,21 +109,17 @@ public class DDDialog : MonoBehaviour
 
         _dialogPanelBtn.onClick.AddListener(Select);
 
-        _actionCancel.action.performed += ctx => Back();
-
         // // if you want to handle a particular dialogue differently, you can use these instead
         // //m_dialoguePlayer.OverrideOnShowMessage += OnShowMessageSpecial;
         // //m_dialoguePlayer.OverrideOnEvaluateCondition += OnEvaluateConditionSpecial;
         // //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
-
-        _legacyMode = GameData.Instance.DevDDLegacyMode;
     }
 
     private void OnEnable()
     {
-        _tableDD.TableChanged += LoadStrings;
+        // _tableDD.TableChanged += LoadStrings;
 
-        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<DialogDesignerEvent>(OnEnableDialog);
         EventController.AddListener<UpdateLanguageEvent>(OnUpdateLanguage);
 
         DialoguePlayer.GlobalOnShowMessage += OnShowMessage;
@@ -147,9 +129,9 @@ public class DDDialog : MonoBehaviour
 
     private void OnDisable()
     {
-        _tableDD.TableChanged -= LoadStrings;
+        // _tableDD.TableChanged -= LoadStrings;
 
-        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<DialogDesignerEvent>(OnEnableDialog);
         EventController.RemoveListener<UpdateLanguageEvent>(OnUpdateLanguage);
 
         DialoguePlayer.GlobalOnShowMessage -= OnShowMessage;
@@ -162,13 +144,15 @@ public class DDDialog : MonoBehaviour
         _canInteract = canInteract;
     }
 
-    private void LoadStrings(StringTable stringTable)
-    {
-        _stringTableDD = stringTable;
-    }
+    // private void LoadStrings(StringTable stringTable)
+    // {
+    //     _stringTableDD = stringTable;
+    // }
 
-    private void OnEnableDialog(EnableDialogEvent evt)
+    private void OnEnableDialog(DialogDesignerEvent evt)
     {
+        _legacyMode = GameData.Instance.DevDDLegacyMode;
+
         if (evt.enable)
         {
             _currentNPC = evt.npc;
@@ -176,6 +160,7 @@ public class DDDialog : MonoBehaviour
             _dialogueable = evt.dialogueable;
             // _currentPlayer = evt.playerData;
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
+            _actionCancel.action.performed += Back;
         }
         else
         {
@@ -184,6 +169,7 @@ public class DDDialog : MonoBehaviour
             _dialogueable = null;
             // _currentPlayer = null;
             EventController.RemoveListener<InteractionEvent>(OnInteractionDialog);
+            _actionCancel.action.performed -= Back;
         }
     }
 
@@ -196,17 +182,8 @@ public class DDDialog : MonoBehaviour
 
         UpdateNode(_dialoguePlayer.CurrentNode as ShowMessageNode);
 
-        if (_currentNPC != null)
-        {
-            _canvasImagePanel.alpha = 1;
-
-            _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
-            _npcTxt.text = _currentNPC.Data.Name;
-        }
-        else
-        {
-            _canvasImagePanel.alpha = 0;
-        }
+        _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
+        _titleTxt.text = _currentNPC.Data.Name;
 
         _currentDialog = "";
         _dialogTxt.text = "";
@@ -217,8 +194,8 @@ public class DDDialog : MonoBehaviour
 
         _dialoguePlayer.Play();
 
-        _showInteractionHintEvent.show = false;
-        EventController.TriggerEvent(_showInteractionHintEvent);
+        // _showInteractionHintEvent.show = false;
+        // EventController.TriggerEvent(_showInteractionHintEvent);
     }
 
     private void UpdateNode(ShowMessageNode showMessageNode)
@@ -231,38 +208,6 @@ public class DDDialog : MonoBehaviour
         }
 
     }
-
-    // private void UpdateUI()
-    // {
-    //     if (_showMessageNode.SpeakerType != SpeakerType.Character)return;
-
-    //     _currentName = _showMessageNode.Character;
-
-    //     if (_currentName == _lastName)return;
-
-    //     _lastName = _currentName;
-
-    //     if (_currentName == "Player")
-    //     {
-    //         _currentCharacter = _currentPlayer;
-    //     }
-    //     else
-    //     {
-    //         _currentCharacter = _characterData.GetCharacterByName(_currentName);
-    //     }
-
-    //     if (_currentCharacter != null)
-    //     {
-    //         _canvasImagePanel.alpha = 1;
-
-    //         _npcImg.sprite = _currentCharacter.GetIcon(EMOTION.None);
-    //         _npcTxt.text = _currentCharacter.name;
-    //     }
-    //     else
-    //     {
-    //         _canvasImagePanel.alpha = 0;
-    //     }
-    // }
 
     private void OnDialogueEnded(DialoguePlayer sender)
     {
@@ -280,11 +225,10 @@ public class DDDialog : MonoBehaviour
         _eventSystemEvent.objectSelected = null;
         EventController.TriggerEvent(_eventSystemEvent);
 
-        _showInteractionHintEvent.show = true;
-        EventController.TriggerEvent(_showInteractionHintEvent);
+        // _showInteractionHintEvent.show = true;
+        // EventController.TriggerEvent(_showInteractionHintEvent);
         EventController.TriggerEvent(_changeInputEvent);
         EventController.TriggerEvent(_enableMovementEvent);
-
     }
 
     private void OnShowMessage(DialoguePlayer sender, ShowMessageNode node)
@@ -302,8 +246,6 @@ public class DDDialog : MonoBehaviour
 
         UpdateNode(node);
 
-        // UpdateUI();
-
         _lastIndexButton = 0;
         _continueImg.SetActive(false);
 
@@ -318,7 +260,7 @@ public class DDDialog : MonoBehaviour
     {
         if (_legacyMode)
         {
-            _currentDialog = node.GetText(_currentLanguage);
+            _currentDialog = node.GetText(_legacyLanguage);
         }
         else
         {
@@ -404,7 +346,7 @@ public class DDDialog : MonoBehaviour
             {
                 for (int i = 0; i < _choiceNode.Choices.Length; i++)
                 {
-                    _ddButtons[i].Show(_choiceNode.GetChoiceText(i, _currentLanguage));
+                    _ddButtons[i].Show(_choiceNode.GetChoiceText(i, _legacyLanguage));
                     _lastIndexButton = i;
                 }
             }
@@ -480,6 +422,11 @@ public class DDDialog : MonoBehaviour
         }
     }
 
+    private void Back(InputAction.CallbackContext context)
+    {
+        Back();
+    }
+
     private void Back()
     {
         if (_dialoguePlayer == null || _showMessageNode == null || _choiceNode == null)return;
@@ -489,7 +436,6 @@ public class DDDialog : MonoBehaviour
 
     private void OnUpdateLanguage(UpdateLanguageEvent evt)
     {
-        _currentLanguage = evt.language;
         _currentLocale = evt.locale;
 
         if (_dialoguePlayer == null || _showMessageNode == null)return;
@@ -519,7 +465,7 @@ public class DDDialog : MonoBehaviour
             {
                 for (int i = 0; i < _choiceNode.Choices.Length; i++)
                 {
-                    _ddButtons[i].UpdateText(_choiceNode.GetChoiceText(i, _currentLanguage));
+                    _ddButtons[i].UpdateText(_choiceNode.GetChoiceText(i, _legacyLanguage));
                 }
             }
             else

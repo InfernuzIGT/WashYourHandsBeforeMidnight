@@ -28,17 +28,15 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
         _changeSceneEvent = new ChangeSceneEvent();
         _changeSceneEvent.load = _load;
+        _changeSceneEvent.useEnableMovementEvent = true;
         _changeSceneEvent.isLoadAdditive = _isLoadAdditive;
         _changeSceneEvent.newPlayerPosition = newPlayerPosition;
         _changeSceneEvent.sceneData = sceneData;
         _changeSceneEvent.instantFade = _instantFade;
 
-        if (_holdUtility != null)
-        {
-            _holdUtility.OnStarted.AddListener(OnStart);
-            _holdUtility.OnCanceled.AddListener(OnCancel);
-            _holdUtility.OnFinished.AddListener(OnFinish);
-        }
+        _holdUtility.OnStarted.AddListener(OnStart);
+        _holdUtility.OnCanceled.AddListener(OnCancel);
+        _holdUtility.OnFinished.AddListener(OnFinish);
     }
 
     public void OnInteractionEnter(Collider other)
@@ -73,7 +71,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
     public void ResetPosition()
     {
-        newPlayerPosition = gameObject.transform.position + new Vector3(1,0,1);
+        newPlayerPosition = gameObject.transform.position + new Vector3(1, 0, 1);
     }
 
     #region Hold System
@@ -93,7 +91,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         EventController.RemoveListener<InteractionEvent>(OnInteractScene);
 
         EventController.TriggerEvent(_changeSceneEvent);
-        
+
         ForceCleanInteraction();
     }
 
