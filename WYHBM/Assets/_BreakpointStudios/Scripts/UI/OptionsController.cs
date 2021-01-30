@@ -3,6 +3,8 @@ using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
+using FMODUnity;
+using FMOD.Studio;
 
 public class OptionsController : MonoBehaviour
 {
@@ -42,6 +44,8 @@ public class OptionsController : MonoBehaviour
 
     public GameObject FirstSelectOptions { get { return _firstSelectOptions; } }
 
+    FMOD.Studio.EventInstance changeSound;
+
     private void Start()
     {
         _isLoaded = GameData.Instance.LoadSettings();
@@ -55,6 +59,10 @@ public class OptionsController : MonoBehaviour
         {
             LoadDefaultSettings();
         }
+    }
+    private void Update()
+    {
+        // changeSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/change");
     }
 
     private void OnEnable()
@@ -135,6 +143,8 @@ public class OptionsController : MonoBehaviour
     private void OptionsLanguage(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
+        
         
         GameData.Instance.SelectNextLanguage(!isLeft);
     }
@@ -142,6 +152,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsResolution(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         _indexResolution = Utils.GetNextIndex(!isLeft, _indexResolution, Screen.resolutions.Length - 1, false);
         Screen.SetResolution(Screen.resolutions[_indexResolution].width, Screen.resolutions[_indexResolution].height, Screen.fullScreen);
@@ -154,6 +165,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsQuality(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         _indexQuality = Utils.GetNextIndex(!isLeft, _indexQuality, QualitySettings.names.Length - 1, false);
         QualitySettings.SetQualityLevel(_indexQuality, true);
@@ -166,6 +178,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsFullscreen(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         Screen.fullScreen = !isLeft;
 
@@ -177,6 +190,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsVsync(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         QualitySettings.vSyncCount = isLeft ? 0 : 1;
 
@@ -188,6 +202,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsMasterVolume(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         _indexMasterVolume = Utils.GetNextIndex(!isLeft, _indexMasterVolume, 10, false);
         VolumeMaster(_indexMasterVolume);
@@ -200,6 +215,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsSoundEffects(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         _indexSoundEffects = Utils.GetNextIndex(!isLeft, _indexSoundEffects, 10, false);
         VolumeSound(_indexSoundEffects);
@@ -212,6 +228,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsMusic(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         _indexMusic = Utils.GetNextIndex(!isLeft, _indexMusic, 10, false);
         VolumeMusic(_indexMusic);
@@ -224,6 +241,7 @@ public class OptionsController : MonoBehaviour
     private void OptionsVibration(bool isLeft)
     {
         if (!_canInteract) return;
+        // changeSound.start();
         
         if (isLeft)
         {
@@ -265,6 +283,7 @@ public class OptionsController : MonoBehaviour
     private void VolumeMaster(float vol)
     {
         RuntimeManager.StudioSystem.setParameterByName(FMODParameters.MasterSlider, vol);
+        Debug.Log("VOLUME MASTER");
     }
 
     private void VolumeMusic(float vol)
