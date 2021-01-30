@@ -45,10 +45,8 @@ public class LocalizationUtility : MonoBehaviour
             _isForced = false;
             _index = LocalizationSettings.AvailableLocales.Locales.IndexOf(_locale);
         }
-        else
-        {
-            _index = 0;
-        }
+        
+        _index = _index < 0 ? 0 : _index;
 
         UpdateLocale(_listLocales[_index]);
     }

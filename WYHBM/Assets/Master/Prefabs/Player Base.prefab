@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 5441447954450045004}
   - component: {fileID: 5441447954450045011}
   - component: {fileID: 5454344177718044526}
-  - component: {fileID: 4106246413456115067}
+  - component: {fileID: 995453505949163658}
   m_Layer: 19
   m_Name: Player Base
   m_TagString: Player
@@ -108,9 +108,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 0}
-  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
-  _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
-  _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
   _movementState: 0
   _inZipline: 0
   endPos: {x: 0, y: 0, z: 0}
@@ -121,10 +118,12 @@ MonoBehaviour:
   footstepSound: {fileID: 4696537044046352187}
   breathingSound: {fileID: 1859904522748835540}
   ShowReferences: 0
+  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
+  _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
+  _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
   _shadow: {fileID: 8913232117615706260}
   _characterController: {fileID: 1255290931}
   _animatorController: {fileID: 5454344177718044526}
-  _deviceUtility: {fileID: 4106246413456115067}
 --- !u!143 &1255290931
 CharacterController:
   m_ObjectHideFlags: 0
@@ -226,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flipSprite: 0
---- !u!114 &4106246413456115067
+--- !u!114 &995453505949163658
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,10 +234,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441447954450045010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07b11175bb8490e498c4c55b6c787cf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6090da511f8374135a15dd8655adcd44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentDevice: 0
+  _recordingInterval: 0.5
+  _mode: 1
+  _globalClockKey: Root
+  _rewindable: 0
+  _recordingDuration: 30
 --- !u!1 &7151162135838049659
 GameObject:
   m_ObjectHideFlags: 0

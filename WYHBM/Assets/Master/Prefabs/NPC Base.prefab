@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 8781508375878358936}
   - component: {fileID: 7724327999077537402}
   - component: {fileID: 4861550839630928318}
+  - component: {fileID: 1101214639555105302}
   m_Layer: 9
   m_Name: NPC Base
   m_TagString: Untagged
@@ -234,12 +235,15 @@ MonoBehaviour:
   _waypoints: {fileID: 0}
   _startLookDirection: 0
   _viewRadius: 7.5
+  _hearRadius: 12
   _viewAngle: 130
   ShowReferences: 0
-  _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
   _interactionNPC: {fileID: 5757332508381093149}
   _holdUtility: {fileID: 7844868855792061304}
   _fieldOfView: {fileID: 7308171088025437376}
+  _animatorController: {fileID: 2203801389680832686}
+  _agent: {fileID: 7724327999077537402}
+  _timeline: {fileID: 1101214639555105302}
 --- !u!195 &7724327999077537402
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -276,6 +280,23 @@ CapsuleCollider:
   m_Height: 3.15
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1101214639555105302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7882800319852633472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6090da511f8374135a15dd8655adcd44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _recordingInterval: 0.5
+  _mode: 1
+  _globalClockKey: Root
+  _rewindable: 0
+  _recordingDuration: 30
 --- !u!1001 &5168149693298235635
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -556,6 +577,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 222802b9db7f3924b8825684bdfec476,
         type: 2}
+    - target: {fileID: 448461730189328648, guid: 34f546212a4c5e94e8ebb8c7a054d3eb,
+        type: 3}
+      propertyPath: _cancelOnPause
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2269715423421459881, guid: 34f546212a4c5e94e8ebb8c7a054d3eb,
         type: 3}
       propertyPath: m_Name

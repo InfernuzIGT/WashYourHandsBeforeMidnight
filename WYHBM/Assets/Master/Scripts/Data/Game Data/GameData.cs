@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Chronos;
 using Events;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 
 public enum SESSION_OPTION
@@ -15,13 +15,13 @@ public enum SESSION_OPTION
 	Delete = 2,
 }
 
-[RequireComponent(typeof(LocalizationUtility))]
+[RequireComponent(typeof(GlobalClock), typeof(Timekeeper))]
+[RequireComponent(typeof(LocalizationUtility), typeof(InputSystemUtility))]
 public class GameData : MonoSingleton<GameData>
 {
 
 	[Header("Developer")]
 	[SerializeField] private bool _devPrintInputInfo = false;
-	[SerializeField] private bool _devDDLegacyMode = false;
 
 	[Header("Configs")]
 	[SerializeField] private PlayerConfig _playerConfig;
@@ -37,11 +37,14 @@ public class GameData : MonoSingleton<GameData>
 	private SpawnPoint _lastSpawnPoint;
 	private GlobalController _globalController;
 	private LocalizationUtility _localizationUtility;
+	private InputSystemUtility _deviceUtility;
+	private GlobalClock _globalClock;
 
 	// Scene Managment
 	private bool _load;
 	private bool _isLoadAdditive;
 	private SceneSO _sceneData;
+	private bool _homeUsed;
 
 	// Input System
 	private Gamepad _gamepad;
@@ -58,13 +61,16 @@ public class GameData : MonoSingleton<GameData>
 	private CustomFadeEvent _customFadeEvent;
 	private SaveAnimationEvent _saveAnimationEvent;
 
+	private bool _devDDLegacyMode;
 	private int _indexQuality;
+	private bool _changeSceneUseEvent;
 
 	// Properties
 	public PlayerController Player { get { return _globalController.playerController; } }
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
 
-	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } }
+	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } set { _devDDLegacyMode = value; } }
+	public bool HomeUsed { get { return _homeUsed; } set { _homeUsed = value; } }
 
 	protected override void Awake()
 	{
@@ -72,7 +78,7 @@ public class GameData : MonoSingleton<GameData>
 
 #if UNITY_EDITOR
 
-		if (_devPrintInputInfo)InputUtility.printInfo = true;
+		if (_devPrintInputInfo)InputSystemAdapter.printInfo = true;
 
 #endif
 
@@ -81,6 +87,10 @@ public class GameData : MonoSingleton<GameData>
 		GetSceneReferences();
 
 		// Load();
+
+		_localizationUtility = GetComponent<LocalizationUtility>();
+		_deviceUtility = GetComponent<InputSystemUtility>();
+		_globalClock = GetComponent<GlobalClock>();
 	}
 
 	private void InitializeConfigs()
@@ -91,8 +101,6 @@ public class GameData : MonoSingleton<GameData>
 
 	private void Start()
 	{
-		_localizationUtility = GetComponent<LocalizationUtility>();
-
 		_listScenes = new List<AsyncOperation>();
 
 		_enableMovementEvent = new EnableMovementEvent();
@@ -125,12 +133,24 @@ public class GameData : MonoSingleton<GameData>
 	{
 		EventController.AddListener<ChangeSceneEvent>(OnChangeScene);
 		EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
+		EventController.AddListener<PauseEvent>(OnPause);
 	}
 
 	private void OnDisable()
 	{
 		EventController.RemoveListener<ChangeSceneEvent>(OnChangeScene);
 		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
+		EventController.RemoveListener<PauseEvent>(OnPause);
+	}
+
+	public void DetectDevice(InputDevice inputDevice = null)
+	{
+		_deviceUtility.DetectDevice(inputDevice);
+	}
+
+	private void OnPause(PauseEvent evt)
+	{
+		_globalClock.localTimeScale = evt.isPaused ? 0 : 1;
 	}
 
 	#region Localization
@@ -144,7 +164,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		return _localizationUtility.Language;
 	}
-	
+
 	public void ForceLanguage(Locale locale)
 	{
 		_localizationUtility.ForceSetLocale(locale);
@@ -212,6 +232,8 @@ public class GameData : MonoSingleton<GameData>
 
 	private void OnChangeScene(ChangeSceneEvent evt)
 	{
+		_changeSceneUseEvent = evt.useEnableMovementEvent;
+
 		_load = evt.load;
 		_isLoadAdditive = evt.isLoadAdditive;
 		_sceneData = evt.sceneData;
@@ -222,8 +244,12 @@ public class GameData : MonoSingleton<GameData>
 		_customFadeEvent.callbackFadeIn = ChangeScene;
 		EventController.TriggerEvent(_customFadeEvent);
 
-		_enableMovementEvent.canMove = false;
-		EventController.TriggerEvent(_enableMovementEvent);
+		if (_changeSceneUseEvent)
+		{
+			_enableMovementEvent.canMove = false;
+			EventController.TriggerEvent(_enableMovementEvent);
+		}
+
 	}
 
 	private void ChangeScene()
@@ -290,8 +316,11 @@ public class GameData : MonoSingleton<GameData>
 		_customFadeEvent.fadeIn = false;
 		EventController.TriggerEvent(_customFadeEvent);
 
-		_enableMovementEvent.canMove = true;
-		EventController.TriggerEvent(_enableMovementEvent);
+		if (_changeSceneUseEvent)
+		{
+			_enableMovementEvent.canMove = true;
+			EventController.TriggerEvent(_enableMovementEvent);
+		}
 
 		GetSceneReferences();
 	}
@@ -448,7 +477,7 @@ public class GameData : MonoSingleton<GameData>
 	public bool SaveSettings(SessionSettings lastSessionSettings)
 	{
 		bool valid = false;
-		
+
 		sessionSettings = lastSessionSettings;
 
 		try
@@ -462,7 +491,7 @@ public class GameData : MonoSingleton<GameData>
 		{
 			Debug.LogError($"<color=red><b>[ERROR]</b></color> Save Settings: {ex}");
 		}
-		
+
 		return valid;
 	}
 

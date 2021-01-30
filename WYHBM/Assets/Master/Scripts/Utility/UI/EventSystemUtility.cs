@@ -1,23 +1,18 @@
 ﻿using Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(EventSystem), typeof(InputSystemUIInputModule))]
-public class EventSystemUtility : MonoBehaviour
+public class EventSystemUtility : MonoSingleton<EventSystemUtility>
 {
     [Header("Event System")]
-    [SerializeField] private bool _startEnable = false;
-    [Space]
+    [SerializeField] private InputActionReference _actionAnyButton = null;
     [SerializeField] private EventSystem _eventSystem;
     [SerializeField] private InputSystemUIInputModule _inputUIModule;
 
     public InputSystemUIInputModule InputUIModule { get { return _inputUIModule; } set { _inputUIModule = value; } }
-
-    private void Start()
-    {
-        if (!_startEnable)_inputUIModule.actionsAsset.Disable();
-    }
 
     private void OnEnable()
     {
@@ -47,6 +42,7 @@ public class EventSystemUtility : MonoBehaviour
         {
             _inputUIModule.actionsAsset.Enable();
             _inputUIModule.actionsAsset.actionMaps[0].Disable(); // Player
+            _actionAnyButton.action.Disable(); // Any Button
         }
     }
 

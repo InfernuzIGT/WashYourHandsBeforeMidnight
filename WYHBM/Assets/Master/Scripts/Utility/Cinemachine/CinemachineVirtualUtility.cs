@@ -52,7 +52,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
     }
 
-    public void Init(PlayerController target, Camera camera, InputSystemUIInputModule InputUIModule)
+    public void Init(PlayerController target, Camera camera)
     {
         _player = target;
         _camera = camera;
@@ -61,13 +61,13 @@ public class CinemachineVirtualUtility : MonoBehaviour
         // InputUIModule.point.action.performed += ctx => _lookVector = ctx.ReadValue<Vector2>();
 
         _player.Input.Player.Zoom.performed += ctx => ChangeZoom();
-        InputUIModule.middleClick.action.performed += ctx => ChangeZoom();
+        EventSystemUtility.Instance.InputUIModule.middleClick.action.performed += ctx => ChangeZoom();
 
         _cinemachineVirtual.m_Follow = _player.transform;
 
         _indexZoom = _startIndexZoom;
         _cinemachineFramingTransposer.m_CameraDistance = _playerConfig.zoomValues[_indexZoom];
-        
+
         _isInitialized = true;
     }
 

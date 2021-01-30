@@ -28,6 +28,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
         _changeSceneEvent = new ChangeSceneEvent();
         _changeSceneEvent.load = _load;
+        _changeSceneEvent.useEnableMovementEvent = true;
         _changeSceneEvent.isLoadAdditive = _isLoadAdditive;
         _changeSceneEvent.newPlayerPosition = newPlayerPosition;
         _changeSceneEvent.sceneData = sceneData;

@@ -75,6 +75,7 @@ namespace Events
     public class ChangeSceneEvent : GameEvent
     {
         public bool load;
+        public bool useEnableMovementEvent;
         public bool isLoadAdditive;
         public SceneSO sceneData;
         public Vector3 newPlayerPosition;
@@ -115,6 +116,7 @@ namespace Events
 
     public class PauseEvent : GameEvent
     {
+        public bool isPaused;
         public PAUSE_TYPE pauseType;
     }
 

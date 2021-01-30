@@ -25,7 +25,7 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     protected bool _showHint = true;
 
-    private SpriteRenderer _hintSprite;
+    // private SpriteRenderer _hintSprite;
     private bool _canInteract = true;
 
     private QuestEvent _questEvent;
@@ -34,9 +34,9 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public virtual void Awake()
     {
-        _hintSprite = transform.GetComponentInChildren<SpriteRenderer>();
+        // _hintSprite = transform.GetComponentInChildren<SpriteRenderer>();
 
-        _hintSprite.enabled = false;
+        // _hintSprite.enabled = false;
 
         _questEvent = new QuestEvent();
         _showInteractionHintEvent = new ShowInteractionHintEvent();
@@ -90,12 +90,12 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     protected void ShowHint(bool show)
     {
-        if (!_showHint)return;
+        // if (!_showHint)return;
 
-        _hintSprite.enabled = show;
-
-        _showInteractionHintEvent.show = show;
-        EventController.TriggerEvent(_showInteractionHintEvent);
+        // _hintSprite.enabled = show;
+        
+        // _showInteractionHintEvent.show = show;
+        // EventController.TriggerEvent(_showInteractionHintEvent);
     }
 
     protected void ForceCleanInteraction()

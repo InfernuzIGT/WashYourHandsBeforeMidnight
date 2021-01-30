@@ -70,7 +70,7 @@ public class Slot : MonoBehaviour
     private void SetEquip(bool isEquipped)
     {
         _isEquipped = isEquipped;
-        transform.SetParent(isEquipped ? GameManager.Instance.worldUI.GetSlot() : GameManager.Instance.worldUI.itemParents);
+        // transform.SetParent(isEquipped ? GameManager.Instance.worldUI.GetSlot() : GameManager.Instance.worldUI.itemParents);
     }
 
     public void PointerEnter()

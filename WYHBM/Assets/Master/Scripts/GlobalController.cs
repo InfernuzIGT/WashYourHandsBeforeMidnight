@@ -19,11 +19,13 @@ public class GlobalController : MonoBehaviour
     [Header("Developer")]
     [SerializeField] private bool _devAutoInit = false;
     [SerializeField] private bool _devSilentSteps = false;
+    [SerializeField] private bool _devDDLegacyMode = false;
 
     [Header("General")]
     [SerializeField, ReadOnly] private PlayerSO playerData;
     [Space]
     [SerializeField, ReadOnly] private bool _isPaused;
+    [SerializeField, ReadOnly] private bool _inDialog;
     [SerializeField, ReadOnly] private bool _inCombat;
     [Space]
     [SerializeField, ReadOnly] private SessionData sessionData;
@@ -46,7 +48,6 @@ public class GlobalController : MonoBehaviour
     [ConditionalHide] public PlayableDirector playableDirector;
     [ConditionalHide] public GameMode.World.UIManager worldUI;
     [ConditionalHide] public GameMode.Combat.UIManager combatUI;
-    [ConditionalHide] public EventSystemUtility eventSystemUtility;
     [Space]
     [ConditionalHide] public Material materialFOV;
     [ConditionalHide] public Material materialDitherNPC;
@@ -72,6 +73,7 @@ public class GlobalController : MonoBehaviour
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
     private EnableDialogEvent _interactionDialogEvent;
+    private PauseEvent _pauseEvent;
 
     public SessionData SessionData { get { return sessionData; } set { sessionData = value; } }
     public PlayerSO PlayerData { get { return playerData; } }
@@ -85,7 +87,7 @@ public class GlobalController : MonoBehaviour
 
     public void Init(Vector3 spawnPosition)
     {
-        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Persistent"));
+        UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Player"));
 
         CheckPersistenceObjects();
 
@@ -96,6 +98,8 @@ public class GlobalController : MonoBehaviour
 
         _cutsceneEvent = new CutsceneEvent();
         _cutsceneEvent.show = false;
+
+        _pauseEvent = new PauseEvent();
 
         SpawnPlayer(spawnPosition);
         SpawnUI();
@@ -115,7 +119,6 @@ public class GlobalController : MonoBehaviour
         gameData.gameObject.name = "GameData";
         worldUI.gameObject.name = "Canvas (World)";
         combatUI.gameObject.name = "Canvas (Combat)";
-        eventSystemUtility.gameObject.name = "Event System";
 #else
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -144,7 +147,7 @@ public class GlobalController : MonoBehaviour
 
     private void OnPause(PauseEvent evt)
     {
-        _isPaused = !_isPaused;
+        _isPaused = evt.isPaused;
 
         if (_isPaused)
         {
@@ -169,7 +172,8 @@ public class GlobalController : MonoBehaviour
         _ppDepthOfField.gaussianStart.value = _isPaused ? 0 : 22.5f;
         _ppDepthOfField.gaussianEnd.value = _isPaused ? 0 : 60;
 
-        Time.timeScale = _isPaused ? 0 : 1;
+        _enableMovementEvent.canMove = !evt.isPaused;
+        EventController.TriggerEvent(_enableMovementEvent);
     }
 
     private void CheckPersistenceObjects()
@@ -179,6 +183,7 @@ public class GlobalController : MonoBehaviour
         gameData = tempGamedata != null ? tempGamedata : Instantiate(gameData);
 
         sessionData = gameData.LoadSessionData();
+        gameData.DevDDLegacyMode = _devDDLegacyMode;
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
 
@@ -190,6 +195,7 @@ public class GlobalController : MonoBehaviour
 
         playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
         playerController.DevSilentSteps = _devSilentSteps;
+        playerController.SetInput(() => Pause(PAUSE_TYPE.PauseMenu), () => Pause(PAUSE_TYPE.Inventory));
         playerController.SetPlayerData(playerData);
 
         sessionData.playerData = playerData;
@@ -279,9 +285,20 @@ public class GlobalController : MonoBehaviour
         materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 1f, (_fovCurrentTime / worldConfig.fovTime)));
     }
 
+    private void Pause(PAUSE_TYPE pauseType)
+    {
+        if (_inCombat || _inDialog)return;
+
+        _isPaused = !_isPaused;
+
+        _pauseEvent.isPaused = _isPaused;
+        _pauseEvent.pauseType = pauseType;
+        EventController.TriggerEvent(_pauseEvent);
+    }
+
     private void CheckCamera()
     {
-        playerCamera.Init(playerController, mainCamera, eventSystemUtility.InputUIModule);
+        playerCamera.Init(playerController, mainCamera);
 
         DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
         detectTargetBehind.SetTarget(playerController.transform);
@@ -295,8 +312,6 @@ public class GlobalController : MonoBehaviour
 
     private void SpawnUI()
     {
-        eventSystemUtility = Instantiate(eventSystemUtility);
-
         worldUI = Instantiate(worldUI);
         combatUI = Instantiate(combatUI);
 

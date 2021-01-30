@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Chronos;
 using Events;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,9 +23,9 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     [SerializeField, ConditionalHide] private InteractionNPC _interactionNPC = null;
     [SerializeField, ConditionalHide] private InputHoldUtility _holdUtility = null;
     [SerializeField, ConditionalHide] private FieldOfView _fieldOfView = null;
-
-    private WorldAnimator _animatorController;
-    private NavMeshAgent _agent;
+    [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
+    [SerializeField, ConditionalHide] private NavMeshAgent _agent = null;
+    [SerializeField, ConditionalHide] private Timeline _timeline = null;
 
     private Vector3 _originalPosition;
     private Quaternion _originalRotation;
@@ -54,18 +55,10 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     public float ViewRadius { get { return _viewRadius; } }
     public float ViewAngle { get { return _viewAngle; } }
 
-    private void Awake()
-    {
-        _animatorController = GetComponent<WorldAnimator>();
-        _agent = GetComponent<NavMeshAgent>();
-        _interactionNPC = GetComponentInChildren<InteractionNPC>();
-
-        _questEvent = new QuestEvent();
-        _enableMovementEvent = new EnableMovementEvent();
-    }
-
     private void Start()
     {
+        _questEvent = new QuestEvent();
+        _enableMovementEvent = new EnableMovementEvent();
 
 #if UNITY_EDITOR
 
@@ -89,7 +82,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
             _fieldOfView.transform.rotation = _originalRotation;
 
-            _fieldOfView.Init(_data.TimeToDetect, _viewRadius, _viewAngle);
+            _fieldOfView.Init(_data.TimeToDetect, _viewRadius, _viewAngle, _timeline);
 
             _holdUtility.Duration = _data.TimeToDetect;
             _holdUtility.OnFinished.AddListener(OnFinish);
@@ -112,7 +105,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Update()
     {
-        if (_agent.isOnNavMesh && _canMove)
+        if (_agent.isOnNavMesh && _canMove && _timeline.timeScale > 0)
         {
             Movement();
             Rotation();

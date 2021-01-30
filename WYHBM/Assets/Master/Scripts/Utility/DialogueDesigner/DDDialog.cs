@@ -29,17 +29,19 @@ public class DDDialog : MonoBehaviour
     [SerializeField, Range(0, .1f)] private float timeSpeed = .05f;
 
     [Header("References")]
-    [SerializeField] private LocalizedStringTable _tableDD;
-    [SerializeField] private InputActionReference _actionCancel = null;
+#pragma warning disable 0414
+    [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+    [SerializeField, ConditionalHide] private LocalizedStringTable _tableDD;
+    [SerializeField, ConditionalHide] private InputActionReference _actionCancel = null;
     [Space]
-    [SerializeField] private Button _dialogPanelBtn = null;
-    [SerializeField] private TextMeshProUGUI _dialogTxt = null;
-    [SerializeField] private DDButton[] _ddButtons = null;
+    [SerializeField, ConditionalHide] private Button _dialogPanelBtn = null;
+    [SerializeField, ConditionalHide] private TextMeshProUGUI _dialogTxt = null;
+    [SerializeField, ConditionalHide] private DDButton[] _ddButtons = null;
     [Space]
-    [SerializeField] private CanvasGroup _canvasImagePanel = null;
-    [SerializeField] private Image _npcImg = null;
-    [SerializeField] private TextMeshProUGUI _npcTxt = null;
-    [SerializeField] private GameObject _continueImg = null;
+    [SerializeField, ConditionalHide] private Image _npcImg = null;
+    [SerializeField, ConditionalHide] private TextMeshProUGUI _npcTxt = null;
+    [SerializeField, ConditionalHide] private GameObject _continueImg = null;
 
     // Dialogues
     private bool _isReading;
@@ -129,8 +131,6 @@ public class DDDialog : MonoBehaviour
         // //m_dialoguePlayer.OverrideOnShowMessage += OnShowMessageSpecial;
         // //m_dialoguePlayer.OverrideOnEvaluateCondition += OnEvaluateConditionSpecial;
         // //m_dialoguePlayer.OverrideOnExecuteScript += OnExecuteScriptSpecial;
-
-        _legacyMode = GameData.Instance.DevDDLegacyMode;
     }
 
     private void OnEnable()
@@ -169,6 +169,8 @@ public class DDDialog : MonoBehaviour
 
     private void OnEnableDialog(EnableDialogEvent evt)
     {
+        _legacyMode = GameData.Instance.DevDDLegacyMode;
+
         if (evt.enable)
         {
             _currentNPC = evt.npc;
@@ -198,14 +200,16 @@ public class DDDialog : MonoBehaviour
 
         if (_currentNPC != null)
         {
-            _canvasImagePanel.alpha = 1;
+            _npcImg.enabled = true;
+            _npcTxt.enabled = true;
 
             _npcImg.sprite = _currentNPC.Data.GetIcon(EMOTION.None);
             _npcTxt.text = _currentNPC.Data.Name;
         }
         else
         {
-            _canvasImagePanel.alpha = 0;
+            _npcImg.enabled = false;
+            _npcTxt.enabled = false;
         }
 
         _currentDialog = "";

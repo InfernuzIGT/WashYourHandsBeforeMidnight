@@ -1,4 +1,6 @@
-﻿using DG.Tweening;
+﻿using Chronos;
+using DG.Tweening;
+using Events;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,6 +11,7 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     [Header("Hold System")]
     [SerializeField, Range(0f, 10f)] private float _duration = 3;
     [SerializeField] private Ease _easeAnimation = Ease.Linear;
+    [SerializeField] private bool _cancelOnPause = false;
 
     [Header("References")]
 #pragma warning disable 0414
@@ -18,9 +21,11 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     [SerializeField, ConditionalHide] private Image _iconImg = null;
     [SerializeField, ConditionalHide] private Image _fillImg = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasGroupUtility = null;
+    [SerializeField, ConditionalHide] private Timeline _timeline = null;
 
     private Tween _fillAnimation;
     private Tween _fillColor;
+    private bool _isStarted;
 
     // Properties
     private UnityEvent _onStarted = new UnityEvent();
@@ -40,6 +45,37 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
         _canvasGroupUtility.SetCanvasCamera();
         _canvasGroupUtility.ShowInstant(false);
+    }
+
+    private void OnEnable()
+    {
+        EventController.AddListener<PauseEvent>(OnPause);
+    }
+
+    private void OnDisable()
+    {
+        EventController.RemoveListener<PauseEvent>(OnPause);
+    }
+
+    private void OnPause(PauseEvent evt)
+    {
+        if (_isStarted)
+        {
+            if (evt.isPaused)
+            {
+                _fillAnimation.Pause();
+                _fillColor.Pause();
+            }
+            else
+            {
+                _fillAnimation.Play();
+                _fillColor.Play();
+            }
+        }
+
+        if (!_cancelOnPause)return;
+
+        OnCancel();
     }
 
     public void SoundDetect(bool enable)
@@ -68,6 +104,8 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
     public void OnStart()
     {
+        _isStarted = true;
+
         _iconData.SetIconStart(ref _iconImg);
 
         _canvasGroupUtility.ShowInstant(true);
@@ -89,6 +127,8 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
     public void OnCancel()
     {
+        _isStarted = false;
+
         _iconData.SetIconCancel(ref _iconImg);
 
         _canvasGroupUtility.Show(false);
@@ -104,6 +144,8 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
     public void OnFinish()
     {
+        _isStarted = false;
+
         _iconData.SetIconFinish(ref _iconImg);
 
         _canvasGroupUtility.Show(false, 1f);
