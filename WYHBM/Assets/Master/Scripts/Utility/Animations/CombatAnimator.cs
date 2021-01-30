@@ -2,6 +2,6 @@
 {
     public void Action(ANIM_STATE animState)
     {
-        _animActionType.Execute(_animator, (int)animState);
+        _animActionType.Execute((int)animState);
     }
 }

@@ -25,23 +25,20 @@ public enum MOVEMENT_STATE
     Jump = 3,
 }
 
-public enum EMOTION
-{
-    None = 0,
-    Happy = 1,
-    Sad = 2,
-    Angry = 3,
-    Surprise = 4,
-    Curious = 5,
-    Sleep = 6
-}
-
 public enum DIRECTION
 {
     UP = 0,
     DOWN = 1,
     LEFT = 2,
     RIGHT = 3
+}
+
+public enum DIALOG_STATE
+{
+    Ready = 0,
+    InProgress = 1,
+    Done = 2,
+    Locked = 3
 }
 
 // public enum TIER

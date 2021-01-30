@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Events;
 using FMODUnity;
 using UnityEngine;
+using UnityEngine.Events;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
-[RequireComponent(typeof(CharacterController), typeof(DeviceUtility))]
+[RequireComponent(typeof(CharacterController), typeof(SpriteRenderer), typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
 
@@ -36,12 +36,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
     [SerializeField, ConditionalHide] private CharacterController _characterController = null;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
-    [SerializeField, ConditionalHide] private DeviceUtility _deviceUtility = null;
 
     // Events
     private InteractionEvent _interactionEvent;
     private LadderEvent _ladderEvent;
-    private PauseEvent _pauseEvent;
 
     // Movement 
     private MOVEMENT_STATE _lastMovementState;
@@ -80,9 +78,6 @@ public class PlayerController : MonoBehaviour
     // Quest
     private bool _isOpenDiary;
 
-    // Interaction
-    private Interaction _currentInteraction;
-
     // Properties
     private CustomInputAction _input;
     public CustomInputAction Input { get { return _input; } set { _input = value; } }
@@ -93,8 +88,10 @@ public class PlayerController : MonoBehaviour
     private bool _isDetectingGround;
     public bool IsDetectingGround { get { return _isDetectingGround; } set { _isDetectingGround = value; } }
 
+    private Interaction _currentInteraction = null;
+    public Interaction CurrentInteraction { get { return _currentInteraction; } }
+
     public bool IsCrouching { get { return _isCrouching; } }
-    public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
     public PlayerSO PlayerData { get { return _playerData; } }
 
     private bool _devSilentSteps;
@@ -114,8 +111,6 @@ public class PlayerController : MonoBehaviour
         _input.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
         // _input.Player.Jump.performed += ctx => Jump();
         _input.Player.Interaction.performed += ctx => Interaction();
-        _input.Player.Pause.performed += ctx => Pause(PAUSE_TYPE.PauseMenu);
-        _input.Player.Options.performed += ctx => Pause(PAUSE_TYPE.Inventory);
         _input.Player.Crouch.performed += ctx => Crouch();
         // _input.Player.Run.started += ctx => Run(true);
         // _input.Player.Run.canceled += ctx => Run(false);
@@ -128,15 +123,20 @@ public class PlayerController : MonoBehaviour
         _deviceConfig.UpdateDictionary();
     }
 
+    public void SetInput(UnityAction actionPause, UnityAction actionOptions)
+    {
+        _input.Player.Pause.performed += ctx => actionPause.Invoke();
+        _input.Player.Options.performed += ctx => actionOptions.Invoke();
+    }
+
     private void Start()
     {
         _interactionEvent = new InteractionEvent();
         _ladderEvent = new LadderEvent();
-        _pauseEvent = new PauseEvent();
 
         _crouchHeight = new Vector3(0, -(_playerConfig.height / 2) / 2, 0);
 
-        _deviceUtility.DetectDevice();
+        GameData.Instance.DetectDevice();
     }
 
     private void OnEnable()
@@ -153,12 +153,6 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.RemoveListener<ChangePositionEvent>(OnChangePosition);
         EventController.RemoveListener<CurrentInteractEvent>(OnCurrentInteraction);
-    }
-
-    private void Pause(PAUSE_TYPE pauseType)
-    {
-        _pauseEvent.pauseType = pauseType;
-        EventController.TriggerEvent(_pauseEvent);
     }
 
     private void Update()
@@ -625,6 +619,9 @@ public class PlayerController : MonoBehaviour
             _input.Player.Disable();
             _characterController.enabled = false;
             StopMovement();
+
+            // TODO Mariano: Enable
+            // if (evt.isDetected)_animatorController.Detected(true);
         }
 
         if (evt.canMove)
@@ -647,7 +644,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
-        InputUtility.DeviceRebind(evt.device, _input);
+        InputSystemAdapter.DeviceRebind(evt.device, _input);
     }
 
     #endregion

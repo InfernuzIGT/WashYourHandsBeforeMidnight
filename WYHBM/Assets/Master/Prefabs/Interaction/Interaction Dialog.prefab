@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7eb0417692f4ca47b252304c31de6be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: []
-  questState: 
-  cutscene: {fileID: 0}
+  questData: []
   onEnter:
     m_PersistentCalls:
       m_Calls:
@@ -43,6 +41,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _localizedDialog:
+    m_TableReference:
+      m_TableCollectionName: GUID:f0d379af0f527094e95f9ff4353f37e9
+    m_TableEntryReference:
+      m_KeyId: 15301709824
+      m_Key: 
 --- !u!1001 &986258466982117238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54,6 +58,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
@@ -72,6 +81,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -83,16 +97,6 @@ PrefabInstance:
     - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1977825115676512154, guid: 109232e5a0434c744a00baf85d3299f2,

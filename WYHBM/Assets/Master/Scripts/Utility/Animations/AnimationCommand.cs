@@ -2,6 +2,8 @@
 
 public abstract class AnimationCommand
 {
+    protected Animator _animator;
+
     // General
     protected readonly int hash_IsAlive = Animator.StringToHash("isAlive"); // Bool
     protected readonly int hash_MovementType = Animator.StringToHash("movementType"); // Int
@@ -14,38 +16,47 @@ public abstract class AnimationCommand
 
     // Combat
     protected readonly int hash_ActionType = Animator.StringToHash("actionType"); // Int
+    protected readonly int hash_IsDetected = Animator.StringToHash("isDetected"); // Bool
 
     // Systems
     protected readonly int hash_CanClimbLedge = Animator.StringToHash("canClimbLedge"); // Bool
     protected readonly int hash_CanClimbLadder = Animator.StringToHash("canClimbLadder"); // Bool
 
+    public AnimationCommand(Animator animator)
+    {
+        _animator = animator;
+    }
 }
 
 #region Animation Command - Float
 public abstract class AnimationCommandFloat : AnimationCommand
 {
-    public abstract void Execute(Animator anim, float value);
+    public AnimationCommandFloat(Animator animator) : base(animator) { }
+    public abstract void Execute(float value);
 }
 #endregion
 
 #region Animation Command - Int
 public abstract class AnimationCommandInt : AnimationCommand
 {
-    public abstract void Execute(Animator anim, int value);
+    public AnimationCommandInt(Animator animator) : base(animator) { }
+    public abstract void Execute(int value);
 }
 #endregion
 
 #region Animation Command - Bool
 public abstract class AnimationCommandBool : AnimationCommand
 {
-    public abstract void Execute(Animator anim, bool value);
+    public AnimationCommandBool(Animator animator) : base(animator) { }
+    public abstract void Execute(bool value);
 }
 #endregion
 
 #region Animation Command - Trigger
 public abstract class AnimationCommandTrigger : AnimationCommand
 {
-    public abstract void Execute(Animator anim);
+    public AnimationCommandTrigger(Animator animator) : base(animator) { }
+    public abstract void Execute();
 }
 #endregion
 
@@ -55,65 +66,81 @@ public abstract class AnimationCommandTrigger : AnimationCommand
 
 public class AnimIsAlive : AnimationCommandBool
 {
-    public override void Execute(Animator anim, bool value)
+    public AnimIsAlive(Animator animator) : base(animator) { }
+    
+    public override void Execute(bool value)
     {
-        anim.SetBool(hash_IsAlive, value);
+        _animator.SetBool(hash_IsAlive, value);
     }
 }
 
 public class AnimMovementType : AnimationCommandInt
 {
-    public override void Execute(Animator anim, int value)
+    public AnimMovementType(Animator animator) : base(animator) { }
+    
+    public override void Execute(int value)
     {
-        anim.SetInteger(hash_MovementType, value);
+        _animator.SetInteger(hash_MovementType, value);
     }
 }
 
 public class AnimIsWalking : AnimationCommandBool
 {
-    public override void Execute(Animator anim, bool value)
+    public AnimIsWalking(Animator animator) : base(animator) { }
+    
+    public override void Execute(bool value)
     {
-        anim.SetBool(hash_IsWalking, value);
+        _animator.SetBool(hash_IsWalking, value);
     }
 }
 
 public class AnimIsGrounded : AnimationCommandBool
 {
-    public override void Execute(Animator anim, bool value)
+    public AnimIsGrounded(Animator animator) : base(animator) { }
+    
+    public override void Execute(bool value)
     {
-        anim.SetBool(hash_IsGrounded, value);
+        _animator.SetBool(hash_IsGrounded, value);
     }
 }
 
 public class AnimIsFalling : AnimationCommandBool
 {
-    public override void Execute(Animator anim, bool value)
+    public AnimIsFalling(Animator animator) : base(animator) { }
+    
+    public override void Execute(bool value)
     {
-        anim.SetBool(hash_isFalling, value);
+        _animator.SetBool(hash_isFalling, value);
     }
 }
 
 public class AnimValueX : AnimationCommandFloat
 {
-    public override void Execute(Animator anim, float value)
+    public AnimValueX(Animator animator) : base(animator) { }
+
+    public override void Execute(float value)
     {
-        anim.SetFloat(hash_ValueX, value);
+        _animator.SetFloat(hash_ValueX, value);
     }
 }
 
 public class AnimValueY : AnimationCommandFloat
 {
-    public override void Execute(Animator anim, float value)
+    public AnimValueY(Animator animator) : base(animator) { }
+
+    public override void Execute(float value)
     {
-        anim.SetFloat(hash_ValueY, value);
+        _animator.SetFloat(hash_ValueY, value);
     }
 }
 
 public class AnimClimbType : AnimationCommandInt
 {
-    public override void Execute(Animator anim, int value)
+    public AnimClimbType(Animator animator) : base(animator) { }
+    
+    public override void Execute(int value)
     {
-        anim.SetInteger(hash_ClimbType, value);
+        _animator.SetInteger(hash_ClimbType, value);
     }
 }
 
@@ -123,9 +150,21 @@ public class AnimClimbType : AnimationCommandInt
 
 public class AnimActionType : AnimationCommandInt
 {
-    public override void Execute(Animator anim, int value)
+    public AnimActionType(Animator animator) : base(animator) { }
+    
+    public override void Execute(int value)
     {
-        anim.SetInteger(hash_ActionType, value);
+        _animator.SetInteger(hash_ActionType, value);
+    }
+}
+
+public class AnimIsDetected : AnimationCommandBool
+{
+    public AnimIsDetected(Animator animator) : base(animator) { }
+    
+    public override void Execute(bool value)
+    {
+        _animator.SetBool(hash_IsDetected, value);
     }
 }
 
@@ -135,17 +174,21 @@ public class AnimActionType : AnimationCommandInt
 
 public class AnimCanClimbLedge : AnimationCommandBool
 {
-    public override void Execute(Animator anim, bool value)
+    public AnimCanClimbLedge(Animator animator) : base(animator) { }
+    
+    public override void Execute(bool value)
     {
-        anim.SetBool(hash_CanClimbLedge, value);
+        _animator.SetBool(hash_CanClimbLedge, value);
     }
 }
 
 public class AnimCanClimbLadder : AnimationCommandBool
 {
-    public override void Execute(Animator anim, bool value)
+    public AnimCanClimbLadder(Animator animator) : base(animator) { }
+    
+    public override void Execute(bool value)
     {
-        anim.SetBool(hash_CanClimbLadder, value);
+        _animator.SetBool(hash_CanClimbLadder, value);
     }
 }
 

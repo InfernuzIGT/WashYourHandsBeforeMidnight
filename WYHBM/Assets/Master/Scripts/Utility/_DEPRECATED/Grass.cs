@@ -36,7 +36,7 @@ public class Grass : MonoBehaviour
     {
         while (true)
         {
-            _material.SetVector(hash_Position, GameManager.Instance.globalController.playerController.transform.position);
+            // _material.SetVector(hash_Position, GameManager.Instance.globalController.playerController.transform.position);
             yield return _wait;
         }
     }

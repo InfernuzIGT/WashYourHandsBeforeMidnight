@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Chronos;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,6 +22,7 @@ public class FieldOfView : MonoBehaviour
     private MeshFilter _viewMeshFilter;
     private MeshRenderer _viewMeshRenderer;
     private Mesh _viewMesh;
+    private Timeline _timeline;
 
     private Collider[] _targetsInViewRadius;
     private List<Vector3> _viewPoints;
@@ -46,8 +48,10 @@ public class FieldOfView : MonoBehaviour
     private List<Transform> _visibleTargets;
     public List<Transform> VisibleTargets { get { return _visibleTargets; } }
 
-    public void Init(float duration, float radius, float angle)
+    public void Init(float duration, float radius, float angle, Timeline timeline)
     {
+        _timeline = timeline;
+
         _visibleTargets = new List<Transform>();
         _viewPoints = new List<Vector3>();
 
@@ -56,7 +60,7 @@ public class FieldOfView : MonoBehaviour
 
         _viewMesh = new Mesh();
         _viewMeshFilter.mesh = _viewMesh;
-        
+
         UpdateView(duration, radius, angle);
 
         _waitForSeconds = new WaitForSeconds(.25f);
@@ -100,7 +104,8 @@ public class FieldOfView : MonoBehaviour
     private void FindVisibleTargets()
     {
         _visibleTargets.Clear();
-        _targetVisible = false;
+
+        if (_timeline.timeScale > 0)_targetVisible = false;
 
         _targetsInViewRadius = Physics.OverlapSphere(transform.position, _viewRadius, _worldConfig.layerFOVTarget);
 
@@ -137,6 +142,8 @@ public class FieldOfView : MonoBehaviour
 
             // _fillAnimation.Kill();
             // _viewMeshRenderer.material.SetFloat(hash_IsDetected, 0);
+
+            Debug.Log($"<b> LOSS </b>");
 
             OnLossTarget.Invoke(_targetLastPosition);
         }

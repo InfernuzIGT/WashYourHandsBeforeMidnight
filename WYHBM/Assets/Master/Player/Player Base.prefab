@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 5441447954450045004}
   - component: {fileID: 5441447954450045011}
   - component: {fileID: 5454344177718044526}
-  - component: {fileID: 4106246413456115067}
+  - component: {fileID: 995453505949163658}
   m_Layer: 19
   m_Name: Player Base
   m_TagString: Player
@@ -108,9 +108,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 0}
-  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
-  _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
-  _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
   _movementState: 0
   _inZipline: 0
   endPos: {x: 0, y: 0, z: 0}
@@ -121,10 +118,12 @@ MonoBehaviour:
   footstepSound: {fileID: 4696537044046352187}
   breathingSound: {fileID: 1859904522748835540}
   ShowReferences: 0
+  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
+  _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
+  _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
   _shadow: {fileID: 8913232117615706260}
   _characterController: {fileID: 1255290931}
   _animatorController: {fileID: 5454344177718044526}
-  _deviceUtility: {fileID: 4106246413456115067}
 --- !u!143 &1255290931
 CharacterController:
   m_ObjectHideFlags: 0
@@ -182,7 +181,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4020343793686724908, guid: eb3df72836f4e9f41b9f76ab27060deb,
+  m_Sprite: {fileID: 2442338011398168992, guid: 1a6ea2121a5839d4982dc7acbfeab926,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -204,7 +203,7 @@ Animator:
   m_GameObject: {fileID: 5441447954450045010}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: a65b2af1864903b44a5d9b6de889c2b1, type: 2}
+  m_Controller: {fileID: 22100000, guid: 787a212de4f18934a8342b8630b8b581, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -225,8 +224,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeeeef2c0388c594da3760e2a124bd16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowReferences: 0
+  _animator: {fileID: 5441447954450045011}
+  _spriteRenderer: {fileID: 5441447954450045004}
   flipSprite: 0
---- !u!114 &4106246413456115067
+--- !u!114 &995453505949163658
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,10 +237,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5441447954450045010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07b11175bb8490e498c4c55b6c787cf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6090da511f8374135a15dd8655adcd44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentDevice: 0
+  _recordingInterval: 0.5
+  _mode: 1
+  _globalClockKey: Root
+  _rewindable: 0
+  _recordingDuration: 30
 --- !u!1 &7151162135838049659
 GameObject:
   m_ObjectHideFlags: 0

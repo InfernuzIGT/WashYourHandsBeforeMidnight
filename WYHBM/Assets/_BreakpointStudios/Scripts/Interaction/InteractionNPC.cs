@@ -8,12 +8,12 @@ public class InteractionNPC : Interaction
     // [SerializeField] private NPCController NPC;
     // public bool haveAmount;
 
-    private EnableDialogEvent _interactionDialogEvent;
+    private DialogDesignerEvent _interactionDialogEvent;
     // private EnterCombatEvent _interactionCombatEvent;
 
     private void Start()
     {
-        _interactionDialogEvent = new EnableDialogEvent();
+        _interactionDialogEvent = new DialogDesignerEvent();
         // _interactionCombatEvent = new EnterCombatEvent();
     }
 
