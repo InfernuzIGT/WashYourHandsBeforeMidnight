@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DeviceUtility : MonoBehaviour
+public class InputSystemUtility : MonoBehaviour
 {
     [SerializeField, ReadOnly] private DEVICE _currentDevice;
     private DeviceChangeEvent _deviceEvent;
@@ -31,14 +31,14 @@ public class DeviceUtility : MonoBehaviour
 
             default:
                 _lastDevice = DEVICE.PC;
-                _currentDevice = inputDevice != null ? InputUtility.GetCurrentDevice(inputDevice) : InputUtility.GetStartDevice();
+                _currentDevice = inputDevice != null ? InputSystemAdapter.GetCurrentDevice(inputDevice) : InputSystemAdapter.GetStartDevice();
                 break;
         }
 
         _deviceEvent = new DeviceChangeEvent();
         _deviceEvent.showPopup = false;
         _deviceEvent.device = _currentDevice;
-        _deviceEvent.gamepad = InputUtility.GetCurrentGamepad();
+        _deviceEvent.gamepad = InputSystemAdapter.GetCurrentGamepad();
         EventController.TriggerEvent(_deviceEvent);
 
         // InputSystem.onActionChange += (obj, change) =>
@@ -56,7 +56,7 @@ public class DeviceUtility : MonoBehaviour
             (device, change) =>
             {
 
-                if (InputUtility.printInfo)Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
+                if (InputSystemAdapter.printInfo)Debug.Log($"<color=yellow><b> Device Change [{change}]:</b></color> {device}");
 
                 switch (change)
                 {
@@ -67,7 +67,7 @@ public class DeviceUtility : MonoBehaviour
                             _isReconnected = true;
 
                             _lastDevice = _currentDevice;
-                            _currentDevice = InputUtility.GetCurrentDevice(device);
+                            _currentDevice = InputSystemAdapter.GetCurrentDevice(device);
                         }
                         break;
 
@@ -78,7 +78,7 @@ public class DeviceUtility : MonoBehaviour
                             _isReconnected = true;
 
                             _lastDevice = _currentDevice;
-                            _currentDevice = InputUtility.GetCurrentDevice(device);
+                            _currentDevice = InputSystemAdapter.GetCurrentDevice(device);
                         }
                         break;
 
@@ -88,7 +88,7 @@ public class DeviceUtility : MonoBehaviour
                             _isAdded = false;
 
                             _currentDevice = _lastDevice;
-                            InputUtility.PrintCurrentDevice(_currentDevice);
+                            InputSystemAdapter.PrintCurrentDevice(_currentDevice);
                         }
                         break;
 
@@ -98,7 +98,7 @@ public class DeviceUtility : MonoBehaviour
                             _isReconnected = false;
 
                             _currentDevice = _lastDevice;
-                            InputUtility.PrintCurrentDevice(_currentDevice);
+                            InputSystemAdapter.PrintCurrentDevice(_currentDevice);
                         }
                         break;
 
@@ -119,7 +119,7 @@ public class DeviceUtility : MonoBehaviour
 
                 _deviceEvent.showPopup = true;
                 _deviceEvent.device = _currentDevice;
-                _deviceEvent.gamepad = InputUtility.GetCurrentGamepad();
+                _deviceEvent.gamepad = InputSystemAdapter.GetCurrentGamepad();
                 EventController.TriggerEvent(_deviceEvent);
 
             };

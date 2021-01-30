@@ -281,6 +281,17 @@
                 },
                 {
                     "name": "",
+                    "id": "89cb458f-d0dd-43cd-b021-d0fcb6d4d685",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8cce47fb-c4e6-4bbb-ab22-6f1be92fe3fd",
                     "path": "<Gamepad>/start",
                     "interactions": "",
@@ -605,6 +616,14 @@
             "id": "6bd2b6e8-87f8-4abb-b33e-3f8e53508025",
             "actions": [
                 {
+                    "name": "CustomAnyButton",
+                    "type": "Button",
+                    "id": "f3e74380-d6d3-4625-b938-bc0d78cbca0f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
                     "name": "Look",
                     "type": "PassThrough",
                     "id": "c7de2782-b087-42b4-9b3a-baddfbc30ba0",
@@ -643,14 +662,6 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "CustomAnyButton",
-                    "type": "Button",
-                    "id": "f3e74380-d6d3-4625-b938-bc0d78cbca0f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press"
                 }
             ],
             "bindings": [

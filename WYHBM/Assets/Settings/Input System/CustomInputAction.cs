@@ -294,6 +294,17 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""89cb458f-d0dd-43cd-b021-d0fcb6d4d685"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""8cce47fb-c4e6-4bbb-ab22-6f1be92fe3fd"",
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
@@ -618,6 +629,14 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
             ""id"": ""6bd2b6e8-87f8-4abb-b33e-3f8e53508025"",
             ""actions"": [
                 {
+                    ""name"": ""CustomAnyButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""f3e74380-d6d3-4625-b938-bc0d78cbca0f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
+                },
+                {
                     ""name"": ""Look"",
                     ""type"": ""PassThrough"",
                     ""id"": ""c7de2782-b087-42b4-9b3a-baddfbc30ba0"",
@@ -656,14 +675,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
-                },
-                {
-                    ""name"": ""CustomAnyButton"",
-                    ""type"": ""Button"",
-                    ""id"": ""f3e74380-d6d3-4625-b938-bc0d78cbca0f"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -1600,12 +1611,12 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         m_Player_DebugMode = m_Player.FindAction("DebugMode", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_CustomAnyButton = m_UI.FindAction("CustomAnyButton", throwIfNotFound: true);
         m_UI_Look = m_UI.FindAction("Look", throwIfNotFound: true);
         m_UI_Zoom = m_UI.FindAction("Zoom", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
-        m_UI_CustomAnyButton = m_UI.FindAction("CustomAnyButton", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1776,22 +1787,22 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_CustomAnyButton;
     private readonly InputAction m_UI_Look;
     private readonly InputAction m_UI_Zoom;
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Submit;
     private readonly InputAction m_UI_Cancel;
-    private readonly InputAction m_UI_CustomAnyButton;
     public struct UIActions
     {
         private @CustomInputAction m_Wrapper;
         public UIActions(@CustomInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CustomAnyButton => m_Wrapper.m_UI_CustomAnyButton;
         public InputAction @Look => m_Wrapper.m_UI_Look;
         public InputAction @Zoom => m_Wrapper.m_UI_Zoom;
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
-        public InputAction @CustomAnyButton => m_Wrapper.m_UI_CustomAnyButton;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1801,6 +1812,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_UIActionsCallbackInterface != null)
             {
+                @CustomAnyButton.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
+                @CustomAnyButton.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
+                @CustomAnyButton.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
                 @Look.started -= m_Wrapper.m_UIActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnLook;
@@ -1816,13 +1830,13 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Cancel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
-                @CustomAnyButton.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
-                @CustomAnyButton.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
-                @CustomAnyButton.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCustomAnyButton;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
             {
+                @CustomAnyButton.started += instance.OnCustomAnyButton;
+                @CustomAnyButton.performed += instance.OnCustomAnyButton;
+                @CustomAnyButton.canceled += instance.OnCustomAnyButton;
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
@@ -1838,9 +1852,6 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
-                @CustomAnyButton.started += instance.OnCustomAnyButton;
-                @CustomAnyButton.performed += instance.OnCustomAnyButton;
-                @CustomAnyButton.canceled += instance.OnCustomAnyButton;
             }
         }
     }
@@ -1934,11 +1945,11 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
     }
     public interface IUIActions
     {
+        void OnCustomAnyButton(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
-        void OnCustomAnyButton(InputAction.CallbackContext context);
     }
 }
