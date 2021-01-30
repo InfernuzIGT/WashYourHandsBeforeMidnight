@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using FMODUnity;
+using FMOD.Studio;
 
 public class MenuController : MonoBehaviour
 {
@@ -65,6 +67,10 @@ public class MenuController : MonoBehaviour
 
     private Vector2 _logoEndSize = new Vector2(475, 475);
     private float _logoEndY = 150f;
+    FMOD.Studio.EventInstance menuMusic;
+    FMOD.Studio.EventInstance scrollSound;
+    FMOD.Studio.EventInstance selectSound;
+    FMOD.Studio.EventInstance backSound;
 
     // private bool _isDataLoaded;
     // public bool IsDataLoaded { get { return _isDataLoaded; } }
@@ -74,9 +80,20 @@ public class MenuController : MonoBehaviour
         SetVersion();
         _deviceConfig.UpdateDictionary();
     }
+    void Update()
+    {
+        // menuMusic = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/Music");
+        // scrollSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/scroll");
+        // selectSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/select");
+        // backSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/back");
+
+    }
 
     private void Start()
     {
+        // menuMusic.start();
+        Debug.Log("START MUSIC");
+        // FMODUnity.RuntimeManager.PlayOneShot("event:/UI/Buttons", GetComponent<Transform>().position);
         _changeSceneEvent = new ChangeSceneEvent();
         _changeSceneEvent.load = true;
         _changeSceneEvent.useEnableMovementEvent = false;
@@ -114,6 +131,9 @@ public class MenuController : MonoBehaviour
 
     private void PressAnyButton(InputAction.CallbackContext action)
     {
+        // selectSound.start();
+        Debug.Log("SELECT SOUND");
+
         GameData.Instance.DetectDevice(action.control.device);
         _actionAnyButton.action.Disable();
 
@@ -145,12 +165,19 @@ public class MenuController : MonoBehaviour
         switch (type)
         {
             case UI_TYPE.Play:
-                _buttonSounds.EventInstance.setParameterByName("UI", 3f);
+                // selectSound.start();
+                Debug.Log("SELECT SOUND");
+
                 EventSystemUtility.Instance.DisableInput(true);
                 EventController.TriggerEvent(_changeSceneEvent);
+                
+                // menuMusic.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 break;
 
             case UI_TYPE.Options:
+                // selectSound.start();
+                Debug.Log("SELECT SOUND");
+
                 _canvasMain.Show(false);
                 _canvasLogo.Show(false);
                 _canvasOptions.Show(true, 0.5f);
@@ -160,6 +187,9 @@ public class MenuController : MonoBehaviour
                 break;
 
             case UI_TYPE.Quit:
+                // selectSound.start();
+                Debug.Log("SELECT SOUND");
+
                 _canvasMain.Show(false);
                 _canvasLogo.Show(false);
                 _canvasExit.Show(true, 0.5f);
@@ -179,10 +209,14 @@ public class MenuController : MonoBehaviour
         switch (_currentUIType)
         {
             case UI_TYPE.Options:
+                // scrollSound.start();
+                Debug.Log("scroll SOUND");
                 ExecuteBack(true);
                 break;
 
             case UI_TYPE.Quit:
+                // scrollSound.start();
+                Debug.Log("scroll SOUND");
                 ExecuteQuit(false);
                 break;
 
@@ -197,6 +231,9 @@ public class MenuController : MonoBehaviour
     {
         if (isBack)
         {
+            // backSound.start();
+            Debug.Log("back SOUND");
+
             _canvasOptions.Show(false);
             _canvasMain.Show(true, 0.5f);
             _canvasLogo.Show(true, 0.5f);
@@ -218,14 +255,15 @@ public class MenuController : MonoBehaviour
     {
         if (isYes)
         {
-            FMODPlayButtonSound(0);
-            _buttonSounds.EventInstance.setParameterByName("UI", 0f);
+            // selectSound.start();
+            Debug.Log("select SOUND");
 
             EventSystemUtility.Instance.DisableInput(true);
             Application.Quit();
         }
         else
         {
+            // backSound.start();
             _canvasExit.Show(false);
             _canvasMain.Show(true, 0.5f);
             _canvasLogo.Show(true, 0.5f);
@@ -236,16 +274,6 @@ public class MenuController : MonoBehaviour
             _currentUIType = UI_TYPE.None;
         }
     }
-
-    #region FMOD
-
-    private void FMODPlayButtonSound(float value)
-    {
-        _buttonSounds.Play();
-        _buttonSounds.EventInstance.setParameterByName(FMODParameters.UI, value);
-    }
-
-    #endregion
 
     public void SetVersion()
     {
