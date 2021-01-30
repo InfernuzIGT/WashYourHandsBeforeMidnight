@@ -36,6 +36,7 @@ public class GameData : MonoSingleton<GameData>
 	private List<AsyncOperation> _listScenes;
 
 	private GlobalController _globalController;
+	private SpawnPoint _spawnPoint;
 	private LocalizationUtility _localizationUtility;
 	private InputSystemUtility _deviceUtility;
 	private GlobalClock _globalClock;
@@ -110,20 +111,25 @@ public class GameData : MonoSingleton<GameData>
 		_saveAnimationEvent = new SaveAnimationEvent();
 	}
 
-	public void GetSceneReferences(bool findGlobalLoop)
+	public void GetSceneReferences(bool findWithLoop)
 	{
-		if (findGlobalLoop)
+		if (findWithLoop)
 		{
-			StartCoroutine(FindGlobalController());
+			StartCoroutine(FindReferences());
 		}
 		else
 		{
+			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
 			_globalController = GameObject.FindObjectOfType<GlobalController>();
-			_globalController?.Init();
+
+			if (_globalController != null && _spawnPoint != null)
+			{
+				_globalController.Init(_spawnPoint.transform.position);
+			}
 		}
 	}
 
-	private IEnumerator FindGlobalController()
+	private IEnumerator FindReferences()
 	{
 		_globalController = GameObject.FindObjectOfType<GlobalController>();
 
@@ -133,7 +139,15 @@ public class GameData : MonoSingleton<GameData>
 			_globalController = GameObject.FindObjectOfType<GlobalController>();
 		}
 
-		_globalController.Init();
+		_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+
+		while (_spawnPoint == null)
+		{
+			yield return new WaitForSeconds(0.5f);
+			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+		}
+
+		_globalController.Init(_spawnPoint.transform.position);
 	}
 
 	private void OnEnable()
@@ -325,7 +339,7 @@ public class GameData : MonoSingleton<GameData>
 
 		if (_globalController == null)
 		{
-			yield return StartCoroutine(FindGlobalController());;
+			yield return StartCoroutine(FindReferences());;
 		}
 
 		yield return new WaitForSeconds(.5f);

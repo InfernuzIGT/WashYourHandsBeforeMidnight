@@ -40,7 +40,6 @@ public class GlobalController : MonoBehaviour
     [SerializeField, ConditionalHide] private WorldConfig _worldConfig;
     [SerializeField, ConditionalHide] private Camera _mainCamera;
     [SerializeField, ConditionalHide] private CinemachineVirtualUtility _playerCamera;
-    [SerializeField, ConditionalHide] private SpawnPoint _spawnPoint;
     [Space]
     [SerializeField, ConditionalHide] private GameData _gameData;
     [SerializeField, ConditionalHide] private CanvasPersistent _canvasPersistent;
@@ -84,7 +83,7 @@ public class GlobalController : MonoBehaviour
         if (_devAutoInit)CheckPersistenceObjects();
     }
 
-    public void Init()
+    public void Init(Vector3 spawnPosition)
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Player"));
 
@@ -100,7 +99,7 @@ public class GlobalController : MonoBehaviour
 
         _pauseEvent = new PauseEvent();
 
-        SpawnPlayer(_spawnPoint.transform.position);
+        SpawnPlayer(spawnPosition);
         SpawnUI();
 
         CheckCamera();
