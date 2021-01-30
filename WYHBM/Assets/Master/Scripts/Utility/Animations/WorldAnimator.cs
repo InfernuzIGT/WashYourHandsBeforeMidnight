@@ -30,7 +30,7 @@ public class WorldAnimator : AnimatorController
 
         _spriteRenderer.flipX = _isFlipped;
     }
-
+    
     public void Walk(bool active)
     {
         _animIsWalking.Execute(_animator, active);

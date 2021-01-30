@@ -61,7 +61,7 @@ public class MenuController : MonoBehaviour
     private GameObject _lastPanel;
 
     private Vector2 _logoStartSize = new Vector2(600, 600);
-    private float _logoStartY = 50f;
+    // private float _logoStartY = 50f;
 
     private Vector2 _logoEndSize = new Vector2(475, 475);
     private float _logoEndY = 150f;

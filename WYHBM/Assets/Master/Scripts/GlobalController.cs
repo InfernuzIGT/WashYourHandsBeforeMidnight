@@ -37,20 +37,21 @@ public class GlobalController : MonoBehaviour
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
-    [ConditionalHide] public WorldConfig worldConfig;
-    [ConditionalHide] public Camera mainCamera;
-    [ConditionalHide] public CinemachineVirtualUtility playerCamera;
+    [SerializeField, ConditionalHide] private WorldConfig _worldConfig;
+    [SerializeField, ConditionalHide] private Camera _mainCamera;
+    [SerializeField, ConditionalHide] private CinemachineVirtualUtility _playerCamera;
+    [SerializeField, ConditionalHide] private SpawnPoint _spawnPoint;
     [Space]
-    [ConditionalHide] public GameData gameData;
-    [ConditionalHide] public CanvasPersistent persistentUI;
-    [ConditionalHide] public PlayerController playerController;
+    [SerializeField, ConditionalHide] private GameData _gameData;
+    [SerializeField, ConditionalHide] private CanvasPersistent _canvasPersistent;
+    [SerializeField, ConditionalHide] private PlayerController _playerController;
     [Space]
-    [ConditionalHide] public PlayableDirector playableDirector;
-    [ConditionalHide] public GameMode.World.UIManager worldUI;
-    [ConditionalHide] public GameMode.Combat.UIManager combatUI;
+    [SerializeField, ConditionalHide] private PlayableDirector _playableDirector;
+    [SerializeField, ConditionalHide] private GameMode.World.UIManager _canvasWorld;
+    [SerializeField, ConditionalHide] private GameMode.Combat.UIManager _canvasCombat;
     [Space]
-    [ConditionalHide] public Material materialFOV;
-    [ConditionalHide] public Material materialDitherNPC;
+    [SerializeField, ConditionalHide] private Material _materialFOV;
+    [SerializeField, ConditionalHide] private Material _materialDitherNPC;
 
     // Shaders
     private int hash_IsVisible = Shader.PropertyToID("_IsVisible");
@@ -72,7 +73,7 @@ public class GlobalController : MonoBehaviour
 
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
-    private EnableDialogEvent _interactionDialogEvent;
+    private DialogDesignerEvent _interactionDialogEvent;
     private PauseEvent _pauseEvent;
 
     public SessionData SessionData { get { return sessionData; } set { sessionData = value; } }
@@ -80,20 +81,18 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
-        if (!_devAutoInit)return;
-
-        CheckPersistenceObjects();
+        if (_devAutoInit)CheckPersistenceObjects();
     }
 
-    public void Init(Vector3 spawnPosition)
+    public void Init()
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Player"));
 
-        CheckPersistenceObjects();
+        if (!_devAutoInit)CheckPersistenceObjects();
 
         _enableMovementEvent = new EnableMovementEvent();
 
-        _interactionDialogEvent = new EnableDialogEvent();
+        _interactionDialogEvent = new DialogDesignerEvent();
         _interactionDialogEvent.enable = false;
 
         _cutsceneEvent = new CutsceneEvent();
@@ -101,24 +100,24 @@ public class GlobalController : MonoBehaviour
 
         _pauseEvent = new PauseEvent();
 
-        SpawnPlayer(spawnPosition);
+        SpawnPlayer(_spawnPoint.transform.position);
         SpawnUI();
 
         CheckCamera();
         // AddItems();
 
-        playableDirector.stopped += OnCutsceneStop;
+        _playableDirector.stopped += OnCutsceneStop;
 
-        materialFOV.SetFloat(hash_IsVisible, 0);
-        materialDitherNPC.SetFloat(hash_IsVisible, 0);
+        _materialFOV.SetFloat(hash_IsVisible, 0);
+        _materialDitherNPC.SetFloat(hash_IsVisible, 0);
 
 #if UNITY_EDITOR
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        gameData.gameObject.name = "GameData";
-        worldUI.gameObject.name = "Canvas (World)";
-        combatUI.gameObject.name = "Canvas (Combat)";
+        _gameData.gameObject.name = "GameData";
+        _canvasWorld.gameObject.name = "Canvas (World)";
+        _canvasCombat.gameObject.name = "Canvas (Combat)";
 #else
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -127,7 +126,7 @@ public class GlobalController : MonoBehaviour
 
     private void OnEnable()
     {
-        EventController.AddListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.AddListener<DialogDesignerEvent>(OnEnableDialog);
         EventController.AddListener<QuestEvent>(OnQuest);
         EventController.AddListener<ChangeInputEvent>(OnChangeInput);
         EventController.AddListener<SessionEvent>(OnSession);
@@ -137,7 +136,7 @@ public class GlobalController : MonoBehaviour
 
     private void OnDisable()
     {
-        EventController.RemoveListener<EnableDialogEvent>(OnEnableDialog);
+        EventController.RemoveListener<DialogDesignerEvent>(OnEnableDialog);
         EventController.RemoveListener<QuestEvent>(OnQuest);
         EventController.RemoveListener<ChangeInputEvent>(OnChangeInput);
         EventController.RemoveListener<SessionEvent>(OnSession);
@@ -180,28 +179,28 @@ public class GlobalController : MonoBehaviour
     {
         GameData tempGamedata = GameObject.FindObjectOfType<GameData>();
 
-        gameData = tempGamedata != null ? tempGamedata : Instantiate(gameData);
-
-        sessionData = gameData.LoadSessionData();
-        gameData.DevDDLegacyMode = _devDDLegacyMode;
+        _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
+        _gameData.DevDDLegacyMode = _devDDLegacyMode;
+        _gameData.GetSceneReferences(true);
+        sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
 
-        tempCanvasPersistent = tempCanvasPersistent != null ? tempCanvasPersistent : Instantiate(persistentUI);
+        tempCanvasPersistent = tempCanvasPersistent != null ? tempCanvasPersistent : Instantiate(_canvasPersistent);
     }
 
     private void SpawnPlayer(Vector3 spawnPosition)
     {
 
-        playerController = Instantiate(playerController, spawnPosition, Quaternion.identity);
-        playerController.DevSilentSteps = _devSilentSteps;
-        playerController.SetInput(() => Pause(PAUSE_TYPE.PauseMenu), () => Pause(PAUSE_TYPE.Inventory));
-        playerController.SetPlayerData(playerData);
+        _playerController = Instantiate(_playerController, spawnPosition, Quaternion.identity);
+        _playerController.DevSilentSteps = _devSilentSteps;
+        _playerController.SetInput(() => Pause(PAUSE_TYPE.PauseMenu), () => Pause(PAUSE_TYPE.Inventory));
+        _playerController.SetPlayerData(playerData);
 
         sessionData.playerData = playerData;
 
-        playerController.Input.Player.ListenMode.started += ctx => ListenMode(true);
-        playerController.Input.Player.ListenMode.canceled += ctx => ListenMode(false);
+        _playerController.Input.Player.ListenMode.started += ctx => ListenMode(true);
+        _playerController.Input.Player.ListenMode.canceled += ctx => ListenMode(false);
     }
 
     private void ListenMode(bool active)
@@ -229,10 +228,10 @@ public class GlobalController : MonoBehaviour
             _coroutineListenMode = null;
         }
 
-        _fovCurrentTime = _fovIsActive ? worldConfig.fovTime : 0;
+        _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;
 
-        materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
-        materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
+        _materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
+        _materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
 
         SetValuesListenMode();
     }
@@ -241,7 +240,7 @@ public class GlobalController : MonoBehaviour
     {
         if (_fovIsActive)
         {
-            while (_fovCurrentTime < worldConfig.fovTime)
+            while (_fovCurrentTime < _worldConfig.fovTime)
             {
                 SetValuesListenMode();
 
@@ -262,27 +261,27 @@ public class GlobalController : MonoBehaviour
             }
         }
 
-        _fovCurrentTime = _fovIsActive ? worldConfig.fovTime : 0;
+        _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;
 
-        materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
-        materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
+        _materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
+        _materialDitherNPC.SetFloat(hash_IsVisible, _fovIsActive ? 1 : 0);
     }
 
     private void SetValuesListenMode()
     {
-        _ppColorAdjustments.saturation.value = Mathf.Lerp(0, -50, (_fovCurrentTime / worldConfig.fovTime));
-        _ppLensDistortion.intensity.value = Mathf.Lerp(0, 0.15f, (_fovCurrentTime / worldConfig.fovTime));
-        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(22.5f, 24, (_fovCurrentTime / worldConfig.fovTime));
-        _ppDepthOfField.gaussianEnd.value = Mathf.Lerp(60, 30f, (_fovCurrentTime / worldConfig.fovTime));
-        _ppVignette.intensity.value = Mathf.Lerp(0.2f, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
-        _ppVignette.smoothness.value = Mathf.Lerp(1, 0.5f, (_fovCurrentTime / worldConfig.fovTime));
+        _ppColorAdjustments.saturation.value = Mathf.Lerp(0, -50, (_fovCurrentTime / _worldConfig.fovTime));
+        _ppLensDistortion.intensity.value = Mathf.Lerp(0, 0.15f, (_fovCurrentTime / _worldConfig.fovTime));
+        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(22.5f, 24, (_fovCurrentTime / _worldConfig.fovTime));
+        _ppDepthOfField.gaussianEnd.value = Mathf.Lerp(60, 30f, (_fovCurrentTime / _worldConfig.fovTime));
+        _ppVignette.intensity.value = Mathf.Lerp(0.2f, 0.5f, (_fovCurrentTime / _worldConfig.fovTime));
+        _ppVignette.smoothness.value = Mathf.Lerp(1, 0.5f, (_fovCurrentTime / _worldConfig.fovTime));
 
-        _ppVignette.color.value = Color.Lerp(_colorVigneteInactive, _colorVigneteActive, (_fovCurrentTime / worldConfig.fovTime));
+        _ppVignette.color.value = Color.Lerp(_colorVigneteInactive, _colorVigneteActive, (_fovCurrentTime / _worldConfig.fovTime));
 
-        playerCamera.SetFOV(Mathf.Lerp(40, 35, (_fovCurrentTime / worldConfig.fovTime)));
+        _playerCamera.SetFOV(Mathf.Lerp(40, 35, (_fovCurrentTime / _worldConfig.fovTime)));
 
-        materialFOV.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.35f, (_fovCurrentTime / worldConfig.fovTime)));
-        materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 1f, (_fovCurrentTime / worldConfig.fovTime)));
+        _materialFOV.SetFloat(hash_IsVisible, Mathf.Lerp(0, 0.35f, (_fovCurrentTime / _worldConfig.fovTime)));
+        _materialDitherNPC.SetFloat(hash_IsVisible, Mathf.Lerp(0, 1f, (_fovCurrentTime / _worldConfig.fovTime)));
     }
 
     private void Pause(PAUSE_TYPE pauseType)
@@ -298,10 +297,10 @@ public class GlobalController : MonoBehaviour
 
     private void CheckCamera()
     {
-        playerCamera.Init(playerController, mainCamera);
+        _playerCamera.Init(_playerController, _mainCamera);
 
-        DetectTargetBehind detectTargetBehind = mainCamera.GetComponent<DetectTargetBehind>();
-        detectTargetBehind.SetTarget(playerController.transform);
+        DetectTargetBehind detectTargetBehind = _mainCamera.GetComponent<DetectTargetBehind>();
+        detectTargetBehind.SetTarget(_playerController.transform);
 
         Volume volume = GetComponent<Volume>();
         volume.profile.TryGet(out _ppColorAdjustments);
@@ -312,11 +311,11 @@ public class GlobalController : MonoBehaviour
 
     private void SpawnUI()
     {
-        worldUI = Instantiate(worldUI);
-        combatUI = Instantiate(combatUI);
+        _canvasWorld = Instantiate(_canvasWorld);
+        _canvasCombat = Instantiate(_canvasCombat);
 
-        worldUI.Show(!_inCombat);
-        combatUI.Show(_inCombat);
+        _canvasWorld.Show(!_inCombat);
+        _canvasCombat.Show(_inCombat);
     }
 
     // public void ChangeWorldCamera()
@@ -377,12 +376,17 @@ public class GlobalController : MonoBehaviour
 
     public bool GetPlayerInMovement()
     {
-        return playerController.GetPlayerInMovement() && !skipEncounters;
+        return _playerController.GetPlayerInMovement() && !skipEncounters;
+    }
+
+    public Interaction GetPlayerCurrentInteraction()
+    {
+        return _playerController.CurrentInteraction;
     }
 
     public void HidePlayer(bool isHiding)
     {
-        playerController.gameObject.SetActive(!isHiding);
+        _playerController.gameObject.SetActive(!isHiding);
     }
 
     private void EnableMovement(bool enable)
@@ -398,7 +402,7 @@ public class GlobalController : MonoBehaviour
 
     #region Events
 
-    private void OnEnableDialog(EnableDialogEvent evt)
+    private void OnEnableDialog(DialogDesignerEvent evt)
     {
         if (evt.enable)
         {
@@ -425,13 +429,13 @@ public class GlobalController : MonoBehaviour
 
     private void OnCutscene(CutsceneEvent evt)
     {
-        playableDirector.playableAsset = evt.cutscene;
-        playableDirector.Play();
+        _playableDirector.playableAsset = evt.cutscene;
+        _playableDirector.Play();
     }
 
     private void OnSession(SessionEvent evt)
     {
-        if (gameData == null)
+        if (_gameData == null)
         {
             Debug.LogError($"<color=red><b>[ERROR]</b></color> GameData NULL");
             return;
@@ -440,15 +444,15 @@ public class GlobalController : MonoBehaviour
         switch (evt.option)
         {
             case SESSION_OPTION.Save:
-                gameData.SaveSession(sessionData);
+                _gameData.SaveSession(sessionData);
                 break;
 
             case SESSION_OPTION.Load:
-                sessionData = gameData.LoadSessionData();
+                sessionData = _gameData.LoadSessionData();
                 break;
 
             case SESSION_OPTION.Delete:
-                gameData.DeleteAll();
+                _gameData.DeleteAll();
                 break;
         }
     }
@@ -460,7 +464,7 @@ public class GlobalController : MonoBehaviour
             case QUEST_STATE.New:
                 for (int i = 0; i < sessionData.listQuest.Count; i++)
                 {
-                    if (sessionData.listQuest[i].data = evt.data)return;
+                    if (sessionData.listQuest[i].data = evt.data)break;
                 }
 
                 Quest newQuest = new Quest();
@@ -468,9 +472,7 @@ public class GlobalController : MonoBehaviour
                 newQuest.currentStep = 0;
 
                 sessionData.listQuest.Add(newQuest);
-
-                gameData.SaveSession(sessionData);
-                return;
+                break;
 
             case QUEST_STATE.Update:
                 for (int i = 0; i < sessionData.listQuest.Count; i++)
@@ -480,11 +482,10 @@ public class GlobalController : MonoBehaviour
                         sessionData.listQuest[i].currentStep++;
 
                         if (sessionData.listQuest[i].currentStep >= evt.data.steps)CompleteQuest(i);
-
-                        return;
+                        break;
                     }
                 }
-                return;
+                break;
 
             case QUEST_STATE.Complete:
                 for (int i = 0; i < sessionData.listQuest.Count; i++)
@@ -492,13 +493,13 @@ public class GlobalController : MonoBehaviour
                     if (sessionData.listQuest[i].data = evt.data)
                     {
                         CompleteQuest(i);
-                        return;
+                        break;
                     }
                 }
-                return;
+                break;
         }
 
-        Debug.LogError($"<color=red><b>[ERROR]</b></color> OnQuest fail! Quest: {evt.data.name}, State: {evt.state}");
+        _gameData.SaveSession(sessionData);
     }
 
     #endregion

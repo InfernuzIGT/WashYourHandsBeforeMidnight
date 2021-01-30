@@ -58,7 +58,7 @@ namespace GameMode.World
         public Button buttonRight;
 
         // Inventory
-        private int _lastSlot = 0;
+        // private int _lastSlot = 0;
 
         // Diary
         private Dictionary<QuestSO, QuestTitle> dicQuestTitle;
@@ -68,6 +68,7 @@ namespace GameMode.World
         private bool _inventory;
         private bool _diary;
         private bool _isComplete;
+        private bool _canInteract;
 
         private Tween _txtAnimation;
         private Canvas _canvas;
@@ -100,8 +101,6 @@ namespace GameMode.World
             _changeSceneEvent.instantFade = false;
 
             AddListeners();
-
-            _actionBack.action.performed += action => ExecuteBackInput();
         }
 
         private void AddListeners()
@@ -128,6 +127,10 @@ namespace GameMode.World
 
         private void Execute(UI_TYPE type)
         {
+            if (!_canInteract)return;
+
+            CanInteract(false);
+
             _currentUIType = type;
 
             switch (type)
@@ -160,8 +163,10 @@ namespace GameMode.World
             }
         }
 
-        private void ExecuteBackInput()
+        private void ExecuteBackInput(InputAction.CallbackContext context)
         {
+            if (!_canInteract)return;
+
             switch (_currentUIType)
             {
                 case UI_TYPE.Play:
@@ -186,15 +191,17 @@ namespace GameMode.World
 
         private void ExecuteBack(bool isBack)
         {
+            CanInteract(false);
+
             if (isBack)
             {
+                _currentUIType = UI_TYPE.Play;
+
                 _canvasOptions.Show(false);
                 _canvasMain.Show(true, 0.5f);
 
                 EventSystemUtility.Instance.SetSelectedGameObject(_lastGameObject);
                 _lastGameObject = _optionsController.FirstSelectOptions;
-
-                _currentUIType = UI_TYPE.None;
 
                 _optionsController.SaveSettings();
             }
@@ -204,8 +211,16 @@ namespace GameMode.World
             // }
         }
 
+        public void CanInteract(bool canInteract)
+        {
+            _canInteract = canInteract;
+            _optionsController.CanInteract = canInteract;
+        }
+
         private void ExecuteQuit(bool isYes)
         {
+            CanInteract(false);
+
             if (isYes)
             {
                 // _buttonSounds.EventInstance.setParameterByName("UI", 0f);
@@ -221,7 +236,7 @@ namespace GameMode.World
                 EventSystemUtility.Instance.SetSelectedGameObject(_lastGameObject);
                 _lastGameObject = _firstSelectMain;
 
-                _currentUIType = UI_TYPE.None;
+                _currentUIType = UI_TYPE.Play;
             }
         }
 
@@ -231,6 +246,18 @@ namespace GameMode.World
 
             EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectMain);
             _lastGameObject = _firstSelectMain;
+
+            _canInteract = evt.isPaused;
+
+            if (evt.isPaused)
+            {
+                _actionBack.action.performed += ExecuteBackInput;
+            }
+            else
+            {
+                _actionBack.action.performed -= ExecuteBackInput;
+            }
+
         }
 
         public void Show(bool isShowing)

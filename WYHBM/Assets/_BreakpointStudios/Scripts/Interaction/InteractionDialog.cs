@@ -1,13 +1,17 @@
 ﻿using Events;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class InteractionDialog : Interaction
 {
-    private EnableDialogEvent _interactionDialogEvent;
+    [Header("Dialog")]
+    [SerializeField] private LocalizedString _localizedDialog;
+
+    private DialogSimpleEvent _interactionDialogEvent;
 
     private void Start()
     {
-        _interactionDialogEvent = new EnableDialogEvent();
+        _interactionDialogEvent = new DialogSimpleEvent();
     }
 
     public void OnInteractionEnter(Collider other)
@@ -31,9 +35,10 @@ public class InteractionDialog : Interaction
         base.Execute();
 
         _interactionDialogEvent.enable = enable;
-        _interactionDialogEvent.npc = null;
-        _interactionDialogEvent.dialogueable = this;
-        _interactionDialogEvent.dialogue = GetDialogData();
+        _interactionDialogEvent.localizedString = _localizedDialog;
+        _interactionDialogEvent.questData = GetQuestData();
+        _interactionDialogEvent.questState = GetQuestState();
+        _interactionDialogEvent.objectName = gameObject.name;
 
         EventController.TriggerEvent(_interactionDialogEvent);
     }

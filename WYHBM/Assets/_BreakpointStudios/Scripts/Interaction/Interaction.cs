@@ -10,6 +10,13 @@ public struct InteractionData
     public QuestSO quest;
 }
 
+[System.Serializable]
+public struct QuestData
+{
+    public QuestSO quest;
+    public QUEST_STATE state;
+}
+
 [RequireComponent(typeof(BoxCollider))]
 public class Interaction : MonoBehaviour, IDialogueable
 {
@@ -17,8 +24,7 @@ public class Interaction : MonoBehaviour, IDialogueable
     public class InteractionUnityEvent : UnityEvent<Collider> { }
 
     [Header("Interaction")]
-    [SerializeField] private InteractionData[] data = null;
-    [SerializeField] private QUEST_STATE[] questState = null;
+    [SerializeField] private QuestData[] questData = null;
     [Space]
     [SerializeField] private InteractionUnityEvent onEnter = null;
     [SerializeField] private InteractionUnityEvent onExit = null;
@@ -29,7 +35,7 @@ public class Interaction : MonoBehaviour, IDialogueable
     private bool _canInteract = true;
 
     private QuestEvent _questEvent;
-    private ShowInteractionHintEvent _showInteractionHintEvent;
+    // private ShowInteractionHintEvent _showInteractionHintEvent;
     private CurrentInteractEvent _currentInteractionEvent;
 
     public virtual void Awake()
@@ -39,7 +45,7 @@ public class Interaction : MonoBehaviour, IDialogueable
         // _hintSprite.enabled = false;
 
         _questEvent = new QuestEvent();
-        _showInteractionHintEvent = new ShowInteractionHintEvent();
+        // _showInteractionHintEvent = new ShowInteractionHintEvent();
         _currentInteractionEvent = new CurrentInteractEvent();
     }
 
@@ -64,9 +70,7 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         if (!_canInteract)return;
 
-        if (GameData.Instance.Player.CurrentInteraction != null)return;
-
-        // if (GameData.Instance.Player.CurrentInteraction != this)return;
+        if (GameData.Instance.GetPlayerCurrentInteraction() != null)return;
 
         _currentInteractionEvent.currentInteraction = this;
         EventController.TriggerEvent(_currentInteractionEvent);
@@ -79,7 +83,7 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         if (!_canInteract)return;
 
-        if (GameData.Instance.Player.CurrentInteraction != this)return;
+        if (GameData.Instance.GetPlayerCurrentInteraction() != this)return;
 
         _currentInteractionEvent.currentInteraction = null;
         EventController.TriggerEvent(_currentInteractionEvent);
@@ -93,7 +97,7 @@ public class Interaction : MonoBehaviour, IDialogueable
         // if (!_showHint)return;
 
         // _hintSprite.enabled = show;
-        
+
         // _showInteractionHintEvent.show = show;
         // EventController.TriggerEvent(_showInteractionHintEvent);
     }
@@ -104,19 +108,14 @@ public class Interaction : MonoBehaviour, IDialogueable
         EventController.TriggerEvent(_currentInteractionEvent);
     }
 
-    public TextAsset GetDialogData()
-    {
-        return data[GameData.Instance.PlayerData.ID].dialogDD;
-    }
-
     public QuestSO GetQuestData()
     {
-        return data[GameData.Instance.PlayerData.ID].quest;
+        return questData[GameData.Instance.PlayerData.ID].quest;
     }
 
     public QUEST_STATE GetQuestState()
     {
-        return questState[GameData.Instance.PlayerData.ID];
+        return questData[GameData.Instance.PlayerData.ID].state;
     }
 
     #endregion
@@ -140,12 +139,12 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public bool DDFirstTime()
     {
-        return !GameData.Instance.CheckAndWriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.FirstTime));
+        return !GameData.Instance.CheckAndWriteID(string.Format(DDParameters.Format, DDParameters.FirstTime, gameObject.name));
     }
 
     public bool DDFinished()
     {
-        return GameData.Instance.CheckID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
+        return GameData.Instance.CheckID(string.Format(DDParameters.Format, DDParameters.Finished, gameObject.name));
     }
 
     public bool DDCheckQuest()
@@ -160,7 +159,7 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public void DDFinish()
     {
-        GameData.Instance.WriteID(string.Format(DDParameters.Format, gameObject.name, DDParameters.Finished));
+        GameData.Instance.WriteID(string.Format(DDParameters.Format, DDParameters.Finished, gameObject.name));
     }
 
     #endregion

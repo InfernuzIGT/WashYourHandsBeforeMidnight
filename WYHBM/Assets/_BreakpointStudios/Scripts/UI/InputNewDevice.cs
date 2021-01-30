@@ -65,13 +65,13 @@ public class InputNewDevice : MonoBehaviour
         _rectTransform.anchoredPosition = _originalPosition;
 
         _tweenStart = transform
-            .DOLocalMoveX(-400, .5f)
+            .DOLocalMoveX(-350, .5f)
             .SetEase(Ease.InOutSine)
             .SetRelative()
             .SetLoops(0);
 
         _tweenEnd = transform
-            .DOLocalMoveX(400, .5f)
+            .DOLocalMoveX(350, .5f)
             .SetEase(Ease.InOutSine)
             .SetRelative()
             .SetLoops(0)

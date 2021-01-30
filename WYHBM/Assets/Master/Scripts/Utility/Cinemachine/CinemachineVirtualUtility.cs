@@ -16,8 +16,8 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private CinemachineVirtualCamera _cinemachineVirtual;
     private CinemachineFramingTransposer _cinemachineFramingTransposer;
 
-    private Vector2 _lookVector;
-    private Vector2 _mouseVector;
+    [SerializeField] private Vector2 _lookVector;
+    [SerializeField] private Vector2 _mouseVector;
     private PlayerController _player;
     private DEVICE _currentDevice;
     private Camera _camera;
@@ -68,12 +68,15 @@ public class CinemachineVirtualUtility : MonoBehaviour
         _indexZoom = _startIndexZoom;
         _cinemachineFramingTransposer.m_CameraDistance = _playerConfig.zoomValues[_indexZoom];
 
+        _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
+        _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;
+
         _isInitialized = true;
     }
 
     private void Update()
     {
-        if (_isFade || !_canMove || !_isInitialized)
+        if (_isFade || !_canMove || !_isInitialized || !Application.isFocused)
         {
             _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
             _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;

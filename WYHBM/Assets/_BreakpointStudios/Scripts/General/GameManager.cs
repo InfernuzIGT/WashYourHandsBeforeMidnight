@@ -177,7 +177,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void SwitchMovement()
     {
-        globalController.playerController.SwitchMovement();
+        // globalController.playerController.SwitchMovement();
     }
 
     private void StartCombat()

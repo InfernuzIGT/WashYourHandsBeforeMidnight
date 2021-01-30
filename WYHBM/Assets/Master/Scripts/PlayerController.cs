@@ -78,9 +78,6 @@ public class PlayerController : MonoBehaviour
     // Quest
     private bool _isOpenDiary;
 
-    // Interaction
-    private Interaction _currentInteraction;
-
     // Properties
     private CustomInputAction _input;
     public CustomInputAction Input { get { return _input; } set { _input = value; } }
@@ -91,8 +88,10 @@ public class PlayerController : MonoBehaviour
     private bool _isDetectingGround;
     public bool IsDetectingGround { get { return _isDetectingGround; } set { _isDetectingGround = value; } }
 
+    private Interaction _currentInteraction = null;
+    public Interaction CurrentInteraction { get { return _currentInteraction; } }
+
     public bool IsCrouching { get { return _isCrouching; } }
-    public Interaction CurrentInteraction { get { return _currentInteraction; } set { _currentInteraction = value; } }
     public PlayerSO PlayerData { get { return _playerData; } }
 
     private bool _devSilentSteps;
@@ -123,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
         _deviceConfig.UpdateDictionary();
     }
-    
+
     public void SetInput(UnityAction actionPause, UnityAction actionOptions)
     {
         _input.Player.Pause.performed += ctx => actionPause.Invoke();

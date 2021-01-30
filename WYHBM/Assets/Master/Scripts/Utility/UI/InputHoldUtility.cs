@@ -1,5 +1,4 @@
-﻿using Chronos;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Events;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,7 +20,6 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     [SerializeField, ConditionalHide] private Image _iconImg = null;
     [SerializeField, ConditionalHide] private Image _fillImg = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasGroupUtility = null;
-    [SerializeField, ConditionalHide] private Timeline _timeline = null;
 
     private Tween _fillAnimation;
     private Tween _fillColor;

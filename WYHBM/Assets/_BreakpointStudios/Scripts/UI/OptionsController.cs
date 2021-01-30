@@ -37,6 +37,9 @@ public class OptionsController : MonoBehaviour
     private int _indexSoundEffects = 10;
     private int _indexMusic = 10;
 
+    private bool _canInteract = true;
+    public bool CanInteract { get { return _canInteract; } set { _canInteract = value; } }
+
     public GameObject FirstSelectOptions { get { return _firstSelectOptions; } }
 
     private void Start()
@@ -131,11 +134,15 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsLanguage(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         GameData.Instance.SelectNextLanguage(!isLeft);
     }
 
     private void OptionsResolution(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         _indexResolution = Utils.GetNextIndex(!isLeft, _indexResolution, Screen.resolutions.Length - 1, false);
         Screen.SetResolution(Screen.resolutions[_indexResolution].width, Screen.resolutions[_indexResolution].height, Screen.fullScreen);
 
@@ -146,6 +153,8 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsQuality(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         _indexQuality = Utils.GetNextIndex(!isLeft, _indexQuality, QualitySettings.names.Length - 1, false);
         QualitySettings.SetQualityLevel(_indexQuality, true);
 
@@ -156,6 +165,8 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsFullscreen(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         Screen.fullScreen = !isLeft;
 
         _sessionSettings.fullScreen = !isLeft;
@@ -165,6 +176,8 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsVsync(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         QualitySettings.vSyncCount = isLeft ? 0 : 1;
 
         _sessionSettings.vSync = isLeft ? 0 : 1;
@@ -174,6 +187,8 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsMasterVolume(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         _indexMasterVolume = Utils.GetNextIndex(!isLeft, _indexMasterVolume, 10, false);
         VolumeMaster(_indexMasterVolume);
 
@@ -184,6 +199,8 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsSoundEffects(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         _indexSoundEffects = Utils.GetNextIndex(!isLeft, _indexSoundEffects, 10, false);
         VolumeSound(_indexSoundEffects);
 
@@ -194,6 +211,8 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsMusic(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         _indexMusic = Utils.GetNextIndex(!isLeft, _indexMusic, 10, false);
         VolumeMusic(_indexMusic);
 
@@ -204,6 +223,8 @@ public class OptionsController : MonoBehaviour
 
     private void OptionsVibration(bool isLeft)
     {
+        if (!_canInteract) return;
+        
         if (isLeft)
         {
             GameData.Instance.StopRumble(true);

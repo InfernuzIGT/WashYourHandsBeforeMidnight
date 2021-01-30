@@ -16,13 +16,22 @@ namespace Events
         public Vector3 lastPlayerPosition;
     }
 
-    public class EnableDialogEvent : GameEvent
+    public class DialogDesignerEvent : GameEvent
     {
         public bool enable;
         public NPCController npc;
         public TextAsset dialogue;
         public IDialogueable dialogueable;
         public PlayerSO playerData;
+    }
+
+    public class DialogSimpleEvent : GameEvent
+    {
+        public bool enable;
+        public LocalizedString localizedString;
+        public QuestSO questData;
+        public QUEST_STATE questState;
+        public string objectName;
     }
 
     public class EnableMovementEvent : GameEvent
@@ -91,10 +100,8 @@ namespace Events
     {
         public SESSION_OPTION option;
     }
-    
-    public class SaveAnimationEvent : GameEvent
-    {
-    }
+
+    public class SaveAnimationEvent : GameEvent { }
 
     public class QuestEvent : GameEvent
     {
@@ -142,15 +149,15 @@ namespace Events
     {
         public bool enable;
     }
-    
+
     public class CurrentInteractEvent : GameEvent
     {
         public Interaction currentInteraction;
     }
 
-    public class ShowInteractionHintEvent : GameEvent
-    {
-        public bool show;
-    }
+    // public class ShowInteractionHintEvent : GameEvent
+    // {
+    //     public bool show;
+    // }
 
 }

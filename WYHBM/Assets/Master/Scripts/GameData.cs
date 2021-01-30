@@ -22,6 +22,7 @@ public class GameData : MonoSingleton<GameData>
 
 	[Header("Developer")]
 	[SerializeField] private bool _devPrintInputInfo = false;
+	[SerializeField] private bool _devDontSave = false;
 
 	[Header("Configs")]
 	[SerializeField] private PlayerConfig _playerConfig;
@@ -34,7 +35,6 @@ public class GameData : MonoSingleton<GameData>
 
 	private List<AsyncOperation> _listScenes;
 
-	private SpawnPoint _lastSpawnPoint;
 	private GlobalController _globalController;
 	private LocalizationUtility _localizationUtility;
 	private InputSystemUtility _deviceUtility;
@@ -62,11 +62,10 @@ public class GameData : MonoSingleton<GameData>
 	private SaveAnimationEvent _saveAnimationEvent;
 
 	private bool _devDDLegacyMode;
-	private int _indexQuality;
+
 	private bool _changeSceneUseEvent;
 
 	// Properties
-	public PlayerController Player { get { return _globalController.playerController; } }
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
 
 	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } set { _devDDLegacyMode = value; } }
@@ -84,7 +83,7 @@ public class GameData : MonoSingleton<GameData>
 
 		base.Awake();
 
-		GetSceneReferences();
+		// GetSceneReferences();
 
 		// Load();
 
@@ -109,24 +108,32 @@ public class GameData : MonoSingleton<GameData>
 		_customFadeEvent = new CustomFadeEvent();
 
 		_saveAnimationEvent = new SaveAnimationEvent();
-
-		_indexQuality = QualitySettings.GetQualityLevel();
 	}
 
-	private void GetSceneReferences()
+	public void GetSceneReferences(bool findGlobalLoop)
+	{
+		if (findGlobalLoop)
+		{
+			StartCoroutine(FindGlobalController());
+		}
+		else
+		{
+			_globalController = GameObject.FindObjectOfType<GlobalController>();
+			_globalController?.Init();
+		}
+	}
+
+	private IEnumerator FindGlobalController()
 	{
 		_globalController = GameObject.FindObjectOfType<GlobalController>();
 
-		_lastSpawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
-
-		if (_globalController != null && _lastSpawnPoint != null)
+		while (_globalController == null)
 		{
-			_globalController.Init(_lastSpawnPoint.transform.position);
+			yield return new WaitForSeconds(0.5f);
+			_globalController = GameObject.FindObjectOfType<GlobalController>();
 		}
-		// else
-		// {
-		// 	Debug.LogError($"<color=red><b>[ERROR]</b></color> Missing Scene Reference: GlobalController[{_globalController == null}] / SpawnPoint[{_lastSpawnPoint == null}]");
-		// }
+
+		_globalController.Init();
 	}
 
 	private void OnEnable()
@@ -151,6 +158,11 @@ public class GameData : MonoSingleton<GameData>
 	private void OnPause(PauseEvent evt)
 	{
 		_globalClock.localTimeScale = evt.isPaused ? 0 : 1;
+	}
+
+	public Interaction GetPlayerCurrentInteraction()
+	{
+		return _globalController.GetPlayerCurrentInteraction();
 	}
 
 	#region Localization
@@ -311,6 +323,11 @@ public class GameData : MonoSingleton<GameData>
 
 		_listScenes.Clear();
 
+		if (_globalController == null)
+		{
+			yield return StartCoroutine(FindGlobalController());;
+		}
+
 		yield return new WaitForSeconds(.5f);
 
 		_customFadeEvent.fadeIn = false;
@@ -322,7 +339,7 @@ public class GameData : MonoSingleton<GameData>
 			EventController.TriggerEvent(_enableMovementEvent);
 		}
 
-		GetSceneReferences();
+		// GetSceneReferences();
 	}
 
 	#endregion
@@ -432,6 +449,8 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool Save()
 	{
+		if (_devDontSave)return true;
+
 		EventController.TriggerEvent(_saveAnimationEvent);
 
 		bool valid = false;
