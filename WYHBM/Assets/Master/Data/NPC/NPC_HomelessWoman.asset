@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bada650817fde2747885a2cf41c92096, type: 3}
-  m_Name: Sam
+  m_Script: {fileID: 11500000, guid: 036b42f3713f2e14594d971d498cf1b4, type: 3}
+  m_Name: NPC_HomelessWoman
   m_EditorClassIdentifier: 
-  _name: Sam
-  _sprite: {fileID: 2442338011398168992, guid: 1a6ea2121a5839d4982dc7acbfeab926, type: 3}
-  _animatorController: {fileID: 22100000, guid: 787a212de4f18934a8342b8630b8b581,
+  _name: HomelessWoman
+  _sprite: {fileID: 452295013617743475, guid: 90aaf1fe79371a34183614c6a5fecb90, type: 3}
+  _animatorController: {fileID: 22100000, guid: 016a5a6476939114fbbfc1260d973fec,
     type: 2}
   iconNone: {fileID: 0}
   iconHappy: {fileID: 0}
@@ -25,4 +25,12 @@ MonoBehaviour:
   iconSleep: {fileID: 0}
   iconSpecial1: {fileID: 0}
   iconSpecial2: {fileID: 0}
-  _id: 0
+  _data: []
+  _canMove: 1
+  _speedMovement: 5
+  _speedRotation: 180
+  _useRandomPosition: 1
+  _waitTime: 5
+  _detectPlayer: 0
+  _timeToDetect: 1
+  combatEnemies: []
