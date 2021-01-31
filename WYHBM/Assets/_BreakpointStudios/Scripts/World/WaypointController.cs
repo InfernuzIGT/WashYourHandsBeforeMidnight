@@ -14,6 +14,17 @@ public class WaypointController : MonoBehaviour
 
 #if UNITY_EDITOR
 
+    public void ResetPosition()
+    {
+        if (positions.Length != 0)
+        {
+            for (int i = 0; i < positions.Length; i++)
+            {
+                positions[i] = gameObject.transform.position + new Vector3(i, 0, i);
+            }
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (showDebug && positions.Length != 0)
