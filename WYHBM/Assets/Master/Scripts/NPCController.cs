@@ -3,6 +3,7 @@ using Chronos;
 using Events;
 using UnityEngine;
 using UnityEngine.AI;
+using FMODUnity;
 
 public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 {
@@ -47,6 +48,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     private QuestEvent _questEvent;
     private EnableMovementEvent _enableMovementEvent;
 
+    // FMOD
+    public StudioEventEmitter zombieRoaming;
+    public StudioEventEmitter zombieFootstep;
+
+
     // Properties
     public DIRECTION StartLookDirection { get { return _startLookDirection; } set { _startLookDirection = value; } }
 
@@ -57,6 +63,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Start()
     {
+
         _questEvent = new QuestEvent();
         _enableMovementEvent = new EnableMovementEvent();
 
@@ -68,6 +75,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 #endif
 
         _canMove = GetCanMove();
+
+        // if (_agent.isOnNavMesh && !_data.CanMove)
+        // {
+        //     _agent.areaMask = 0;
+        // }
 
         _waitForSeconds = new WaitForSeconds(_data.WaitTime);
         _waitUntilIsMoving = new WaitUntil(() => _isMoving);
@@ -88,6 +100,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _holdUtility.OnFinished.AddListener(OnFinish);
         }
 
+        // zombieRoaming.Play();
         _coroutinePatrol = StartCoroutine(MovementAgent());
     }
 
@@ -215,6 +228,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         {
             _agent.SetDestination(targetLastPosition);
             if (_coroutinePatrol != null)StopCoroutine(_coroutinePatrol);
+
         }
 
         _holdUtility.OnStart();
@@ -252,6 +266,17 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     #endregion
 
+    #region FMOD
+
+    public void PlayFootsteps()
+    {
+        // zombieFootstep.Play();
+        Debug.Log("Zombie Footstep");
+
+    }
+
+
+    #endregion
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Tags.Player))
