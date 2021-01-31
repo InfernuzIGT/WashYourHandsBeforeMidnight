@@ -11,20 +11,29 @@ public class WorldAnimator : AnimatorController
 
     public void Movement(Vector3 movement, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
     {
-        FlipSprite(movement);
+        FlipSprite(movement.x);
 
         _animValueX.Execute(movement.x);
         _animValueY.Execute(movement.y);
         _animMovementType.Execute((int)movementState);
     }
-
-    private void FlipSprite(Vector3 movement)
+    
+    public void Movement(float valueX, float valueY, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
     {
-        if (movement.x < 0)
+        FlipSprite(valueX);
+
+        _animValueX.Execute(valueX);
+        _animValueY.Execute(valueY);
+        _animMovementType.Execute((int)movementState);
+    }
+
+    private void FlipSprite(float valueX)
+    {
+        if (valueX < 0)
         {
             _isFlipped = flipSprite ? false : true;
         }
-        else if (movement.x > 0)
+        else if (valueX > 0)
         {
             _isFlipped = flipSprite ? true : false;
         }

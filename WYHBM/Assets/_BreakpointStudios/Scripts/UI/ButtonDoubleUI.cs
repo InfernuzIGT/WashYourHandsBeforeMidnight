@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
+using FMODUnity;
+using FMOD.Studio;
 
 public class ButtonDoubleUI : ButtonUI, IMoveHandler
 {
@@ -12,6 +14,8 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
     [SerializeField, ConditionalHide] private Image _arrowLeftImg = null;
     [SerializeField, ConditionalHide] private Image _arrowRightImg = null;
     [SerializeField, ConditionalHide] private LocalizeStringEvent _localizeStringEvent = null;
+
+    EventInstance changeSound;
 
     [Header("Button Double")]
     [SerializeField] private bool _dynamicArrows = true;
@@ -21,6 +25,13 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
     private bool _arrowRightState;
     private UnityAction _actionLeft;
     private UnityAction _actionRight;
+
+   
+
+    protected override void StartExtra()
+    {
+        changeSound = FMODUnity.RuntimeManager.CreateInstance(_FMODConfig.back);
+    }
 
     public void AddListenerHorizontal(UnityAction actionLeft, UnityAction actionRight)
     {
@@ -85,6 +96,7 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
 
     protected override void OnSelectExtra()
     {
+        PlaySound();
         _isSelected = true;
         _optionTxt.color = Color.black;
 
@@ -122,10 +134,14 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
         {
             case MoveDirection.Left:
                 _actionLeft.Invoke();
+                Debug.Log("CHANGE");
+                changeSound.start();
                 break;
 
             case MoveDirection.Right:
+                Debug.Log("CHANGE");
                 _actionRight.Invoke();
+                changeSound.start();
                 break;
         }
     }
