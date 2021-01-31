@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 036b42f3713f2e14594d971d498cf1b4, type: 3}
-  m_Name: NPC_HomelessMan
+  m_Name: NPC_Zombie_01
   m_EditorClassIdentifier: 
-  _name: HomelessMan
-  _sprite: {fileID: -587432438532168016, guid: 3dd5777e30761a64da6e61c35092cd67, type: 3}
-  _animatorController: {fileID: 22100000, guid: f00eb2cac516ac94182c99f62b63a072,
+  _name: NPC_Zombie_01
+  _sprite: {fileID: 651421828840662886, guid: 0e9fd6e51aa069a4484d6eccb6dda589, type: 3}
+  _animatorController: {fileID: 22100000, guid: 83788a6a51caec44582f27bc5c956549,
     type: 2}
   iconNone: {fileID: 0}
   iconHappy: {fileID: 0}
@@ -27,10 +27,10 @@ MonoBehaviour:
   iconSpecial2: {fileID: 0}
   _data: []
   _canMove: 1
-  _speedMovement: 5
+  _speedMovement: 5.77
   _speedRotation: 180
   _useRandomPosition: 1
-  _waitTime: 5
-  _detectPlayer: 0
-  _timeToDetect: 1
+  _waitTime: 3.9
+  _detectPlayer: 1
+  _timeToDetect: 1.77
   combatEnemies: []
