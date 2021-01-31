@@ -19,18 +19,13 @@ PrefabInstance:
       objectReference: {fileID: 2800000, guid: 3804d32a0e3ebb343af8fcb7125603ce, type: 3}
     - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
-      propertyPath: _equipment.Array.size
-      value: 1
+      propertyPath: _name
+      value: Zombie_02
       objectReference: {fileID: 0}
     - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
       propertyPath: character
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
-        type: 3}
-      propertyPath: _statsBaseDamage
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
@@ -40,18 +35,13 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
-      propertyPath: _name
-      value: Zombie_02
+      propertyPath: _statsBaseDamage
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
       propertyPath: _statsHealthStart
       value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
-        type: 3}
-      propertyPath: _equipment.Array.data[0]
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
@@ -65,6 +55,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: c8f292d16401e96449ed2a6e2b7ecf85,
         type: 2}
+    - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
+        type: 3}
+      propertyPath: _equipment.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
+        type: 3}
+      propertyPath: _equipment.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
+        type: 3}
+      propertyPath: _equipment.actionItem.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1394650014886057987, guid: e1399f6efcc0da446a24986d1df760e6,
+        type: 3}
+      propertyPath: _equipment.actionItem.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: e70eea3ebf5822a4b8713f6f324360ff,
+        type: 2}
+    - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -82,6 +98,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -93,16 +114,6 @@ PrefabInstance:
     - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,
-        type: 3}
-      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7919165389212162476, guid: e1399f6efcc0da446a24986d1df760e6,

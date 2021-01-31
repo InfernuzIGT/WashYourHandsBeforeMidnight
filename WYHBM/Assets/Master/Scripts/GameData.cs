@@ -68,6 +68,7 @@ public class GameData : MonoSingleton<GameData>
 
 	// Properties
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
+	public SpawnPoint SpawnPoint { get { return _spawnPoint; } }
 
 	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } set { _devDDLegacyMode = value; } }
 	public bool HomeUsed { get { return _homeUsed; } set { _homeUsed = value; } }
@@ -109,6 +110,12 @@ public class GameData : MonoSingleton<GameData>
 		_customFadeEvent = new CustomFadeEvent();
 
 		_saveAnimationEvent = new SaveAnimationEvent();
+	}
+	
+	public List<Player> GetListPlayer(){
+		
+		
+		return _globalController.GetListPlayer();
 	}
 
 	public void GetSceneReferences(bool findWithLoop)

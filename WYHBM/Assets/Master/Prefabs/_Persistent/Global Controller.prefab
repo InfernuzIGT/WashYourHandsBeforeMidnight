@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3895262929768338340}
   - component: {fileID: 3409396407064783239}
+  - component: {fileID: 5555676777735927321}
   - component: {fileID: 190124564774067418}
   - component: {fileID: 2170058644991450080}
   m_Layer: 0
@@ -62,13 +63,13 @@ MonoBehaviour:
   _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
   _mainCamera: {fileID: 0}
   _playerCamera: {fileID: 0}
-  _spawnPoint: {fileID: 0}
   _gameData: {fileID: 7222876601119083809, guid: 91e3eab5bc2b28e41aab94fa5dd126f3,
     type: 3}
   _canvasPersistent: {fileID: 3161950892634703790, guid: 8ff2349a3e13f3b4cb344c4537a50e6b,
     type: 3}
   _playerController: {fileID: 5441447954450045000, guid: c852591fc240d4a4fa2ebe65e312a0d9,
     type: 3}
+  _combatController: {fileID: 5555676777735927321}
   _playableDirector: {fileID: 190124564774067418}
   _canvasWorld: {fileID: 3733784730637442484, guid: ebe2453115239114da0bde694a1753f4,
     type: 3}
@@ -76,6 +77,24 @@ MonoBehaviour:
     type: 3}
   _materialFOV: {fileID: 2100000, guid: c9112e53dd9e5de4883bd8f643e82b62, type: 2}
   _materialDitherNPC: {fileID: 2100000, guid: a69e816f58c64f2488c557c46994c0bb, type: 2}
+--- !u!114 &5555676777735927321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8160450674754796521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f0d88ae95056d844892eb88b63a1b6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _combatConfig: {fileID: 11400000, guid: aef813af54698824ba8ae4f7bee4a0c3, type: 2}
+  _currentCombatArea: {fileID: 0}
+  _combatPlayers:
+  - {fileID: 5662450056060739064, guid: 87fe42735fd1968409b345cf3ac6b988, type: 3}
+  listPlayers: []
+  listEnemies: []
 --- !u!320 &190124564774067418
 PlayableDirector:
   m_ObjectHideFlags: 0

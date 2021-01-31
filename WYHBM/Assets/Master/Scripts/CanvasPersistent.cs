@@ -20,7 +20,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     // Fade
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
-    private bool _fadeInstant;
+    private bool _fadeFast;
     private bool _show;
     private float _letterboxSize;
 
@@ -54,14 +54,14 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 
     private void OnFade(FadeEvent evt)
     {
-        _fadeInstant = evt.instant;
+        _fadeFast = evt.fast;
         _callbackMid = evt.callbackMid;
         _callbackEnd = evt.callbackEnd;
 
         evt.callbackStart?.Invoke();
 
         _fadeImg
-            .DOFade(1, _fadeInstant ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(1, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnKill(FadeIn);
 
         SetCanvas(true);
@@ -72,7 +72,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         _callbackMid?.Invoke();
 
         _fadeImg
-            .DOFade(0, _fadeInstant ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(0, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnComplete(() => SetCanvas(false))
             .OnKill(() => _callbackEnd?.Invoke());
     }

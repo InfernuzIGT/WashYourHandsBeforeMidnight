@@ -44,8 +44,13 @@ public class CombatCharacter : MonoBehaviour
     private float _varShader;
     private float _matGlowSpeed = 2.5f;
 
+    // Events
     // private InfoTextEvent infoTextEvent;
     private ShakeEvent _shakeEvent;
+    private CombatCheckGameEvent _combatCheckGameEvent;
+    private CombatCharacterGoAheadEvent _combatCharacterGoAheadEvent;
+    protected CombatRemoveCharacterEvent _combatRemoveCharacterEvent;
+
     private Coroutine _coroutineGettingAhead;
 
     // Shader
@@ -96,6 +101,11 @@ public class CombatCharacter : MonoBehaviour
 
         // infoTextEvent = new InfoTextEvent();
         _shakeEvent = new ShakeEvent();
+        _combatRemoveCharacterEvent = new CombatRemoveCharacterEvent();
+        _combatCheckGameEvent = new CombatCheckGameEvent();
+
+        _combatCharacterGoAheadEvent = new CombatCharacterGoAheadEvent();
+        _combatCharacterGoAheadEvent.character = this;
 
         _waitPerAction = new WaitForSeconds(_combatConfig.waitTimePerAction);
 
@@ -310,12 +320,13 @@ public class CombatCharacter : MonoBehaviour
     public void CheckGame()
     {
         gameObject.SetActive(false);
-        GameManager.Instance.combatManager.CheckGame();
+        // GameManager.Instance.combatManager.CheckGame();
+        EventController.TriggerEvent(_combatCheckGameEvent);
     }
 
-    public virtual void RemoveCharacter()
+    public void RemoveCharacter()
     {
-
+        EventController.TriggerEvent(_combatRemoveCharacterEvent);
     }
 
     public int GetItemDamage()
@@ -458,7 +469,9 @@ public class CombatCharacter : MonoBehaviour
             yield return null;
         }
 
-        GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
+        EventController.TriggerEvent(_combatCharacterGoAheadEvent);
+
+        // GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
     }
 
     #endregion 

@@ -8,6 +8,9 @@ public class SpawnPoint : MonoBehaviour
     [Space]
     [SerializeField] private SpriteRenderer _spriteRenderer = null;
 
+    [Header("Combat Areas")]
+    [SerializeField] private CombatArea[] _combatAreas;
+
     private void Start()
     {
         _spriteRenderer.enabled = false;
@@ -19,5 +22,10 @@ public class SpawnPoint : MonoBehaviour
 
         _spriteRenderer.sprite = player.Sprite;
     }
-    
+
+    public CombatArea GetCombatArea()
+    {
+        return _combatAreas[Random.Range(0, _combatAreas.Length)];
+    }
+
 }
