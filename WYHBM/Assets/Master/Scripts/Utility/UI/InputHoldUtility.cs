@@ -3,10 +3,15 @@ using Events;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using FMODUnity;
 
 [RequireComponent(typeof(CanvasGroupUtility))]
 public class InputHoldUtility : MonoBehaviour, IHoldeable
 {
+    [Header("FMOD")]
+    public StudioEventEmitter zombieAlertSound;
+    public StudioEventEmitter chargeInteractionSound;
+
     [Header("Hold System")]
     [SerializeField, Range(0f, 10f)] private float _duration = 3;
     [SerializeField] private Ease _easeAnimation = Ease.Linear;
@@ -102,6 +107,9 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
     public void OnStart()
     {
+        // zombieAlertSound.Play();
+        // chargeInteractionSound.Play();
+
         _isStarted = true;
 
         _iconData.SetIconStart(ref _iconImg);
@@ -142,6 +150,9 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
     public void OnFinish()
     {
+        // zombieAlertSound.Stop();
+        // chargeInteractionSound.Stop();
+
         _isStarted = false;
 
         _iconData.SetIconFinish(ref _iconImg);

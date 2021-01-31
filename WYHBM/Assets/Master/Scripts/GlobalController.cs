@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using FMODUnity;
 
 [System.Serializable]
 public class Quest
@@ -17,6 +18,10 @@ public class Quest
 [RequireComponent(typeof(Volume), typeof(PlayableDirector))]
 public class GlobalController : MonoBehaviour
 {
+
+    public StudioEventEmitter listenModeOnSound;
+    public StudioEventEmitter listenModeOffSound;
+
     [Header("Developer")]
     [SerializeField] private bool _devAutoInit = false;
     [SerializeField] private bool _devSilentSteps = false;
@@ -201,6 +206,7 @@ public class GlobalController : MonoBehaviour
 
         if (_isPaused)
         {
+
             ListenModeInstant(false);
 
             // switch (evt.pauseType)
@@ -265,6 +271,8 @@ public class GlobalController : MonoBehaviour
 
         // if (!playerController.IsCrouching)playerController.Crouch();
 
+        // listenModeOnSound.Play();
+
         if (_coroutineListenMode != null)
         {
             StopCoroutine(_coroutineListenMode);
@@ -282,6 +290,8 @@ public class GlobalController : MonoBehaviour
         {
             StopCoroutine(_coroutineListenMode);
             _coroutineListenMode = null;
+
+            // listenModeOffSound.Play();
         }
 
         _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;

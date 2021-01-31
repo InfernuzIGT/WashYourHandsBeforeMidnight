@@ -9,4 +9,12 @@ public class FMODConfig : ScriptableObject
     
     [Header("Other")]
     [EventRef] public string stinger = null;
+
+    [Header("Menu")]
+    [EventRef] public string music = null;
+    [EventRef] public string scroll = null;
+    [EventRef] public string select = null;
+    [EventRef] public string back = null;
+    [EventRef] public string change = null;
+
 }
