@@ -298,8 +298,8 @@ public class PlayerController : MonoBehaviour
         _characterController.Move(_movement * Time.deltaTime);
 
         // Animation       
-        _animatorController.Movement(_inputMovementAux, _movementState);
-        // _animatorController.Movement(_movement, _movementState);
+        // _animatorController.Movement(_inputMovementAux, _movementState);
+        _animatorController.Movement(_movement.x, _movement.z, _movementState);
 
         //Sound
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
@@ -372,11 +372,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(transform.position, Vector3.down, out _hit, 3, _worldConfig.layerGround))
         {
-            _shadow.enabled = true;
+            // _shadow.enabled = true;
 
-            _groundPosition = new Vector3(transform.position.x, _hit.point.y + 0.1f, transform.position.z - 1);
+            // _groundPosition = new Vector3(transform.position.x, _hit.point.y + 0.1f, transform.position.z - 1);
 
-            _shadow.transform.position = _groundPosition;
+            // _shadow.transform.position = _groundPosition;
 
             switch (_hit.collider.gameObject.tag)
             {
@@ -405,10 +405,10 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        else
-        {
-            _shadow.enabled = false;
-        }
+        // else
+        // {
+        // _shadow.enabled = false;
+        // }
 
         footstepSound.Play();
     }
