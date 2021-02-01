@@ -26,6 +26,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 
     // Save
     protected readonly int hash_IsSaving = Animator.StringToHash("isSaving");
+    protected readonly int hash_IsLoading = Animator.StringToHash("isLoading");
 
     private Canvas _canvas;
 
@@ -40,6 +41,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     {
         EventController.AddListener<FadeEvent>(OnFade);
         EventController.AddListener<SaveAnimationEvent>(OnSaveAnimation);
+        EventController.AddListener<LoadAnimationEvent>(OnLoadAnimation);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
         EventController.AddListener<CustomFadeEvent>(OnCustomFade);
     }
@@ -48,6 +50,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     {
         EventController.RemoveListener<FadeEvent>(OnFade);
         EventController.RemoveListener<SaveAnimationEvent>(OnSaveAnimation);
+        EventController.RemoveListener<LoadAnimationEvent>(OnLoadAnimation);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
         EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
     }
@@ -127,10 +130,15 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     {
         ShowSaveAnimation();
     }
-    
+
     public void ShowSaveAnimation()
     {
         _animatorSave.SetTrigger(hash_IsSaving);
+    }
+
+    private void OnLoadAnimation(LoadAnimationEvent evt)
+    {
+        _animatorSave.SetBool(hash_IsLoading,evt.isLoading);
     }
 
 }

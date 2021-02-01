@@ -237,7 +237,7 @@ public class GlobalController : MonoBehaviour
 
         _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
         _gameData.DevDDLegacyMode = _devDDLegacyMode;
-        _gameData.GetSceneReferences(true);
+        if (_devAutoInit) _gameData.GetSceneReferences();
         sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();

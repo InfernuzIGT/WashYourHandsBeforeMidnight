@@ -19,7 +19,6 @@ public enum SESSION_OPTION
 [RequireComponent(typeof(LocalizationUtility), typeof(InputSystemUtility))]
 public class GameData : MonoSingleton<GameData>
 {
-
 	[Header("Developer")]
 	[SerializeField] private bool _devPrintInputInfo = false;
 	[SerializeField] private bool _devDontSave = false;
@@ -34,13 +33,18 @@ public class GameData : MonoSingleton<GameData>
 	public SessionData sessionData;
 	public SessionSettings sessionSettings;
 
+	[Header("References")]
+#pragma warning disable 0414
+	[SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+	[SerializeField, ConditionalHide] private LocalizationUtility _localizationUtility;
+	[SerializeField, ConditionalHide] private InputSystemUtility _inputSystemUtility;
+	[SerializeField, ConditionalHide] private GlobalClock _globalClock;
+
 	private List<AsyncOperation> _listScenes;
 
 	private GlobalController _globalController;
 	private SpawnPoint _spawnPoint;
-	private LocalizationUtility _localizationUtility;
-	private InputSystemUtility _deviceUtility;
-	private GlobalClock _globalClock;
 
 	// Scene Managment
 	private bool _load;
@@ -62,6 +66,7 @@ public class GameData : MonoSingleton<GameData>
 	private ChangePositionEvent _changePositionEvent;
 	private CustomFadeEvent _customFadeEvent;
 	private SaveAnimationEvent _saveAnimationEvent;
+	private LoadAnimationEvent _loadAnimationEvent;
 
 	private bool _devDDLegacyMode;
 
@@ -80,18 +85,15 @@ public class GameData : MonoSingleton<GameData>
 
 #if UNITY_EDITOR
 		Cursor.visible = true;
-		// Cursor.lockState = CursorLockMode.None;
+		Cursor.lockState = CursorLockMode.None;
 		if (_devPrintInputInfo)InputSystemAdapter.printInfo = true;
 #else
 		Cursor.visible = false;
-		// Cursor.lockState = CursorLockMode.Locked;
+		Cursor.lockState = CursorLockMode.Locked;
 #endif
 
-		_localizationUtility = GetComponent<LocalizationUtility>();
-		_deviceUtility = GetComponent<InputSystemUtility>();
-		_globalClock = GetComponent<GlobalClock>();
-
 		base.Awake();
+
 	}
 
 	private void InitializeConfigs()
@@ -109,6 +111,7 @@ public class GameData : MonoSingleton<GameData>
 
 		_customFadeEvent = new CustomFadeEvent();
 
+		_loadAnimationEvent = new LoadAnimationEvent();
 		_saveAnimationEvent = new SaveAnimationEvent();
 
 #if UNITY_EDITOR
@@ -121,26 +124,12 @@ public class GameData : MonoSingleton<GameData>
 
 	public List<Player> GetListPlayer()
 	{
-
 		return _globalController.GetListPlayer();
 	}
 
-	public void GetSceneReferences(bool findWithLoop)
+	public void GetSceneReferences()
 	{
-		if (findWithLoop)
-		{
-			StartCoroutine(FindReferences());
-		}
-		else
-		{
-			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
-			_globalController = GameObject.FindObjectOfType<GlobalController>();
-
-			if (_globalController != null && _spawnPoint != null)
-			{
-				_globalController.Init(_spawnPoint.transform.position);
-			}
-		}
+		StartCoroutine(FindReferences());
 	}
 
 	private IEnumerator FindReferences()
@@ -149,7 +138,7 @@ public class GameData : MonoSingleton<GameData>
 
 		while (_globalController == null)
 		{
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(3);
 			_globalController = GameObject.FindObjectOfType<GlobalController>();
 		}
 
@@ -157,11 +146,17 @@ public class GameData : MonoSingleton<GameData>
 
 		while (_spawnPoint == null)
 		{
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(3);
 			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
 		}
 
 		_globalController.Init(_spawnPoint.transform.position);
+
+		if (_loadAnimationEvent.isLoading)
+		{
+			_loadAnimationEvent.isLoading = false;
+			EventController.TriggerEvent(_loadAnimationEvent);
+		}
 	}
 
 	private void OnEnable()
@@ -180,7 +175,7 @@ public class GameData : MonoSingleton<GameData>
 
 	public void DetectDevice(InputDevice inputDevice = null)
 	{
-		_deviceUtility.DetectDevice(inputDevice);
+		_inputSystemUtility.DetectDevice(inputDevice);
 	}
 
 	private void OnPause(PauseEvent evt)
@@ -336,18 +331,21 @@ public class GameData : MonoSingleton<GameData>
 
 	private IEnumerator LoadingProgress()
 	{
-		float currentProgress = 0;
-		float totalProgress = 0;
+		_loadAnimationEvent.isLoading = true;
+		EventController.TriggerEvent(_loadAnimationEvent);
 
-		for (int i = 0; i < _listScenes.Count; i++)
-		{
-			while (!_listScenes[i].isDone)
-			{
-				totalProgress += _listScenes[i].progress;
-				currentProgress = totalProgress / _listScenes.Count;
-				yield return null;
-			}
-		}
+		// float currentProgress = 0;
+		// float totalProgress = 0;
+
+		// for (int i = 0; i < _listScenes.Count; i++)
+		// {
+		// 	while (!_listScenes[i].isDone)
+		// 	{
+		// 		totalProgress += _listScenes[i].progress;
+		// 		currentProgress = totalProgress / _listScenes.Count;
+		// 		yield return null;
+		// 	}
+		// }
 
 		_listScenes.Clear();
 
@@ -357,6 +355,8 @@ public class GameData : MonoSingleton<GameData>
 		}
 
 		yield return new WaitForSeconds(.5f);
+
+		_globalController.Init(_spawnPoint.transform.position);
 
 		_customFadeEvent.fadeIn = false;
 		EventController.TriggerEvent(_customFadeEvent);
@@ -368,6 +368,7 @@ public class GameData : MonoSingleton<GameData>
 		}
 
 		// GetSceneReferences();
+		// TODO Mariano: Search another checkpoint?
 	}
 
 	#endregion

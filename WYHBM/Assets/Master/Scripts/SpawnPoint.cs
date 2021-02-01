@@ -3,24 +3,13 @@
 [RequireComponent(typeof(SpriteRenderer))]
 public class SpawnPoint : MonoBehaviour
 {
-    [Header("Spawn Point")]
-    public PlayerSO player;
-    [Space]
-    [SerializeField] private SpriteRenderer _spriteRenderer = null;
-
-    [Header("Combat Areas")]
+    [Header("General")]
     [SerializeField] private CombatArea[] _combatAreas;
 
     private void Start()
     {
-        _spriteRenderer.enabled = false;
-    }
-
-    public void SetSprite()
-    {
-        if (_spriteRenderer == null)_spriteRenderer = GetComponent<SpriteRenderer>();
-
-        _spriteRenderer.sprite = player.Sprite;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.enabled = false;
     }
 
     public CombatArea GetCombatArea()

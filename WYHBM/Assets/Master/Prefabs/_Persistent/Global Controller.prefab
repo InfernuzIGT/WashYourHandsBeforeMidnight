@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2170058644991450080}
   m_Layer: 0
   m_Name: Global Controller
-  m_TagString: Untagged
+  m_TagString: GlobalController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e0f67d7c74265045ab9170ddba87d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listenModeOnSound: {fileID: 0}
+  listenModeOffSound: {fileID: 0}
   _devAutoInit: 0
   _devSilentSteps: 0
   _devDDLegacyMode: 0

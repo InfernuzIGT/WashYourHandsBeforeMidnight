@@ -91,8 +91,7 @@ namespace Events
 
     }
 
-    public class CombatCheckGameEvent : GameEvent
-    { }
+    public class CombatCheckGameEvent : GameEvent { }
 
     public class CombatCharacterGoAheadEvent : GameEvent
     {
@@ -108,7 +107,7 @@ namespace Events
     {
         public List<CombatCharacter> listAllCharacters = new List<CombatCharacter>();
     }
-    
+
     public class CombatHideActionsEvent : GameEvent
     {
         public bool canHighlight;
@@ -161,6 +160,11 @@ namespace Events
     }
 
     public class SaveAnimationEvent : GameEvent { }
+
+    public class LoadAnimationEvent : GameEvent
+    {
+        public bool isLoading;
+    }
 
     public class QuestEvent : GameEvent
     {
