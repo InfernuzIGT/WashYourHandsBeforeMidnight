@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036b42f3713f2e14594d971d498cf1b4, type: 3}
   m_Name: NPC_HomelessWoman
   m_EditorClassIdentifier: 
-  _name: HomelessWoman
+  _name: Kat
   _sprite: {fileID: 452295013617743475, guid: 90aaf1fe79371a34183614c6a5fecb90, type: 3}
   _animatorController: {fileID: 22100000, guid: 016a5a6476939114fbbfc1260d973fec,
     type: 2}
-  iconNone: {fileID: 0}
+  iconNone: {fileID: -2655717424657439744, guid: 544af810c2ddc3744804f8937722bfc7,
+    type: 3}
   iconHappy: {fileID: 0}
   iconSad: {fileID: 0}
   iconAngry: {fileID: 0}
@@ -25,7 +26,9 @@ MonoBehaviour:
   iconSleep: {fileID: 0}
   iconSpecial1: {fileID: 0}
   iconSpecial2: {fileID: 0}
-  _data: []
+  _data:
+  - dialogDD: {fileID: 4900000, guid: 7c71abe6f50d5604d90488ecaed1054b, type: 3}
+    quest: {fileID: 11400000, guid: cafe6633b9a348a43850b56c921c6402, type: 2}
   _canMove: 0
   _speedMovement: 5
   _speedRotation: 180
