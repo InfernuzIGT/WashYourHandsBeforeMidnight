@@ -414,13 +414,13 @@ public class GameData : MonoSingleton<GameData>
 		return containId;
 	}
 
-	public bool CheckQuest(QuestSO questData)
+	public bool CheckQuestStep(QuestSO questData)
 	{
 		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
 			if (_globalController.SessionData.listQuest[i].data == questData)
 			{
-				return _globalController.SessionData.listQuest[i].currentStep >= questData.steps;
+				return _globalController.SessionData.listQuest[i].currentStep == questData.steps;
 			}
 		}
 

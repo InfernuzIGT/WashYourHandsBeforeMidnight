@@ -36,10 +36,47 @@ public class InteractionDialog : Interaction
 
         _interactionDialogEvent.enable = enable;
         _interactionDialogEvent.localizedString = _localizedDialog;
-        _interactionDialogEvent.questData = GetQuestData();
+        _interactionDialogEvent.questData = GetData();
         _interactionDialogEvent.questState = GetQuestState();
-        _interactionDialogEvent.objectName = gameObject.name;
 
         EventController.TriggerEvent(_interactionDialogEvent);
+    }
+
+    private QuestSO GetData()
+    {
+        QuestSO data = GetQuestData();
+
+        if (data == null)return null;
+
+        QUEST_STATE state = GetQuestState();
+        string id = string.Format(DDParameters.FormatQuadruple, data.name, state.ToString(), DDParameters.SimpleQuest, gameObject.name);
+
+        switch (state)
+        {
+            case QUEST_STATE.New:
+                if (!GameData.Instance.CheckAndWriteID(id))
+                {
+                    return data;
+                }
+                break;
+
+            case QUEST_STATE.Update:
+                if (GameData.Instance.CheckQuestStep(data) && !GameData.Instance.CheckID(id))
+                {
+                    GameData.Instance.WriteID(id);
+                    return data;
+                }
+                break;
+
+            case QUEST_STATE.Complete:
+                if (GameData.Instance.HaveQuest(data) && !GameData.Instance.CheckID(id))
+                {
+                    GameData.Instance.WriteID(id);
+                    return data;
+                }
+                break;
+        }
+
+        return null;
     }
 }

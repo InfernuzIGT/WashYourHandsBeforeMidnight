@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
+    
+    public UnityAction cancelListerMode;
 
     // Properties
     private CustomInputAction _input;
@@ -103,7 +105,7 @@ public class PlayerController : MonoBehaviour
     private bool _devSilentSteps;
     public bool DevSilentSteps { get { return _devSilentSteps; } set { _devSilentSteps = value; } }
 
-    Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
+	Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
     {
@@ -357,6 +359,8 @@ public class PlayerController : MonoBehaviour
 
     public void Crouch(bool cancel = false)
     {
+        cancelListerMode.Invoke();
+        
         if (cancel)_isCrouching = true;
 
         // crouchSound.Play();
@@ -365,7 +369,6 @@ public class PlayerController : MonoBehaviour
 
         if (_characterController.isGrounded && _isCrouching)
         {
-            
             ChangeMovementState(MOVEMENT_STATE.Crouch);
 
             _characterController.height = _playerConfig.height / 2;

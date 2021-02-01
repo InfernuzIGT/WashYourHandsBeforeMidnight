@@ -15,6 +15,7 @@ public struct QuestData
 {
     public QuestSO quest;
     public QUEST_STATE state;
+    public int requiredStep;
 }
 
 [RequireComponent(typeof(BoxCollider))]
@@ -149,7 +150,7 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public bool DDCheckQuest()
     {
-        return GameData.Instance.CheckQuest(GetQuestData());
+        return GameData.Instance.CheckQuestStep(GetQuestData());
     }
 
     public bool DDHaveQuest()

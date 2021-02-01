@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Cinemachine;
 using Events;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using FMODUnity;
 
 [System.Serializable]
 public class Quest
@@ -263,10 +263,21 @@ public class GlobalController : MonoBehaviour
 
         _playerController.Input.Player.ListenMode.started += ctx => ListenMode(true);
         _playerController.Input.Player.ListenMode.canceled += ctx => ListenMode(false);
+        
+        _playerController.cancelListerMode += CancelListenMode;
+    }
+    
+    private void CancelListenMode()
+    {
+        if (!_playerController.IsCrouching)return;
+        
+        ListenMode(false);
     }
 
     private void ListenMode(bool active)
     {
+        if (!_playerController.IsCrouching)return;
+
         _fovIsActive = active;
 
         // if (!playerController.IsCrouching)playerController.Crouch();

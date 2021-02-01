@@ -391,7 +391,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     public bool DDCheckQuest()
     {
-        return GameData.Instance.CheckQuest(GetQuestData());
+        return GameData.Instance.CheckQuestStep(GetQuestData());
     }
 
     public bool DDHaveQuest()

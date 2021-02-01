@@ -2,12 +2,17 @@
 
 public class WorldAnimator : AnimatorController
 {
-    [Header("World")]
-    [SerializeField] private bool flipSprite;
+    private Material _material;
 
     private bool _isFlipped;
-
     public bool isFlipped { get { return _isFlipped; } }
+
+    private int hash_FlipUV = Shader.PropertyToID("_FlipUV");
+
+    private void Start()
+    {
+        _material = _spriteRenderer.material;
+    }
 
     public void Movement(Vector3 movement, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
     {
@@ -17,7 +22,7 @@ public class WorldAnimator : AnimatorController
         _animValueY.Execute(movement.y);
         _animMovementType.Execute((int)movementState);
     }
-    
+
     public void Movement(float valueX, float valueY, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
     {
         FlipSprite(valueX);
@@ -31,14 +36,14 @@ public class WorldAnimator : AnimatorController
     {
         if (valueX < 0)
         {
-            _isFlipped = flipSprite ? false : true;
+            _isFlipped = true;
         }
         else if (valueX > 0)
         {
-            _isFlipped = flipSprite ? true : false;
+            _isFlipped = false;
         }
 
-        _spriteRenderer.flipX = _isFlipped;
+        _material.SetFloat(hash_FlipUV, _isFlipped ? 1 : 0);
     }
 
     public void Walk(bool active)

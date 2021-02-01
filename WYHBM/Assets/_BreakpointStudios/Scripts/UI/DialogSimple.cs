@@ -158,8 +158,6 @@ public class DialogSimple : MonoBehaviour
     {
         if (_questEvent.data == null)return;
 
-        if (GameData.Instance.CheckAndWriteID(string.Format(DDParameters.FormatQuadruple, _questEvent.data.name, _questEvent.state.ToString(), DDParameters.SimpleQuest, _objectName)))return;
-
         EventController.TriggerEvent(_questEvent);
     }
 
