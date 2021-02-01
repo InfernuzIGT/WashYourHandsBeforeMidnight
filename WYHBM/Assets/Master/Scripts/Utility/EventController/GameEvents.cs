@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
@@ -45,15 +46,71 @@ namespace Events
         public LADDER_EXIT ladderExit;
     }
 
-    public class EnterCombatEvent : GameEvent
+    // public class EnterCombatEvent : GameEvent
+    // {
+    //     public NPCSO npc;
+    //     public NPCController currentNPC;
+    // }
+
+    // public class ExitCombatEvent : GameEvent
+    // {
+    //     public bool isWin;
+    // }
+
+    public class CombatEvent : GameEvent
     {
-        public NPCSO npc;
-        public NPCController currentNPC;
+        public bool isEnter;
+        public bool isWin;
+        public List<Enemy> combatEnemies = new List<Enemy>();
     }
 
-    public class ExitCombatEvent : GameEvent
+    public class CombatActionEvent : GameEvent
     {
-        public bool isWin;
+        public ItemSO item;
+    }
+
+    public class CombatUIEvent : GameEvent
+    {
+        public List<CombatCharacter> listWaitingCharacters = new List<CombatCharacter>();
+    }
+
+    public class CombatPlayerEvent : GameEvent
+    {
+        public bool canSelect;
+        public int combatIndex;
+    }
+
+    public class CombatRemoveCharacterEvent : GameEvent
+    {
+        public CombatCharacter character;
+        public bool isPlayer;
+    }
+
+    public class CombatEnemyEvent : GameEvent
+    {
+
+    }
+
+    public class CombatCheckGameEvent : GameEvent { }
+
+    public class CombatCharacterGoAheadEvent : GameEvent
+    {
+        public CombatCharacter character;
+    }
+
+    public class CombatCreateActionsEvent : GameEvent
+    {
+        public Equipment equipment;
+    }
+
+    public class CombatCreateTurnEvent : GameEvent
+    {
+        public List<CombatCharacter> listAllCharacters = new List<CombatCharacter>();
+    }
+
+    public class CombatHideActionsEvent : GameEvent
+    {
+        public bool canHighlight;
     }
 
     #endregion
@@ -62,7 +119,7 @@ namespace Events
 
     public class FadeEvent : GameEvent
     {
-        public bool instant;
+        public bool fast;
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
@@ -103,6 +160,11 @@ namespace Events
     }
 
     public class SaveAnimationEvent : GameEvent { }
+
+    public class LoadAnimationEvent : GameEvent
+    {
+        public bool isLoading;
+    }
 
     public class QuestEvent : GameEvent
     {

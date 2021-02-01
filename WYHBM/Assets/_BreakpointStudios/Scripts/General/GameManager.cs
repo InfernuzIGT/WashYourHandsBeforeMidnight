@@ -19,7 +19,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     [Header("References")]
     public GlobalController globalController;
-    public CombatManager combatManager;
+    // public CombatController combatManager;
     public CinemachineManager cinemachineManager;
     public PlayableDirector playableDirector;
     public GameMode.World.UIManager worldUI;
@@ -39,7 +39,7 @@ public class GameManager : MonoSingleton<GameManager>
     private CombatArea _currentCombatArea;
     private NPCController currentNPC;
     private float _currentTimeEncounter;
-    private float _limitTimeEncounter = 10;
+    // private float _limitTimeEncounter = 10;
 
     // Inventory
     // private int _inventoryMaxSlots = 8;
@@ -74,63 +74,63 @@ public class GameManager : MonoSingleton<GameManager>
         listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.instant = true;
+        _fadeEvent.fast = true;
 
         // _characterIndex = 0;
         // worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);
 
         inCombat = false;
 
-        CheckEncounters(true);
+        // CheckEncounters(true);
     }
 
-    private void OnEnable()
-    {
-        EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
-        EventController.AddListener<ExitCombatEvent>(OnExitCombat);
-        // EventController.AddListener<CutsceneEvent>(OnCutscene);
+    // private void OnEnable()
+    // {
+    //     // EventController.AddListener<EnterCombatEvent>(OnEnterCombat);
+    //     // EventController.AddListener<ExitCombatEvent>(OnExitCombat);
+    //     // EventController.AddListener<CutsceneEvent>(OnCutscene);
 
-    }
+    // }
 
-    private void OnDisable()
-    {
-        EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
-        EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
-        // EventController.RemoveListener<CutsceneEvent>(OnCutscene);
-    }
+    // private void OnDisable()
+    // {
+    //     // EventController.RemoveListener<EnterCombatEvent>(OnEnterCombat);
+    //     // EventController.RemoveListener<ExitCombatEvent>(OnExitCombat);
+    //     // EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+    // }
 
-    public void CheckEncounters(bool isEnabled)
-    {
-        if (isEnabled)
-        {
-            _coroutineEnconters = StartCoroutine(CheckEncounter());
-        }
-        else
-        {
-            StopCoroutine(_coroutineEnconters);
-            _coroutineEnconters = null;
-        }
-    }
+    // public void CheckEncounters(bool isEnabled)
+    // {
+    //     if (isEnabled)
+    //     {
+    //         // _coroutineEnconters = StartCoroutine(CheckEncounter());
+    //     }
+    //     else
+    //     {
+    //         StopCoroutine(_coroutineEnconters);
+    //         _coroutineEnconters = null;
+    //     }
+    // }
 
-    private IEnumerator CheckEncounter()
-    {
-        yield return new WaitForSeconds(3f);
+    // private IEnumerator CheckEncounter()
+    // {
+    //     yield return new WaitForSeconds(3f);
 
-        while (true)
-        {
-            if (!inCombat && !isPaused && globalController.GetPlayerInMovement())
-            {
-                _currentTimeEncounter += Time.deltaTime;
+    //     while (true)
+    //     {
+    //         if (!inCombat && !isPaused && globalController.GetPlayerInMovement())
+    //         {
+    //             _currentTimeEncounter += Time.deltaTime;
 
-                if (_currentTimeEncounter > _limitTimeEncounter)
-                {
-                    _currentTimeEncounter = 0;
-                    TriggerCombat();
-                }
-            }
-            yield return null;
-        }
-    }
+    //             if (_currentTimeEncounter > _limitTimeEncounter)
+    //             {
+    //                 _currentTimeEncounter = 0;
+    //                 TriggerCombat();
+    //             }
+    //         }
+    //         yield return null;
+    //     }
+    // }
 
     // private void OpenInventory()
     // {
@@ -150,58 +150,58 @@ public class GameManager : MonoSingleton<GameManager>
     //     }
     // }
 
-    private void SwitchAmbient()
-    {
-        CheckEncounters(!inCombat);
+    // private void SwitchAmbient()
+    // {
+    //     CheckEncounters(!inCombat);
 
-        // globalController.playerController.ToggleInputWorld(!inCombat);
-        globalController.HidePlayer(inCombat);
+    //     // globalController.playerController.ToggleInputWorld(!inCombat);
+    //     globalController.HidePlayer(inCombat);
 
-        combatUI.Show(inCombat);
-        worldUI.Show(!inCombat);
+    //     combatUI.Show(inCombat);
+    //     worldUI.Show(!inCombat);
 
-        // combatManager.ToggleInputCombat(inCombat);
-        combatManager.SetCombatArea(inCombat);
+    //     // combatManager.ToggleInputCombat(inCombat);
+    //     combatManager.SetCombatArea(inCombat);
 
-        if (!inCombat)
-        {
-            globalController.ChangeToCombatCamera(null);
-            combatUI.actions.Clear();
-            combatUI.ClearTurn();
-        }
-        else
-        {
-            globalController.ChangeToCombatCamera(_currentCombatArea.virtualCamera);
-        }
-    }
+    //     if (!inCombat)
+    //     {
+    //         globalController.ChangeToCombatCamera(null);
+    //         combatUI.actions.Clear();
+    //         combatUI.ClearTurn();
+    //     }
+    //     else
+    //     {
+    //         globalController.ChangeToCombatCamera(_currentCombatArea.virtualCamera);
+    //     }
+    // }
 
-    private void SwitchMovement()
-    {
-        // globalController.playerController.SwitchMovement();
-    }
+    // private void SwitchMovement()
+    // {
+    //     // globalController.playerController.SwitchMovement();
+    // }
 
-    private void StartCombat()
-    {
-        // currentNPC?.Kill();
-        combatManager.InitiateTurn();
-    }
+    // private void StartCombat()
+    // {
+    //     // currentNPC?.Kill();
+    //     combatManager.InitiateTurn();
+    // }
 
-    public void ReorderTurn()
-    {
-        combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
-    }
+    // public void ReorderTurn()
+    // {
+    //     combatUI.ReorderTurn(combatManager.ListWaitingCharacters);
+    // }
 
-    public void SelectButton(GameObject button)
-    {
-        eventSystem.SetSelectedGameObject(button);
-    }
+    // public void SelectButton(GameObject button)
+    // {
+    //     eventSystem.SetSelectedGameObject(button);
+    // }
 
-    public void PlayerCanSelect(bool canSelect, int combatIndex = 0)
-    {
-        combatManager.ChangeCombatState(canSelect);
-        combatUI.ShowPlayerPanel(canSelect, true);
-        if (canSelect)combatUI.ShowActions(combatIndex);
-    }
+    // public void PlayerCanSelect(bool canSelect, int combatIndex = 0)
+    // {
+    //     combatManager.ChangeCombatState(canSelect);
+    //     combatUI.ShowPlayerPanel(canSelect, true);
+    //     if (canSelect)combatUI.ShowActions(combatIndex);
+    // }
 
     #region Inventory
 
@@ -257,60 +257,60 @@ public class GameManager : MonoSingleton<GameManager>
 
     #region Events
 
-    public void OnEnterCombat(EnterCombatEvent evt)
-    {
-        inCombat = true;
-        currentNPC = evt.currentNPC;
+    // public void OnEnterCombat(EnterCombatEvent evt)
+    // {
+    //     inCombat = true;
+    //     currentNPC = evt.currentNPC;
 
-        int indexArea = Random.Range(0, combatAreas.Length);
-        _currentCombatArea = combatAreas[indexArea];
-        combatManager.SetData(_currentCombatArea, combatPlayers, evt.npc.combatEnemies);
+    //     int indexArea = Random.Range(0, combatAreas.Length);
+    //     _currentCombatArea = combatAreas[indexArea];
+    //     combatManager.SetData(_currentCombatArea, combatPlayers, evt.npc.combatEnemies);
 
-        _fadeEvent.callbackStart = SwitchMovement;
-        _fadeEvent.callbackMid = SwitchAmbient;
-        _fadeEvent.callbackEnd = StartCombat;
+    //     _fadeEvent.callbackStart = SwitchMovement;
+    //     _fadeEvent.callbackMid = SwitchAmbient;
+    //     _fadeEvent.callbackEnd = StartCombat;
 
-        EventController.TriggerEvent(_fadeEvent);
-    }
+    //     EventController.TriggerEvent(_fadeEvent);
+    // }
 
-    private void TriggerCombat()
-    {
-        if (!ProportionValue.GetProbability(0.4f))return;
+    // private void TriggerCombat()
+    // {
+    //     if (!ProportionValue.GetProbability(0.4f))return;
 
-        inCombat = true;
-        currentNPC = null;
+    //     inCombat = true;
+    //     currentNPC = null;
 
-        int indexArea = Random.Range(0, combatAreas.Length);
-        _currentCombatArea = combatAreas[indexArea];
+    //     int indexArea = Random.Range(0, combatAreas.Length);
+    //     _currentCombatArea = combatAreas[indexArea];
 
-        int indexEncounter = Random.Range(0, enemyEncounters.Count);
-        combatManager.SetData(_currentCombatArea, combatPlayers, enemyEncounters[indexEncounter].enemies);
+    //     int indexEncounter = Random.Range(0, enemyEncounters.Count);
+    //     combatManager.SetData(_currentCombatArea, combatPlayers, enemyEncounters[indexEncounter].enemies);
 
-        _fadeEvent.callbackStart = SwitchMovement;
-        _fadeEvent.callbackMid = SwitchAmbient;
-        _fadeEvent.callbackEnd = StartCombat;
+    //     _fadeEvent.callbackStart = SwitchMovement;
+    //     _fadeEvent.callbackMid = SwitchAmbient;
+    //     _fadeEvent.callbackEnd = StartCombat;
 
-        EventController.TriggerEvent(_fadeEvent);
-    }
+    //     EventController.TriggerEvent(_fadeEvent);
+    // }
 
-    public void OnExitCombat(ExitCombatEvent evt)
-    {
-        inCombat = false;
+    // public void OnExitCombat(ExitCombatEvent evt)
+    // {
+    //     inCombat = false;
 
-        _fadeEvent.callbackStart = null;
-        _fadeEvent.callbackMid = SwitchAmbient;
-        _fadeEvent.callbackEnd = SwitchMovement;
+    //     _fadeEvent.callbackStart = null;
+    //     _fadeEvent.callbackMid = SwitchAmbient;
+    //     _fadeEvent.callbackEnd = SwitchMovement;
 
-        EventController.TriggerEvent(_fadeEvent);
-    }
+    //     EventController.TriggerEvent(_fadeEvent);
+    // }
 
-    private void OnCutscene(CutsceneEvent evt)
-    {
-        // Debug.Log($"<b> {evt.cutscene.name} </b>");
-        playableDirector.playableAsset = evt.cutscene;
+    // private void OnCutscene(CutsceneEvent evt)
+    // {
+    //     // Debug.Log($"<b> {evt.cutscene.name} </b>");
+    //     playableDirector.playableAsset = evt.cutscene;
 
-        playableDirector.Play();
-    }
+    //     playableDirector.Play();
+    // }
 
     #endregion
 

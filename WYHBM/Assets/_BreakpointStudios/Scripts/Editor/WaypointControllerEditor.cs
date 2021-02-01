@@ -30,6 +30,22 @@ public class WaypointControllerEditor : Editor
     {
         base.OnInspectorGUI();
         EditorUtility.SetDirty(_controller);
+
+        EditorGUILayout.Space();
+        DrawHorizontalLine();
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Reset Position"))
+        {
+            _controller.ResetPosition();
+        }
+    }
+
+    private void DrawHorizontalLine()
+    {
+        Rect rect = EditorGUILayout.GetControlRect(false, 1);
+        rect.height = 1;
+        EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
     }
 
 }

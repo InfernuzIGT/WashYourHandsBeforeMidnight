@@ -23,6 +23,11 @@ public class PlayerController : MonoBehaviour
     [Header("FMOD")]
     public StudioEventEmitter footstepSound;
     public StudioEventEmitter breathingSound;
+    public StudioEventEmitter crouchSound;
+    public StudioEventEmitter standSound;
+    public StudioEventEmitter fallSound;
+    public StudioEventEmitter listenModeOnSound;
+    public StudioEventEmitter listenModeOffSound;
 
     [Header("References")]
 #pragma warning disable 0414
@@ -33,7 +38,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
     // [SerializeField] private FMODConfig _fmodConfig = null;
     [Space]
-    [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
+    // [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
     [SerializeField, ConditionalHide] private CharacterController _characterController = null;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
 
@@ -69,6 +74,7 @@ public class PlayerController : MonoBehaviour
     private bool _inIvy = false;
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
+    // private bool _isFalling;
 
     // Ledge
     private Vector3 newPos;
@@ -77,6 +83,8 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
+    
+    public UnityAction cancelListerMode;
 
     // Properties
     private CustomInputAction _input;
@@ -97,7 +105,7 @@ public class PlayerController : MonoBehaviour
     private bool _devSilentSteps;
     public bool DevSilentSteps { get { return _devSilentSteps; } set { _devSilentSteps = value; } }
 
-    Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
+	Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
     {
@@ -204,7 +212,7 @@ public class PlayerController : MonoBehaviour
                 _currentSoundRadius = _playerConfig.soundRadiusJogging;
                 _speedHorizontal = _playerConfig.speedJogging;
 
-                footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+                // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
                 _animatorController.Walk(false);
 
@@ -232,7 +240,7 @@ public class PlayerController : MonoBehaviour
             case MOVEMENT_STATE.Run:
                 _currentSoundRadius = _playerConfig.soundRadiusRun;
                 _speedHorizontal = _playerConfig.speedRun;
-                footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+                // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
                 break;
 
             case MOVEMENT_STATE.Crouch:
@@ -241,17 +249,17 @@ public class PlayerController : MonoBehaviour
                 if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
                 {
                     _speedHorizontal = _playerConfig.speedWalk;
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                    // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
                 else if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimitCrouch || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimitCrouch)
                 {
                     _speedHorizontal = _playerConfig.speedCrouchFast;
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                    // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
                 else
                 {
                     _speedHorizontal = _playerConfig.speedCrouch;
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                    // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
                 break;
 
@@ -286,10 +294,21 @@ public class PlayerController : MonoBehaviour
             _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
 
             _animatorController.Falling(false);
+
+            // if (_isFalling)
+            // {
+            //     fallSound.Play();
+
+            //     _isFalling = false;
+                
+            // }
         }
         else if (Mathf.Abs(_characterController.velocity.y) > _playerConfig.magnitudeFall)
         {
+
             _animatorController.Falling(true);
+
+            // _isFalling = true;
         }
 
         // Move
@@ -298,12 +317,12 @@ public class PlayerController : MonoBehaviour
         _characterController.Move(_movement * Time.deltaTime);
 
         // Animation       
-        _animatorController.Movement(_inputMovementAux, _movementState);
-        // _animatorController.Movement(_movement, _movementState);
+        // _animatorController.Movement(_inputMovementAux, _movementState);
+        _animatorController.Movement(_movement.x, _movement.z, _movementState);
 
         //Sound
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
-        footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+        // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
     }
 
     private void StopMovement()
@@ -340,7 +359,11 @@ public class PlayerController : MonoBehaviour
 
     public void Crouch(bool cancel = false)
     {
+        cancelListerMode.Invoke();
+        
         if (cancel)_isCrouching = true;
+
+        // crouchSound.Play();
 
         _isCrouching = !_isCrouching;
 
@@ -353,6 +376,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            // standSound.Play();
+
             ChangeMovementState();
 
             _characterController.height = _playerConfig.height;
@@ -372,11 +397,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(transform.position, Vector3.down, out _hit, 3, _worldConfig.layerGround))
         {
-            _shadow.enabled = true;
+            // _shadow.enabled = true;
 
             _groundPosition = new Vector3(transform.position.x, _hit.point.y + 0.1f, transform.position.z - 1);
 
-            _shadow.transform.position = _groundPosition;
+            // _shadow.transform.position = _groundPosition;
 
             switch (_hit.collider.gameObject.tag)
             {
@@ -405,10 +430,10 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        else
-        {
-            _shadow.enabled = false;
-        }
+        // else
+        // {
+        // _shadow.enabled = false;
+        // }
 
         footstepSound.Play();
     }

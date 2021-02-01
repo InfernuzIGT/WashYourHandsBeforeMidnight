@@ -40,7 +40,7 @@ public class DDDialog : MonoBehaviour
     private int _counter;
     private int _visibleCount;
     private bool _ddError;
-    private string _legacyLanguage = "es";
+    private string _legacyLanguage = "ENG";
     // private PlayerSO _currentPlayer;
     // private string _currentName = "DDUtility";
     // private string _lastName;

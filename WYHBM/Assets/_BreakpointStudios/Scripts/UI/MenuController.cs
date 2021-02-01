@@ -1,12 +1,11 @@
 ﻿using DG.Tweening;
 using Events;
+using FMOD.Studio;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using FMODUnity;
-using FMOD.Studio;
 
 public class MenuController : MonoBehaviour
 {
@@ -26,7 +25,6 @@ public class MenuController : MonoBehaviour
     [SerializeField] private bool _isDemo = false;
     [SerializeField] private VERSION version = VERSION.Alpha;
     [SerializeField, Range(0, 10)] private int versionReview = 0;
-
 
     [Header("References")]
 #pragma warning disable 0414
@@ -213,7 +211,6 @@ public class MenuController : MonoBehaviour
         if (isBack)
         {
             backSound.start();
-            Debug.Log("back SOUND");
 
             _canvasOptions.Show(false);
             _canvasMain.Show(true, 0.5f);

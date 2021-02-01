@@ -3,6 +3,7 @@ using Chronos;
 using Events;
 using UnityEngine;
 using UnityEngine.AI;
+using FMODUnity;
 
 public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 {
@@ -46,6 +47,12 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     // Events
     private QuestEvent _questEvent;
     private EnableMovementEvent _enableMovementEvent;
+    private CombatEvent _combatEvent;
+
+    // FMOD
+    public StudioEventEmitter zombieRoaming;
+    public StudioEventEmitter zombieFootstep;
+
 
     // Properties
     public DIRECTION StartLookDirection { get { return _startLookDirection; } set { _startLookDirection = value; } }
@@ -57,8 +64,16 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Start()
     {
+
         _questEvent = new QuestEvent();
         _enableMovementEvent = new EnableMovementEvent();
+
+        if (_data.CanCombat)
+        {
+            _combatEvent = new CombatEvent();
+            _combatEvent.isEnter = true;
+            _combatEvent.combatEnemies.AddRange(_data.CombatEnemies);
+        }
 
 #if UNITY_EDITOR
 
@@ -68,6 +83,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 #endif
 
         _canMove = GetCanMove();
+
+        // if (_agent.isOnNavMesh && !_data.CanMove)
+        // {
+        //     _agent.areaMask = 0;
+        // }
 
         _waitForSeconds = new WaitForSeconds(_data.WaitTime);
         _waitUntilIsMoving = new WaitUntil(() => _isMoving);
@@ -88,6 +108,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _holdUtility.OnFinished.AddListener(OnFinish);
         }
 
+        // zombieRoaming.Play();
         _coroutinePatrol = StartCoroutine(MovementAgent());
     }
 
@@ -215,6 +236,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         {
             _agent.SetDestination(targetLastPosition);
             if (_coroutinePatrol != null)StopCoroutine(_coroutinePatrol);
+
         }
 
         _holdUtility.OnStart();
@@ -246,12 +268,23 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _enableMovementEvent.isDetected = true;
         EventController.TriggerEvent(_enableMovementEvent);
 
-        // TODO Mariano: Trigger Combat
         Debug.Log($"<color=red><b> COMBAT! </b></color>");
+        EventController.TriggerEvent(_combatEvent);
     }
 
     #endregion
 
+    #region FMOD
+
+    public void PlayFootsteps()
+    {
+        // zombieFootstep.Play();
+        Debug.Log("Zombie Footstep");
+
+    }
+
+
+    #endregion
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Tags.Player))
@@ -358,7 +391,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     public bool DDCheckQuest()
     {
-        return GameData.Instance.CheckQuest(GetQuestData());
+        return GameData.Instance.CheckQuestCurrentStep(GetQuestData());
     }
 
     public bool DDHaveQuest()

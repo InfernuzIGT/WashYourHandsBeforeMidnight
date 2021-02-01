@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8291343348467503925}
   m_Layer: 0
   m_Name: Spawn Point
-  m_TagString: Untagged
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,7 +50,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8d55981ee10e3cc46933b07f9940773f, type: 2}
+  - {fileID: 2100000, guid: 9762be1369c41b64aaf782302967f4c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,3 +97,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
   _spriteRenderer: {fileID: 8291343348467503922}
+  _combatAreas: []

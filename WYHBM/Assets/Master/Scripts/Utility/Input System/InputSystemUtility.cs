@@ -10,6 +10,11 @@ public class InputSystemUtility : MonoBehaviour
     private bool _isAdded;
     private bool _isReconnected;
 
+    private void Start()
+    {
+        _deviceEvent = new DeviceChangeEvent();
+    }
+
     public void DetectDevice(InputDevice inputDevice = null)
     {
         switch (Application.platform)
@@ -29,13 +34,17 @@ public class InputSystemUtility : MonoBehaviour
                 _currentDevice = DEVICE.XboxOne;
                 break;
 
+            case RuntimePlatform.WindowsPlayer:
+                _lastDevice = DEVICE.PC;
+                _currentDevice = inputDevice != null ? InputSystemAdapter.GetCurrentDevice(inputDevice) : InputSystemAdapter.GetStartDevice();
+                break;
+
             default:
                 _lastDevice = DEVICE.PC;
                 _currentDevice = inputDevice != null ? InputSystemAdapter.GetCurrentDevice(inputDevice) : InputSystemAdapter.GetStartDevice();
                 break;
         }
 
-        _deviceEvent = new DeviceChangeEvent();
         _deviceEvent.showPopup = false;
         _deviceEvent.device = _currentDevice;
         _deviceEvent.gamepad = InputSystemAdapter.GetCurrentGamepad();

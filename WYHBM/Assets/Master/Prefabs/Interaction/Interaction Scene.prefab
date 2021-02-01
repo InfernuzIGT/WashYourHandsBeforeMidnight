@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485091d69ccf7f94890fa60c69a67026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: []
-  questState: 
+  questData: []
   onEnter:
     m_PersistentCalls:
       m_Calls:
@@ -61,6 +60,17 @@ PrefabInstance:
         type: 3}
       propertyPath: _duration
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 448461730189328648, guid: 34f546212a4c5e94e8ebb8c7a054d3eb,
+        type: 3}
+      propertyPath: _iconData
+      value: 
+      objectReference: {fileID: 11400000, guid: cbde4380f37b5b842a5f4ef6bc6a9886,
+        type: 2}
+    - target: {fileID: 448461730189328648, guid: 34f546212a4c5e94e8ebb8c7a054d3eb,
+        type: 3}
+      propertyPath: ShowReferences
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2269715423421459881, guid: 34f546212a4c5e94e8ebb8c7a054d3eb,
         type: 3}

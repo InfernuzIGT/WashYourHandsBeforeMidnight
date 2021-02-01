@@ -10,6 +10,7 @@ public class AnimatorController : MonoBehaviour
     [SerializeField, ConditionalHide] protected Animator _animator;
     [SerializeField, ConditionalHide] protected SpriteRenderer _spriteRenderer;
 
+
     // General
     protected AnimationCommandBool _animIsAlive;
     protected AnimationCommandInt _animMovementType;
@@ -47,5 +48,6 @@ public class AnimatorController : MonoBehaviour
         // Systems
         _animCanClimbLedge = new AnimCanClimbLedge(_animator);
         _animCanClimbLadder = new AnimCanClimbLadder(_animator);
+
     }
 }

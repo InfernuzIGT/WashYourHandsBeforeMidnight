@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Events;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace GameMode.Combat
     public class UIManager : MonoBehaviour
     {
         [Header("General")]
+        [SerializeField] private CombatConfig _combatConfig = null;
         public TextMeshProUGUI messageTxt;
         public GameObject panelPlayer;
         public GameObject panelEnemy;
@@ -34,15 +36,119 @@ namespace GameMode.Combat
             _turn = new List<Turn>();
         }
 
-        public void CreateActions(Equipment equipment)
+        private void OnEnable()
         {
-            // _actions = Instantiate(GameData.Instance.combatConfig.actionsPrefab, actionsContainer);
-            _actions.Init(equipment);
+            EventController.AddListener<CombatUIEvent>(OnCombatUI);
+            EventController.AddListener<CombatActionEvent>(OnCombatAction);
+            EventController.AddListener<CombatPlayerEvent>(OnCombatPlayer);
+            EventController.AddListener<CombatEnemyEvent>(OnCombatEnemy);
+            EventController.AddListener<CombatCreateActionsEvent>(OnCombatCreateActions);
+            EventController.AddListener<CombatCreateTurnEvent>(OnCombatCreateTurn);
+            EventController.AddListener<CombatHideActionsEvent>(OnCombatHideActions);
+        }
+
+        private void OnDisable()
+        {
+            EventController.RemoveListener<CombatUIEvent>(OnCombatUI);
+            EventController.RemoveListener<CombatActionEvent>(OnCombatAction);
+            EventController.RemoveListener<CombatPlayerEvent>(OnCombatPlayer);
+            EventController.RemoveListener<CombatCreateActionsEvent>(OnCombatCreateActions);
+            EventController.RemoveListener<CombatCreateTurnEvent>(OnCombatCreateTurn);
+            EventController.RemoveListener<CombatHideActionsEvent>(OnCombatHideActions);
+        }
+
+        private void OnCombatAction(CombatActionEvent evt)
+        {
+            if (evt.item == null)
+            {
+                messageTxt.text = "Select enemy";
+                return;
+            }
+
+            switch (evt.item.type)
+            {
+                case ITEM_TYPE.WeaponMelee:
+                    messageTxt.text = "Select enemy";
+                    break;
+
+                case ITEM_TYPE.WeaponOneHand:
+                    messageTxt.text = "Select enemy";
+                    break;
+
+                case ITEM_TYPE.WeaponTwoHands:
+                    messageTxt.text = "Select enemy";
+                    break;
+
+                case ITEM_TYPE.ItemHeal:
+                    messageTxt.text = "Select player";
+                    break;
+
+                case ITEM_TYPE.ItemGrenade:
+                    messageTxt.text = "Select enemy";
+                    break;
+
+                case ITEM_TYPE.ItemDefense:
+                    messageTxt.text = "Select player";
+                    break;
+
+                default:
+                    messageTxt.text = "";
+                    break;
+            }
+        }
+
+        private void OnCombatCreateActions(CombatCreateActionsEvent evt)
+        {
+            _actions = Instantiate(_combatConfig.actionsPrefab, actionsContainer);
+            _actions.Init(evt.equipment);
             _actions.gameObject.SetActive(false);
             actions.Add(_actions);
         }
 
-        public void ShowActions(int index)
+        private void OnCombatCreateTurn(CombatCreateTurnEvent evt)
+        {
+            _turn.Clear();
+
+            for (int i = 0; i < evt.listAllCharacters.Count; i++)
+            {
+                _turn.Add(turn[i]);
+                _turn[i].SetSprite(evt.listAllCharacters[i]);
+                _turn[i].gameObject.SetActive(true);
+            }
+        }
+
+        private void OnCombatHideActions(CombatHideActionsEvent evt)
+        {
+            actions[_lastIndex].gameObject.SetActive(!evt.canHighlight);
+        }
+
+        private void OnCombatUI(CombatUIEvent evt)
+        {
+            // Reorder
+            for (int i = 0; i < _turn.Count; i++)
+            {
+                _turn[i].gameObject.SetActive(false);
+            }
+
+            for (int i = 0; i < evt.listWaitingCharacters.Count; i++)
+            {
+                _turn[i].SetSprite(evt.listWaitingCharacters[i]);
+                _turn[i].gameObject.SetActive(true);
+            }
+        }
+
+        private void OnCombatPlayer(CombatPlayerEvent evt)
+        {
+            ShowPlayerPanel(evt.canSelect, true);
+            if (evt.canSelect)ShowActions(evt.combatIndex);
+        }
+
+        private void OnCombatEnemy(CombatEnemyEvent evt)
+        {
+            ShowPlayerPanel(true, false);
+        }
+
+        private void ShowActions(int index)
         {
             actions[_lastIndex].gameObject.SetActive(false);
             actions[index].gameObject.SetActive(true);
@@ -50,11 +156,6 @@ namespace GameMode.Combat
             actions[index].SelectFirstButton();
 
             _lastIndex = index;
-        }
-
-        public void HideActions(bool isHiding)
-        {
-            actions[_lastIndex].gameObject.SetActive(!isHiding);
         }
 
         public void Show(bool isShowing)
@@ -75,7 +176,7 @@ namespace GameMode.Combat
         //     }
         // }
 
-        public void ShowPlayerPanel(bool show, bool isPlayer)
+        private void ShowPlayerPanel(bool show, bool isPlayer)
         {
             if (show)
             {
@@ -88,32 +189,6 @@ namespace GameMode.Combat
                 panelPlayer.SetActive(false);
                 panelEnemy.SetActive(false);
                 messageTxt.text = "";
-            }
-        }
-
-        public void CreateTurn(List<CombatCharacter> characters)
-        {
-            _turn.Clear();
-
-            for (int i = 0; i < characters.Count; i++)
-            {
-                _turn.Add(turn[i]);
-                _turn[i].SetSprite(characters[i]);
-                _turn[i].gameObject.SetActive(true);
-            }
-        }
-
-        public void ReorderTurn(List<CombatCharacter> characters)
-        {
-            for (int i = 0; i < _turn.Count; i++)
-            {
-                _turn[i].gameObject.SetActive(false);
-            }
-
-            for (int i = 0; i < characters.Count; i++)
-            {
-                _turn[i].SetSprite(characters[i]);
-                _turn[i].gameObject.SetActive(true);
             }
         }
 

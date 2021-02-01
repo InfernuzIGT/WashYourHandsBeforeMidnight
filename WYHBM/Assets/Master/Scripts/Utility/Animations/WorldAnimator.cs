@@ -2,34 +2,48 @@
 
 public class WorldAnimator : AnimatorController
 {
-    [Header("World")]
-    [SerializeField] private bool flipSprite;
+    private Material _material;
 
     private bool _isFlipped;
-
     public bool isFlipped { get { return _isFlipped; } }
+
+    private int hash_FlipUV = Shader.PropertyToID("_FlipUV");
+
+    private void Start()
+    {
+        _material = _spriteRenderer.material;
+    }
 
     public void Movement(Vector3 movement, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
     {
-        FlipSprite(movement);
+        FlipSprite(movement.x);
 
         _animValueX.Execute(movement.x);
         _animValueY.Execute(movement.y);
         _animMovementType.Execute((int)movementState);
     }
 
-    private void FlipSprite(Vector3 movement)
+    public void Movement(float valueX, float valueY, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
     {
-        if (movement.x < 0)
+        FlipSprite(valueX);
+
+        _animValueX.Execute(valueX);
+        _animValueY.Execute(valueY);
+        _animMovementType.Execute((int)movementState);
+    }
+
+    private void FlipSprite(float valueX)
+    {
+        if (valueX < 0)
         {
-            _isFlipped = flipSprite ? false : true;
+            _isFlipped = true;
         }
-        else if (movement.x > 0)
+        else if (valueX > 0)
         {
-            _isFlipped = flipSprite ? true : false;
+            _isFlipped = false;
         }
 
-        _spriteRenderer.flipX = _isFlipped;
+        _material.SetFloat(hash_FlipUV, _isFlipped ? 1 : 0);
     }
 
     public void Walk(bool active)
