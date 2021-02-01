@@ -3,38 +3,41 @@ guid: c685b424e7a0a344bb686d80f53009e7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4874504800072346463
-    second: Combat_Sam 0
+      213: 923977044924240840
+    second: Combat_Sam_Idle_0
   - first:
-      213: 4278717998064839203
-    second: Combat_Sam 1
+      213: 1418768615783926273
+    second: Combat_Sam_Idle_1
   - first:
-      213: -3887614029672305680
-    second: Combat_Sam 2
+      213: -1445518003326264881
+    second: Combat_Sam_Idle_2
   - first:
-      213: -4683818858522528333
-    second: Combat_Sam 3
+      213: -3335364516247452931
+    second: Combat_Sam_Idle_3
   - first:
-      213: -5709235790408733859
-    second: Combat_Sam 4
+      213: 4298289111721349995
+    second: Combat_Sam_Idle_4
   - first:
-      213: -774859050494092580
-    second: Combat_Sam 5
+      213: -4358527854120528447
+    second: Combat_Sam_Idle_5
   - first:
-      213: -1629756584809686153
-    second: Combat_Sam 6
+      213: -8141085034525278241
+    second: Combat_Sam_Idle_6
   - first:
-      213: -6956316772469209107
-    second: Combat_Sam 7
+      213: 4796199863602444350
+    second: Combat_Sam_Idle_7
   - first:
-      213: -5834779754564368777
-    second: Combat_Sam 8
+      213: 1688709683807660073
+    second: Combat_Sam_Attack_1_0
   - first:
-      213: -2145106942860722173
-    second: Combat_Sam 9
+      213: 4806770307165040466
+    second: Combat_Sam_Attack_2_0
   - first:
-      213: 7955235230417175044
-    second: Combat_Sam 10
+      213: 328207811698876065
+    second: Combat_Sam_Hit_0
+  - first:
+      213: -2193257179685569827
+    second: Combat_Sam_Item_0
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -94,7 +97,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 280
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -156,13 +159,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Combat_Sam 0
+      name: Combat_Sam_Idle_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 256
-        width: 128
-        height: 128
+        y: 140
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -170,20 +173,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f5baf381a48b5a340800000000000000
-      internalID: 4874504800072346463
+      spriteID: 8c313571a30a2dc00800000000000000
+      internalID: 923977044924240840
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 1
+      name: Combat_Sam_Idle_1
       rect:
         serializedVersion: 2
-        x: 128
-        y: 256
-        width: 128
-        height: 128
+        x: 70
+        y: 140
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,20 +194,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 32aa9b0895f016b30800000000000000
-      internalID: 4278717998064839203
+      spriteID: 10a06420a8a70b310800000000000000
+      internalID: 1418768615783926273
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 2
+      name: Combat_Sam_Idle_2
       rect:
         serializedVersion: 2
-        x: 256
-        y: 256
-        width: 128
-        height: 128
+        x: 140
+        y: 140
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -212,20 +215,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0fbae8133ab6c0ac0800000000000000
-      internalID: -3887614029672305680
+      spriteID: fc95e4fd80d70fbe0800000000000000
+      internalID: -1445518003326264881
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 3
+      name: Combat_Sam_Idle_3
       rect:
         serializedVersion: 2
-        x: 384
-        y: 256
-        width: 128
-        height: 128
+        x: 210
+        y: 140
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,20 +236,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3b53d79609bbffeb0800000000000000
-      internalID: -4683818858522528333
+      spriteID: df2c0acd4a766b1d0800000000000000
+      internalID: -3335364516247452931
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 4
+      name: Combat_Sam_Idle_4
       rect:
         serializedVersion: 2
         x: 0
-        y: 128
-        width: 128
-        height: 128
+        y: 70
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -254,20 +257,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d5badb52c48b4c0b0800000000000000
-      internalID: -5709235790408733859
+      spriteID: b63941e7c2796ab30800000000000000
+      internalID: 4298289111721349995
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 5
+      name: Combat_Sam_Idle_5
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
-        width: 128
-        height: 128
+        x: 70
+        y: 70
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -275,20 +278,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cda9d488cc52f35f0800000000000000
-      internalID: -774859050494092580
+      spriteID: 1c5108752066383c0800000000000000
+      internalID: -4358527854120528447
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 6
+      name: Combat_Sam_Idle_6
       rect:
         serializedVersion: 2
-        x: 256
-        y: 128
-        width: 128
-        height: 128
+        x: 140
+        y: 70
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -296,20 +299,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 77b901c5501f169e0800000000000000
-      internalID: -1629756584809686153
+      spriteID: fdf3fde5b4e050f80800000000000000
+      internalID: -8141085034525278241
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 7
+      name: Combat_Sam_Idle_7
       rect:
         serializedVersion: 2
-        x: 384
-        y: 128
-        width: 128
-        height: 128
+        x: 210
+        y: 70
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -317,20 +320,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: de781e760c2367f90800000000000000
-      internalID: -6956316772469209107
+      spriteID: e38fcc55d568f8240800000000000000
+      internalID: 4796199863602444350
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 8
+      name: Combat_Sam_Attack_1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 128
-        height: 128
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -338,20 +341,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 776cc8a2ab2b60fa0800000000000000
-      internalID: -5834779754564368777
+      spriteID: 9282e10a2808f6710800000000000000
+      internalID: 1688709683807660073
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 9
+      name: Combat_Sam_Attack_2_0
       rect:
         serializedVersion: 2
-        x: 128
+        x: 70
         y: 0
-        width: 128
-        height: 128
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -359,20 +362,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3000099c99c0b32e0800000000000000
-      internalID: -2145106942860722173
+      spriteID: 25fa773802415b240800000000000000
+      internalID: 4806770307165040466
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Combat_Sam 10
+      name: Combat_Sam_Hit_0
       rect:
         serializedVersion: 2
-        x: 256
+        x: 140
         y: 0
-        width: 128
-        height: 128
+        width: 70
+        height: 70
       alignment: 7
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -380,8 +383,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 40240bd1b4ca66e60800000000000000
-      internalID: 7955235230417175044
+      spriteID: 1aed1dc04470e8400800000000000000
+      internalID: 328207811698876065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Combat_Sam_Item_0
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 0
+        width: 70
+        height: 70
+      alignment: 7
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dda34c7273cff81e0800000000000000
+      internalID: -2193257179685569827
       vertices: []
       indices: 
       edges: []
