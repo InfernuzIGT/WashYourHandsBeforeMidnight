@@ -15,6 +15,7 @@ public struct QuestData
 {
     public QuestSO quest;
     public QUEST_STATE state;
+    public int requiredStep;
 }
 
 [RequireComponent(typeof(BoxCollider))]
@@ -117,6 +118,11 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         return questData[GameData.Instance.PlayerData.ID].state;
     }
+    
+    public int GetQuestRequiredStep()
+    {
+        return questData[GameData.Instance.PlayerData.ID].requiredStep;
+    }
 
     #endregion
 
@@ -149,7 +155,7 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public bool DDCheckQuest()
     {
-        return GameData.Instance.CheckQuest(GetQuestData());
+        return GameData.Instance.CheckQuestCurrentStep(GetQuestData());
     }
 
     public bool DDHaveQuest()

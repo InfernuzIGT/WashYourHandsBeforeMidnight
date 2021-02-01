@@ -3,7 +3,6 @@ using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
-using FMODUnity;
 using FMOD.Studio;
 
 public class OptionsController : MonoBehaviour

@@ -19,10 +19,10 @@ public enum SESSION_OPTION
 [RequireComponent(typeof(LocalizationUtility), typeof(InputSystemUtility))]
 public class GameData : MonoSingleton<GameData>
 {
-
 	[Header("Developer")]
 	[SerializeField] private bool _devPrintInputInfo = false;
 	[SerializeField] private bool _devDontSave = false;
+	[SerializeField] private bool _devLoadMainMenu = false;
 
 	[Header("Configs")]
 	[SerializeField] private PlayerConfig _playerConfig;
@@ -33,13 +33,18 @@ public class GameData : MonoSingleton<GameData>
 	public SessionData sessionData;
 	public SessionSettings sessionSettings;
 
+	[Header("References")]
+#pragma warning disable 0414
+	[SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+	[SerializeField, ConditionalHide] private LocalizationUtility _localizationUtility;
+	[SerializeField, ConditionalHide] private InputSystemUtility _inputSystemUtility;
+	[SerializeField, ConditionalHide] private GlobalClock _globalClock;
+
 	private List<AsyncOperation> _listScenes;
 
 	private GlobalController _globalController;
 	private SpawnPoint _spawnPoint;
-	private LocalizationUtility _localizationUtility;
-	private InputSystemUtility _deviceUtility;
-	private GlobalClock _globalClock;
 
 	// Scene Managment
 	private bool _load;
@@ -61,6 +66,7 @@ public class GameData : MonoSingleton<GameData>
 	private ChangePositionEvent _changePositionEvent;
 	private CustomFadeEvent _customFadeEvent;
 	private SaveAnimationEvent _saveAnimationEvent;
+	private LoadAnimationEvent _loadAnimationEvent;
 
 	private bool _devDDLegacyMode;
 
@@ -68,6 +74,7 @@ public class GameData : MonoSingleton<GameData>
 
 	// Properties
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
+	public SpawnPoint SpawnPoint { get { return _spawnPoint; } }
 
 	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } set { _devDDLegacyMode = value; } }
 	public bool HomeUsed { get { return _homeUsed; } set { _homeUsed = value; } }
@@ -77,20 +84,16 @@ public class GameData : MonoSingleton<GameData>
 		InitializeConfigs();
 
 #if UNITY_EDITOR
-
+		Cursor.visible = true;
+		Cursor.lockState = CursorLockMode.None;
 		if (_devPrintInputInfo)InputSystemAdapter.printInfo = true;
-
+#else
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Locked;
 #endif
 
 		base.Awake();
 
-		// GetSceneReferences();
-
-		// Load();
-
-		_localizationUtility = GetComponent<LocalizationUtility>();
-		_deviceUtility = GetComponent<InputSystemUtility>();
-		_globalClock = GetComponent<GlobalClock>();
 	}
 
 	private void InitializeConfigs()
@@ -108,25 +111,25 @@ public class GameData : MonoSingleton<GameData>
 
 		_customFadeEvent = new CustomFadeEvent();
 
+		_loadAnimationEvent = new LoadAnimationEvent();
 		_saveAnimationEvent = new SaveAnimationEvent();
+
+#if UNITY_EDITOR
+#else
+		if (!_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+#endif
+		if (_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+
 	}
 
-	public void GetSceneReferences(bool findWithLoop)
+	public List<Player> GetListPlayer()
 	{
-		if (findWithLoop)
-		{
-			StartCoroutine(FindReferences());
-		}
-		else
-		{
-			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
-			_globalController = GameObject.FindObjectOfType<GlobalController>();
+		return _globalController.GetListPlayer();
+	}
 
-			if (_globalController != null && _spawnPoint != null)
-			{
-				_globalController.Init(_spawnPoint.transform.position);
-			}
-		}
+	public void GetSceneReferences()
+	{
+		StartCoroutine(FindReferences());
 	}
 
 	private IEnumerator FindReferences()
@@ -135,7 +138,7 @@ public class GameData : MonoSingleton<GameData>
 
 		while (_globalController == null)
 		{
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(3);
 			_globalController = GameObject.FindObjectOfType<GlobalController>();
 		}
 
@@ -143,11 +146,17 @@ public class GameData : MonoSingleton<GameData>
 
 		while (_spawnPoint == null)
 		{
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(3);
 			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
 		}
 
 		_globalController.Init(_spawnPoint.transform.position);
+
+		if (_loadAnimationEvent.isLoading)
+		{
+			_loadAnimationEvent.isLoading = false;
+			EventController.TriggerEvent(_loadAnimationEvent);
+		}
 	}
 
 	private void OnEnable()
@@ -166,7 +175,7 @@ public class GameData : MonoSingleton<GameData>
 
 	public void DetectDevice(InputDevice inputDevice = null)
 	{
-		_deviceUtility.DetectDevice(inputDevice);
+		_inputSystemUtility.DetectDevice(inputDevice);
 	}
 
 	private void OnPause(PauseEvent evt)
@@ -322,18 +331,21 @@ public class GameData : MonoSingleton<GameData>
 
 	private IEnumerator LoadingProgress()
 	{
-		float currentProgress = 0;
-		float totalProgress = 0;
+		_loadAnimationEvent.isLoading = true;
+		EventController.TriggerEvent(_loadAnimationEvent);
 
-		for (int i = 0; i < _listScenes.Count; i++)
-		{
-			while (!_listScenes[i].isDone)
-			{
-				totalProgress += _listScenes[i].progress;
-				currentProgress = totalProgress / _listScenes.Count;
-				yield return null;
-			}
-		}
+		// float currentProgress = 0;
+		// float totalProgress = 0;
+
+		// for (int i = 0; i < _listScenes.Count; i++)
+		// {
+		// 	while (!_listScenes[i].isDone)
+		// 	{
+		// 		totalProgress += _listScenes[i].progress;
+		// 		currentProgress = totalProgress / _listScenes.Count;
+		// 		yield return null;
+		// 	}
+		// }
 
 		_listScenes.Clear();
 
@@ -354,6 +366,7 @@ public class GameData : MonoSingleton<GameData>
 		}
 
 		// GetSceneReferences();
+		// TODO Mariano: Search another checkpoint?
 	}
 
 	#endregion
@@ -407,13 +420,26 @@ public class GameData : MonoSingleton<GameData>
 		return containId;
 	}
 
-	public bool CheckQuest(QuestSO questData)
+	public bool CheckQuestCurrentStep(QuestSO questData)
 	{
 		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
 			if (_globalController.SessionData.listQuest[i].data == questData)
 			{
-				return _globalController.SessionData.listQuest[i].currentStep >= questData.steps;
+				return _globalController.SessionData.listQuest[i].currentStep == questData.steps;
+			}
+		}
+
+		return false;
+	}
+
+	public bool CheckQuestRequiredStep(QuestSO questData, int requiredSteps)
+	{
+		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
+		{
+			if (_globalController.SessionData.listQuest[i].data == questData)
+			{
+				return _globalController.SessionData.listQuest[i].currentStep == requiredSteps;
 			}
 		}
 

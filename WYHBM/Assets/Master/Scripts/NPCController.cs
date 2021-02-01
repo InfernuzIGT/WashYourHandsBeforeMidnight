@@ -47,6 +47,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     // Events
     private QuestEvent _questEvent;
     private EnableMovementEvent _enableMovementEvent;
+    private CombatEvent _combatEvent;
 
     // FMOD
     public StudioEventEmitter zombieRoaming;
@@ -66,6 +67,13 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
         _questEvent = new QuestEvent();
         _enableMovementEvent = new EnableMovementEvent();
+
+        if (_data.CanCombat)
+        {
+            _combatEvent = new CombatEvent();
+            _combatEvent.isEnter = true;
+            _combatEvent.combatEnemies.AddRange(_data.CombatEnemies);
+        }
 
 #if UNITY_EDITOR
 
@@ -260,8 +268,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _enableMovementEvent.isDetected = true;
         EventController.TriggerEvent(_enableMovementEvent);
 
-        // TODO Mariano: Trigger Combat
         Debug.Log($"<color=red><b> COMBAT! </b></color>");
+        EventController.TriggerEvent(_combatEvent);
     }
 
     #endregion
@@ -383,7 +391,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     public bool DDCheckQuest()
     {
-        return GameData.Instance.CheckQuest(GetQuestData());
+        return GameData.Instance.CheckQuestCurrentStep(GetQuestData());
     }
 
     public bool DDHaveQuest()

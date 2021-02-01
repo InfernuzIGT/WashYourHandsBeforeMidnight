@@ -11,6 +11,7 @@ public class SceneEditor : EditorWindow
     private string _pathMainMenu = "Assets/Master/Main Menu.unity";
     private string _pathPersistent = "Assets/Master/Persistent.unity";
     private string _pathPlayer = "Assets/Master/Player.unity";
+    private string _pathLevelTest = "Assets/_BreakpointStudios/Levels/Level Test/Scenes/Level Test.unity";
 
     private GUIStyle _styleButtons;
     private GUIStyle _styleButtonBig;
@@ -22,7 +23,7 @@ public class SceneEditor : EditorWindow
         Texture2D iconTitle = EditorGUIUtility.Load(EditorGUIUtility.isProSkin ? "SceneAsset On Icon" : "SceneAsset Icon")as Texture2D;
         GUIContent titleContent = new GUIContent("Scene Editor", iconTitle);
         window.titleContent = titleContent;
-        window.minSize = new Vector2(325, 395);
+        window.minSize = new Vector2(325, 465);
         window.Show();
     }
 
@@ -39,6 +40,8 @@ public class SceneEditor : EditorWindow
         Scene("Persistent", _pathPersistent);
         EditorGUILayout.Space();
         Scene("Player", _pathPlayer);
+        EditorGUILayout.Space();
+        Scene("Level Test", _pathLevelTest);
         EditorGUILayout.Space();
 
         SceneData();

@@ -20,12 +20,13 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     // Fade
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
-    private bool _fadeInstant;
+    private bool _fadeFast;
     private bool _show;
     private float _letterboxSize;
 
     // Save
     protected readonly int hash_IsSaving = Animator.StringToHash("isSaving");
+    protected readonly int hash_IsLoading = Animator.StringToHash("isLoading");
 
     private Canvas _canvas;
 
@@ -40,6 +41,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     {
         EventController.AddListener<FadeEvent>(OnFade);
         EventController.AddListener<SaveAnimationEvent>(OnSaveAnimation);
+        EventController.AddListener<LoadAnimationEvent>(OnLoadAnimation);
         EventController.AddListener<CutsceneEvent>(OnCutscene);
         EventController.AddListener<CustomFadeEvent>(OnCustomFade);
     }
@@ -48,20 +50,21 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     {
         EventController.RemoveListener<FadeEvent>(OnFade);
         EventController.RemoveListener<SaveAnimationEvent>(OnSaveAnimation);
+        EventController.RemoveListener<LoadAnimationEvent>(OnLoadAnimation);
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
         EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
     }
 
     private void OnFade(FadeEvent evt)
     {
-        _fadeInstant = evt.instant;
+        _fadeFast = evt.fast;
         _callbackMid = evt.callbackMid;
         _callbackEnd = evt.callbackEnd;
 
         evt.callbackStart?.Invoke();
 
         _fadeImg
-            .DOFade(1, _fadeInstant ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(1, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnKill(FadeIn);
 
         SetCanvas(true);
@@ -72,7 +75,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         _callbackMid?.Invoke();
 
         _fadeImg
-            .DOFade(0, _fadeInstant ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(0, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
             .OnComplete(() => SetCanvas(false))
             .OnKill(() => _callbackEnd?.Invoke());
     }
@@ -127,10 +130,15 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     {
         ShowSaveAnimation();
     }
-    
+
     public void ShowSaveAnimation()
     {
         _animatorSave.SetTrigger(hash_IsSaving);
+    }
+
+    private void OnLoadAnimation(LoadAnimationEvent evt)
+    {
+        _animatorSave.SetBool(hash_IsLoading,evt.isLoading);
     }
 
 }

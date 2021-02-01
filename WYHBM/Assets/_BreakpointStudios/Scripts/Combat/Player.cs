@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using Events;
 
 [RequireComponent(typeof(CombatAnimator))]
 public class Player : CombatCharacter
 {
+    private CombatPlayerEvent _combatPlayerEvent;
+    
     public override void Start()
     {
         base.Start();
-    }
-
-    public override void RemoveCharacter()
-    {
-        base.RemoveCharacter();
-        GameManager.Instance.combatManager.RemoveCharacter(this);
+        
+        _combatPlayerEvent = new CombatPlayerEvent();
+        
+        _combatRemoveCharacterEvent.character = this;
+        _combatRemoveCharacterEvent.isPlayer = true;
     }
 
     #region Animation
@@ -54,7 +56,10 @@ public class Player : CombatCharacter
 
         MaterialShow(true);
 
-        GameManager.Instance.PlayerCanSelect(true, _combatIndex);
+        // GameManager.Instance.PlayerCanSelect(true, _combatIndex);
+        _combatPlayerEvent.canSelect = true;
+        _combatPlayerEvent.combatIndex = _combatIndex;
+        EventController.TriggerEvent(_combatPlayerEvent);
 
         _isActionDone = false;
 
@@ -65,7 +70,9 @@ public class Player : CombatCharacter
 
         Shake();
 
-        GameManager.Instance.PlayerCanSelect(false);
+        // GameManager.Instance.PlayerCanSelect(false);
+        _combatPlayerEvent.canSelect = false;
+        EventController.TriggerEvent(_combatPlayerEvent);
 
         // GameManager.Instance.ReorderTurn();
 

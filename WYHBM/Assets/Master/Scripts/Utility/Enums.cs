@@ -1,11 +1,10 @@
 ﻿public enum ANIM_STATE
 {
     Idle = 0,
-    Hit = 1,
-    Death = 2,
-    Action_A = 3,
-    Action_B = 4,
-    Action_Item = 5
+    Attack_1 = 1,
+    Attack_2 = 2,
+    Item = 3,
+    Hit = 4,
 }
 
 public enum COMBAT_STATE
