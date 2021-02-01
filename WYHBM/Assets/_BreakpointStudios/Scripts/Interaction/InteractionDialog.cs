@@ -46,7 +46,7 @@ public class InteractionDialog : Interaction
     {
         QuestSO data = GetQuestData();
 
-        if (data == null) return null;
+        if (data == null)return null;
 
         QUEST_STATE state = GetQuestState();
         string id = string.Format(DDParameters.FormatQuadruple, data.name, state.ToString(), DDParameters.SimpleQuest, gameObject.name);
@@ -61,6 +61,13 @@ public class InteractionDialog : Interaction
                 break;
 
             case QUEST_STATE.Update:
+                if (GameData.Instance.CheckQuestRequiredStep(data, GetQuestRequiredStep()) && !GameData.Instance.CheckID(id))
+                {
+                    GameData.Instance.WriteID(id);
+                    return data;
+                }
+                break;
+
             case QUEST_STATE.Complete:
                 if (GameData.Instance.HaveQuest(data) && !GameData.Instance.CheckID(id))
                 {

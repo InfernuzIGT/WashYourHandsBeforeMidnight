@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
     // [SerializeField] private FMODConfig _fmodConfig = null;
     [Space]
-    [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
+    // [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
     [SerializeField, ConditionalHide] private CharacterController _characterController = null;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
 
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     private bool _inIvy = false;
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
-    private bool _isFalling;
+    // private bool _isFalling;
 
     // Ledge
     private Vector3 newPos;
@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
+    
+    public UnityAction cancelListerMode;
 
     // Properties
     private CustomInputAction _input;
@@ -103,7 +105,7 @@ public class PlayerController : MonoBehaviour
     private bool _devSilentSteps;
     public bool DevSilentSteps { get { return _devSilentSteps; } set { _devSilentSteps = value; } }
 
-    Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
+	Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
     {
@@ -306,7 +308,7 @@ public class PlayerController : MonoBehaviour
 
             _animatorController.Falling(true);
 
-            _isFalling = true;
+            // _isFalling = true;
         }
 
         // Move
@@ -357,6 +359,8 @@ public class PlayerController : MonoBehaviour
 
     public void Crouch(bool cancel = false)
     {
+        cancelListerMode.Invoke();
+        
         if (cancel)_isCrouching = true;
 
         // crouchSound.Play();
@@ -365,7 +369,6 @@ public class PlayerController : MonoBehaviour
 
         if (_characterController.isGrounded && _isCrouching)
         {
-            
             ChangeMovementState(MOVEMENT_STATE.Crouch);
 
             _characterController.height = _playerConfig.height / 2;

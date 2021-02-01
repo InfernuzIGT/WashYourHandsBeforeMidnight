@@ -2,6 +2,8 @@
 {
     // General
     public const string Player = "Player";
+    public const string SpawnPoint = "SpawnPoint";
+    public const string GlobalController = "GlobalController";
 
     // Ground
     public const string Ground_Grass = "Ground/Grass";

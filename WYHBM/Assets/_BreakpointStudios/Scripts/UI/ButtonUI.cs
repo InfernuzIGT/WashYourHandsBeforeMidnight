@@ -35,7 +35,6 @@ public class ButtonUI : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
-        UnityEngine.Debug.Log("SCROLL");
         PlaySound();
         _buttonImg.enabled = true;
         _buttonTxt.color = Color.black;

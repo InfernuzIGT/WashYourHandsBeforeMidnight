@@ -53,6 +53,7 @@ public class PlayerConfig : ScriptableObject
         }
     }
 
+    [ContextMenu("Update Dictionary")]
     public void UpdateActionDictionary()
     {
         rumbleDictionary = new Dictionary<RUMBLE_TYPE, RumbleValues>();

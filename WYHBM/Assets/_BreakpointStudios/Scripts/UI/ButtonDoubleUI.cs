@@ -134,12 +134,10 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
         {
             case MoveDirection.Left:
                 _actionLeft.Invoke();
-                Debug.Log("CHANGE");
                 changeSound.start();
                 break;
 
             case MoveDirection.Right:
-                Debug.Log("CHANGE");
                 _actionRight.Invoke();
                 changeSound.start();
                 break;
