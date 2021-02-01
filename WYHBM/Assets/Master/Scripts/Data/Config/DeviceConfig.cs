@@ -79,6 +79,7 @@ public class DeviceConfig : ScriptableObject
         }
     }
 
+    [ContextMenu("Update Dictionary")]
     public void UpdateDictionary()
     {
         UpdateDeviceDictionary();
