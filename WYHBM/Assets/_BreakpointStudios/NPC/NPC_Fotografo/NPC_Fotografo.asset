@@ -30,7 +30,11 @@ MonoBehaviour:
   iconSpecial1: {fileID: 2372395298560368491, guid: 544af810c2ddc3744804f8937722bfc7,
     type: 3}
   iconSpecial2: {fileID: 0}
-  _data: []
+  _data:
+  - dialogDD: {fileID: 4900000, guid: 8b6a294332888a84095b97c62e3438a3, type: 3}
+    quest: {fileID: 0}
+  _canCombat: 0
+  combatEnemies: []
   _canMove: 1
   _speedMovement: 5
   _speedRotation: 180
@@ -38,4 +42,3 @@ MonoBehaviour:
   _waitTime: 5
   _detectPlayer: 0
   _timeToDetect: 1
-  combatEnemies: []
