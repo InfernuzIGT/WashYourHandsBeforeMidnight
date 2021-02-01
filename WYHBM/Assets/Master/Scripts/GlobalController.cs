@@ -247,7 +247,6 @@ public class GlobalController : MonoBehaviour
 
     private void SpawnPlayer(Vector3 spawnPosition)
     {
-
         _playerController = Instantiate(_playerController, spawnPosition, Quaternion.identity);
         _playerController.DevSilentSteps = _devSilentSteps;
         _playerController.SetInput(() => Pause(PAUSE_TYPE.PauseMenu), () => Pause(PAUSE_TYPE.Inventory));

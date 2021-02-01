@@ -356,8 +356,6 @@ public class GameData : MonoSingleton<GameData>
 
 		yield return new WaitForSeconds(.5f);
 
-		_globalController.Init(_spawnPoint.transform.position);
-
 		_customFadeEvent.fadeIn = false;
 		EventController.TriggerEvent(_customFadeEvent);
 
