@@ -122,15 +122,9 @@ public class GlobalController : MonoBehaviour
         _materialDitherNPC.SetFloat(hash_IsVisible, 0);
 
 #if UNITY_EDITOR
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
         _gameData.gameObject.name = "GameData";
         _canvasWorld.gameObject.name = "Canvas (World)";
         _canvasCombat.gameObject.name = "Canvas (Combat)";
-#else
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
 #endif
     }
 
@@ -263,14 +257,14 @@ public class GlobalController : MonoBehaviour
 
         _playerController.Input.Player.ListenMode.started += ctx => ListenMode(true);
         _playerController.Input.Player.ListenMode.canceled += ctx => ListenMode(false);
-        
+
         _playerController.cancelListerMode += CancelListenMode;
     }
-    
+
     private void CancelListenMode()
     {
         if (!_playerController.IsCrouching)return;
-        
+
         ListenMode(false);
     }
 

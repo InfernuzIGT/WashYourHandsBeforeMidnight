@@ -61,7 +61,7 @@ public class InteractionDialog : Interaction
                 break;
 
             case QUEST_STATE.Update:
-                if (GameData.Instance.CheckQuestStep(data) && !GameData.Instance.CheckID(id))
+                if (GameData.Instance.CheckQuestRequiredStep(data, GetQuestRequiredStep()) && !GameData.Instance.CheckID(id))
                 {
                     GameData.Instance.WriteID(id);
                     return data;

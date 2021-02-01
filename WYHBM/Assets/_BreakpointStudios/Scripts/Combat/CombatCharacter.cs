@@ -16,19 +16,7 @@ public class CombatCharacter : MonoBehaviour
 {
     [Header("General")]
     [SerializeField] protected CombatConfig _combatConfig = null;
-    [SerializeField] private string _name = null;
-    [SerializeField] private Equipment _equipment = new Equipment();
-
-    [Header("Sprites")]
-    [SerializeField] private Sprite _previewSprite = null;
-    [SerializeField] private Sprite _turnSprite = null;
-
-    [Header("Stats")]
-    [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
-    [SerializeField, Range(0f, 100f)] private int _statsHealthStart = 100;
-    [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 10;
-    [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 5;
-    [SerializeField, Range(1f, 10f)] private int _statsReaction = 1;
+    [SerializeField] protected CombatCharacterSO _data = null;
 
     // Protected
     protected SpriteRenderer _spriteRenderer;
@@ -67,16 +55,6 @@ public class CombatCharacter : MonoBehaviour
     private ItemSO _itemDefense;
     private ItemSO _itemHeal;
 
-    // Combat Properties
-    public string Name { get { return _name; } }
-    public Equipment Equipment { get { return _equipment; } }
-    public Sprite PreviewSprite { get { return _previewSprite; } }
-    public Sprite TurnSprite { get { return _turnSprite; } }
-    public int StatsHealthMax { get { return _statsHealthMax; } }
-    public int StatsBaseDamage { get { return _statsBaseDamage; } }
-    public int StatsBaseDefense { get { return _statsBaseDefense; } }
-    public int StatsReaction { get { return _statsReaction; } }
-
     // Properties
     protected int _combatIndex;
     public int CombatIndex { get { return _combatIndex; } }
@@ -92,6 +70,8 @@ public class CombatCharacter : MonoBehaviour
 
     public bool CanHighlight { get { return _canHighlight; } set { _canHighlight = value; } }
     protected bool _canHighlight;
+
+    public CombatCharacterSO Data { get { return _data; } }
 
     public virtual void Start()
     {
@@ -121,7 +101,7 @@ public class CombatCharacter : MonoBehaviour
         _isMyTurn = false;
 
         _combatIndex = index;
-        _healthActual = _statsHealthStart;
+        _healthActual = _data.StatsHealthStart;
 
         // _equipment.AddRange(inventoryCombat);
 
@@ -131,7 +111,7 @@ public class CombatCharacter : MonoBehaviour
             transform.position.z);
 
         _characterUI = Instantiate(_combatConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
-        _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, _combatConfig.startFillDuration);
+        _characterUI.healthBar.DOFillAmount(_healthActual / _data.StatsHealthMax, _combatConfig.startFillDuration);
     }
 
     // public void OnPointerEnter(PointerEventData eventData)
@@ -227,7 +207,7 @@ public class CombatCharacter : MonoBehaviour
         }
 
         _characterUI.healthBar.
-        DOFillAmount(_healthActual / _statsHealthMax, _combatConfig.fillDuration).
+        DOFillAmount(_healthActual / _data.StatsHealthMax, _combatConfig.fillDuration).
         OnComplete(Kill);
 
         // ShowInfoText(totalDamage, _textConfig.colorMsgDamage);
@@ -243,9 +223,9 @@ public class CombatCharacter : MonoBehaviour
 
         // ShowInfoText(amountHeal, _textConfig.colorMsgHeal);
 
-        if (_healthActual > _statsHealthMax)_healthActual = _statsHealthMax;
+        if (_healthActual > _data.StatsHealthMax)_healthActual = _data.StatsHealthMax;
 
-        _characterUI.healthBar.DOFillAmount(_healthActual / _statsHealthMax, _combatConfig.fillDuration);
+        _characterUI.healthBar.DOFillAmount(_healthActual / _data.StatsHealthMax, _combatConfig.fillDuration);
     }
 
     #endregion
@@ -257,8 +237,7 @@ public class CombatCharacter : MonoBehaviour
         _combatAnimator.Action(combatState);
 
         if (combatState == ANIM_STATE.Idle ||
-            combatState == ANIM_STATE.Hit ||
-            combatState == ANIM_STATE.Death)
+            combatState == ANIM_STATE.Hit)
         {
             AnimationActionEnd();
         }
@@ -337,7 +316,7 @@ public class CombatCharacter : MonoBehaviour
         }
         else
         {
-            _totalValue = _statsBaseDamage;
+            _totalValue = _data.StatsBaseDamage;
         }
 
         return _totalValue;
@@ -461,7 +440,7 @@ public class CombatCharacter : MonoBehaviour
     {
         float elapsedTime = 0;
 
-        float timeThreshold = (10 / _statsReaction) * _combatConfig.actionTimeThresholdMultiplier;
+        float timeThreshold = (10 / _data.StatsReaction) * _combatConfig.actionTimeThresholdMultiplier;
 
         while (elapsedTime <= timeThreshold)
         {
@@ -475,5 +454,19 @@ public class CombatCharacter : MonoBehaviour
     }
 
     #endregion 
+
+#if UNITY_EDITOR
+
+    public void SetData()
+    {
+        GetComponent<SpriteRenderer>().sprite = _data.Sprite;
+        GetComponent<Animator>().runtimeAnimatorController = _data.AnimatorController;
+
+        // TODO Mariano: Add rest of values
+
+        Debug.Log($"<color=green><b>[Combat {_data.Name}]</b></color> Data loaded successfully!");
+    }
+
+#endif
 
 }

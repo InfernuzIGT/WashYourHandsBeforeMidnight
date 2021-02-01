@@ -133,7 +133,7 @@ public class CombatController : MonoBehaviour
 
         if (evt.item == null)
         {
-            _animState = ANIM_STATE.Action_A;
+            _animState = ANIM_STATE.Attack_1;
             // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
             _currentItem = null;
             HighlightCharacters(true, false);
@@ -143,37 +143,22 @@ public class CombatController : MonoBehaviour
         switch (evt.item.type)
         {
             case ITEM_TYPE.WeaponMelee:
-                _animState = ANIM_STATE.Action_A;
+                _animState = ANIM_STATE.Attack_1;
                 // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
             case ITEM_TYPE.WeaponOneHand:
-                _animState = ANIM_STATE.Action_B;
-                // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
-                HighlightCharacters(true, false);
-                break;
-
             case ITEM_TYPE.WeaponTwoHands:
-                _animState = ANIM_STATE.Action_Item;
+                _animState = ANIM_STATE.Attack_2;
                 // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
             case ITEM_TYPE.ItemHeal:
-                _animState = ANIM_STATE.Action_Item;
-                // GameManager.Instance.combatUI.messageTxt.text = "Select player";
-                HighlightCharacters(true, true);
-                break;
-
             case ITEM_TYPE.ItemGrenade:
-                _animState = ANIM_STATE.Action_Item;
-                // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
-                HighlightCharacters(true, false);
-                break;
-
             case ITEM_TYPE.ItemDefense:
-                _animState = ANIM_STATE.Action_Item;
+                _animState = ANIM_STATE.Item;
                 // GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 HighlightCharacters(true, true);
                 break;
@@ -255,7 +240,7 @@ public class CombatController : MonoBehaviour
             player.gameObject.SetActive(false);
             indexCombat++;
 
-            _combatCreateActionsEvent.equipment = combatPlayers[i].Equipment;
+            _combatCreateActionsEvent.equipment = combatPlayers[i].Data.Equipment;
             EventController.TriggerEvent(_combatCreateActionsEvent);
 
             // GameManager.Instance.combatUI.CreateActions(combatPlayers[i].Equipment);
@@ -502,7 +487,7 @@ public class CombatController : MonoBehaviour
         {
             for (int j = 0; j < sortedCharacters.Count - 1; j++)
             {
-                if (sortedCharacters[j].StatsReaction < sortedCharacters[j + 1].StatsReaction)
+                if (sortedCharacters[j].Data.StatsReaction < sortedCharacters[j + 1].Data.StatsReaction)
                 {
                     fastestCharacter = sortedCharacters[j + 1];
 

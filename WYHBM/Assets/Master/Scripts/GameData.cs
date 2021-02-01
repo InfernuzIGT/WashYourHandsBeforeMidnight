@@ -23,6 +23,7 @@ public class GameData : MonoSingleton<GameData>
 	[Header("Developer")]
 	[SerializeField] private bool _devPrintInputInfo = false;
 	[SerializeField] private bool _devDontSave = false;
+	[SerializeField] private bool _devLoadMainMenu = false;
 
 	[Header("Configs")]
 	[SerializeField] private PlayerConfig _playerConfig;
@@ -78,20 +79,19 @@ public class GameData : MonoSingleton<GameData>
 		InitializeConfigs();
 
 #if UNITY_EDITOR
-
+		Cursor.visible = true;
+		// Cursor.lockState = CursorLockMode.None;
 		if (_devPrintInputInfo)InputSystemAdapter.printInfo = true;
-
+#else
+		Cursor.visible = false;
+		// Cursor.lockState = CursorLockMode.Locked;
 #endif
-
-		base.Awake();
-
-		// GetSceneReferences();
-
-		// Load();
 
 		_localizationUtility = GetComponent<LocalizationUtility>();
 		_deviceUtility = GetComponent<InputSystemUtility>();
 		_globalClock = GetComponent<GlobalClock>();
+
+		base.Awake();
 	}
 
 	private void InitializeConfigs()
@@ -110,11 +110,18 @@ public class GameData : MonoSingleton<GameData>
 		_customFadeEvent = new CustomFadeEvent();
 
 		_saveAnimationEvent = new SaveAnimationEvent();
+
+#if UNITY_EDITOR
+#else
+		if (!_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+#endif
+		if (_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+
 	}
-	
-	public List<Player> GetListPlayer(){
-		
-		
+
+	public List<Player> GetListPlayer()
+	{
+
 		return _globalController.GetListPlayer();
 	}
 
@@ -414,13 +421,26 @@ public class GameData : MonoSingleton<GameData>
 		return containId;
 	}
 
-	public bool CheckQuestStep(QuestSO questData)
+	public bool CheckQuestCurrentStep(QuestSO questData)
 	{
 		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
 			if (_globalController.SessionData.listQuest[i].data == questData)
 			{
 				return _globalController.SessionData.listQuest[i].currentStep == questData.steps;
+			}
+		}
+
+		return false;
+	}
+
+	public bool CheckQuestRequiredStep(QuestSO questData, int requiredSteps)
+	{
+		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
+		{
+			if (_globalController.SessionData.listQuest[i].data == questData)
+			{
+				return _globalController.SessionData.listQuest[i].currentStep == requiredSteps;
 			}
 		}
 

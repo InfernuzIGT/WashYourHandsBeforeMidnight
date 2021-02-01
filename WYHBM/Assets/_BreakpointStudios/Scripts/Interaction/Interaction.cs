@@ -118,6 +118,11 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         return questData[GameData.Instance.PlayerData.ID].state;
     }
+    
+    public int GetQuestRequiredStep()
+    {
+        return questData[GameData.Instance.PlayerData.ID].requiredStep;
+    }
 
     #endregion
 
@@ -150,7 +155,7 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public bool DDCheckQuest()
     {
-        return GameData.Instance.CheckQuestStep(GetQuestData());
+        return GameData.Instance.CheckQuestCurrentStep(GetQuestData());
     }
 
     public bool DDHaveQuest()

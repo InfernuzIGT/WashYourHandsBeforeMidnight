@@ -23,8 +23,8 @@ public class Enemy : CombatCharacter
 		int randomPlayer = Random.Range(0, GameData.Instance.GetListPlayer().Count);
 		int randomAction = Random.Range(0, 2);
 
-		GameData.Instance.GetListPlayer()[randomPlayer].Select(randomAction == 0 ? Equipment.actionA : Equipment.actionB);
-		AnimationAction(randomAction == 0 ? ANIM_STATE.Action_A : ANIM_STATE.Action_B);
+		GameData.Instance.GetListPlayer()[randomPlayer].Select(randomAction == 0 ? Data.Equipment.actionA : Data.Equipment.actionB);
+		AnimationAction(randomAction == 0 ? ANIM_STATE.Attack_1 : ANIM_STATE.Attack_2);
 
 		DoAction();
 	}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NPC_Zombie_01_Stay
   m_EditorClassIdentifier: 
   _name: NPC_Zombie_01
-  _sprite: {fileID: 651421828840662886, guid: 8a63a306096229948ab3bf0e0b9d3489, type: 3}
+  _sprite: {fileID: 651421828840662886, guid: 0e9fd6e51aa069a4484d6eccb6dda589, type: 3}
   _animatorController: {fileID: 22100000, guid: 83788a6a51caec44582f27bc5c956549,
     type: 2}
   iconNone: {fileID: 0}
@@ -26,8 +26,9 @@ MonoBehaviour:
   iconSpecial1: {fileID: 0}
   iconSpecial2: {fileID: 0}
   _data: []
-  _canCombat: 0
-  combatEnemies: []
+  _canCombat: 1
+  combatEnemies:
+  - {fileID: 7509734975322126681, guid: 3750b2288bd06c343baa6284e71cdb8e, type: 3}
   _canMove: 0
   _speedMovement: 5.77
   _speedRotation: 180

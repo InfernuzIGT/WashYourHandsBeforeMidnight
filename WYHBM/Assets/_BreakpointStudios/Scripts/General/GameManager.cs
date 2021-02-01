@@ -39,7 +39,7 @@ public class GameManager : MonoSingleton<GameManager>
     private CombatArea _currentCombatArea;
     private NPCController currentNPC;
     private float _currentTimeEncounter;
-    private float _limitTimeEncounter = 10;
+    // private float _limitTimeEncounter = 10;
 
     // Inventory
     // private int _inventoryMaxSlots = 8;
