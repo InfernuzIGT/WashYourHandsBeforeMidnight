@@ -81,7 +81,7 @@ public class Enemy : CombatCharacter
 			yield return null;
 		}
 
-		Shake();
+		// Shake();
 
 		// GameManager.Instance.ReorderTurn();
 

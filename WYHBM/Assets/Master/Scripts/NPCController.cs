@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using Chronos;
 using Events;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.AI;
-using FMODUnity;
 
 public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 {
@@ -52,7 +52,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     // FMOD
     public StudioEventEmitter zombieRoaming;
     public StudioEventEmitter zombieFootstep;
-
 
     // Properties
     public DIRECTION StartLookDirection { get { return _startLookDirection; } set { _startLookDirection = value; } }
@@ -259,7 +258,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
         _isMoving = false;
         _canMove = false;
-        _agent.isStopped = true;
+        if (_agent.isOnNavMesh)_agent.isStopped = true;
 
         _animatorController.Movement(Vector3.zero);
         _animatorController.Detected(true);
@@ -268,7 +267,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _enableMovementEvent.isDetected = true;
         EventController.TriggerEvent(_enableMovementEvent);
 
-        Debug.Log($"<color=red><b> COMBAT! </b></color>");
+        _combatEvent.detectionLocation = transform.position;
         EventController.TriggerEvent(_combatEvent);
     }
 
@@ -283,7 +282,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     }
 
-
     #endregion
     public void OnInteractionEnter(Collider other)
     {
@@ -291,15 +289,23 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         {
             EventController.AddListener<EnableMovementEvent>(OnStopMovement);
 
-            if (_agent.isOnNavMesh)_agent.isStopped = true;
+            if (_data.DetectPlayer)
+            {
+                _holdUtility.OnFinish();
+            }
+            else
+            {
+                if (_agent.isOnNavMesh)_agent.isStopped = true;
 
-            _canMove = false;
+                _canMove = false;
 
-            if (_playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
+                if (_playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
 
-            _animatorController?.Movement(Vector3.zero);
+                _animatorController?.Movement(Vector3.zero);
 
-            _interactionNPC.Execute(true, this);
+                _interactionNPC.Execute(true, this);
+            }
+
         }
     }
 

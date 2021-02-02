@@ -68,7 +68,7 @@ public class Player : CombatCharacter
             yield return null;
         }
 
-        Shake();
+        // Shake();
 
         // GameManager.Instance.PlayerCanSelect(false);
         _combatPlayerEvent.canSelect = false;
