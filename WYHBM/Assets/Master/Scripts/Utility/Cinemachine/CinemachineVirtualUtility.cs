@@ -1,7 +1,6 @@
 ﻿using Cinemachine;
 using Events;
 using UnityEngine;
-using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(CinemachineVirtualCamera))]
 public class CinemachineVirtualUtility : MonoBehaviour
@@ -16,8 +15,9 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private CinemachineVirtualCamera _cinemachineVirtual;
     private CinemachineFramingTransposer _cinemachineFramingTransposer;
 
-    [SerializeField] private Vector2 _lookVector;
-    [SerializeField] private Vector2 _mouseVector;
+    private Vector2 _lookVector;
+    private Vector2 _mouseVector;
+    private Vector2 _tempVector;
     private PlayerController _player;
     private DEVICE _currentDevice;
     private Camera _camera;
@@ -28,6 +28,10 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private int _indexZoom;
     private bool _canMove = true;
     private bool _isInitialized;
+
+    // Combat
+    private bool _inCombat;
+    private Vector3 _combatLocation;
 
     private void Awake()
     {
@@ -43,6 +47,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
         EventController.AddListener<CustomFadeEvent>(OnCustomFade);
         EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.AddListener<EnableMovementEvent>(OnStopMovement);
+        EventController.AddListener<CombatEvent>(OnCombat);
     }
 
     private void OnDisable()
@@ -50,6 +55,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
         EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
+        EventController.RemoveListener<CombatEvent>(OnCombat);
     }
 
     public void Init(PlayerController target, Camera camera)
@@ -82,6 +88,16 @@ public class CinemachineVirtualUtility : MonoBehaviour
             _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;
             return;
         }
+
+        // TODO Mariano: Hacer que mire a donde esta el enemigo que te detecto
+        // if (_inCombat)
+        // {
+        //     _tempVector = _camera.WorldToViewportPoint(_combatLocation);
+
+        //     _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _tempVector.x;
+        //     _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _tempVector.y;
+        //     return;
+        // }
 
         if (_currentDevice != DEVICE.PC)
         {
@@ -174,6 +190,12 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private void OnStopMovement(EnableMovementEvent evt)
     {
         _canMove = evt.canMove;
+    }
+
+    private void OnCombat(CombatEvent evt)
+    {
+        _inCombat = evt.isEnter;
+        _combatLocation = evt.detectionLocation;
     }
 
     #endregion
