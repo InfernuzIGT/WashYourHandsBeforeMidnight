@@ -31,38 +31,20 @@ public class CombatController : MonoBehaviour
     private int _indexLastCharacter;
 
     private Coroutine _coroutineTurnsLoop;
-    // private WaitForSeconds _waitStart;
     private WaitForSeconds _waitBetweenTurns;
 
     // Events
+    private CombatEvent _combatEvent;
     private CombatUIEvent _combatUIEvent;
     private CombatCreateActionsEvent _combatCreateActionsEvent;
     private CombatCreateTurnEvent _combatCreateTurnEvent;
     private CombatHideActionsEvent _combatHideActionsEvent;
-    // private ExitCombatEvent _interactionCombatEvent;
-
-    // private CustomInputActions _inputCombat;
 
     // Properties
     private List<CombatCharacter> _listWaitingCharacters;
     public List<CombatCharacter> ListWaitingCharacters { get { return _listWaitingCharacters; } }
 
     public List<Player> ListPlayers { get { return listPlayers; } }
-
-    // public void Awake()
-    // {
-    //     CreateInput();
-    // }
-
-    // private void CreateInput()
-    // {
-    //     _inputCombat = new CustomInputActions();
-
-    //     _inputCombat.UI.Navigate.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-    //     _inputCombat.UI.Navigate.performed += ctx => NavigateCharacter();
-    //     _inputCombat.UI.Submit.performed += ctx => SelectCharacter(true);
-    //     _inputCombat.UI.Cancel.performed += ctx => SelectCharacter(false);
-    // }
 
     private void Start()
     {
@@ -72,10 +54,10 @@ public class CombatController : MonoBehaviour
         _listWaitingCharacters = new List<CombatCharacter>();
         _listSelectionCharacters = new List<CombatCharacter>();
 
-        // _waitStart = new WaitForSeconds(_combatConfig.waitTimeToStart);
         _waitBetweenTurns = new WaitForSeconds(_combatConfig.waitTimeBetweenTurns);
 
-        // _interactionCombatEvent = new ExitCombatEvent();
+        _combatEvent = new CombatEvent();
+        _combatEvent.isEnter = false;
 
         _combatUIEvent = new CombatUIEvent();
         _combatCreateActionsEvent = new CombatCreateActionsEvent();
@@ -94,8 +76,7 @@ public class CombatController : MonoBehaviour
         EventController.AddListener<CombatActionEvent>(OnCombatAction);
         EventController.AddListener<CombatRemoveCharacterEvent>(OnCombatRemoveCharacter);
         EventController.AddListener<CombatPlayerEvent>(OnCombatPlayer);
-        EventController.AddListener<CombatCheckGameEvent>(OnCombatCheckGame);
-
+        EventController.AddListener<CombatCharacterGoAheadEvent>(OnCombatCharacterGoAhead);
     }
 
     private void OnDisable()
@@ -104,8 +85,7 @@ public class CombatController : MonoBehaviour
         EventController.RemoveListener<CombatActionEvent>(OnCombatAction);
         EventController.RemoveListener<CombatRemoveCharacterEvent>(OnCombatRemoveCharacter);
         EventController.RemoveListener<CombatPlayerEvent>(OnCombatPlayer);
-        EventController.RemoveListener<CombatCheckGameEvent>(OnCombatCheckGame);
-
+        EventController.RemoveListener<CombatCharacterGoAheadEvent>(OnCombatCharacterGoAhead);
     }
 
     public CinemachineVirtualCamera GetCombatAreaCamera()
@@ -124,7 +104,6 @@ public class CombatController : MonoBehaviour
         {
 
         }
-
     }
 
     private void OnCombatAction(CombatActionEvent evt)
@@ -164,7 +143,6 @@ public class CombatController : MonoBehaviour
                 break;
 
             default:
-                Debug.Log($"<b> NONE </b>");
                 _combatState = COMBAT_STATE.None;
                 // GameManager.Instance.combatUI.messageTxt.text = "";
                 HighlightCharacters(false, true);
@@ -180,14 +158,16 @@ public class CombatController : MonoBehaviour
         ChangeCombatState(evt.canSelect);
     }
 
-    private void OnCombatCheckGame(CombatCheckGameEvent evt)
+    private void CheckGame()
     {
         if (listPlayers.Count == 0)
         {
+            StopCoroutine(TurnsLoop());
             FinishGame(false);
         }
         else if (listEnemies.Count == 0)
         {
+            StopCoroutine(TurnsLoop());
             FinishGame(true);
         }
     }
@@ -198,6 +178,8 @@ public class CombatController : MonoBehaviour
         CombatCharacter auxCharacter;
 
         index = _listWaitingCharacters.IndexOf(evt.character);
+
+        if (index < 0)return;
 
         if (index <= 1)
         {
@@ -222,11 +204,6 @@ public class CombatController : MonoBehaviour
     {
         int indexCombat = 0;
 
-        // _currentCombatArea = Instantiate(
-        //     _currentCombatArea,
-        //     combatArea.transform.position,
-        //     combatArea.transform.rotation);
-
         for (int i = 0; i < combatPlayers.Count; i++)
         {
             Player player = Instantiate(
@@ -236,14 +213,11 @@ public class CombatController : MonoBehaviour
                 _currentCombatArea.transform);
 
             player.SetCharacter(indexCombat);
-            // player.SetCharacter(indexCombat, combatPlayers[i].equipment);
             player.gameObject.SetActive(false);
             indexCombat++;
 
             _combatCreateActionsEvent.equipment = combatPlayers[i].Data.Equipment;
             EventController.TriggerEvent(_combatCreateActionsEvent);
-
-            // GameManager.Instance.combatUI.CreateActions(combatPlayers[i].Equipment);
 
             listPlayers.Add(player);
             _listAllCharacters.Add(player);
@@ -258,7 +232,6 @@ public class CombatController : MonoBehaviour
                 _currentCombatArea.transform);
 
             enemy.SetCharacter(indexCombat);
-            // enemy.SetCharacter(indexCombat, combatEnemies[i].equipment);
             enemy.gameObject.SetActive(false);
             indexCombat++;
 
@@ -269,25 +242,10 @@ public class CombatController : MonoBehaviour
         _combatCreateTurnEvent.listAllCharacters.Clear();
         _combatCreateTurnEvent.listAllCharacters.AddRange(_listAllCharacters);
         EventController.TriggerEvent(_combatCreateTurnEvent);
-        // GameManager.Instance.combatUI.CreateTurn(_listAllCharacters);
     }
-
-    // public void ToggleInputCombat(bool isEnabled)
-    // {
-    //     if (isEnabled)
-    //     {
-    //         _inputCombat.Enable();
-    //     }
-    //     else
-    //     {
-    //         _inputCombat.Disable();
-    //     }
-    // }
 
     private void HighlightCharacters(bool canHighlight, bool isPlayer)
     {
-
-        // GameManager.Instance.combatUI.HideActions(canHighlight);
         _combatHideActionsEvent.canHighlight = canHighlight;
         EventController.TriggerEvent(_combatHideActionsEvent);
 
@@ -396,7 +354,6 @@ public class CombatController : MonoBehaviour
         _listAllCharacters.Remove(evt.character);
         _listWaitingCharacters.Remove(evt.character);
 
-        // GameManager.Instance.ReorderTurn();
         _combatUIEvent.listWaitingCharacters.Clear();
         _combatUIEvent.listWaitingCharacters.AddRange(_listWaitingCharacters);
         EventController.TriggerEvent(_combatUIEvent);
@@ -415,7 +372,12 @@ public class CombatController : MonoBehaviour
 
     private void FinishGame(bool isWin)
     {
+        Debug.Log($"<b> WIN: {isWin} </b>");
+
         _isEndOfCombat = true;
+
+        _combatEvent.isWin = isWin;
+        EventController.TriggerEvent(_combatEvent);
 
         // uIController.endTxt.text = isWin ? _textConfig.gameWinTxt : _textConfig.gameLoseTxt;
 
@@ -447,6 +409,11 @@ public class CombatController : MonoBehaviour
         else
         {
             _currentCharacter = null;
+
+            for (int i = 0; i < _listAllCharacters.Count; i++)
+            {
+                Destroy(_listAllCharacters[i].gameObject);
+            }
 
             listPlayers.Clear();
             listEnemies.Clear();
@@ -521,6 +488,8 @@ public class CombatController : MonoBehaviour
         while (!_isEndOfCombat)
         {
             yield return _currentCharacter.StartWaitingForAction();
+
+            CheckGame();
 
             SendBottom();
 

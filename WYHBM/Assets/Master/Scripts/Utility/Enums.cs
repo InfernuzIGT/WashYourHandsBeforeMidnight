@@ -68,17 +68,6 @@ public enum LADDER_EXIT
     Top = 2,
 }
 
-public enum BUTTON_TYPE
-{
-    None = 0,
-    Diary = 1,
-    Inventory = 2,
-    System = 3,
-    Resume = 4,
-    Options = 5,
-    Quit = 6,
-}
-
 public enum PAUSE_TYPE
 {
     None = 0,
@@ -94,24 +83,3 @@ public enum UI_TYPE
     Options = 2,
     Quit = 3,
 }
-
-public enum DIALOG_TYPE
-{
-    None = 0,
-    Ready = 1,
-    InProgress = 2,
-    Completed = 3
-}
-
-public enum SCENE_INDEX
-{
-    MainMenu = 0,
-    Master = 1,
-}
-
-// public enum PLAYER
-// {
-//     Sam = 0,
-//     Dallas = 1,
-//     Will = 2
-// }

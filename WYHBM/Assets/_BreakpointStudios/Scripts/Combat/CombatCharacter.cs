@@ -15,18 +15,23 @@ public class Equipment
 public class CombatCharacter : MonoBehaviour
 {
     [Header("General")]
-    [SerializeField] protected CombatConfig _combatConfig = null;
     [SerializeField] protected CombatCharacterSO _data = null;
 
+    [Header("References")]
+#pragma warning disable 0414
+    [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+    [SerializeField, ConditionalHide] protected CombatConfig _combatConfig = null;
+    [SerializeField, ConditionalHide] protected SpriteRenderer _spriteRenderer;
+    [SerializeField, ConditionalHide] private HealthBar _healthBar;
+    [SerializeField, ConditionalHide] private CombatAnimator _combatAnimator;
+
     // Protected
-    protected SpriteRenderer _spriteRenderer;
     protected bool _isActionDone;
     protected bool _isAlive = true;
     protected Material _material;
     protected WaitForSeconds _waitPerAction;
 
-    private CharacterUI _characterUI;
-    private CombatAnimator _combatAnimator;
     // private Vector2 _infoTextPosition;
     private bool _inDefense;
     private float _varShader;
@@ -35,7 +40,6 @@ public class CombatCharacter : MonoBehaviour
     // Events
     // private InfoTextEvent infoTextEvent;
     private ShakeEvent _shakeEvent;
-    private CombatCheckGameEvent _combatCheckGameEvent;
     private CombatCharacterGoAheadEvent _combatCharacterGoAheadEvent;
     protected CombatRemoveCharacterEvent _combatRemoveCharacterEvent;
 
@@ -75,14 +79,11 @@ public class CombatCharacter : MonoBehaviour
 
     public virtual void Start()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _combatAnimator = GetComponent<CombatAnimator>();
         _material = _spriteRenderer.material;
 
         // infoTextEvent = new InfoTextEvent();
         _shakeEvent = new ShakeEvent();
         _combatRemoveCharacterEvent = new CombatRemoveCharacterEvent();
-        _combatCheckGameEvent = new CombatCheckGameEvent();
 
         _combatCharacterGoAheadEvent = new CombatCharacterGoAheadEvent();
         _combatCharacterGoAheadEvent.character = this;
@@ -105,30 +106,8 @@ public class CombatCharacter : MonoBehaviour
 
         // _equipment.AddRange(inventoryCombat);
 
-        Vector3 healthBarPos = new Vector3(
-            transform.position.x,
-            transform.position.y + _combatConfig.offsetHealthBar,
-            transform.position.z);
-
-        _characterUI = Instantiate(_combatConfig.characterUIPrefab, healthBarPos, Quaternion.identity, this.transform);
-        _characterUI.healthBar.DOFillAmount(_healthActual / _data.StatsHealthMax, _combatConfig.startFillDuration);
+        _healthBar.UpdateBar(_healthActual / _data.StatsHealthMax);
     }
-
-    // public void OnPointerEnter(PointerEventData eventData)
-    // {
-    //     if (_canHighlight && !_isMyTurn)
-    //     {
-    //         MaterialShow(true);
-    //     }
-    // }
-
-    // public void OnPointerExit(PointerEventData eventData)
-    // {
-    //     if (_canHighlight && !_isMyTurn)
-    //     {
-    //         MaterialShow(false);
-    //     }
-    // }
 
     #region Actions
 
@@ -177,6 +156,8 @@ public class CombatCharacter : MonoBehaviour
             return;
         }
 
+        Shake();
+
         _totalDamage = GetItemDamage();
 
         if (_inDefense)
@@ -206,9 +187,7 @@ public class CombatCharacter : MonoBehaviour
             RemoveCharacter();
         }
 
-        _characterUI.healthBar.
-        DOFillAmount(_healthActual / _data.StatsHealthMax, _combatConfig.fillDuration).
-        OnComplete(Kill);
+        _healthBar.UpdateBar(_healthActual / _data.StatsHealthMax, Kill);
 
         // ShowInfoText(totalDamage, _textConfig.colorMsgDamage);
     }
@@ -225,7 +204,7 @@ public class CombatCharacter : MonoBehaviour
 
         if (_healthActual > _data.StatsHealthMax)_healthActual = _data.StatsHealthMax;
 
-        _characterUI.healthBar.DOFillAmount(_healthActual / _data.StatsHealthMax, _combatConfig.fillDuration);
+        _healthBar.UpdateBar(_healthActual / _data.StatsHealthMax);
     }
 
     #endregion
@@ -279,7 +258,7 @@ public class CombatCharacter : MonoBehaviour
 
     #endregion
 
-    public void Shake()
+    protected void Shake()
     {
         EventController.TriggerEvent(_shakeEvent);
     }
@@ -288,19 +267,13 @@ public class CombatCharacter : MonoBehaviour
     {
         if (!_isAlive)
         {
-            _characterUI.Kill();
+            _healthBar.Kill();
 
             _spriteRenderer.
             DOFade(0, _combatConfig.canvasFadeDuration).
-            SetEase(Ease.OutQuad).OnComplete(CheckGame);
+            SetEase(Ease.OutQuad)
+            .OnComplete(() => gameObject.SetActive(false));
         }
-    }
-
-    public void CheckGame()
-    {
-        gameObject.SetActive(false);
-        // GameManager.Instance.combatManager.CheckGame();
-        EventController.TriggerEvent(_combatCheckGameEvent);
     }
 
     public void RemoveCharacter()
@@ -310,26 +283,52 @@ public class CombatCharacter : MonoBehaviour
 
     public int GetItemDamage()
     {
-        if (_itemAttack != null)
-        {
-            _totalValue = Random.Range(_itemAttack.value.x, _itemAttack.value.y);
-        }
-        else
-        {
-            _totalValue = _data.StatsBaseDamage;
-        }
+        // if (_itemAttack != null)
+        // {
+        //     _totalValue = Random.Range(_itemAttack.value.x, _itemAttack.value.y);
+        // }
+        // else
+        // {
+        //     _totalValue = _data.StatsBaseDamage;
+        // }
+
+        _totalValue = _data.StatsBaseDamage;
 
         return _totalValue;
     }
 
     public int GetItemDefense()
     {
-        return _totalValue = Random.Range(_itemDefense.value.x, _itemDefense.value.y);
+        // if (_itemDefense != null)
+        // {
+        //     _totalValue = Random.Range(_itemDefense.value.x, _itemDefense.value.y);
+        // }
+        // else
+        // {
+        //     _totalValue = _data.StatsBaseDefense;
+        // }
+
+        _totalValue = _data.StatsBaseDefense;
+
+        return _totalValue;
     }
 
     public int GetItemHeal()
     {
-        return _totalValue = Random.Range(_itemHeal.value.x, _itemHeal.value.y);
+        // if (_itemHeal != null)
+        // {
+        //     _totalValue = Random.Range(_itemHeal.value.x, _itemHeal.value.y);
+        // }
+        // else
+        // {
+        //     // TODO Mariano: Cambiar por Stat Heal
+        //     _totalValue = _data.StatsBaseDefense;
+        // }
+
+        // TODO Mariano: Cambiar por Stat Heal
+        _totalValue = _data.StatsBaseDefense;
+        
+        return _totalValue;
     }
 
     public bool GetProbability()
@@ -447,9 +446,8 @@ public class CombatCharacter : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
+        
         EventController.TriggerEvent(_combatCharacterGoAheadEvent);
-
         // GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
     }
 

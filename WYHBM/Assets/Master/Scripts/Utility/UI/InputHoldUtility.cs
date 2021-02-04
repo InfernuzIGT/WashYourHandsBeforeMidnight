@@ -83,26 +83,27 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
 
     public void SoundDetect(bool enable)
     {
-        if (enable)
-        {
-            _iconData.SetIconStart(ref _iconImg);
-            _canvasGroupUtility.ShowInstant(true);
+        // TODO Mariano: Implementar bien
+        // if (enable)
+        // {
+        //     _iconData.SetIconStart(ref _iconImg);
+        //     _canvasGroupUtility.ShowInstant(true);
 
-            _fillImg.fillAmount = 0;
-            _fillImg.color = _iconData.colorStart;
-        }
-        else
-        {
-            _iconData.SetIconCancel(ref _iconImg);
+        //     _fillImg.fillAmount = 0;
+        //     _fillImg.color = _iconData.colorStart;
+        // }
+        // else
+        // {
+        //     _iconData.SetIconCancel(ref _iconImg);
 
-            _canvasGroupUtility.Show(false);
+        //     _canvasGroupUtility.Show(false);
 
-            _fillAnimation.Kill();
-            _fillColor.Kill();
+        //     _fillAnimation.Kill();
+        //     _fillColor.Kill();
 
-            _fillImg.fillAmount = 0;
-            _fillImg.color = _iconData.colorStart;
-        }
+        //     _fillImg.fillAmount = 0;
+        //     _fillImg.color = _iconData.colorStart;
+        // }
     }
 
     public void OnStart()

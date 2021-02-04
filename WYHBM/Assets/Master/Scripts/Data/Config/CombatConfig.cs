@@ -7,9 +7,7 @@ public class CombatConfig : ScriptableObject
     public Vector3 positionAction = new Vector3(-.5f, 0, 0);
     public float animationDuration = .35f;
     [Space]
-    public float startFillDuration = 5;
-    public float fillDuration = .25f;
-    public float offsetHealthBar = 2;
+    public float fillDuration = 1f;
 
     [Header("Fade")]
     public float fadeDuration = 3;
@@ -22,7 +20,6 @@ public class CombatConfig : ScriptableObject
     public LayerMask layerEnemy;
 
     [Header("References")]
-    public CharacterUI characterUIPrefab;
     public Actions actionsPrefab;
     public ActionButton actionButtonPrefab;
 

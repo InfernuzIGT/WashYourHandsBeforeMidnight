@@ -15,8 +15,8 @@ public class CombatCharacterSO : ScriptableObject
     [Space]
     [SerializeField, Range(0f, 100f)] private int _statsHealthMax = 100;
     [SerializeField, Range(0f, 100f)] private int _statsHealthStart = 100;
-    [SerializeField, Range(0f, 20f)] private int _statsBaseDamage = 30;
-    [SerializeField, Range(1f, 10f)] private int _statsBaseDefense = 45;
+    [SerializeField, Range(0f, 50f)] private int _statsBaseDamage = 30;
+    [SerializeField, Range(1f, 50f)] private int _statsBaseDefense = 45;
     [SerializeField, Range(1f, 10f)] private int _statsReaction = 1;
 
     // Properties
