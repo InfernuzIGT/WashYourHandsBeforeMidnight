@@ -92,8 +92,6 @@ namespace Events
 
     }
 
-    public class CombatCheckGameEvent : GameEvent { }
-
     public class CombatCharacterGoAheadEvent : GameEvent
     {
         public CombatCharacter character;

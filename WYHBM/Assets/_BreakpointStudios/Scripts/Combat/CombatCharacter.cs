@@ -40,7 +40,6 @@ public class CombatCharacter : MonoBehaviour
     // Events
     // private InfoTextEvent infoTextEvent;
     private ShakeEvent _shakeEvent;
-    private CombatCheckGameEvent _combatCheckGameEvent;
     private CombatCharacterGoAheadEvent _combatCharacterGoAheadEvent;
     protected CombatRemoveCharacterEvent _combatRemoveCharacterEvent;
 
@@ -85,7 +84,6 @@ public class CombatCharacter : MonoBehaviour
         // infoTextEvent = new InfoTextEvent();
         _shakeEvent = new ShakeEvent();
         _combatRemoveCharacterEvent = new CombatRemoveCharacterEvent();
-        _combatCheckGameEvent = new CombatCheckGameEvent();
 
         _combatCharacterGoAheadEvent = new CombatCharacterGoAheadEvent();
         _combatCharacterGoAheadEvent.character = this;
@@ -273,15 +271,9 @@ public class CombatCharacter : MonoBehaviour
 
             _spriteRenderer.
             DOFade(0, _combatConfig.canvasFadeDuration).
-            SetEase(Ease.OutQuad).OnComplete(CheckGame);
+            SetEase(Ease.OutQuad)
+            .OnComplete(() => gameObject.SetActive(false));
         }
-    }
-
-    public void CheckGame()
-    {
-        gameObject.SetActive(false);
-        // GameManager.Instance.combatManager.CheckGame();
-        EventController.TriggerEvent(_combatCheckGameEvent);
     }
 
     public void RemoveCharacter()
@@ -454,9 +446,8 @@ public class CombatCharacter : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
+        
         EventController.TriggerEvent(_combatCharacterGoAheadEvent);
-
         // GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
     }
 

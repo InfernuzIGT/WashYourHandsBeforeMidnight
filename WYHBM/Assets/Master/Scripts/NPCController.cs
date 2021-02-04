@@ -36,6 +36,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     private bool _isMoving;
     private bool _hearSound;
     private bool _backToStart;
+    private bool _isDetectingPlayer;
     private int _positionIndex = 0;
 
     private PlayerSO _playerData;
@@ -115,12 +116,30 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     {
         _fieldOfView.OnFindTarget += OnFindTarget;
         _fieldOfView.OnLossTarget += OnLossTarget;
+
+        EventController.AddListener<CombatEvent>(OnCombat);
     }
 
     private void OnDisable()
     {
         _fieldOfView.OnFindTarget -= OnFindTarget;
         _fieldOfView.OnLossTarget -= OnLossTarget;
+
+        EventController.RemoveListener<CombatEvent>(OnCombat);
+    }
+
+    private void OnCombat(CombatEvent evt)
+    {
+        if (evt.isEnter)
+        {
+
+        }
+        else
+        {
+            // if (evt.isWin && _isDetectingPlayer)Destroy(gameObject);
+            
+            if (_isDetectingPlayer)Destroy(gameObject);
+        }
     }
 
     private void Update()
@@ -254,6 +273,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     public void OnFinish()
     {
+        _isDetectingPlayer = true;
         _fieldOfView.SetState(false);
 
         _isMoving = false;

@@ -156,16 +156,21 @@ public class GlobalController : MonoBehaviour
         {
             _inCombat = true;
 
-            _fadeEvent.callbackStart = null;
-            _fadeEvent.callbackMid = SwitchAmbient;
+            // _fadeEvent.callbackStart = null;
+            // _fadeEvent.callbackMid = SwitchAmbient;
             _fadeEvent.callbackEnd = StartCombat;
-
-            EventController.TriggerEvent(_fadeEvent);
         }
         else
         {
+            _inCombat = false;
 
+            // _fadeEvent.callbackStart = null;
+            // _fadeEvent.callbackMid = SwitchAmbient;
+            _fadeEvent.callbackEnd = () => EnableMovement(true);
         }
+        
+        _fadeEvent.callbackMid = SwitchAmbient;
+        EventController.TriggerEvent(_fadeEvent);
     }
 
     private void SwitchAmbient()
@@ -237,7 +242,7 @@ public class GlobalController : MonoBehaviour
 
         _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
         _gameData.DevDDLegacyMode = _devDDLegacyMode;
-        if (_devAutoInit) _gameData.GetSceneReferences();
+        if (_devAutoInit)_gameData.GetSceneReferences();
         sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
