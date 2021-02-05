@@ -280,7 +280,6 @@ public class GlobalController : MonoBehaviour
 
         // if (!playerController.IsCrouching)playerController.Crouch();
 
-        // listenModeOnSound.Play();
 
         if (_coroutineListenMode != null)
         {
@@ -300,7 +299,6 @@ public class GlobalController : MonoBehaviour
             StopCoroutine(_coroutineListenMode);
             _coroutineListenMode = null;
 
-            // listenModeOffSound.Play();
         }
 
         _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;
@@ -315,6 +313,7 @@ public class GlobalController : MonoBehaviour
     {
         if (_fovIsActive)
         {
+                listenModeOnSound.Play();
             while (_fovCurrentTime < _worldConfig.fovTime)
             {
                 SetValuesListenMode();
@@ -326,6 +325,7 @@ public class GlobalController : MonoBehaviour
         }
         else
         {
+            listenModeOffSound.Play();
             while (_fovCurrentTime > 0)
             {
                 SetValuesListenMode();
