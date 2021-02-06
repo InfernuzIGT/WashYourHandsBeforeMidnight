@@ -109,7 +109,6 @@ public class GlobalController : MonoBehaviour
         _pauseEvent = new PauseEvent();
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.fast = true;
         _fadeEvent.callbackMid = SwitchAmbient;
 
         SpawnPlayer(spawnPosition);
@@ -154,20 +153,28 @@ public class GlobalController : MonoBehaviour
 
     private void OnCombat(CombatEvent evt)
     {
+        _inCombat = evt.isEnter;
+
         if (evt.isEnter)
         {
-            _inCombat = true;
-
-            _fadeEvent.callbackEnd = StartCombat;
-            EventController.TriggerEvent(_fadeEvent);
+            _fadeEvent.instant = true;
+            _fadeEvent.delay = _worldConfig.fadeDelay;
+            _fadeEvent.callbackEnd = _combatController.InitiateTurn;
+            StartCoroutine(StartCombat());
         }
         else
         {
-            _inCombat = false;
-
+            _fadeEvent.instant = false;
+            _fadeEvent.delay = 0;
             _fadeEvent.callbackEnd = () => EnableMovement(true);
             StartCoroutine(FinishCombat());
         }
+    }
+
+    private IEnumerator StartCombat()
+    {
+        yield return new WaitForSeconds(_combatConfig.waitTimeToStart);
+        EventController.TriggerEvent(_fadeEvent);
     }
 
     private IEnumerator FinishCombat()
@@ -185,11 +192,6 @@ public class GlobalController : MonoBehaviour
         if (!_inCombat)_canvasCombat.ClearActions();
 
         ChangeToCombatCamera(_inCombat ? _combatController.GetCombatAreaCamera() : null);
-    }
-
-    private void StartCombat()
-    {
-        _combatController.InitiateTurn();
     }
 
     private void OnPause(PauseEvent evt)

@@ -666,7 +666,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""id"": ""8d4f8569-026d-4aad-af30-71a059f458a1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press""
+                    ""interactions"": """"
                 },
                 {
                     ""name"": ""Cancel"",
@@ -674,7 +674,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""id"": ""a18fe46d-6512-4d49-8eb9-4e5b672cbb3a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press""
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [

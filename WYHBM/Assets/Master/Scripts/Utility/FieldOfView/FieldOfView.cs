@@ -97,7 +97,11 @@ public class FieldOfView : MonoBehaviour
         }
         else
         {
-            StopCoroutine(_coroutineFindTarget);
+            if (_coroutineFindTarget != null)
+            {
+                StopCoroutine(_coroutineFindTarget);
+                _coroutineFindTarget = null;
+            }
         }
     }
 

@@ -161,6 +161,8 @@ MonoBehaviour:
   _animatorController: {fileID: 2203801389680832686}
   _agent: {fileID: 7724327999077537402}
   _timeline: {fileID: 1101214639555105302}
+  zombieRoaming: {fileID: 0}
+  zombieFootstep: {fileID: 0}
 --- !u!195 &7724327999077537402
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -268,7 +270,7 @@ MonoBehaviour:
   ShowReferences: 0
   _animator: {fileID: 7882800319852633473}
   _spriteRenderer: {fileID: 7882800319852633502}
-  flipSprite: 1
+  _matDither: {fileID: 2100000, guid: a69e816f58c64f2488c557c46994c0bb, type: 2}
 --- !u!114 &1101214639555105302
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,9 +20,10 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     // Fade
     private TweenCallback _callbackMid;
     private TweenCallback _callbackEnd;
-    private bool _fadeFast;
+    private bool _fadeInstant;
     private bool _show;
     private float _letterboxSize;
+    private float _delay;
 
     // Save
     protected readonly int hash_IsSaving = Animator.StringToHash("isSaving");
@@ -57,14 +58,15 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 
     private void OnFade(FadeEvent evt)
     {
-        _fadeFast = evt.fast;
+        _fadeInstant = evt.instant;
+        _delay = evt.delay;
         _callbackMid = evt.callbackMid;
         _callbackEnd = evt.callbackEnd;
 
         evt.callbackStart?.Invoke();
 
         _fadeImg
-            .DOFade(1, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(1, _fadeInstant ? 0 : _worldConfig.fadeDuration)
             .OnKill(FadeIn);
 
         SetCanvas(true);
@@ -75,7 +77,8 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         _callbackMid?.Invoke();
 
         _fadeImg
-            .DOFade(0, _fadeFast ? _worldConfig.fadeFastDuration : _worldConfig.fadeSlowDuration)
+            .DOFade(0, _fadeInstant ? 0 : _worldConfig.fadeDuration)
+            .SetDelay(_delay)
             .OnComplete(() => SetCanvas(false))
             .OnKill(() => _callbackEnd?.Invoke());
     }
@@ -138,7 +141,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 
     private void OnLoadAnimation(LoadAnimationEvent evt)
     {
-        _animatorSave.SetBool(hash_IsLoading,evt.isLoading);
+        _animatorSave.SetBool(hash_IsLoading, evt.isLoading);
     }
 
 }
