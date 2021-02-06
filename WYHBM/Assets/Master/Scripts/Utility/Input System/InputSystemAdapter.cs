@@ -39,6 +39,7 @@ public enum RUMBLE_TYPE
     None = 0,
     Options = 1,
     Attack = 2,
+    Hit = 3,
 }
 
 public static class Devices

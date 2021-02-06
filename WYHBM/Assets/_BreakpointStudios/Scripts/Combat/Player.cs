@@ -18,6 +18,14 @@ public class Player : CombatCharacter
         _combatRemoveCharacterEvent.isPlayer = true;
     }
 
+    public override void EffectReceiveDamage()
+    {
+        EventController.TriggerEvent(_shakeEvent);
+
+        _vibrationEvent.type = RUMBLE_TYPE.Hit;
+        EventController.TriggerEvent(_vibrationEvent);
+    }
+
     #region Animation
 
     public override void AnimationActionStart()

@@ -46,17 +46,6 @@ namespace Events
         public LADDER_EXIT ladderExit;
     }
 
-    // public class EnterCombatEvent : GameEvent
-    // {
-    //     public NPCSO npc;
-    //     public NPCController currentNPC;
-    // }
-
-    // public class ExitCombatEvent : GameEvent
-    // {
-    //     public bool isWin;
-    // }
-
     public class CombatEvent : GameEvent
     {
         public bool isEnter;
@@ -68,11 +57,6 @@ namespace Events
     public class CombatActionEvent : GameEvent
     {
         public ItemSO item;
-    }
-
-    public class CombatUIEvent : GameEvent
-    {
-        public List<CombatCharacter> listWaitingCharacters = new List<CombatCharacter>();
     }
 
     public class CombatPlayerEvent : GameEvent
@@ -102,11 +86,6 @@ namespace Events
         public Equipment equipment;
     }
 
-    public class CombatCreateTurnEvent : GameEvent
-    {
-        public List<CombatCharacter> listAllCharacters = new List<CombatCharacter>();
-    }
-
     public class CombatHideActionsEvent : GameEvent
     {
         public bool canHighlight;
@@ -115,6 +94,11 @@ namespace Events
     #endregion
 
     public class ShakeEvent : GameEvent { }
+
+    public class VibrationEvent : GameEvent
+    {
+        public RUMBLE_TYPE type;
+    }
 
     public class FadeEvent : GameEvent
     {

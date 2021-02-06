@@ -35,9 +35,7 @@ public class CombatController : MonoBehaviour
 
     // Events
     private CombatEvent _combatEvent;
-    private CombatUIEvent _combatUIEvent;
     private CombatCreateActionsEvent _combatCreateActionsEvent;
-    private CombatCreateTurnEvent _combatCreateTurnEvent;
     private CombatHideActionsEvent _combatHideActionsEvent;
 
     // Properties
@@ -59,9 +57,7 @@ public class CombatController : MonoBehaviour
         _combatEvent = new CombatEvent();
         _combatEvent.isEnter = false;
 
-        _combatUIEvent = new CombatUIEvent();
         _combatCreateActionsEvent = new CombatCreateActionsEvent();
-        _combatCreateTurnEvent = new CombatCreateTurnEvent();
         _combatHideActionsEvent = new CombatHideActionsEvent();
 
         EventSystemUtility.Instance.InputUIModule.move.action.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
@@ -113,7 +109,6 @@ public class CombatController : MonoBehaviour
         if (evt.item == null)
         {
             _animState = ANIM_STATE.Attack_1;
-            // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
             _currentItem = null;
             HighlightCharacters(true, false);
             return;
@@ -123,14 +118,12 @@ public class CombatController : MonoBehaviour
         {
             case ITEM_TYPE.WeaponMelee:
                 _animState = ANIM_STATE.Attack_1;
-                // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
             case ITEM_TYPE.WeaponOneHand:
             case ITEM_TYPE.WeaponTwoHands:
                 _animState = ANIM_STATE.Attack_2;
-                // GameManager.Instance.combatUI.messageTxt.text = "Select enemy";
                 HighlightCharacters(true, false);
                 break;
 
@@ -138,13 +131,11 @@ public class CombatController : MonoBehaviour
             case ITEM_TYPE.ItemGrenade:
             case ITEM_TYPE.ItemDefense:
                 _animState = ANIM_STATE.Item;
-                // GameManager.Instance.combatUI.messageTxt.text = "Select player";
                 HighlightCharacters(true, true);
                 break;
 
             default:
                 _combatState = COMBAT_STATE.None;
-                // GameManager.Instance.combatUI.messageTxt.text = "";
                 HighlightCharacters(false, true);
                 HighlightCharacters(false, false);
                 break;
@@ -238,10 +229,6 @@ public class CombatController : MonoBehaviour
             listEnemies.Add(enemy);
             _listAllCharacters.Add(enemy);
         }
-
-        _combatCreateTurnEvent.listAllCharacters.Clear();
-        _combatCreateTurnEvent.listAllCharacters.AddRange(_listAllCharacters);
-        EventController.TriggerEvent(_combatCreateTurnEvent);
     }
 
     private void HighlightCharacters(bool canHighlight, bool isPlayer)
@@ -354,10 +341,6 @@ public class CombatController : MonoBehaviour
         _listAllCharacters.Remove(evt.character);
         _listWaitingCharacters.Remove(evt.character);
 
-        _combatUIEvent.listWaitingCharacters.Clear();
-        _combatUIEvent.listWaitingCharacters.AddRange(_listWaitingCharacters);
-        EventController.TriggerEvent(_combatUIEvent);
-
         if (evt.isPlayer)
         {
             Player player = evt.character as Player;
@@ -375,21 +358,9 @@ public class CombatController : MonoBehaviour
         Debug.Log($"<b> WIN: {isWin} </b>");
 
         _isEndOfCombat = true;
-
+        
         _combatEvent.isWin = isWin;
         EventController.TriggerEvent(_combatEvent);
-
-        // uIController.endTxt.text = isWin ? _textConfig.gameWinTxt : _textConfig.gameLoseTxt;
-
-        // uIController.endTxt.gameObject.SetActive(true);
-
-        // uIController.endTxt.transform.
-        // DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 1, 5, .5f).
-        // SetEase(Ease.OutQuad);
-
-        // _interactionCombatEvent.isWin = isWin;
-        // EventController.TriggerEvent(_interactionCombatEvent);
-
     }
 
     public void SetCombatArea(bool isEnabled)
@@ -518,10 +489,6 @@ public class CombatController : MonoBehaviour
 
         _currentCharacter = _listWaitingCharacters[0];
         _currentCharacter.IsMyTurn = true;
-
-        _combatUIEvent.listWaitingCharacters.Clear();
-        _combatUIEvent.listWaitingCharacters.AddRange(_listWaitingCharacters);
-        EventController.TriggerEvent(_combatUIEvent);
     }
 
     /// <summary>
