@@ -12,7 +12,7 @@ Material:
     type: 3}
   m_ShaderKeywords: CORNERS_ON ETC1_EXTERNAL_ALPHA _ALPHATEST_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -66,6 +66,7 @@ Material:
     - Vector1_A4F7F3CD: 0.5
     - Vector1_CCAAC608: 0
     - Vector1_D5924D39: 1
+    - Vector1_F560FDB3: 256
     - _AlphaClip: 1
     - _Blend: 0
     - _BumpScale: 1
@@ -78,12 +79,14 @@ Material:
     - _Glossiness: 0
     - _GlossinessSource: 0
     - _GlossyReflections: 0
-    - _Glow: 0
+    - _Glow: 1
     - _Gradient: 0
     - _IsDamaged: 0
     - _IsHealing: 0
-    - _IsSelected: 1
+    - _IsKilled: 1
+    - _IsSelected: 0
     - _IsSelected_1: 0
+    - _Lerp: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _QueueOffset: 0
@@ -103,8 +106,9 @@ Material:
     - Color_C35AF2B3: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Emission: {r: 0.8, g: 0.8, b: 0.8, a: 0.8}
+    - _Emission: {r: 4, g: 4, b: 4, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Emission_Normal: {r: 0.8, g: 0.8, b: 0.8, a: 0.8}
     - _SpecColor: {r: 0.19999987, g: 0.19999987, b: 0.19999987, a: 0.5}
 --- !u!114 &7706954962473244541
 MonoBehaviour:

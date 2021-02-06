@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,11 +18,10 @@ public class GameManager : MonoSingleton<GameManager>
 
     [Header("References")]
     public GlobalController globalController;
-    // public CombatController combatManager;
     public CinemachineManager cinemachineManager;
     public PlayableDirector playableDirector;
-    public GameMode.World.UIManager worldUI;
-    public GameMode.Combat.UIManager combatUI;
+    public CanvasWorld worldUI;
+    public CanvasCombat combatUI;
     public EventSystem eventSystem;
 
     [Header("Combat")]

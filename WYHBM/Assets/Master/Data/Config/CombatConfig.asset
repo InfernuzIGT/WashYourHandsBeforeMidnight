@@ -13,8 +13,32 @@ MonoBehaviour:
   m_Name: CombatConfig
   m_EditorClassIdentifier: 
   positionAction: {x: -0.5, y: 0, z: 0}
-  animationDuration: 0.35
+  animationDuration: 0.2
   fillDuration: 2
+  actionSelectAction:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950520419225600
+      m_Key: 
+  actionSelectEnemy:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950522365382656
+      m_Key: 
+  actionSelectPlayer:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950524038909952
+      m_Key: 
+  actionEnemyTurn:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950524768718848
+      m_Key: 
   fadeDuration: 3
   canvasFadeDuration: 0.35
   fadeOutEndDuration: 0.75
@@ -33,6 +57,7 @@ MonoBehaviour:
     type: 3}
   actionTimeThresholdMultiplier: 1
   waitTimeToStart: 0.5
+  waitTimeToFinish: 2
   waitTimePerAction: 0.5
   waitTimeBetweenTurns: 0.25
   shakeDuration: 0.25
