@@ -26,8 +26,6 @@ public class PlayerController : MonoBehaviour
     public StudioEventEmitter crouchSound;
     public StudioEventEmitter standSound;
     public StudioEventEmitter fallSound;
-    public StudioEventEmitter listenModeOnSound;
-    public StudioEventEmitter listenModeOffSound;
 
     [Header("References")]
 #pragma warning disable 0414
@@ -74,7 +72,7 @@ public class PlayerController : MonoBehaviour
     private bool _inIvy = false;
     private RaycastHit _hitBot;
     private Vector3 _botPosition;
-    // private bool _isFalling;
+    private bool _isFalling;
 
     // Ledge
     private Vector3 newPos;
@@ -295,20 +293,20 @@ public class PlayerController : MonoBehaviour
 
             _animatorController.Falling(false);
 
-            // if (_isFalling)
-            // {
-            //     fallSound.Play();
+            if (_isFalling)
+            {
+                fallSound.Play();
 
-            //     _isFalling = false;
-                
-            // }
+                _isFalling = false;
+
+            }
         }
         else if (Mathf.Abs(_characterController.velocity.y) > _playerConfig.magnitudeFall)
         {
 
             _animatorController.Falling(true);
 
-            // _isFalling = true;
+            _isFalling = true;
         }
 
         // Move
@@ -363,7 +361,7 @@ public class PlayerController : MonoBehaviour
         
         if (cancel)_isCrouching = true;
 
-        // crouchSound.Play();
+        crouchSound.Play();
 
         _isCrouching = !_isCrouching;
 
@@ -376,7 +374,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // standSound.Play();
+            standSound.Play();
 
             ChangeMovementState();
 
