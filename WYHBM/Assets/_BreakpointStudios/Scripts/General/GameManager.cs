@@ -72,7 +72,7 @@ public class GameManager : MonoSingleton<GameManager>
         listSlots = new List<Slot>();
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.fast = true;
+        _fadeEvent.instant = true;
 
         // _characterIndex = 0;
         // worldUI.ChangeCharacter(combatPlayers[_characterIndex], _characterIndex, inLeftLimit : true);

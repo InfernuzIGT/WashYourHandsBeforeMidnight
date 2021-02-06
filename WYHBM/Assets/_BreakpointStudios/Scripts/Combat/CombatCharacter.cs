@@ -154,7 +154,7 @@ public class CombatCharacter : MonoBehaviour
 
         if (!GetProbability())
         {
-            AnimationAction(ANIM_STATE.Idle);
+            AnimationAction(ANIM_STATE.Dodge);
             Debug.Log($"<b> DODGE! </b>");
             return;
         }
@@ -176,8 +176,6 @@ public class CombatCharacter : MonoBehaviour
 
             _totalDefense = 0;
 
-            AnimationAction(ANIM_STATE.Hit);
-
             EffectReceiveDamage();
         }
 
@@ -188,9 +186,18 @@ public class CombatCharacter : MonoBehaviour
             _healthActual = 0;
             _isAlive = false;
             RemoveCharacter();
-        }
 
-        _healthBar.UpdateBar(true, _healthActual / _data.StatsHealthMax, Kill);
+            AnimationAction(ANIM_STATE.Dead);
+
+            _healthBar.UpdateBar(true, _healthActual / _data.StatsHealthMax);
+            Kill();
+        }
+        else
+        {
+            AnimationAction(ANIM_STATE.Hit);
+
+            _healthBar.UpdateBar(true, _healthActual / _data.StatsHealthMax, Kill);
+        }
 
         // ShowInfoText(totalDamage, _textConfig.colorMsgDamage);
     }
@@ -220,14 +227,15 @@ public class CombatCharacter : MonoBehaviour
     {
         _combatAnimator.Action(combatState);
 
-        if (combatState == ANIM_STATE.Idle ||
-            combatState == ANIM_STATE.Hit)
+        if (combatState == ANIM_STATE.Attack_1 ||
+            combatState == ANIM_STATE.Attack_2 ||
+            combatState == ANIM_STATE.Item)
         {
-            AnimationActionEnd();
+            AnimationActionStart();
         }
         else
         {
-            AnimationActionStart();
+            AnimationActionEnd();
         }
     }
 
@@ -249,7 +257,8 @@ public class CombatCharacter : MonoBehaviour
     private IEnumerator Recovery()
     {
         yield return _waitPerAction;
-        AnimationAction(ANIM_STATE.Idle);
+
+        if (_isAlive)AnimationAction(ANIM_STATE.Idle);
     }
 
     // // TODO Mariano: Review
@@ -379,8 +388,8 @@ public class CombatCharacter : MonoBehaviour
         _material.SetFloat(hash_IsHealing, 0);
 
         _material
-            .DOFloat(0, hash_IsKilled, _combatConfig.waitTimeToFinish / 2)
-            .SetEase(Ease.InBack)
+            .DOFloat(0, hash_IsKilled, _combatConfig.waitTimePerAction * 2)
+            .SetEase(Ease.OutBack)
             .OnComplete(() => gameObject.SetActive(false));
     }
 

@@ -62,8 +62,8 @@ public class CombatController : MonoBehaviour
 
         EventSystemUtility.Instance.InputUIModule.move.action.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
         EventSystemUtility.Instance.InputUIModule.move.action.performed += ctx => NavigateCharacter();
-        EventSystemUtility.Instance.InputUIModule.submit.action.performed += ctx => SelectCharacter(true);
-        EventSystemUtility.Instance.InputUIModule.cancel.action.performed += ctx => SelectCharacter(false);
+        EventSystemUtility.Instance.InputUIModule.submit.action.started += ctx => SelectCharacter(true);
+        EventSystemUtility.Instance.InputUIModule.cancel.action.started += ctx => SelectCharacter(false);
     }
 
     private void OnEnable()

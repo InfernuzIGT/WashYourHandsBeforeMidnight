@@ -14,7 +14,7 @@ public class Turn : MonoBehaviour
     public void SetSprite(CombatCharacter character)
     {
         _characterImg = GetComponent<Image>();
-        _characterImg.sprite = character.Data.TurnSprite;
+        // _characterImg.sprite = character.Data.TurnSprite;
     }
 
 }

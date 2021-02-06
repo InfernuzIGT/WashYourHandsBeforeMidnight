@@ -102,7 +102,8 @@ namespace Events
 
     public class FadeEvent : GameEvent
     {
-        public bool fast;
+        public bool instant;
+        public float delay;
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;

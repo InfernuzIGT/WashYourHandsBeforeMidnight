@@ -5,6 +5,8 @@
     Attack_2 = 2,
     Item = 3,
     Hit = 4,
+    Dead = 5,
+    Dodge = 6,
 }
 
 public enum COMBAT_STATE
