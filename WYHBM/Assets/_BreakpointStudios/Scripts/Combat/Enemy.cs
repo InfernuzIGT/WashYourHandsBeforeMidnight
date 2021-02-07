@@ -18,6 +18,12 @@ public class Enemy : CombatCharacter
 		_combatRemoveCharacterEvent.isPlayer = false;
 	}
 
+	public override void EffectReceiveDamage()
+	{
+		_vibrationEvent.type = RUMBLE_TYPE.Attack;
+		EventController.TriggerEvent(_vibrationEvent);
+	}
+
 	public void Select()
 	{
 		int randomPlayer = Random.Range(0, GameData.Instance.GetListPlayer().Count);
@@ -67,7 +73,6 @@ public class Enemy : CombatCharacter
 
 		MaterialShow(true);
 
-		// GameManager.Instance.combatUI.ShowPlayerPanel(true, false);
 		EventController.TriggerEvent(_combatEnemyEvent);
 
 		yield return new WaitForSeconds(Random.Range(.25f, 1.25f));
@@ -81,13 +86,9 @@ public class Enemy : CombatCharacter
 			yield return null;
 		}
 
-		Shake();
-
-		// GameManager.Instance.ReorderTurn();
+		MaterialShow(false);
 
 		yield return _waitPerAction;
-
-		MaterialShow(false);
 
 		AnimationAction(ANIM_STATE.Idle);
 	}

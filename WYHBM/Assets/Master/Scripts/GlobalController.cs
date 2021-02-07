@@ -44,6 +44,7 @@ public class GlobalController : MonoBehaviour
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
     [SerializeField, ConditionalHide] private WorldConfig _worldConfig;
+    [SerializeField, ConditionalHide] private CombatConfig _combatConfig;
     [SerializeField, ConditionalHide] private Camera _mainCamera;
     [SerializeField, ConditionalHide] private CinemachineVirtualUtility _playerCamera;
     [Space]
@@ -53,8 +54,8 @@ public class GlobalController : MonoBehaviour
     [SerializeField, ConditionalHide] private CombatController _combatController;
     [Space]
     [SerializeField, ConditionalHide] private PlayableDirector _playableDirector;
-    [SerializeField, ConditionalHide] private GameMode.World.UIManager _canvasWorld;
-    [SerializeField, ConditionalHide] private GameMode.Combat.UIManager _canvasCombat;
+    [SerializeField, ConditionalHide] private CanvasWorld _canvasWorld;
+    [SerializeField, ConditionalHide] private CanvasCombat _canvasCombat;
     [Space]
     [SerializeField, ConditionalHide] private Material _materialFOV;
     [SerializeField, ConditionalHide] private Material _materialDitherNPC;
@@ -108,7 +109,7 @@ public class GlobalController : MonoBehaviour
         _pauseEvent = new PauseEvent();
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.fast = true;
+        _fadeEvent.callbackMid = SwitchAmbient;
 
         SpawnPlayer(spawnPosition);
         SpawnUI();
@@ -152,20 +153,34 @@ public class GlobalController : MonoBehaviour
 
     private void OnCombat(CombatEvent evt)
     {
+        _inCombat = evt.isEnter;
+
         if (evt.isEnter)
         {
-            _inCombat = true;
-
-            _fadeEvent.callbackStart = null;
-            _fadeEvent.callbackMid = SwitchAmbient;
-            _fadeEvent.callbackEnd = StartCombat;
-
-            EventController.TriggerEvent(_fadeEvent);
+            _fadeEvent.instant = true;
+            _fadeEvent.delay = _worldConfig.fadeDelay;
+            _fadeEvent.callbackEnd = _combatController.InitiateTurn;
+            StartCoroutine(StartCombat());
         }
         else
         {
-
+            _fadeEvent.instant = false;
+            _fadeEvent.delay = 0;
+            _fadeEvent.callbackEnd = () => EnableMovement(true);
+            StartCoroutine(FinishCombat());
         }
+    }
+
+    private IEnumerator StartCombat()
+    {
+        yield return new WaitForSeconds(_combatConfig.waitTimeToStart);
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
+    private IEnumerator FinishCombat()
+    {
+        yield return new WaitForSeconds(_combatConfig.waitTimeToFinish);
+        EventController.TriggerEvent(_fadeEvent);
     }
 
     private void SwitchAmbient()
@@ -173,25 +188,10 @@ public class GlobalController : MonoBehaviour
         _canvasCombat.Show(_inCombat);
         _canvasWorld.Show(!_inCombat);
 
-        // combatManager.ToggleInputCombat(_inCombat);
         _combatController.SetCombatArea(_inCombat);
+        if (!_inCombat)_canvasCombat.ClearActions();
 
-        if (!_inCombat)
-        {
-            ChangeToCombatCamera(null);
-            _canvasCombat.actions.Clear();
-            _canvasCombat.ClearTurn();
-        }
-        else
-        {
-            ChangeToCombatCamera(_combatController.GetCombatAreaCamera());
-        }
-    }
-
-    private void StartCombat()
-    {
-        // currentNPC?.Kill();
-        _combatController.InitiateTurn();
+        ChangeToCombatCamera(_inCombat ? _combatController.GetCombatAreaCamera() : null);
     }
 
     private void OnPause(PauseEvent evt)
@@ -237,7 +237,7 @@ public class GlobalController : MonoBehaviour
 
         _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
         _gameData.DevDDLegacyMode = _devDDLegacyMode;
-        if (_devAutoInit) _gameData.GetSceneReferences();
+        if (_devAutoInit)_gameData.GetSceneReferences();
         sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
@@ -275,8 +275,6 @@ public class GlobalController : MonoBehaviour
 
         // if (!playerController.IsCrouching)playerController.Crouch();
 
-        // listenModeOnSound.Play();
-
         if (_coroutineListenMode != null)
         {
             StopCoroutine(_coroutineListenMode);
@@ -295,7 +293,6 @@ public class GlobalController : MonoBehaviour
             StopCoroutine(_coroutineListenMode);
             _coroutineListenMode = null;
 
-            // listenModeOffSound.Play();
         }
 
         _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;
@@ -310,6 +307,7 @@ public class GlobalController : MonoBehaviour
     {
         if (_fovIsActive)
         {
+            listenModeOnSound.Play();
             while (_fovCurrentTime < _worldConfig.fovTime)
             {
                 SetValuesListenMode();
@@ -321,6 +319,7 @@ public class GlobalController : MonoBehaviour
         }
         else
         {
+            listenModeOffSound.Play();
             while (_fovCurrentTime > 0)
             {
                 SetValuesListenMode();

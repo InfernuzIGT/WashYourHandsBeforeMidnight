@@ -46,32 +46,17 @@ namespace Events
         public LADDER_EXIT ladderExit;
     }
 
-    // public class EnterCombatEvent : GameEvent
-    // {
-    //     public NPCSO npc;
-    //     public NPCController currentNPC;
-    // }
-
-    // public class ExitCombatEvent : GameEvent
-    // {
-    //     public bool isWin;
-    // }
-
     public class CombatEvent : GameEvent
     {
         public bool isEnter;
         public bool isWin;
+        public Vector3 detectionLocation;
         public List<Enemy> combatEnemies = new List<Enemy>();
     }
 
     public class CombatActionEvent : GameEvent
     {
         public ItemSO item;
-    }
-
-    public class CombatUIEvent : GameEvent
-    {
-        public List<CombatCharacter> listWaitingCharacters = new List<CombatCharacter>();
     }
 
     public class CombatPlayerEvent : GameEvent
@@ -91,8 +76,6 @@ namespace Events
 
     }
 
-    public class CombatCheckGameEvent : GameEvent { }
-
     public class CombatCharacterGoAheadEvent : GameEvent
     {
         public CombatCharacter character;
@@ -101,11 +84,6 @@ namespace Events
     public class CombatCreateActionsEvent : GameEvent
     {
         public Equipment equipment;
-    }
-
-    public class CombatCreateTurnEvent : GameEvent
-    {
-        public List<CombatCharacter> listAllCharacters = new List<CombatCharacter>();
     }
 
     public class CombatHideActionsEvent : GameEvent
@@ -117,9 +95,15 @@ namespace Events
 
     public class ShakeEvent : GameEvent { }
 
+    public class VibrationEvent : GameEvent
+    {
+        public RUMBLE_TYPE type;
+    }
+
     public class FadeEvent : GameEvent
     {
-        public bool fast;
+        public bool instant;
+        public float delay;
         public TweenCallback callbackStart;
         public TweenCallback callbackMid;
         public TweenCallback callbackEnd;
