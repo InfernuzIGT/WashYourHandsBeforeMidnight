@@ -11,6 +11,9 @@ public class WorldConfig : ScriptableObject
     public float fadeDuration = 1f;
     public float fadeDelay = 2;
 
+    [Header("References")]
+    public InteractionCorpse interactionCorpse;
+
     [Header("Text")]
     public float textTimeStart = 0.5f;
     public float textTimeSpeed = 0.025f;

@@ -16,9 +16,13 @@ public class ActionButton : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
     [SerializeField, ConditionalHide] private CombatConfig _combatConfig = null;
+    [SerializeField, ConditionalHide] private Image _actionImg = null;
     [SerializeField, ConditionalHide] private Image _selectionImg = null;
     [SerializeField, ConditionalHide] private Image _itemImg = null;
     [SerializeField, ConditionalHide] private Image _inputImg = null;
+    [Space]
+    [SerializeField, ConditionalHide] private Sprite _spriteSelected = null;
+    [SerializeField, ConditionalHide] private Sprite _spriteUnselected = null;
 
     private ItemSO _item;
     private Button _actionButton;
@@ -53,11 +57,6 @@ public class ActionButton : MonoBehaviour, ISelectHandler, IDeselectHandler
         _actionIndex.Invoke(_index);
     }
 
-    private void SetIndex(int index)
-    {
-
-    }
-
     public void SelectButton()
     {
         EventController.TriggerEvent(_eventSystemEvent);
@@ -65,6 +64,7 @@ public class ActionButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
+        _actionImg.sprite = _spriteSelected;
         _selectionImg.enabled = true;
         _inputImg.enabled = true;
 
@@ -73,6 +73,7 @@ public class ActionButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnDeselect(BaseEventData eventData)
     {
+        _actionImg.sprite = _spriteUnselected;
         _selectionImg.enabled = false;
         _inputImg.enabled = false;
 

@@ -355,8 +355,6 @@ public class CombatController : MonoBehaviour
 
     private void FinishGame(bool isWin)
     {
-        Debug.Log($"<b> WIN: {isWin} </b>");
-
         _isEndOfCombat = true;
         
         _combatEvent.isWin = isWin;

@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InteractionCorpse : Interaction, IInteractable
 {
-    // TODO Mariano: Spawnear con Sprite de CombatCharacterSO en la escena actual
+    [Header("Corpse")]
+    [SerializeField] private SpriteRenderer _spriteRenderer;
     
-    // [Header("Corpse")]
+    public void Init(Sprite sprite)
+    {
+        _spriteRenderer.sprite = sprite;
+    }
 
     public void OnInteractionEnter(Collider other)
     {

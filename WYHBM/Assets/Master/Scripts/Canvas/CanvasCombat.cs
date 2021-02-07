@@ -23,7 +23,7 @@ public class CanvasCombat : MonoBehaviour
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasTop = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasBot = null;
 
-    private int _lastIndex = 0;
+    // private int _lastIndex = 0;
     private LocalizedString _localizedAction;
 
     // private void Start()

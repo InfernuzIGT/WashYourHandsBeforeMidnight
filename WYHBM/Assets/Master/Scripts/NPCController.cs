@@ -21,6 +21,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
+    [SerializeField, ConditionalHide] private WorldConfig _worldConfig = null;
+    [SerializeField, ConditionalHide] private Transform _shadow = null;
     [SerializeField, ConditionalHide] private InteractionNPC _interactionNPC = null;
     [SerializeField, ConditionalHide] private InputHoldUtility _holdUtility = null;
     [SerializeField, ConditionalHide] private FieldOfView _fieldOfView = null;
@@ -137,8 +139,13 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         else
         {
             // if (evt.isWin && _isDetectingPlayer)Destroy(gameObject);
-            
-            if (_isDetectingPlayer)Destroy(gameObject);
+
+            if (_isDetectingPlayer)
+            {
+                InteractionCorpse corpse = Instantiate(_worldConfig.interactionCorpse, _shadow.position, Quaternion.identity);
+                corpse.Init(_data.SpriteCorpse);
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -287,7 +294,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _enableMovementEvent.isDetected = true;
         EventController.TriggerEvent(_enableMovementEvent);
 
-        _combatEvent.detectionLocation = transform.position;
+        _combatEvent.enemy = transform;
         EventController.TriggerEvent(_combatEvent);
     }
 
@@ -353,12 +360,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         if (_data.CanMove)_agent.isStopped = !evt.canMove;
 
         _animatorController?.Movement(Vector3.zero);
-    }
-
-    public void Kill()
-    {
-        EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
-        Destroy(gameObject);
     }
 
     public float GetLookDirection(DIRECTION direction)
