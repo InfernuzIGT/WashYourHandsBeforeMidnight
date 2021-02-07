@@ -22,6 +22,7 @@ public class CanvasCombat : MonoBehaviour
     [SerializeField, ConditionalHide] private LocalizeStringEvent _localizeStringEvent = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasTop = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasBot = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasInputBack = null;
 
     // private int _lastIndex = 0;
     private LocalizedString _localizedAction;
@@ -97,7 +98,23 @@ public class CanvasCombat : MonoBehaviour
     {
         // _actions[_lastIndex].gameObject.SetActive(!evt.canHighlight);
 
-        _canvasBot.ShowInstant(!evt.canHighlight);
+        // TODO Mariano: Show Back Button
+
+        if (evt.canHighlight)
+        {
+            _canvasBot.ShowInstant(false);
+            _canvasInputBack.ShowInstant(true);
+        }
+        else
+        {
+            _canvasBot.ShowInstant(true);
+            _canvasInputBack.ShowInstant(false);
+
+            _localizedAction = _combatConfig.actionSelectAction;
+
+            _localizeStringEvent.StringReference = _localizedAction;
+            _localizeStringEvent.OnUpdateString.Invoke(_actionsTxt.text);
+        }
     }
 
     private void OnCombatPlayer(CombatPlayerEvent evt)
@@ -128,7 +145,12 @@ public class CanvasCombat : MonoBehaviour
         _actionsTxt.enabled = show;
 
         _canvasTop.ShowInstant(show);
-        if (isPlayer)_canvasBot.ShowInstant(show);
+        
+        if (isPlayer)
+        {
+            _canvasBot.ShowInstant(show);
+            _canvasInputBack.ShowInstant(false);
+        }
 
         _localizedAction = isPlayer ? _combatConfig.actionSelectAction : _combatConfig.actionEnemyTurn;
 
