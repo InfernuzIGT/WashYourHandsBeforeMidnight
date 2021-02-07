@@ -7,7 +7,6 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CharacterController), typeof(SpriteRenderer), typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
-
     [Header("General")]
     [SerializeField, ReadOnly] private PlayerSO _playerData = null;
     [SerializeField, ReadOnly] private MOVEMENT_STATE _movementState = MOVEMENT_STATE.Walk;
@@ -81,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
-    
+
     public UnityAction cancelListerMode;
 
     // Properties
@@ -103,7 +102,7 @@ public class PlayerController : MonoBehaviour
     private bool _devSilentSteps;
     public bool DevSilentSteps { get { return _devSilentSteps; } set { _devSilentSteps = value; } }
 
-	Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
+    Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
     {
@@ -192,7 +191,7 @@ public class PlayerController : MonoBehaviour
     // {
     //     GUIStyle guiStyle = new GUIStyle();
     //     guiStyle.fontSize = 50;
-    //     GUI.Label(new Rect(10, 10, 100, 20), string.Format("Velocity Y: {0}", _characterController.velocity.y.ToString()), guiStyle);
+    //     GUI.Label(new Rect(10, 10, 100, 20), string.Format("Velocity: {0}", _characterController.velocity.magnitude), guiStyle);
     // }
 
     private void Movement()
@@ -358,7 +357,7 @@ public class PlayerController : MonoBehaviour
     public void Crouch(bool cancel = false)
     {
         cancelListerMode.Invoke();
-        
+
         if (cancel)_isCrouching = true;
 
         crouchSound.Play();
@@ -643,14 +642,14 @@ public class PlayerController : MonoBehaviour
             _characterController.enabled = false;
             StopMovement();
 
-            // TODO Mariano: Enable
-            // if (evt.isDetected)_animatorController.Detected(true);
+            if (evt.isDetected)_animatorController.Detected(true);
         }
 
         if (evt.canMove)
         {
             _isInteracting = false;
 
+            if (evt.isDetected)_animatorController.Detected(false);
             // Crouch(true);
         }
     }

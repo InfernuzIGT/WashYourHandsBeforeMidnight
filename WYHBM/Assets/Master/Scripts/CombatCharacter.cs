@@ -155,7 +155,6 @@ public class CombatCharacter : MonoBehaviour
         if (!GetProbability())
         {
             AnimationAction(ANIM_STATE.Dodge);
-            Debug.Log($"<b> DODGE! </b>");
             return;
         }
 

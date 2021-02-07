@@ -6,7 +6,6 @@ public class CombatCharacterSO : ScriptableObject
     [Header("Character")]
     [SerializeField] private string _name = "-";
     [SerializeField, PreviewTexture(64)] private Sprite _sprite = null;
-    [SerializeField, PreviewTexture(64)] private Sprite _spriteDead = null;
     [SerializeField] private AnimatorOverrideController _animatorController = null;
 
     [Header("Combat")]
