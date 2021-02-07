@@ -18,6 +18,14 @@ public class WorldConfig : ScriptableObject
     public float textTimeStart = 0.5f;
     public float textTimeSpeed = 0.025f;
 
+    [Header("Ground Textures")]
+    [PreviewTexture(48, FieldType.Texture)] public Texture textureDefault;
+    [PreviewTexture(48, FieldType.Texture)] public Texture textureGrass;
+    [PreviewTexture(48, FieldType.Texture)] public Texture textureDirt;
+    [PreviewTexture(48, FieldType.Texture)] public Texture textureWood;
+    [PreviewTexture(48, FieldType.Texture)] public Texture textureCement;
+    [PreviewTexture(48, FieldType.Texture)] public Texture textureCeramic;
+
     [Header("Layers")]
     public LayerMask layerFOVTarget;
     public LayerMask layerFOVObstacle;
