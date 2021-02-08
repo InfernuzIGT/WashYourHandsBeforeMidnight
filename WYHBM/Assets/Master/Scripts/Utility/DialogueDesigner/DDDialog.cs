@@ -19,7 +19,7 @@ public class DDDialog : MonoBehaviour
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
     [SerializeField, ConditionalHide] private WorldConfig _worldConfig = null;
-    // [SerializeField, ConditionalHide] private LocalizedStringTable _tableDD;
+    [SerializeField, ConditionalHide] private LocalizedStringTable _tableDD;
     [SerializeField, ConditionalHide] private InputActionReference _actionCancel = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasUtility;
     [Space]
@@ -117,7 +117,7 @@ public class DDDialog : MonoBehaviour
 
     private void OnEnable()
     {
-        // _tableDD.TableChanged += LoadStrings;
+        _tableDD.TableChanged += LoadStrings;
 
         EventController.AddListener<DialogDesignerEvent>(OnEnableDialog);
         EventController.AddListener<UpdateLanguageEvent>(OnUpdateLanguage);
@@ -129,7 +129,7 @@ public class DDDialog : MonoBehaviour
 
     private void OnDisable()
     {
-        // _tableDD.TableChanged -= LoadStrings;
+        _tableDD.TableChanged -= LoadStrings;
 
         EventController.RemoveListener<DialogDesignerEvent>(OnEnableDialog);
         EventController.RemoveListener<UpdateLanguageEvent>(OnUpdateLanguage);
@@ -144,10 +144,10 @@ public class DDDialog : MonoBehaviour
         _canInteract = canInteract;
     }
 
-    // private void LoadStrings(StringTable stringTable)
-    // {
-    //     _stringTableDD = stringTable;
-    // }
+    private void LoadStrings(StringTable stringTable)
+    {
+        _stringTableDD = stringTable;
+    }
 
     private void OnEnableDialog(DialogDesignerEvent evt)
     {
