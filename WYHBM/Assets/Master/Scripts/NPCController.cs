@@ -53,6 +53,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     // FMOD
     public StudioEventEmitter zombieRoaming;
     public StudioEventEmitter zombieFootstep;
+    public StudioEventEmitter zombieAlert;
 
     // Properties
     public DIRECTION StartLookDirection { get { return _startLookDirection; } set { _startLookDirection = value; } }
@@ -68,11 +69,15 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _questEvent = new QuestEvent();
         _enableMovementEvent = new EnableMovementEvent();
 
+
         if (_data.CanCombat)
         {
             _combatEvent = new CombatEvent();
             _combatEvent.isEnter = true;
             _combatEvent.combatEnemies.AddRange(_data.CombatEnemies);
+
+            StartRoaming();
+
         }
 
 #if UNITY_EDITOR
@@ -108,7 +113,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _holdUtility.OnFinished.AddListener(OnFinish);
         }
 
-        // zombieRoaming.Play();
         _coroutinePatrol = StartCoroutine(MovementAgent());
     }
 
@@ -128,6 +132,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         EventController.RemoveListener<CombatEvent>(OnCombat);
     }
 
+    private void StartRoaming()
+    {
+        zombieRoaming.Play();
+    }
+
     private void OnCombat(CombatEvent evt)
     {
         if (evt.isEnter)
@@ -137,8 +146,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         else
         {
             // if (evt.isWin && _isDetectingPlayer)Destroy(gameObject);
-            
-            if (_isDetectingPlayer)Destroy(gameObject);
+
+            if (_isDetectingPlayer) Destroy(gameObject);
         }
     }
 
@@ -179,6 +188,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
                 _backToStart = true;
                 _isMoving = true;
+
+
             }
             else
             {
@@ -187,6 +198,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
                 _isMoving = false;
             }
         }
+    }
+
+    private void ZombieFootstep()
+    {
+        zombieFootstep.Play();
     }
 
     private void Rotation()
@@ -243,6 +259,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _fieldOfView.UpdateView(_data.TimeToDetect, _hearRadius, _viewAngle);
 
             _canMove = true;
+
         }
     }
 
@@ -252,8 +269,10 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     {
         if (_canMove)
         {
+            zombieAlert.Play();
+
             _agent.SetDestination(targetLastPosition);
-            if (_coroutinePatrol != null)StopCoroutine(_coroutinePatrol);
+            if (_coroutinePatrol != null) StopCoroutine(_coroutinePatrol);
 
         }
 
@@ -278,7 +297,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
         _isMoving = false;
         _canMove = false;
-        if (_agent.isOnNavMesh)_agent.isStopped = true;
+        if (_agent.isOnNavMesh) _agent.isStopped = true;
 
         _animatorController.Movement(Vector3.zero);
         _animatorController.Detected(true);
@@ -293,16 +312,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     #endregion
 
-    #region FMOD
-
-    public void PlayFootsteps()
-    {
-        // zombieFootstep.Play();
-        Debug.Log("Zombie Footstep");
-
-    }
-
-    #endregion
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Tags.Player))
@@ -315,11 +324,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             }
             else
             {
-                if (_agent.isOnNavMesh)_agent.isStopped = true;
+                if (_agent.isOnNavMesh) _agent.isStopped = true;
 
                 _canMove = false;
 
-                if (_playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
+                if (_playerData == null) _playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
 
                 _animatorController?.Movement(Vector3.zero);
 
@@ -335,7 +344,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
 
-            if (_agent.isOnNavMesh)_agent.isStopped = false;
+            if (_agent.isOnNavMesh) _agent.isStopped = false;
 
             _canMove = GetCanMove();
 
@@ -350,7 +359,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             return;
         }
 
-        if (_data.CanMove)_agent.isStopped = !evt.canMove;
+        if (_data.CanMove) _agent.isStopped = !evt.canMove;
 
         _animatorController?.Movement(Vector3.zero);
     }

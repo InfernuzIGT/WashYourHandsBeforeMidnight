@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
     // Quest
     private bool _isOpenDiary;
-    
+
     public UnityAction cancelListerMode;
 
     // Properties
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
     private bool _devSilentSteps;
     public bool DevSilentSteps { get { return _devSilentSteps; } set { _devSilentSteps = value; } }
 
-	Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
+    Dictionary<int, QuestSO> questLog = new Dictionary<int, QuestSO>();
 
     private void Awake()
     {
@@ -358,15 +358,15 @@ public class PlayerController : MonoBehaviour
     public void Crouch(bool cancel = false)
     {
         cancelListerMode.Invoke();
-        
-        if (cancel)_isCrouching = true;
 
-        crouchSound.Play();
+        if (cancel) _isCrouching = true;
 
         _isCrouching = !_isCrouching;
 
         if (_characterController.isGrounded && _isCrouching)
         {
+            crouchSound.Play();
+
             ChangeMovementState(MOVEMENT_STATE.Crouch);
 
             _characterController.height = _playerConfig.height / 2;
@@ -381,11 +381,12 @@ public class PlayerController : MonoBehaviour
             _characterController.height = _playerConfig.height;
             _characterController.center = Vector3.zero;
         }
+
     }
 
     public void Footstep()
     {
-        if (!_canPlayFootstep)return;
+        if (!_canPlayFootstep) return;
 
         FootstepDetection();
         FootstepSound();
@@ -438,7 +439,7 @@ public class PlayerController : MonoBehaviour
 
     private void FootstepSound()
     {
-        if (_devSilentSteps)return;
+        if (_devSilentSteps) return;
 
         _targetsInSoundRadius = Physics.OverlapSphere(_groundPosition, _currentSoundRadius, _worldConfig.layerNPC);
 
@@ -446,7 +447,7 @@ public class PlayerController : MonoBehaviour
         {
             _currentNPC = _targetsInSoundRadius[i].GetComponent<NPCController>();
 
-            if (_currentNPC != null)_currentNPC.SetDestination(transform.position);
+            if (_currentNPC != null) _currentNPC.SetDestination(transform.position);
         }
     }
 

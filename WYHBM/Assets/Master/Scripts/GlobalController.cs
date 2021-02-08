@@ -63,6 +63,8 @@ public class GlobalController : MonoBehaviour
     // Shaders
     private int hash_IsVisible = Shader.PropertyToID("_IsVisible");
 
+    private bool _blockSoundListenMode;
+
     // PostProcess
     private ColorAdjustments _ppColorAdjustments;
     private LensDistortion _ppLensDistortion;
@@ -89,14 +91,14 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
-        if (_devAutoInit)CheckPersistenceObjects();
+        if (_devAutoInit) CheckPersistenceObjects();
     }
 
     public void Init(Vector3 spawnPosition)
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Player"));
 
-        if (!_devAutoInit)CheckPersistenceObjects();
+        if (!_devAutoInit) CheckPersistenceObjects();
 
         _enableMovementEvent = new EnableMovementEvent();
 
@@ -189,7 +191,7 @@ public class GlobalController : MonoBehaviour
         _canvasWorld.Show(!_inCombat);
 
         _combatController.SetCombatArea(_inCombat);
-        if (!_inCombat)_canvasCombat.ClearActions();
+        if (!_inCombat) _canvasCombat.ClearActions();
 
         ChangeToCombatCamera(_inCombat ? _combatController.GetCombatAreaCamera() : null);
     }
@@ -237,7 +239,7 @@ public class GlobalController : MonoBehaviour
 
         _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
         _gameData.DevDDLegacyMode = _devDDLegacyMode;
-        if (_devAutoInit)_gameData.GetSceneReferences();
+        if (_devAutoInit) _gameData.GetSceneReferences();
         sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
@@ -262,14 +264,19 @@ public class GlobalController : MonoBehaviour
 
     private void CancelListenMode()
     {
-        if (!_playerController.IsCrouching)return;
+        if (!_playerController.IsCrouching) return;
+
+        _blockSoundListenMode = true;
 
         ListenMode(false);
+
+        _fovIsActive = false;
     }
 
     private void ListenMode(bool active)
     {
-        if (!_playerController.IsCrouching)return;
+        if (!_playerController.IsCrouching) return;
+
 
         _fovIsActive = active;
 
@@ -308,6 +315,7 @@ public class GlobalController : MonoBehaviour
         if (_fovIsActive)
         {
             listenModeOnSound.Play();
+
             while (_fovCurrentTime < _worldConfig.fovTime)
             {
                 SetValuesListenMode();
@@ -319,7 +327,17 @@ public class GlobalController : MonoBehaviour
         }
         else
         {
-            listenModeOffSound.Play();
+
+            if (!_blockSoundListenMode)
+            {
+                listenModeOffSound.Play();
+                
+            }
+            else
+            {
+                _blockSoundListenMode = false;
+            }
+
             while (_fovCurrentTime > 0)
             {
                 SetValuesListenMode();
@@ -328,7 +346,9 @@ public class GlobalController : MonoBehaviour
 
                 yield return null;
             }
+
         }
+
 
         _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;
 
@@ -355,7 +375,7 @@ public class GlobalController : MonoBehaviour
 
     private void Pause(PAUSE_TYPE pauseType)
     {
-        if (_inCombat || _inDialog)return;
+        if (_inCombat || _inDialog) return;
 
         _isPaused = !_isPaused;
 
@@ -486,7 +506,7 @@ public class GlobalController : MonoBehaviour
 
     private void OnInteractionDialog(InteractionEvent evt)
     {
-        if (!evt.isStart)return;
+        if (!evt.isStart) return;
 
         EnableMovement(false);
     }
@@ -533,7 +553,7 @@ public class GlobalController : MonoBehaviour
             case QUEST_STATE.New:
                 for (int i = 0; i < sessionData.listQuest.Count; i++)
                 {
-                    if (sessionData.listQuest[i].data = evt.data)break;
+                    if (sessionData.listQuest[i].data = evt.data) break;
                 }
 
                 Quest newQuest = new Quest();
@@ -550,7 +570,7 @@ public class GlobalController : MonoBehaviour
                     {
                         sessionData.listQuest[i].currentStep++;
 
-                        if (sessionData.listQuest[i].currentStep >= evt.data.steps)CompleteQuest(i);
+                        if (sessionData.listQuest[i].currentStep >= evt.data.steps) CompleteQuest(i);
                         break;
                     }
                 }
