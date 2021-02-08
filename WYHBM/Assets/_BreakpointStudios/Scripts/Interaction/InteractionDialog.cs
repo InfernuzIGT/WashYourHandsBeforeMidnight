@@ -8,6 +8,9 @@ public class InteractionDialog : Interaction
     [SerializeField] private LocalizedString _localizedDialog;
 
     private DialogSimpleEvent _interactionDialogEvent;
+    [SerializeField] private Animator anim;
+    private bool _isPlaying;
+    
 
     private void Start()
     {
@@ -18,6 +21,7 @@ public class InteractionDialog : Interaction
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
+
             Execute(true);
         }
     }
@@ -39,7 +43,16 @@ public class InteractionDialog : Interaction
         _interactionDialogEvent.questData = GetData();
         _interactionDialogEvent.questState = GetQuestState();
 
+        if (anim != null && !_isPlaying)
+        {
+            _isPlaying = true;
+
+            anim.SetBool("startAnim", true);
+
+        }
+
         EventController.TriggerEvent(_interactionDialogEvent);
+
     }
 
     private QuestSO GetData()

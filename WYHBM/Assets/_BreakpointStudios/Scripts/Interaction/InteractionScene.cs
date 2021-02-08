@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Events;
 using UnityEngine;
+using FMODUnity;
 
 public class InteractionScene : Interaction, IInteractable, IHoldeable
 {
@@ -19,6 +20,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
     private List<AsyncOperation> _listScenes;
     private ChangeSceneEvent _changeSceneEvent;
+
 
     public bool ShowDebug { get { return _showDebug; } }
 
@@ -91,6 +93,8 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         EventController.RemoveListener<InteractionEvent>(OnInteractScene);
 
         EventController.TriggerEvent(_changeSceneEvent);
+
+        // doorSound.Play();
 
         ForceCleanInteraction();
     }
