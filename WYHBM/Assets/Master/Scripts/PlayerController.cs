@@ -381,6 +381,8 @@ public class PlayerController : MonoBehaviour
         {
             crouchSound.Play();
 
+            //footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+
             ChangeMovementState(MOVEMENT_STATE.Crouch);
 
             _characterController.height = _playerConfig.height / 2;
@@ -389,6 +391,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             standSound.Play();
+
+            //footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
             ChangeMovementState();
 
