@@ -168,7 +168,7 @@ public class GlobalController : MonoBehaviour
         {
             _fadeEvent.instant = false;
             _fadeEvent.delay = 0;
-            _fadeEvent.callbackEnd = () => EnableMovement(true);
+            _fadeEvent.callbackEnd = () => EnableMovement(true, true);
             StartCoroutine(FinishCombat());
         }
     }
@@ -422,13 +422,13 @@ public class GlobalController : MonoBehaviour
         if (combatCamera == null)
         {
             _combatCamera.gameObject.SetActive(false);
-            _playerCamera.gameObject.SetActive(true);
+            // _playerCamera.gameObject.SetActive(true);
             _combatCamera = null;
         }
         else
         {
             combatCamera.gameObject.SetActive(true);
-            _playerCamera.gameObject.SetActive(false);
+            // _playerCamera.gameObject.SetActive(false);
             _combatCamera = combatCamera;
         }
     }
@@ -478,9 +478,10 @@ public class GlobalController : MonoBehaviour
         _playerController.gameObject.SetActive(!isHiding);
     }
 
-    private void EnableMovement(bool enable)
+    private void EnableMovement(bool enable, bool isDetected = false)
     {
         _enableMovementEvent.canMove = enable;
+        _enableMovementEvent.isDetected = isDetected;
         EventController.TriggerEvent(_enableMovementEvent);
     }
 

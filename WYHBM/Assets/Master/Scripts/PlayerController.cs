@@ -3,11 +3,12 @@ using Events;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
+// using UnityEngine.VFX;
+// using UnityEngine.VFX.Utility;
 
 [RequireComponent(typeof(CharacterController), typeof(SpriteRenderer), typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
-
     [Header("General")]
     [SerializeField, ReadOnly] private PlayerSO _playerData = null;
     [SerializeField, ReadOnly] private MOVEMENT_STATE _movementState = MOVEMENT_STATE.Walk;
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
     // [SerializeField] private FMODConfig _fmodConfig = null;
     [Space]
     // [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
+    // [SerializeField, ConditionalHide] private VisualEffect _vfxFootstep = null;
     [SerializeField, ConditionalHide] private CharacterController _characterController = null;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
 
@@ -62,6 +64,8 @@ public class PlayerController : MonoBehaviour
     private float _currentSoundRadius;
     private Vector3 _groundPosition;
     private NPCController _currentNPC;
+    private bool _canPlayVFXFootstep;
+    // private ExposedProperty hash_FootstepTexture = "VFX Texture";
 
     //Jump
     // private float _jump = 9.81f;
@@ -192,7 +196,7 @@ public class PlayerController : MonoBehaviour
     // {
     //     GUIStyle guiStyle = new GUIStyle();
     //     guiStyle.fontSize = 50;
-    //     GUI.Label(new Rect(10, 10, 100, 20), string.Format("Velocity Y: {0}", _characterController.velocity.y.ToString()), guiStyle);
+    //     GUI.Label(new Rect(10, 10, 100, 20), string.Format("Velocity: {0}", _characterController.velocity.magnitude), guiStyle);
     // }
 
     private void Movement()
@@ -213,6 +217,8 @@ public class PlayerController : MonoBehaviour
                 // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
                 _animatorController.Walk(false);
+
+                _canPlayVFXFootstep = true;
 
                 // TODO Mariano: Enable
                 // if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
@@ -238,6 +244,9 @@ public class PlayerController : MonoBehaviour
             case MOVEMENT_STATE.Run:
                 _currentSoundRadius = _playerConfig.soundRadiusRun;
                 _speedHorizontal = _playerConfig.speedRun;
+
+                _canPlayVFXFootstep = true;
+
                 // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
                 break;
 
@@ -259,6 +268,9 @@ public class PlayerController : MonoBehaviour
                     _speedHorizontal = _playerConfig.speedCrouch;
                     // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
+
+                _canPlayVFXFootstep = false;
+
                 break;
 
             case MOVEMENT_STATE.Jump:
@@ -359,6 +371,8 @@ public class PlayerController : MonoBehaviour
     {
         cancelListerMode.Invoke();
 
+        if (cancel)_isCrouching = true;
+
         if (cancel) _isCrouching = true;
 
         _isCrouching = !_isCrouching;
@@ -405,26 +419,32 @@ public class PlayerController : MonoBehaviour
             switch (_hit.collider.gameObject.tag)
             {
                 case Tags.Ground_Grass:
+                    // _vfxFootstep.SetTexture(hash_FootstepTexture, _worldConfig.textureGrass);
                     footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 2);
                     break;
 
                 case Tags.Ground_Dirt:
+                    // _vfxFootstep.SetTexture(hash_FootstepTexture, _worldConfig.textureDirt);
                     footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
                     break;
 
                 case Tags.Ground_Wood:
+                    // _vfxFootstep.SetTexture(hash_FootstepTexture, _worldConfig.textureWood);
                     footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
                     break;
 
                 case Tags.Ground_Cement:
+                    // _vfxFootstep.SetTexture(hash_FootstepTexture, _worldConfig.textureCement);
                     footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
                     break;
 
                 case Tags.Ground_Ceramic:
+                    // _vfxFootstep.SetTexture(hash_FootstepTexture, _worldConfig.textureCeramic);
                     footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 3);
                     break;
 
                 default:
+                    // _vfxFootstep.SetTexture(hash_FootstepTexture, _worldConfig.textureDefault);
                     footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
                     break;
             }
@@ -435,6 +455,8 @@ public class PlayerController : MonoBehaviour
         // }
 
         footstepSound.Play();
+
+        // if (_canPlayVFXFootstep)_vfxFootstep.Play();
     }
 
     private void FootstepSound()
@@ -644,14 +666,14 @@ public class PlayerController : MonoBehaviour
             _characterController.enabled = false;
             StopMovement();
 
-            // TODO Mariano: Enable
-            // if (evt.isDetected)_animatorController.Detected(true);
+            if (evt.isDetected)_animatorController.Detected(true);
         }
 
         if (evt.canMove)
         {
             _isInteracting = false;
 
+            if (evt.isDetected)_animatorController.Detected(false);
             // Crouch(true);
         }
     }

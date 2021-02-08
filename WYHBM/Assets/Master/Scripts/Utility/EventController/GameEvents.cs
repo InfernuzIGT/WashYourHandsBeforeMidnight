@@ -50,7 +50,7 @@ namespace Events
     {
         public bool isEnter;
         public bool isWin;
-        public Vector3 detectionLocation;
+        public Transform enemy;
         public List<Enemy> combatEnemies = new List<Enemy>();
     }
 

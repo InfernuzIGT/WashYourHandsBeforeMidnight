@@ -17,7 +17,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
     private Vector2 _lookVector;
     private Vector2 _mouseVector;
-    private Vector2 _tempVector;
+    [ReadOnly, SerializeField] private Vector2 _tempVector;
     private PlayerController _player;
     private DEVICE _currentDevice;
     private Camera _camera;
@@ -31,7 +31,7 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
     // Combat
     private bool _inCombat;
-    private Vector3 _combatLocation;
+    private int _lastIndexZoom;
 
     private void Awake()
     {
@@ -82,22 +82,12 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
     private void Update()
     {
-        if (_isFade || !_canMove || !_isInitialized || !Application.isFocused)
+        if (_isFade || !_canMove || !_isInitialized || !Application.isFocused || _inCombat)
         {
             _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
             _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;
             return;
         }
-
-        // TODO Mariano: Hacer que mire a donde esta el enemigo que te detecto
-        // if (_inCombat)
-        // {
-        //     _tempVector = _camera.WorldToViewportPoint(_combatLocation);
-
-        //     _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _tempVector.x;
-        //     _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _tempVector.y;
-        //     return;
-        // }
 
         if (_currentDevice != DEVICE.PC)
         {
@@ -195,7 +185,22 @@ public class CinemachineVirtualUtility : MonoBehaviour
     private void OnCombat(CombatEvent evt)
     {
         _inCombat = evt.isEnter;
-        _combatLocation = evt.detectionLocation;
+
+        if (_inCombat)
+        {
+            _cinemachineVirtual.m_Follow = evt.enemy;
+
+            _lastIndexZoom = _indexZoom;
+            _indexZoom = 0;
+        }
+        else
+        {
+            _cinemachineVirtual.m_Follow = _player.transform;
+
+            _indexZoom = _lastIndexZoom;
+        }
+
+        _cinemachineFramingTransposer.m_CameraDistance = _playerConfig.zoomValues[_indexZoom];
     }
 
     #endregion

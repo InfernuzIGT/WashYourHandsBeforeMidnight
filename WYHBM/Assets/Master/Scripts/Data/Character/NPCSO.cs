@@ -9,13 +9,14 @@ public class NPCSO : CharacterSO
 
     [Header("Combat")]
     [SerializeField] private bool _canCombat = false;
+    [SerializeField, PreviewTexture(64)] private Sprite _spriteCorpse = null;
     [SerializeField] private List<Enemy> combatEnemies;
 
     [Header("IA")]
     [SerializeField] private bool _canMove = true;
     [SerializeField, Range(0f, 10f)] private float _speedMovement = 5;
     [SerializeField, Range(0f, 360f)] private float _speedRotation = 180;
-    [SerializeField] private bool _useRandomPosition = true;
+    [SerializeField] private bool _useRandomPosition = false;
     [SerializeField, Range(0f, 10f)] private float _waitTime = 5;
 
     [Header("Field of View")]
@@ -25,6 +26,7 @@ public class NPCSO : CharacterSO
     // Properties
     public InteractionData[] Data { get { return _data; } }
 
+    public Sprite SpriteCorpse { get { return _spriteCorpse; } }
     public List<Enemy> CombatEnemies { get { return combatEnemies; } }
     public bool CanCombat { get { return _canCombat; } }
     public bool CanMove { get { return _canMove; } }
