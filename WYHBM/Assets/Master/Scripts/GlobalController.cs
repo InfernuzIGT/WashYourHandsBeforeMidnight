@@ -331,7 +331,7 @@ public class GlobalController : MonoBehaviour
             if (!_blockSoundListenMode)
             {
                 listenModeOffSound.Play();
-                
+                listenModeOnSound.Stop();
             }
             else
             {

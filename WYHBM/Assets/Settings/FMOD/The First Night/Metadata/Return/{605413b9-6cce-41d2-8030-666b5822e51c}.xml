@@ -20,16 +20,55 @@
 	<object class="MixerBusEffectChain" id="{44e774d4-fd6f-4152-a369-3f921f8d96dc}">
 		<relationship name="effects">
 			<destination>{cf719061-f26a-45aa-9b49-8c77c541d901}</destination>
+			<destination>{53a26858-1329-4b4a-9e90-502a32b9f1ca}</destination>
 			<destination>{7defb6da-9b80-4cde-b047-254d9650ade4}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{8c87d678-8dd9-4db4-9578-9b94e6466306}" />
 	<object class="SFXReverbEffect" id="{cf719061-f26a-45aa-9b49-8c77c541d901}">
+		<property name="decayTime">
+			<value>4100</value>
+		</property>
+		<property name="HFReference">
+			<value>9500</value>
+		</property>
+		<property name="HFDecayRatio">
+			<value>22.5</value>
+		</property>
+		<property name="diffusion">
+			<value>44</value>
+		</property>
+		<property name="lowShelfFrequency">
+			<value>590</value>
+		</property>
+		<property name="lowShelfGain">
+			<value>-8.5</value>
+		</property>
+		<property name="highCut">
+			<value>9500</value>
+		</property>
+		<property name="earlyLateMix">
+			<value>77</value>
+		</property>
 		<property name="wetLevel">
-			<value>0</value>
+			<value>-2</value>
 		</property>
 		<property name="dryLevel">
 			<value>-80</value>
+		</property>
+	</object>
+	<object class="MultibandEqEffect" id="{53a26858-1329-4b4a-9e90-502a32b9f1ca}">
+		<property name="filterTypeA">
+			<value>0</value>
+		</property>
+		<property name="filterTypeE">
+			<value>8</value>
+		</property>
+		<property name="frequencyE">
+			<value>2446.88208</value>
+		</property>
+		<property name="gainE">
+			<value>-2.58620834</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{7defb6da-9b80-4cde-b047-254d9650ade4}" />
