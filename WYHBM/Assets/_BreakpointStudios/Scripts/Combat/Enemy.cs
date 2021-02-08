@@ -18,6 +18,12 @@ public class Enemy : CombatCharacter
 		_combatRemoveCharacterEvent.isPlayer = false;
 	}
 
+	public override void EffectReceiveDamage()
+	{
+		_vibrationEvent.type = RUMBLE_TYPE.Attack;
+		EventController.TriggerEvent(_vibrationEvent);
+	}
+
 	public void Select()
 	{
 		int randomPlayer = Random.Range(0, GameData.Instance.GetListPlayer().Count);
@@ -79,11 +85,10 @@ public class Enemy : CombatCharacter
 		{
 			yield return null;
 		}
-		
+
 		MaterialShow(false);
 
 		yield return _waitPerAction;
-
 
 		AnimationAction(ANIM_STATE.Idle);
 	}

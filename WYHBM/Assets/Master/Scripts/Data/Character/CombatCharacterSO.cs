@@ -6,8 +6,6 @@ public class CombatCharacterSO : ScriptableObject
     [Header("Character")]
     [SerializeField] private string _name = "-";
     [SerializeField, PreviewTexture(64)] private Sprite _sprite = null;
-    [SerializeField, PreviewTexture(64)] private Sprite _previewSprite = null;
-    [SerializeField, PreviewTexture(64)] private Sprite _turnSprite = null;
     [SerializeField] private AnimatorOverrideController _animatorController = null;
 
     [Header("Combat")]
@@ -22,8 +20,6 @@ public class CombatCharacterSO : ScriptableObject
     // Properties
     public string Name { get { return _name; } }
     public Sprite Sprite { get { return _sprite; } }
-    public Sprite PreviewSprite { get { return _previewSprite; } }
-    public Sprite TurnSprite { get { return _turnSprite; } }
     public AnimatorOverrideController AnimatorController { get { return _animatorController; } }
     public Equipment Equipment { get { return _equipment; } }
     public int StatsHealthMax { get { return _statsHealthMax; } }

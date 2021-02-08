@@ -14,8 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fovTime: 0.15
   fadeCutsceneDuration: 1
-  fadeFastDuration: 1
-  fadeSlowDuration: 3
+  fadeDuration: 1
+  fadeDelay: 1.5
+  interactionCorpse: {fileID: 4279125928587726095, guid: c411673567554d344a65adc50e32ec6b,
+    type: 3}
+  textTimeStart: 0.5
+  textTimeSpeed: 0.025
+  textureDefault: {fileID: 2800000, guid: 6237d0fa23b0a2b439d76443ec7f21d8, type: 3}
+  textureGrass: {fileID: 2800000, guid: f74c196d622ab8f48a772410ca1f847f, type: 3}
+  textureDirt: {fileID: 2800000, guid: 5c6ce9591d2671b44bc5b91f3e076cf3, type: 3}
+  textureWood: {fileID: 2800000, guid: 26694be621e935840bd76e20eb3d0c11, type: 3}
+  textureCement: {fileID: 2800000, guid: 445856e935cc3a041b47201916e62909, type: 3}
+  textureCeramic: {fileID: 2800000, guid: 44cc04a6474c33242b66e10ee9277e7a, type: 3}
   layerFOVTarget:
     serializedVersion: 2
     m_Bits: 524288

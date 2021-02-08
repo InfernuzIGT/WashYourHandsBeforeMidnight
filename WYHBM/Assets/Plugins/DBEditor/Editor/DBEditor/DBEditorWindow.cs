@@ -27,6 +27,7 @@ namespace DBEditor
         private bool _dragging;
         private float _splitterWidth = 0;
         private float _labelWidth;
+        private Vector2 scrollPos;
 
         [MenuItem("Tools/DBEditor", priority = 1100)]
         static void Init()
@@ -130,6 +131,8 @@ namespace DBEditor
 
             EditorGUILayout.BeginVertical();
 
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+
             EditorGUIUtility.labelWidth = _labelWidth;
 
             if (!_inspectorLock)
@@ -161,6 +164,8 @@ namespace DBEditor
 
                 EditorGUILayout.EndVertical();
             }
+
+            EditorGUILayout.EndScrollView();
 
             EditorGUILayout.EndVertical();
 

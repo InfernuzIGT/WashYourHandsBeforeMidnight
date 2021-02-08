@@ -44,6 +44,7 @@ public class GlobalController : MonoBehaviour
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
     [SerializeField, ConditionalHide] private WorldConfig _worldConfig;
+    [SerializeField, ConditionalHide] private CombatConfig _combatConfig;
     [SerializeField, ConditionalHide] private Camera _mainCamera;
     [SerializeField, ConditionalHide] private CinemachineVirtualUtility _playerCamera;
     [Space]
@@ -53,14 +54,16 @@ public class GlobalController : MonoBehaviour
     [SerializeField, ConditionalHide] private CombatController _combatController;
     [Space]
     [SerializeField, ConditionalHide] private PlayableDirector _playableDirector;
-    [SerializeField, ConditionalHide] private GameMode.World.UIManager _canvasWorld;
-    [SerializeField, ConditionalHide] private GameMode.Combat.UIManager _canvasCombat;
+    [SerializeField, ConditionalHide] private CanvasWorld _canvasWorld;
+    [SerializeField, ConditionalHide] private CanvasCombat _canvasCombat;
     [Space]
     [SerializeField, ConditionalHide] private Material _materialFOV;
     [SerializeField, ConditionalHide] private Material _materialDitherNPC;
 
     // Shaders
     private int hash_IsVisible = Shader.PropertyToID("_IsVisible");
+
+    private bool _blockSoundListenMode;
 
     // PostProcess
     private ColorAdjustments _ppColorAdjustments;
@@ -88,14 +91,14 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
-        if (_devAutoInit)CheckPersistenceObjects();
+        if (_devAutoInit) CheckPersistenceObjects();
     }
 
     public void Init(Vector3 spawnPosition)
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Player"));
 
-        if (!_devAutoInit)CheckPersistenceObjects();
+        if (!_devAutoInit) CheckPersistenceObjects();
 
         _enableMovementEvent = new EnableMovementEvent();
 
@@ -108,7 +111,7 @@ public class GlobalController : MonoBehaviour
         _pauseEvent = new PauseEvent();
 
         _fadeEvent = new FadeEvent();
-        _fadeEvent.fast = true;
+        _fadeEvent.callbackMid = SwitchAmbient;
 
         SpawnPlayer(spawnPosition);
         SpawnUI();
@@ -152,24 +155,33 @@ public class GlobalController : MonoBehaviour
 
     private void OnCombat(CombatEvent evt)
     {
+        _inCombat = evt.isEnter;
+
         if (evt.isEnter)
         {
-            _inCombat = true;
-
-            // _fadeEvent.callbackStart = null;
-            // _fadeEvent.callbackMid = SwitchAmbient;
-            _fadeEvent.callbackEnd = StartCombat;
+            _fadeEvent.instant = true;
+            _fadeEvent.delay = _worldConfig.fadeDelay;
+            _fadeEvent.callbackEnd = _combatController.InitiateTurn;
+            StartCoroutine(StartCombat());
         }
         else
         {
-            _inCombat = false;
-
-            // _fadeEvent.callbackStart = null;
-            // _fadeEvent.callbackMid = SwitchAmbient;
-            _fadeEvent.callbackEnd = () => EnableMovement(true);
+            _fadeEvent.instant = false;
+            _fadeEvent.delay = 0;
+            _fadeEvent.callbackEnd = () => EnableMovement(true, true);
+            StartCoroutine(FinishCombat());
         }
-        
-        _fadeEvent.callbackMid = SwitchAmbient;
+    }
+
+    private IEnumerator StartCombat()
+    {
+        yield return new WaitForSeconds(_combatConfig.waitTimeToStart);
+        EventController.TriggerEvent(_fadeEvent);
+    }
+
+    private IEnumerator FinishCombat()
+    {
+        yield return new WaitForSeconds(_combatConfig.waitTimeToFinish);
         EventController.TriggerEvent(_fadeEvent);
     }
 
@@ -178,25 +190,10 @@ public class GlobalController : MonoBehaviour
         _canvasCombat.Show(_inCombat);
         _canvasWorld.Show(!_inCombat);
 
-        // combatManager.ToggleInputCombat(_inCombat);
         _combatController.SetCombatArea(_inCombat);
+        if (!_inCombat) _canvasCombat.ClearActions();
 
-        if (!_inCombat)
-        {
-            ChangeToCombatCamera(null);
-            _canvasCombat.actions.Clear();
-            _canvasCombat.ClearTurn();
-        }
-        else
-        {
-            ChangeToCombatCamera(_combatController.GetCombatAreaCamera());
-        }
-    }
-
-    private void StartCombat()
-    {
-        // currentNPC?.Kill();
-        _combatController.InitiateTurn();
+        ChangeToCombatCamera(_inCombat ? _combatController.GetCombatAreaCamera() : null);
     }
 
     private void OnPause(PauseEvent evt)
@@ -242,7 +239,7 @@ public class GlobalController : MonoBehaviour
 
         _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
         _gameData.DevDDLegacyMode = _devDDLegacyMode;
-        if (_devAutoInit)_gameData.GetSceneReferences();
+        if (_devAutoInit) _gameData.GetSceneReferences();
         sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
@@ -267,19 +264,23 @@ public class GlobalController : MonoBehaviour
 
     private void CancelListenMode()
     {
-        if (!_playerController.IsCrouching)return;
+        if (!_playerController.IsCrouching) return;
+
+        _blockSoundListenMode = true;
 
         ListenMode(false);
+
+        _fovIsActive = false;
     }
 
     private void ListenMode(bool active)
     {
-        if (!_playerController.IsCrouching)return;
+        if (!_playerController.IsCrouching) return;
+
 
         _fovIsActive = active;
 
         // if (!playerController.IsCrouching)playerController.Crouch();
-
 
         if (_coroutineListenMode != null)
         {
@@ -313,7 +314,8 @@ public class GlobalController : MonoBehaviour
     {
         if (_fovIsActive)
         {
-                listenModeOnSound.Play();
+            listenModeOnSound.Play();
+
             while (_fovCurrentTime < _worldConfig.fovTime)
             {
                 SetValuesListenMode();
@@ -325,7 +327,17 @@ public class GlobalController : MonoBehaviour
         }
         else
         {
-            listenModeOffSound.Play();
+
+            if (!_blockSoundListenMode)
+            {
+                listenModeOffSound.Play();
+                
+            }
+            else
+            {
+                _blockSoundListenMode = false;
+            }
+
             while (_fovCurrentTime > 0)
             {
                 SetValuesListenMode();
@@ -334,7 +346,9 @@ public class GlobalController : MonoBehaviour
 
                 yield return null;
             }
+
         }
+
 
         _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;
 
@@ -361,7 +375,7 @@ public class GlobalController : MonoBehaviour
 
     private void Pause(PAUSE_TYPE pauseType)
     {
-        if (_inCombat || _inDialog)return;
+        if (_inCombat || _inDialog) return;
 
         _isPaused = !_isPaused;
 
@@ -408,13 +422,13 @@ public class GlobalController : MonoBehaviour
         if (combatCamera == null)
         {
             _combatCamera.gameObject.SetActive(false);
-            _playerCamera.gameObject.SetActive(true);
+            // _playerCamera.gameObject.SetActive(true);
             _combatCamera = null;
         }
         else
         {
             combatCamera.gameObject.SetActive(true);
-            _playerCamera.gameObject.SetActive(false);
+            // _playerCamera.gameObject.SetActive(false);
             _combatCamera = combatCamera;
         }
     }
@@ -464,9 +478,10 @@ public class GlobalController : MonoBehaviour
         _playerController.gameObject.SetActive(!isHiding);
     }
 
-    private void EnableMovement(bool enable)
+    private void EnableMovement(bool enable, bool isDetected = false)
     {
         _enableMovementEvent.canMove = enable;
+        _enableMovementEvent.isDetected = isDetected;
         EventController.TriggerEvent(_enableMovementEvent);
     }
 
@@ -492,7 +507,7 @@ public class GlobalController : MonoBehaviour
 
     private void OnInteractionDialog(InteractionEvent evt)
     {
-        if (!evt.isStart)return;
+        if (!evt.isStart) return;
 
         EnableMovement(false);
     }
@@ -539,7 +554,7 @@ public class GlobalController : MonoBehaviour
             case QUEST_STATE.New:
                 for (int i = 0; i < sessionData.listQuest.Count; i++)
                 {
-                    if (sessionData.listQuest[i].data = evt.data)break;
+                    if (sessionData.listQuest[i].data = evt.data) break;
                 }
 
                 Quest newQuest = new Quest();
@@ -556,7 +571,7 @@ public class GlobalController : MonoBehaviour
                     {
                         sessionData.listQuest[i].currentStep++;
 
-                        if (sessionData.listQuest[i].currentStep >= evt.data.steps)CompleteQuest(i);
+                        if (sessionData.listQuest[i].currentStep >= evt.data.steps) CompleteQuest(i);
                         break;
                     }
                 }

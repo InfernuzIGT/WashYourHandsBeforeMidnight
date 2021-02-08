@@ -15,11 +15,39 @@ MonoBehaviour:
   MaxCategoryId: 1000
   LabelWidth: 220
   Configs:
+  - TreeViewName: Config
+    FileStoragePath: Assets/Plugins/DBEditor/Config
+    ClassName: 
+    AutoScan: 0
+    Files:
+    - {fileID: 11400000}
   - TreeViewName: General
-    FileStoragePath: Assets/Data/Config
+    FileStoragePath: Assets/Master/Data/Config
     ClassName: 
     AutoScan: 0
     Files:
     - {fileID: 11400000, guid: aef813af54698824ba8ae4f7bee4a0c3, type: 2}
+    - {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
+    - {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
     - {fileID: 11400000, guid: f71be2b2a211cce44bb4c3a9b28874c7, type: 2}
     - {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
+  - TreeViewName: NPCs
+    FileStoragePath: Assets
+    ClassName: 
+    AutoScan: 0
+    Files:
+    - {fileID: 11400000, guid: 1f90fec080eb797448ad460e48f385ba, type: 2}
+    - {fileID: 11400000, guid: aec03bd49dbf7ae40b73e768a8fc9a16, type: 2}
+    - {fileID: 11400000, guid: 31afae6c04c4b80499587212e83ab496, type: 2}
+    - {fileID: 11400000, guid: d52f348c122d342489c8e80dfd803a48, type: 2}
+    - {fileID: 11400000, guid: 577fe24a01720e24187666469fd12dc7, type: 2}
+    - {fileID: 11400000, guid: b3ad24753a6f159449cc92054ca15cd3, type: 2}
+    - {fileID: 11400000, guid: c02a552bd6bd9724ab0e16b61be48c11, type: 2}
+  - TreeViewName: Combat Characters
+    FileStoragePath: Assets
+    ClassName: 
+    AutoScan: 0
+    Files:
+    - {fileID: 11400000, guid: dcbb41f3800bdec4caefb1106d980f17, type: 2}
+    - {fileID: 11400000, guid: 8686b75f15adcea47875edb6cb2f905f, type: 2}
+    - {fileID: 11400000, guid: 60a31a66497ee9b4a9e2f1efada86fb0, type: 2}

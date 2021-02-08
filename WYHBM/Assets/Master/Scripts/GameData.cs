@@ -164,6 +164,7 @@ public class GameData : MonoSingleton<GameData>
 		EventController.AddListener<ChangeSceneEvent>(OnChangeScene);
 		EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
 		EventController.AddListener<PauseEvent>(OnPause);
+		EventController.AddListener<VibrationEvent>(OnVibration);
 	}
 
 	private void OnDisable()
@@ -171,6 +172,12 @@ public class GameData : MonoSingleton<GameData>
 		EventController.RemoveListener<ChangeSceneEvent>(OnChangeScene);
 		EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
 		EventController.RemoveListener<PauseEvent>(OnPause);
+		EventController.RemoveListener<VibrationEvent>(OnVibration);
+	}
+
+	private void OnVibration(VibrationEvent evt)
+	{
+		PlayRumble(evt.type);
 	}
 
 	public void DetectDevice(InputDevice inputDevice = null)

@@ -10,34 +10,53 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
     [SerializeField, ConditionalHide] private CombatConfig _combatConfig = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasUtility = null;
     [SerializeField, ConditionalHide] private Image _healthBackImg = null;
     [SerializeField, ConditionalHide] private Image _healthFrontImg = null;
 
     private CanvasGroup _canvasGroup;
+    private Tween _barAnimation;
 
-    private void Awake()
+    private void Start()
     {
-        // _canvasGroup = GetComponent<CanvasGroup>();
-        Canvas canvas = GetComponent<Canvas>();
-        canvas.worldCamera = Camera.main;
+        _canvasUtility.SetCanvasCamera();
     }
 
-    public void UpdateBar(float value)
+    public void UpdateBar(bool isDamage, float value)
     {
-        _healthBackImg.DOFillAmount(value, _combatConfig.fillDuration);
-        _healthFrontImg.fillAmount = value;
+        _barAnimation.Kill();
+
+        if (isDamage)
+        {
+            _barAnimation = _healthBackImg.DOFillAmount(value, _combatConfig.fillDuration);
+            _healthFrontImg.fillAmount = value;
+        }
+        else
+        {
+            _healthBackImg.fillAmount = value;
+            _barAnimation = _healthFrontImg.DOFillAmount(value, _combatConfig.fillDuration);
+        }
     }
-    
-    public void UpdateBar(float value, TweenCallback action)
+
+    public void UpdateBar(bool isDamage, float value, TweenCallback action)
     {
-        _healthBackImg.DOFillAmount(value, _combatConfig.fillDuration).OnComplete(action);
-        _healthFrontImg.fillAmount = value;
+        _barAnimation.Kill();
+
+        if (isDamage)
+        {
+            _barAnimation = _healthBackImg.DOFillAmount(value, _combatConfig.fillDuration).OnComplete(action);
+            _healthFrontImg.fillAmount = value;
+        }
+        else
+        {
+            _healthBackImg.fillAmount = value;
+            _barAnimation = _healthFrontImg.DOFillAmount(value, _combatConfig.fillDuration).OnComplete(action);
+        }
     }
 
     public void Kill()
     {
-        // _canvasGroup.
-        // DOFade(0, GameData.Instance.combatConfig.canvasFadeDuration).
-        // SetEase(Ease.OutQuad);
+        _canvasUtility.ShowInstant(false);
+        // _canvasUtility.Show(false, 0, _combatConfig.waitTimePerAction);
     }
 }

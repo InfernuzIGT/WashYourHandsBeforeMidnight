@@ -2,7 +2,9 @@
 
 public class WorldAnimator : AnimatorController
 {
-    private Material _material;
+    [SerializeField, ConditionalHide] private Material _matDither;
+
+    private Material _matCharacter;
 
     private bool _isFlipped;
     public bool isFlipped { get { return _isFlipped; } }
@@ -11,7 +13,8 @@ public class WorldAnimator : AnimatorController
 
     private void Start()
     {
-        _material = _spriteRenderer.material;
+        _matCharacter = _spriteRenderer.material;
+        // _matDither = Instantiate(_matDither); // TODO Mariano: Se debe destruir con Resources.UnloadUnusedAssets 
     }
 
     public void Movement(Vector3 movement, MOVEMENT_STATE movementState = MOVEMENT_STATE.Walk)
@@ -43,7 +46,8 @@ public class WorldAnimator : AnimatorController
             _isFlipped = false;
         }
 
-        _material.SetFloat(hash_FlipUV, _isFlipped ? 1 : 0);
+        _matCharacter.SetFloat(hash_FlipUV, _isFlipped ? 1 : 0);
+        _matDither.SetFloat(hash_FlipUV, _isFlipped ? 1 : 0);
     }
 
     public void Walk(bool active)
