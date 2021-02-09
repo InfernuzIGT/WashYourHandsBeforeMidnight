@@ -22,6 +22,7 @@ public class Enemy : CombatCharacter
 	{
 		_vibrationEvent.type = RUMBLE_TYPE.Attack;
 		EventController.TriggerEvent(_vibrationEvent);
+		
 	}
 
 	public void Select()
@@ -31,6 +32,7 @@ public class Enemy : CombatCharacter
 
 		GameData.Instance.GetListPlayer()[randomPlayer].Select(randomAction == 0 ? Data.Equipment.actionA : Data.Equipment.actionB);
 		AnimationAction(randomAction == 0 ? ANIM_STATE.Attack_1 : ANIM_STATE.Attack_2);
+
 
 		DoAction();
 	}

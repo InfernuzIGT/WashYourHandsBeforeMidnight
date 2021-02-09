@@ -18,6 +18,11 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
     [SerializeField] private bool _showDebug = false;
     [SerializeField] private Color _color = new Color(0, 1, 0, 0.5f);
 
+    [Header("FMOD")]
+    public StudioEventEmitter holdStart;
+    public StudioEventEmitter holdStop;
+    public StudioEventEmitter doorSound;
+
     private List<AsyncOperation> _listScenes;
     private ChangeSceneEvent _changeSceneEvent;
 
@@ -64,10 +69,22 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         if (evt.isStart)
         {
             _holdUtility.OnStart();
+
+            if (_holdUtility.isDoor)
+            {
+                holdStart.Play();
+                
+            }
         }
         else
         {
             _holdUtility.OnCancel();
+
+            if (_holdUtility.isDoor)
+            {
+                holdStart.Stop();
+                holdStop.Play();
+            }
         }
     }
 
@@ -94,7 +111,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 
         EventController.TriggerEvent(_changeSceneEvent);
 
-        // doorSound.Play();
+        doorSound.Play();
 
         ForceCleanInteraction();
     }

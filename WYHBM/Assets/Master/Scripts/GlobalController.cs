@@ -21,6 +21,9 @@ public class GlobalController : MonoBehaviour
 
     public StudioEventEmitter listenModeOnSound;
     public StudioEventEmitter listenModeOffSound;
+    FMOD.Studio.EventInstance _pauseSnapshot;
+    public StudioEventEmitter battleMusic;
+    public StudioEventEmitter victorySound;
 
     [Header("Developer")]
     [SerializeField] private bool _devAutoInit = false;
@@ -93,6 +96,12 @@ public class GlobalController : MonoBehaviour
     {
         if (_devAutoInit) CheckPersistenceObjects();
     }
+
+    private void Update()
+    {
+        // _pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/path del snapshot");
+    }
+
 
     public void Init(Vector3 spawnPosition)
     {
@@ -181,6 +190,7 @@ public class GlobalController : MonoBehaviour
 
     private IEnumerator FinishCombat()
     {
+        
         yield return new WaitForSeconds(_combatConfig.waitTimeToFinish);
         EventController.TriggerEvent(_fadeEvent);
     }
@@ -192,6 +202,12 @@ public class GlobalController : MonoBehaviour
 
         _combatController.SetCombatArea(_inCombat);
         if (!_inCombat) _canvasCombat.ClearActions();
+
+        if (!_inCombat)
+        {
+            battleMusic.Stop();
+            victorySound.Play();
+        }
 
         ChangeToCombatCamera(_inCombat ? _combatController.GetCombatAreaCamera() : null);
     }
@@ -226,6 +242,8 @@ public class GlobalController : MonoBehaviour
 
         _enableMovementEvent.canMove = !evt.isPaused;
         EventController.TriggerEvent(_enableMovementEvent);
+
+        _pauseSnapshot.start(); 
     }
 
     public List<Player> GetListPlayer()
@@ -430,6 +448,8 @@ public class GlobalController : MonoBehaviour
             combatCamera.gameObject.SetActive(true);
             // _playerCamera.gameObject.SetActive(false);
             _combatCamera = combatCamera;
+
+            battleMusic.Play();
         }
     }
 
