@@ -25,7 +25,11 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{bf4e8da7-4bdf-4eff-8d70-437d407e08b9}" />
-	<object class="GainEffect" id="{198b0273-191f-43ec-851a-f62efe18b4f6}" />
+	<object class="GainEffect" id="{198b0273-191f-43ec-851a-f62efe18b4f6}">
+		<property name="gain">
+			<value>-2</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{e25c7217-3a87-4a8e-b134-4d9b6867818d}" />
 	<object class="MultibandEqEffect" id="{bb204ab2-e1cf-4b24-9abe-f18d34c9bcd8}">
 		<property name="filterTypeA">
