@@ -90,6 +90,8 @@ public class GameData : MonoSingleton<GameData>
 #else
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
+		
+		DeleteAll();
 #endif
 
 		base.Awake();
@@ -152,7 +154,7 @@ public class GameData : MonoSingleton<GameData>
 
 		_globalController.Init(_spawnPoint.transform.position);
 
-		if (_loadAnimationEvent.isLoading)
+		if (_loadAnimationEvent != null && _loadAnimationEvent.isLoading)
 		{
 			_loadAnimationEvent.isLoading = false;
 			EventController.TriggerEvent(_loadAnimationEvent);
