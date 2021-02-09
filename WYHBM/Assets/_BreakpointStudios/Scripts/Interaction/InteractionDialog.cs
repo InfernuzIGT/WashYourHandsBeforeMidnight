@@ -9,8 +9,7 @@ public class InteractionDialog : Interaction
 
     private DialogSimpleEvent _interactionDialogEvent;
     [SerializeField] private Animator anim;
-    private bool _isPlaying;
-    
+    [SerializeField] private bool _isPlaying;
 
     private void Start()
     {
