@@ -25,6 +25,7 @@ public class InputHoldUtility : MonoBehaviour, IHoldeable
     [SerializeField, ConditionalHide] private Image _iconImg = null;
     [SerializeField, ConditionalHide] private Image _fillImg = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasGroupUtility = null;
+    public bool isDoor;
 
     private Tween _fillAnimation;
     private Tween _fillColor;

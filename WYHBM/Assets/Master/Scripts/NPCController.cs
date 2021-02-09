@@ -165,6 +165,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             Movement();
             Rotation();
         }
+
     }
 
     private void Movement()
