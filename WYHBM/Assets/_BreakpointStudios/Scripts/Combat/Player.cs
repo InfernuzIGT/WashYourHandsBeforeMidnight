@@ -36,6 +36,7 @@ public class Player : CombatCharacter
         DOMove(transform.position - _combatConfig.positionAction, _combatConfig.animationDuration).
         SetEase(Ease.OutQuad);
 
+
         // transform.
         // DOMoveX(_combatConfig.positionXCharacter, _combatConfig.waitCombatDuration).
         // SetEase(Ease.OutQuad).

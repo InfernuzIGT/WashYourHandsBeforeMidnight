@@ -49,6 +49,8 @@ public class InteractionDialog : Interaction
 
             anim.SetBool("startAnim", true);
 
+            FMODUnity.RuntimeManager.PlayOneShot("event:/Interactables/Doors/Lever", GetComponent<Transform>().position);
+
         }
 
         EventController.TriggerEvent(_interactionDialogEvent);

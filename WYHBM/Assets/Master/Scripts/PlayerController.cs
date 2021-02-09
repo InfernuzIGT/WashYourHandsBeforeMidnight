@@ -214,7 +214,7 @@ public class PlayerController : MonoBehaviour
                 _currentSoundRadius = _playerConfig.soundRadiusJogging;
                 _speedHorizontal = _playerConfig.speedJogging;
 
-                // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+                footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
                 _animatorController.Walk(false);
 
@@ -253,20 +253,21 @@ public class PlayerController : MonoBehaviour
             case MOVEMENT_STATE.Crouch:
                 _currentSoundRadius = _playerConfig.soundRadiusCrouch;
 
+
                 if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
                 {
                     _speedHorizontal = _playerConfig.speedWalk;
-                    // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
                 else if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimitCrouch || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimitCrouch)
                 {
                     _speedHorizontal = _playerConfig.speedCrouchFast;
-                    // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
                 else
                 {
                     _speedHorizontal = _playerConfig.speedCrouch;
-                    // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
 
                 _canPlayVFXFootstep = false;
@@ -372,8 +373,6 @@ public class PlayerController : MonoBehaviour
         cancelListerMode.Invoke();
 
         if (cancel)_isCrouching = true;
-
-        if (cancel) _isCrouching = true;
 
         _isCrouching = !_isCrouching;
 

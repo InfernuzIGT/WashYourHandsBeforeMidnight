@@ -23,7 +23,7 @@ public class PlayerConfig : ScriptableObject
     public float speedCrouch = 2f;
     [Space]
     public float gravity = 39.24f;
-    public float magnitudeFall = 20f;
+    public float magnitudeFall = 30f;
     [Space]
     public float soundRadiusRun = 16f;
     public float soundRadiusJogging = 12f;
