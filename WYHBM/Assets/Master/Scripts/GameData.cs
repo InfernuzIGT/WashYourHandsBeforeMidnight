@@ -44,6 +44,7 @@ public class GameData : MonoSingleton<GameData>
 	private List<AsyncOperation> _listScenes;
 
 	private GlobalController _globalController;
+	private LevelManager _levelManager;
 	private SpawnPoint _spawnPoint;
 
 	// Scene Managment
@@ -75,6 +76,7 @@ public class GameData : MonoSingleton<GameData>
 	// Properties
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
 	public SpawnPoint SpawnPoint { get { return _spawnPoint; } }
+	public LevelManager LevelManager { get { return _levelManager; } }
 
 	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } set { _devDDLegacyMode = value; } }
 	public bool HomeUsed { get { return _homeUsed; } set { _homeUsed = value; } }
@@ -90,7 +92,7 @@ public class GameData : MonoSingleton<GameData>
 #else
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
-		
+
 		DeleteAll();
 #endif
 
@@ -144,13 +146,15 @@ public class GameData : MonoSingleton<GameData>
 			_globalController = GameObject.FindObjectOfType<GlobalController>();
 		}
 
-		_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+		_levelManager = GameObject.FindObjectOfType<LevelManager>();
 
-		while (_spawnPoint == null)
+		while (_levelManager == null)
 		{
 			yield return new WaitForSeconds(3);
-			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+			_levelManager = GameObject.FindObjectOfType<LevelManager>();
 		}
+
+		_spawnPoint = _levelManager.GetSpawnPoint(PlayerData.ID);
 
 		_globalController.Init(_spawnPoint.transform.position);
 
@@ -411,7 +415,7 @@ public class GameData : MonoSingleton<GameData>
 		{
 			_globalController.SessionData.listIds.Add(id);
 			// sessionData.listIds.Add(id);
-			Save();
+			// Save();
 		}
 	}
 
@@ -423,7 +427,7 @@ public class GameData : MonoSingleton<GameData>
 		{
 			_globalController.SessionData.listIds.Add(id);
 			// sessionData.listIds.Add(id);
-			Save();
+			// Save();
 		}
 
 		return containId;

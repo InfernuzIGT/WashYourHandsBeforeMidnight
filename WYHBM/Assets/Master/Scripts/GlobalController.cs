@@ -201,7 +201,6 @@ public class GlobalController : MonoBehaviour
         _canvasWorld.Show(!_inCombat);
 
         _combatController.SetCombatArea(_inCombat);
-        if (!_inCombat) _canvasCombat.ClearActions();
 
         if (!_inCombat)
         {

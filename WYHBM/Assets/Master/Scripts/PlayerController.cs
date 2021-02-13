@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
     private float _currentSoundRadius;
     private Vector3 _groundPosition;
     private NPCController _currentNPC;
-    private bool _canPlayVFXFootstep;
+    // private bool _canPlayVFXFootstep;
     // private ExposedProperty hash_FootstepTexture = "VFX Texture";
 
     //Jump
@@ -218,7 +218,7 @@ public class PlayerController : MonoBehaviour
 
                 _animatorController.Walk(false);
 
-                _canPlayVFXFootstep = true;
+                // _canPlayVFXFootstep = true;
 
                 // TODO Mariano: Enable
                 // if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
@@ -245,7 +245,7 @@ public class PlayerController : MonoBehaviour
                 _currentSoundRadius = _playerConfig.soundRadiusRun;
                 _speedHorizontal = _playerConfig.speedRun;
 
-                _canPlayVFXFootstep = true;
+                // _canPlayVFXFootstep = true;
 
                 // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
                 break;
@@ -270,7 +270,7 @@ public class PlayerController : MonoBehaviour
                     footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
 
-                _canPlayVFXFootstep = false;
+                // _canPlayVFXFootstep = false;
 
                 break;
 

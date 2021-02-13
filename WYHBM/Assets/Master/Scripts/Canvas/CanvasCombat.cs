@@ -163,9 +163,4 @@ public class CanvasCombat : MonoBehaviour
         _canvasUtility.ShowInstant(isShowing);
     }
 
-    public void ClearActions()
-    {
-        _actions.Clear();
-    }
-
 }

@@ -93,7 +93,7 @@ public class CombatController : MonoBehaviour
     {
         if (evt.isEnter)
         {
-            _currentCombatArea = GameData.Instance.SpawnPoint.GetCombatArea();
+            _currentCombatArea = GameData.Instance.LevelManager.GetCombatArea();
             SetData(_currentCombatArea, _combatPlayers, evt.combatEnemies);
         }
         else
