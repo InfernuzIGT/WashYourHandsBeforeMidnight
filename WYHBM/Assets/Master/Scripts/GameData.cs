@@ -48,6 +48,7 @@ public class GameData : MonoSingleton<GameData>
 	private SpawnPoint _spawnPoint;
 
 	// Scene Managment
+	private bool _onlyTeleport;
 	private bool _load;
 	private bool _isLoadAdditive;
 	private SceneSO _sceneData;
@@ -282,6 +283,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		_changeSceneUseEvent = evt.useEnableMovementEvent;
 
+		_onlyTeleport = evt.onlyTeleport;
 		_load = evt.load;
 		_isLoadAdditive = evt.isLoadAdditive;
 		_sceneData = evt.sceneData;
@@ -302,6 +304,13 @@ public class GameData : MonoSingleton<GameData>
 
 	private void ChangeScene()
 	{
+		if (_onlyTeleport || _sceneData == null)
+		{
+			EventController.TriggerEvent(_changePositionEvent);
+			StartCoroutine(LoadingProgress());
+			return;
+		}
+
 		if (_load)
 		{
 			if (_isLoadAdditive)
@@ -337,7 +346,6 @@ public class GameData : MonoSingleton<GameData>
 		else
 		{
 			EventController.TriggerEvent(_changePositionEvent);
-
 			StartCoroutine(LoadingProgress());
 		}
 	}

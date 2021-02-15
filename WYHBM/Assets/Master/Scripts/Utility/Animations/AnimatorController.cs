@@ -19,13 +19,15 @@ public class AnimatorController : MonoBehaviour
     protected AnimationCommandBool _animIsFalling;
     protected AnimationCommandFloat _animValueX;
     protected AnimationCommandFloat _animValueY;
-    protected AnimationCommandInt _animClimbType;
+    protected AnimationCommandInt _animRandomIdle;
+    protected AnimationCommandTrigger _animSpecialAnimation;
 
     // Combat
     protected AnimationCommandInt _animActionType;
     protected AnimationCommandBool _animIsDetected;
 
-    // Systems
+    // DEPRECATED
+    protected AnimationCommandInt _animClimbType;
     protected AnimationCommandBool _animCanClimbLedge;
     protected AnimationCommandBool _animCanClimbLadder;
 
@@ -39,13 +41,15 @@ public class AnimatorController : MonoBehaviour
         _animIsFalling = new AnimIsFalling(_animator);
         _animValueX = new AnimValueX(_animator);
         _animValueY = new AnimValueY(_animator);
-        _animClimbType = new AnimClimbType(_animator);
+        _animRandomIdle = new AnimRandomIdle(_animator);
+        _animSpecialAnimation = new AnimSpecialAnimation(_animator);
 
         // Combat
         _animActionType = new AnimActionType(_animator);
         _animIsDetected = new AnimIsDetected(_animator);
 
-        // Systems
+        // DEPRECATED
+        _animClimbType = new AnimClimbType(_animator);
         _animCanClimbLedge = new AnimCanClimbLedge(_animator);
         _animCanClimbLadder = new AnimCanClimbLadder(_animator);
 

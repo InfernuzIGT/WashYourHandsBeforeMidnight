@@ -62,6 +62,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Item",
+                    "type": "Button",
+                    "id": "291ee367-2f60-4368-8f10-8acab4026a14",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "de34b2f2-f181-4fbc-84e5-a8c0e322c014",
@@ -606,6 +614,61 @@
                     "processors": "",
                     "groups": "Switch",
                     "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d059a79f-bab6-42e9-9fbc-14251ebfe91c",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6478d9d1-bb53-4a59-adad-c6340315278e",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic;Steam;Xbox360;PS3",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9ba8cbc6-5ead-48e0-976a-0ace97d5e220",
+                    "path": "<DualShockGamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PS4",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3eed3807-246b-4c66-999f-62f031ee460a",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxOne",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f5f1a86-bba5-4fbe-ac95-ae21adf8ffca",
+                    "path": "<SwitchProControllerHID>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Switch",
+                    "action": "Item",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
