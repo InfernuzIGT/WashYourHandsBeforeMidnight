@@ -125,6 +125,7 @@ namespace Events
 
     public class ChangeSceneEvent : GameEvent
     {
+        public bool onlyTeleport;
         public bool load;
         public bool useEnableMovementEvent;
         public bool isLoadAdditive;

@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     private float _speedHorizontal;
     private float _speedVertical;
     private bool _isInteracting;
+    private bool _isFalling;
 
     // Crouch
     private Vector3 _crouchHeight;
@@ -69,20 +70,9 @@ public class PlayerController : MonoBehaviour
     private RaycastHit _hitJump;
     private Vector3 _jumpDirection;
 
-    // Ivy
-    // private float _speedIvy = 5f;
-    private bool _inIvy = false;
-    private RaycastHit _hitBot;
-    private Vector3 _botPosition;
-    private bool _isFalling;
-
-    // Ledge
-    private Vector3 newPos;
-
-    private Vector3 _lastPosition;
-
-    // Quest
+    // Other
     private bool _isOpenDiary;
+    private WaitForSeconds _waitRandomIdle;
 
     public UnityAction cancelListerMode;
 
@@ -120,6 +110,7 @@ public class PlayerController : MonoBehaviour
         _input.Player.Jump.performed += ctx => Jump();
         _input.Player.Interaction.performed += ctx => Interaction();
         _input.Player.Crouch.performed += ctx => Crouch();
+        _input.Player.Item.performed += ctx => Item();
         // _input.Player.Run.started += ctx => Run(true);
         // _input.Player.Run.canceled += ctx => Run(false);
 
@@ -146,6 +137,11 @@ public class PlayerController : MonoBehaviour
         _jumpDirection = new Vector3(0, 0, 0);
 
         GameData.Instance.DetectDevice();
+
+        _waitRandomIdle = new WaitForSeconds(_worldConfig.randomIdleTime);
+
+        // TODO Mariano: Activate if is not moving
+        // StartCoroutine(RandomIdle());
     }
 
     private void OnEnable()
@@ -370,6 +366,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void Item()
+    {
+        // TODO Mariano: Usar item
+    }
+
     public void Footstep()
     {
         if (!_canPlayFootstep)return;
@@ -511,6 +512,15 @@ public class PlayerController : MonoBehaviour
         _movementState = newState;
     }
 
+    private IEnumerator RandomIdle()
+    {
+        while (true)
+        {
+            yield return _waitRandomIdle;
+            _animatorController.RandomIdle();
+        }
+    }
+
     public void SetPlayerData(PlayerSO data)
     {
         _playerData = data;
@@ -525,11 +535,6 @@ public class PlayerController : MonoBehaviour
         _canMove = !_canMove;
     }
 
-    public void SwitchLadderMovement(bool inLadder)
-    {
-        _inIvy = inLadder;
-    }
-
     public void SetNewPosition(float x, float y, float z)
     {
         transform.position = new Vector3(x, y, z);
@@ -537,7 +542,7 @@ public class PlayerController : MonoBehaviour
 
     public bool GetPlayerInMovement()
     {
-        return _characterController.isGrounded && _canMove && !_isJumping && !_inIvy && _movement.magnitude > 0.1f;
+        return _characterController.isGrounded && _canMove && !_isJumping && _movement.magnitude > 0.1f;
     }
 
     #region Events

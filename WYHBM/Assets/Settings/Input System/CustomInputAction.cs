@@ -75,6 +75,14 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""291ee367-2f60-4368-8f10-8acab4026a14"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""de34b2f2-f181-4fbc-84e5-a8c0e322c014"",
@@ -619,6 +627,61 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Switch"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d059a79f-bab6-42e9-9fbc-14251ebfe91c"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6478d9d1-bb53-4a59-adad-c6340315278e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic;Steam;Xbox360;PS3"",
+                    ""action"": ""Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ba8cbc6-5ead-48e0-976a-0ace97d5e220"",
+                    ""path"": ""<DualShockGamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PS4"",
+                    ""action"": ""Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3eed3807-246b-4c66-999f-62f031ee460a"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxOne"",
+                    ""action"": ""Item"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f5f1a86-bba5-4fbe-ac95-ae21adf8ffca"",
+                    ""path"": ""<SwitchProControllerHID>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Switch"",
+                    ""action"": ""Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1560,6 +1623,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Item = m_Player.FindAction("Item", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Options = m_Player.FindAction("Options", throwIfNotFound: true);
         m_Player_ListenMode = m_Player.FindAction("Listen Mode", throwIfNotFound: true);
@@ -1629,6 +1693,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Interaction;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Item;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Options;
     private readonly InputAction m_Player_ListenMode;
@@ -1645,6 +1710,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Item => m_Wrapper.m_Player_Item;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Options => m_Wrapper.m_Player_Options;
         public InputAction @ListenMode => m_Wrapper.m_Player_ListenMode;
@@ -1680,6 +1746,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @Item.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItem;
+                @Item.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItem;
+                @Item.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnItem;
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
@@ -1720,6 +1789,9 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Item.started += instance.OnItem;
+                @Item.performed += instance.OnItem;
+                @Item.canceled += instance.OnItem;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -1893,6 +1965,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
         void OnInteraction(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnItem(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnOptions(InputAction.CallbackContext context);
         void OnListenMode(InputAction.CallbackContext context);

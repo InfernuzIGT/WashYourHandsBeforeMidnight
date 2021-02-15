@@ -5,6 +5,7 @@ public class WorldAnimator : AnimatorController
     [SerializeField, ConditionalHide] private Material _matDither;
 
     private Material _matCharacter;
+    private int _indexRandomIdle;
 
     private bool _isFlipped;
     public bool isFlipped { get { return _isFlipped; } }
@@ -35,7 +36,15 @@ public class WorldAnimator : AnimatorController
         _animMovementType.Execute((int)movementState);
     }
 
-    private void FlipSprite(float valueX)
+    public void FlipSprite()
+    {
+        _isFlipped = !_isFlipped;
+
+        _matCharacter.SetFloat(hash_FlipUV, _isFlipped ? 1 : 0);
+        _matDither.SetFloat(hash_FlipUV, _isFlipped ? 1 : 0);
+    }
+
+    public void FlipSprite(float valueX)
     {
         if (valueX < 0)
         {
@@ -75,4 +84,17 @@ public class WorldAnimator : AnimatorController
         _animIsDetected.Execute(isDetected);
     }
 
+    public void RandomIdle()
+    {
+        _indexRandomIdle = Random.Range(1, 4);
+        _animRandomIdle.Execute(_indexRandomIdle);
+
+        _indexRandomIdle = 0;
+        _animRandomIdle.Execute(_indexRandomIdle);
+    }
+    
+    public void SpecialAnimation()
+    {
+        _animSpecialAnimation.Execute();
+    }
 }

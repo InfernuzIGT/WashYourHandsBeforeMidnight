@@ -40,9 +40,10 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     private bool _isDetectingPlayer;
     private int _positionIndex = 0;
 
-    private PlayerSO _playerData;
+    private PlayerController _player;
     private Coroutine _coroutinePatrol;
     private WaitForSeconds _waitForSeconds;
+    private WaitForSeconds _waitRandomIdle;
     private WaitUntil _waitUntilIsMoving;
     private WaitUntil _waitUntilCanPatrol;
 
@@ -88,10 +89,14 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _canPatrol = GetCanPatrol();
 
         _waitForSeconds = new WaitForSeconds(_data.WaitTime);
+        _waitRandomIdle = new WaitForSeconds(_worldConfig.randomIdleTime);
         _waitUntilIsMoving = new WaitUntil(() => _isMoving);
         _waitUntilCanPatrol = new WaitUntil(() => _canPatrol);
 
         _agent.updateRotation = false;
+
+        // TODO Mariano: Activate if is not moving
+        // StartCoroutine(RandomIdle());
 
         if (_data.DetectPlayer)
         {
@@ -328,7 +333,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
                 _canPatrol = false;
 
-                if (_playerData == null)_playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
+                if (_player == null)_player = other.gameObject.GetComponent<PlayerController>();
 
                 _animatorController?.Movement(Vector3.zero);
 
@@ -352,8 +357,24 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         }
     }
 
+    private IEnumerator RandomIdle()
+    {
+        while (true)
+        {
+            yield return _waitRandomIdle;
+            _animatorController.RandomIdle();
+        }
+    }
+
+    private void FlipSprite()
+    {
+        _animatorController.FlipSprite((_player.transform.position.x - transform.position.x));
+    }
+
     private void OnStopMovement(EnableMovementEvent evt)
     {
+        if (!_data.CanCombat && !evt.canMove)FlipSprite();
+
         if (!_data.CanMove || _waypoints == null)return;
 
         if (_data.CanPatrol)_agent.isStopped = !evt.canMove;
@@ -388,12 +409,12 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     public TextAsset GetDialogData()
     {
-        return _data.Data.Length != 0 ? _data.Data[_playerData.ID].dialogDD : null;
+        return _data.Data.Length != 0 ? _data.Data[_player.PlayerData.ID].dialogDD : null;
     }
 
     public QuestSO GetQuestData()
     {
-        return _data.Data.Length != 0 ? _data.Data[_playerData.ID].quest : null;
+        return _data.Data.Length != 0 ? _data.Data[_player.PlayerData.ID].quest : null;
     }
 
     #region Dialogue Designer
