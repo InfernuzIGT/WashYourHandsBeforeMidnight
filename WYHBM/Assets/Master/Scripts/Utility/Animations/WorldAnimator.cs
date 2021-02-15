@@ -2,6 +2,7 @@
 
 public class WorldAnimator : AnimatorController
 {
+    [SerializeField, ConditionalHide] private SpriteRenderer _spriteRenderer;
     [SerializeField, ConditionalHide] private Material _matDither;
 
     private Material _matCharacter;
@@ -92,7 +93,7 @@ public class WorldAnimator : AnimatorController
         _indexRandomIdle = 0;
         _animRandomIdle.Execute(_indexRandomIdle);
     }
-    
+
     public void SpecialAnimation()
     {
         _animSpecialAnimation.Execute();

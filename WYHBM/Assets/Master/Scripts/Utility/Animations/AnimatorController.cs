@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
+[RequireComponent(typeof(Animator))]
 public class AnimatorController : MonoBehaviour
 {
     [Header("Animator")]
@@ -8,8 +8,6 @@ public class AnimatorController : MonoBehaviour
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
     [SerializeField, ConditionalHide] protected Animator _animator;
-    [SerializeField, ConditionalHide] protected SpriteRenderer _spriteRenderer;
-
 
     // General
     protected AnimationCommandBool _animIsAlive;
@@ -25,6 +23,10 @@ public class AnimatorController : MonoBehaviour
     // Combat
     protected AnimationCommandInt _animActionType;
     protected AnimationCommandBool _animIsDetected;
+
+    // Object
+    protected AnimationCommandTrigger _animObjectTrigger;
+    protected AnimationCommandBool _animObjectBool;
 
     // DEPRECATED
     protected AnimationCommandInt _animClimbType;
@@ -47,6 +49,10 @@ public class AnimatorController : MonoBehaviour
         // Combat
         _animActionType = new AnimActionType(_animator);
         _animIsDetected = new AnimIsDetected(_animator);
+
+        // Object
+        _animObjectTrigger = new AnimObjectTrigger(_animator);
+        _animObjectBool = new AnimObjectBool(_animator);
 
         // DEPRECATED
         _animClimbType = new AnimClimbType(_animator);

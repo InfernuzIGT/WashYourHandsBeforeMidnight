@@ -37,7 +37,7 @@ public class GlobalController : MonoBehaviour
     [SerializeField, ReadOnly] private bool _inDialog;
     [SerializeField, ReadOnly] private bool _inCombat;
     [Space]
-    [SerializeField, ReadOnly] private SessionData sessionData;
+    [SerializeField] private SessionData sessionData;
 
     private bool skipEncounters = true;
     // public ItemSO[] items;
@@ -94,7 +94,7 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
-        if (_devAutoInit) CheckPersistenceObjects();
+        if (_devAutoInit)CheckPersistenceObjects();
     }
 
     private void Update()
@@ -102,12 +102,11 @@ public class GlobalController : MonoBehaviour
         // _pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/path del snapshot");
     }
 
-
     public void Init(Vector3 spawnPosition)
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Player"));
 
-        if (!_devAutoInit) CheckPersistenceObjects();
+        if (!_devAutoInit)CheckPersistenceObjects();
 
         _enableMovementEvent = new EnableMovementEvent();
 
@@ -190,7 +189,7 @@ public class GlobalController : MonoBehaviour
 
     private IEnumerator FinishCombat()
     {
-        
+
         yield return new WaitForSeconds(_combatConfig.waitTimeToFinish);
         EventController.TriggerEvent(_fadeEvent);
     }
@@ -242,7 +241,7 @@ public class GlobalController : MonoBehaviour
         _enableMovementEvent.canMove = !evt.isPaused;
         EventController.TriggerEvent(_enableMovementEvent);
 
-        _pauseSnapshot.start(); 
+        _pauseSnapshot.start();
     }
 
     public List<Player> GetListPlayer()
@@ -256,7 +255,7 @@ public class GlobalController : MonoBehaviour
 
         _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
         _gameData.DevDDLegacyMode = _devDDLegacyMode;
-        if (_devAutoInit) _gameData.GetSceneReferences();
+        if (_devAutoInit)_gameData.GetSceneReferences();
         sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
@@ -281,7 +280,7 @@ public class GlobalController : MonoBehaviour
 
     private void CancelListenMode()
     {
-        if (!_playerController.IsCrouching) return;
+        if (!_playerController.IsCrouching)return;
 
         _blockSoundListenMode = true;
 
@@ -292,8 +291,7 @@ public class GlobalController : MonoBehaviour
 
     private void ListenMode(bool active)
     {
-        if (!_playerController.IsCrouching) return;
-
+        if (!_playerController.IsCrouching)return;
 
         _fovIsActive = active;
 
@@ -366,7 +364,6 @@ public class GlobalController : MonoBehaviour
 
         }
 
-
         _fovCurrentTime = _fovIsActive ? _worldConfig.fovTime : 0;
 
         _materialFOV.SetFloat(hash_IsVisible, _fovIsActive ? 0.35f : 0);
@@ -392,7 +389,7 @@ public class GlobalController : MonoBehaviour
 
     private void Pause(PAUSE_TYPE pauseType)
     {
-        if (_inCombat || _inDialog) return;
+        if (_inCombat || _inDialog)return;
 
         _isPaused = !_isPaused;
 
@@ -526,7 +523,7 @@ public class GlobalController : MonoBehaviour
 
     private void OnInteractionDialog(InteractionEvent evt)
     {
-        if (!evt.isStart) return;
+        if (!evt.isStart)return;
 
         EnableMovement(false);
     }
@@ -573,7 +570,7 @@ public class GlobalController : MonoBehaviour
             case QUEST_STATE.New:
                 for (int i = 0; i < sessionData.listQuest.Count; i++)
                 {
-                    if (sessionData.listQuest[i].data = evt.data) break;
+                    if (sessionData.listQuest[i].data = evt.data)break;
                 }
 
                 Quest newQuest = new Quest();
@@ -590,7 +587,7 @@ public class GlobalController : MonoBehaviour
                     {
                         sessionData.listQuest[i].currentStep++;
 
-                        if (sessionData.listQuest[i].currentStep >= evt.data.steps) CompleteQuest(i);
+                        if (sessionData.listQuest[i].currentStep >= evt.data.steps)CompleteQuest(i);
                         break;
                     }
                 }

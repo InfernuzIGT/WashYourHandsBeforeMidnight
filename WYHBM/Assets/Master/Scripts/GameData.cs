@@ -422,7 +422,6 @@ public class GameData : MonoSingleton<GameData>
 		if (!_globalController.SessionData.listIds.Contains(id))
 		{
 			_globalController.SessionData.listIds.Add(id);
-			// sessionData.listIds.Add(id);
 			// Save();
 		}
 	}
@@ -434,7 +433,6 @@ public class GameData : MonoSingleton<GameData>
 		if (!containId)
 		{
 			_globalController.SessionData.listIds.Add(id);
-			// sessionData.listIds.Add(id);
 			// Save();
 		}
 
@@ -495,15 +493,7 @@ public class GameData : MonoSingleton<GameData>
 				sessionData = JsonUtility.FromJson<SessionData>(original);
 				valid = true;
 			}
-			// else
-			// {
-			// 	sessionData = new SessionData();
-			// }
 		}
-		// else
-		// {
-		// 	sessionData = new SessionData();
-		// }
 
 		return valid;
 	}
