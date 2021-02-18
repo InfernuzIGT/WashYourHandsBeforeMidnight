@@ -8,7 +8,7 @@
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{32e33119-0c58-4133-bbc1-369cea000137}</destination>
+			<destination>{fae76c69-9c35-47d7-a225-aff055ed72fc}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{92372c7c-ffd2-4660-9ab0-bf064469d634}</destination>
@@ -92,6 +92,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{d7c959ee-5829-4c86-a32e-7ed80c503c4d}">
+		<property name="volume">
+			<value>-5.5</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{3913e761-635b-4b14-bb30-326d6a4c333d}</destination>
 		</relationship>
@@ -118,7 +121,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{a310d045-ed7c-44a2-9e88-17bb3be00ba8}">
 		<property name="volume">
-			<value>-3.5</value>
+			<value>-6.5</value>
 		</property>
 		<property name="name">
 			<value>game Over</value>
@@ -174,6 +177,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{6283a805-b324-4307-965a-c2e031a67903}">
+		<property name="volume">
+			<value>-3</value>
+		</property>
 		<property name="name">
 			<value>Audio 2</value>
 		</property>

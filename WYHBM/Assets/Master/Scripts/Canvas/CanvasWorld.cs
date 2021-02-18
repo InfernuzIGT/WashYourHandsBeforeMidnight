@@ -15,7 +15,7 @@ public class CanvasWorld : MonoBehaviour
     [SerializeField] private SceneSO sceneData = null;
 
     [Header("FMOD")]
-    private FMOD.Studio.EventInstance _pauseSnapshot;
+    //private FMOD.Studio.EventInstance _pauseSnapshot;
 
     [Header("References")]
 #pragma warning disable 0414
@@ -89,7 +89,7 @@ public class CanvasWorld : MonoBehaviour
     /// </summary>
     void Update()
     {
-        // _pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/path del snapshot");
+        //_pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/path del snapshot");
     }
 
     private void Start()
@@ -258,12 +258,12 @@ public class CanvasWorld : MonoBehaviour
         if (evt.isPaused)
         {
             _actionBack.action.performed += ExecuteBackInput;
-            _pauseSnapshot.start();
+            //_pauseSnapshot.start();
         }
         else
         {
             _actionBack.action.performed -= ExecuteBackInput;
-            _pauseSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            //_pauseSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
 
     }

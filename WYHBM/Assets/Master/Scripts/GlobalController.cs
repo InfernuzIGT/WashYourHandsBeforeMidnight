@@ -21,7 +21,7 @@ public class GlobalController : MonoBehaviour
 
     public StudioEventEmitter listenModeOnSound;
     public StudioEventEmitter listenModeOffSound;
-    FMOD.Studio.EventInstance _pauseSnapshot;
+    //FMOD.Studio.EventInstance _pauseSnapshot;
     public StudioEventEmitter battleMusic;
     public StudioEventEmitter victorySound;
 
@@ -99,7 +99,7 @@ public class GlobalController : MonoBehaviour
 
     private void Update()
     {
-        // _pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/path del snapshot");
+        //_pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/Pause_Mode");
     }
 
     public void Init(Vector3 spawnPosition)
@@ -229,10 +229,10 @@ public class GlobalController : MonoBehaviour
             //         break;
             // }
         }
-        // else
-        // {
-
-        // }
+         else
+         {
+        //_pauseSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+         }
 
         _ppColorAdjustments.saturation.value = _isPaused ? -80 : 0;
         _ppDepthOfField.gaussianStart.value = _isPaused ? 0 : 22.5f;
@@ -241,7 +241,7 @@ public class GlobalController : MonoBehaviour
         _enableMovementEvent.canMove = !evt.isPaused;
         EventController.TriggerEvent(_enableMovementEvent);
 
-        _pauseSnapshot.start();
+        //_pauseSnapshot.start(); 
     }
 
     public List<Player> GetListPlayer()

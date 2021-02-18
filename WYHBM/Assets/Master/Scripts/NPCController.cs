@@ -81,8 +81,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
 #if UNITY_EDITOR
 
-        gameObject.name = string.Format("NPC_{0}", _data.Name);
-        _interactionNPC.gameObject.name = string.Format("InteractionNPC_{0}", _data.Name);
+        // gameObject.name = string.Format("NPC_{0}", _data.Name);
+        // _interactionNPC.gameObject.name = string.Format("InteractionNPC_{0}", _data.Name);
 
 #endif
 
@@ -251,6 +251,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _lastDestination = _waypoints.positions[_positionIndex];
             _agent.SetDestination(_lastDestination);
             _isMoving = true;
+            
+            // TODO Mariano: Hacer que haga ida y vuelta
         }
     }
 
@@ -404,7 +406,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private bool GetCanPatrol()
     {
-        return !(!_agent.isOnNavMesh && _data.CanPatrol || !_data.CanPatrol || _waypoints == null || _data.CanMove);
+        return _agent.isOnNavMesh && _data.CanPatrol && _waypoints != null & _data.CanMove;
     }
 
     public TextAsset GetDialogData()

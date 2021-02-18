@@ -129,7 +129,7 @@ public class GameData : MonoSingleton<GameData>
 		}
 		else
 		{
-			SceneManager.LoadSceneAsync(1); // Main Menu
+			SceneManager.UnloadSceneAsync(0); // Persistent
 		}
 	}
 
