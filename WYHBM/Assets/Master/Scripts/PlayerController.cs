@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
     // [SerializeField] private FMODConfig _fmodConfig = null;
     [Space]
-    // [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
+    [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
     // [SerializeField, ConditionalHide] private VisualEffect _vfxFootstep = null;
     [SerializeField, ConditionalHide] private CharacterController _characterController = null;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
@@ -69,6 +69,12 @@ public class PlayerController : MonoBehaviour
     private bool _isClimbing;
     private RaycastHit _hitJump;
     private Vector3 _jumpDirection;
+
+    // Ladder
+    private bool _blockLadder = true;
+    private bool _inLadder;
+    private RaycastHit _hitLadderBot;
+    private Vector3 ladderBot;
 
     // Other
     private bool _isOpenDiary;
@@ -135,7 +141,7 @@ public class PlayerController : MonoBehaviour
 
         _crouchHeight = new Vector3(0, -(_playerConfig.height / 2) / 2, 0);
         _jumpDirection = new Vector3(0, 0, 0);
-
+        ladderBot = new Vector3(0, _characterController.height / 2, 0);
         GameData.Instance.DetectDevice();
 
         _waitRandomIdle = new WaitForSeconds(_worldConfig.randomIdleTime);
@@ -150,6 +156,7 @@ public class PlayerController : MonoBehaviour
         EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.AddListener<ChangePositionEvent>(OnChangePosition);
         EventController.AddListener<CurrentInteractEvent>(OnCurrentInteraction);
+        EventController.AddListener<LadderEvent>(OnLadder);
     }
 
     private void OnDisable()
@@ -158,6 +165,7 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
         EventController.RemoveListener<ChangePositionEvent>(OnChangePosition);
         EventController.RemoveListener<CurrentInteractEvent>(OnCurrentInteraction);
+        EventController.RemoveListener<LadderEvent>(OnLadder);
     }
 
     private void Update()
@@ -248,7 +256,8 @@ public class PlayerController : MonoBehaviour
 
             case MOVEMENT_STATE.ClimbShort:
             case MOVEMENT_STATE.ClimbLarge:
-                _speedHorizontal = 0;
+            case MOVEMENT_STATE.Ladder:
+                _speedHorizontal = _playerConfig.speedLadder;
 
                 break;
 
@@ -257,6 +266,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if (_isClimbing)return;
+
+        if (_inLadder)
+        {
+            MovementLadder();
+            return;
+        }
 
         if (_characterController.isGrounded)
         {
@@ -277,6 +292,8 @@ public class PlayerController : MonoBehaviour
             {
                 // TODO Mariano: Si pasa X tiempo cayendo, cambiar animacion/sonido/ejecutar animacion land
                 _isFalling = false;
+                _shadow.enabled = true;
+
                 fallSound.Play();
             }
         }
@@ -285,6 +302,7 @@ public class PlayerController : MonoBehaviour
             _animatorController.Falling(true);
 
             _isFalling = true;
+            _shadow.enabled = false;
         }
 
         // Move
@@ -299,6 +317,37 @@ public class PlayerController : MonoBehaviour
         //Sound
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
         // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+    }
+
+    private void MovementLadder()
+    {
+        if (_blockLadder)return;
+
+        if (Physics.Raycast(transform.position - ladderBot, Vector3.down, out _hitLadderBot, .5f))
+        {
+            _blockLadder = true;
+            _ladderEvent.type = LADDER_TYPE.Bot;
+            EventController.TriggerEvent(_ladderEvent);
+            return;
+        }
+
+        _inputMovementAux = _inputMovement.normalized;
+
+        _jumpDirection.x = _inputMovementAux.x;
+        _jumpDirection.z = _inputMovementAux.y;
+
+        _movement.x = 0;
+        _movement.y = (_inputMovement.y != 0 ? _inputMovementAux.y : 0) * _speedHorizontal;
+        _movement.z = 0;
+        _movement = Vector3.ClampMagnitude(_movement, _speedHorizontal);
+
+        // Move
+        _characterController.Move(_movement * Time.deltaTime);
+
+        // Animation       
+        _animatorController.Movement(_movement.x, _movement.z, _movementState);
+
+        _canPlayFootstep = false;
     }
 
     private void StopMovement()
@@ -535,11 +584,6 @@ public class PlayerController : MonoBehaviour
         _canMove = !_canMove;
     }
 
-    public void SetNewPosition(float x, float y, float z)
-    {
-        transform.position = new Vector3(x, y, z);
-    }
-
     public bool GetPlayerInMovement()
     {
         return _characterController.isGrounded && _canMove && !_isJumping && _movement.magnitude > 0.1f;
@@ -576,7 +620,46 @@ public class PlayerController : MonoBehaviour
 
     private void OnChangePosition(ChangePositionEvent evt)
     {
-        transform.position = evt.newPosition;
+        _characterController.enabled = false;
+
+        if (evt.useY)
+        {
+            transform.position = evt.newPosition;
+        }
+        else
+        {
+            transform.position = new Vector3(evt.newPosition.x, transform.position.y, evt.newPosition.z) + evt.offset;
+        }
+
+        _characterController.enabled = true;
+    }
+
+    private void OnLadder(LadderEvent evt)
+    {
+        switch (evt.type)
+        {
+            case LADDER_TYPE.Interaction:
+                _inLadder = !_inLadder;
+
+                if (_inLadder)
+                {
+                    ChangeMovementState(MOVEMENT_STATE.Ladder);
+                    _shadow.enabled = false;
+                    _blockLadder = false;
+                }
+                else
+                {
+                    ChangeMovementState();
+                }
+                break;
+
+            case LADDER_TYPE.Bot:
+                break;
+
+            case LADDER_TYPE.Top:
+                // TODO Mariano: Animation Top
+                break;
+        }
     }
 
     private void OnCurrentInteraction(CurrentInteractEvent evt)

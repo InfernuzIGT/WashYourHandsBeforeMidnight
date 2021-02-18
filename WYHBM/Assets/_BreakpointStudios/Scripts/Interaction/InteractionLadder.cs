@@ -1,75 +1,97 @@
 ﻿using Events;
 using UnityEngine;
 
+public enum LADDER_TYPE
+{
+    Interaction = 0,
+    Bot = 1,
+    Top = 2,
+}
+
 public class InteractionLadder : Interaction, IInteractable
 {
-    [Header("Ladder")]
-    public bool inLadder;
+    private bool _inLadder;
+
+    private ChangePositionEvent _changePositionEvent;
+    private LadderEvent _ladderEvent;
+
+    private void Start()
+    {
+        _changePositionEvent = new ChangePositionEvent();
+        _changePositionEvent.newPosition = transform.position;
+        _changePositionEvent.offset = new Vector3(0, 0.5f, 0);
+        _changePositionEvent.useY = false;
+
+        _ladderEvent = new LadderEvent();
+        _ladderEvent.type = LADDER_TYPE.Interaction;
+    }
 
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
             EventController.AddListener<InteractionEvent>(OnInteractionLadder);
-            EventController.AddListener<LadderEvent>(OnExitLadder);
         }
     }
 
     public void OnInteractionExit(Collider other)
     {
-        if (other.gameObject.CompareTag(Tags.Player) && inLadder)
+        if (other.gameObject.CompareTag(Tags.Player))
         {
-            OnExitLadder(LADDER_EXIT.Top);
+            if (_inLadder)
+            {
+                OnLadder(LADDER_TYPE.Top);
+            }
+            else
+            {
+                EventController.RemoveListener<InteractionEvent>(OnInteractionLadder);
+            }
         }
     }
 
     private void OnInteractionLadder(InteractionEvent evt)
     {
-        // inLadder = !inLadder;
+        if (!evt.isStart)return;
 
-        // GameManager.Instance.globalController.playerController.SwitchLadderMovement(inLadder);
+        _inLadder = !_inLadder;
 
-        // if (inLadder)
-        // {
-        //     GameManager.Instance.globalController.playerController.SetNewPosition(
-        //         transform.position.x,
-        //         GameManager.Instance.globalController.playerController.transform.position.y + 1, // TODO Mariano: Move To Config (ladderOffsetY)
-        //         transform.position.z);
-        // }
-        // else
-        // {
-        //     OnExitLadder(LADDER_EXIT.Interaction);
-        // }
-    }
-
-    private void OnExitLadder(LadderEvent evt)
-    {
-        OnExitLadder(evt.ladderExit);
-    }
-
-    private void OnExitLadder(LADDER_EXIT ladderExit)
-    {
-        inLadder = false;
-
-        EventController.RemoveListener<InteractionEvent>(OnInteractionLadder);
-        EventController.RemoveListener<LadderEvent>(OnExitLadder);
-
-        switch (ladderExit)
+        if (_inLadder)
         {
-            case LADDER_EXIT.Interaction:
-                // Nothing
+            EventController.TriggerEvent(_ladderEvent);
+            EventController.TriggerEvent(_changePositionEvent);
+
+            OnLadder(LADDER_TYPE.Interaction);
+        }
+        else
+        {
+            OnLadder(LADDER_TYPE.Bot);
+        }
+    }
+
+    private void OnLadderEvent(LadderEvent evt)
+    {
+        OnLadder(evt.type);
+    }
+
+    private void OnLadder(LADDER_TYPE type)
+    {
+        switch (type)
+        {
+            case LADDER_TYPE.Interaction:
+                EventController.AddListener<LadderEvent>(OnLadderEvent);
                 break;
 
-            case LADDER_EXIT.Bot:
-                // TODO Mariano: Animation Bot
+            case LADDER_TYPE.Bot:
+            case LADDER_TYPE.Top:
+
+                _inLadder = false;
+                EventController.RemoveListener<InteractionEvent>(OnInteractionLadder);
+                EventController.RemoveListener<LadderEvent>(OnLadderEvent);
+
+                _ladderEvent.type = LADDER_TYPE.Interaction;
+                EventController.TriggerEvent(_ladderEvent);
                 break;
 
-            case LADDER_EXIT.Top:
-                // TODO Mariano: Animation Top
-                break;
-
-            default:
-                break;
         }
     }
 }

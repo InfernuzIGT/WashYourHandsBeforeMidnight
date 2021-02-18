@@ -43,7 +43,7 @@ namespace Events
 
     public class LadderEvent : GameEvent
     {
-        public LADDER_EXIT ladderExit;
+        public LADDER_TYPE type;
     }
 
     public class CombatEvent : GameEvent
@@ -71,10 +71,7 @@ namespace Events
         public bool isPlayer;
     }
 
-    public class CombatEnemyEvent : GameEvent
-    {
-
-    }
+    public class CombatEnemyEvent : GameEvent { }
 
     public class CombatCharacterGoAheadEvent : GameEvent
     {
@@ -114,6 +111,7 @@ namespace Events
         public bool instant;
         public bool fadeIn;
         public TweenCallback callbackFadeIn;
+        public float duration;
     }
 
     public class CutsceneEvent : GameEvent
@@ -137,6 +135,8 @@ namespace Events
     public class ChangePositionEvent : GameEvent
     {
         public Vector3 newPosition;
+        public Vector3 offset = Vector3.zero;
+        public bool useY;
     }
 
     public class SessionEvent : GameEvent

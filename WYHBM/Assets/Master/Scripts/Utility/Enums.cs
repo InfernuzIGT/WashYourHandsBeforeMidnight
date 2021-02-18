@@ -25,6 +25,7 @@ public enum MOVEMENT_STATE
     Crouch = 2,
     ClimbShort = 3,
     ClimbLarge = 4,
+    Ladder = 5,
 }
 
 public enum DIRECTION
