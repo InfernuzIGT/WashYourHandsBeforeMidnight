@@ -57,6 +57,7 @@ public class MenuController : MonoBehaviour
     private ChangeSceneEvent _changeSceneEvent;
 
     private FadeEvent _fadeEvent;
+    private CustomFadeEvent _customfadeEvent;
     private GameObject _lastPanel;
 
     private Vector2 _logoStartSize = new Vector2(600, 600);
@@ -81,6 +82,14 @@ public class MenuController : MonoBehaviour
         backSound = FMODUnity.RuntimeManager.CreateInstance(_FMODConfig.back);
 
         menuMusic.start();
+
+        _customfadeEvent = new CustomFadeEvent();
+        _customfadeEvent.instant = false;
+        _customfadeEvent.fadeIn = false;
+        _customfadeEvent.duration = 2;
+
+        EventController.TriggerEvent(_customfadeEvent);
+
         _changeSceneEvent = new ChangeSceneEvent();
         _changeSceneEvent.load = true;
         _changeSceneEvent.useEnableMovementEvent = false;

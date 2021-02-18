@@ -5,7 +5,6 @@ using UnityEngine.Localization;
 public class InteractionSave : Interaction, IInteractable
 {
     [Header("Save")]
-    // TODO Mariano: Ver si tira los 3 Dialogos
     [SerializeField] private LocalizedString[] _localizedDialog;
 
     [Header("References")]
@@ -21,6 +20,8 @@ public class InteractionSave : Interaction, IInteractable
     {
         _sessionEvent = new SessionEvent();
         _sessionEvent.option = SESSION_OPTION.Save;
+
+        _interactionDialogEvent = new DialogSimpleEvent();
     }
 
     public void OnInteractionEnter(Collider other)
@@ -28,7 +29,6 @@ public class InteractionSave : Interaction, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             Execute(true);
-            EventController.AddListener<InteractionEvent>(OnInteractSave);
         }
     }
 
@@ -37,7 +37,6 @@ public class InteractionSave : Interaction, IInteractable
         if (other.gameObject.CompareTag(Tags.Player))
         {
             Execute(false);
-            EventController.RemoveListener<InteractionEvent>(OnInteractSave);
         }
     }
 
@@ -45,17 +44,23 @@ public class InteractionSave : Interaction, IInteractable
     {
         base.Execute();
 
+        CanInteractEvent(enable);
+
         _interactionDialogEvent.enable = enable;
         _interactionDialogEvent.localizedString = _localizedDialog[Random.Range(0, _localizedDialog.Length)];
 
         EventController.TriggerEvent(_interactionDialogEvent);
     }
 
-    private void OnInteractSave(InteractionEvent evt)
+    public override void OnInteractEvent()
     {
+        base.OnInteractEvent();
+
+        Execute(false);
+
         _animatorController.SpecialAnimation();
 
         EventController.TriggerEvent(_sessionEvent);
-        EventController.RemoveListener<InteractionEvent>(OnInteractSave);
     }
+
 }

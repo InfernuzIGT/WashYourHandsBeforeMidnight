@@ -1454,6 +1454,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
+      propertyPath: animationData.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
       propertyPath: questData.Array.data[0].quest
       value: 
       objectReference: {fileID: 11400000, guid: c933de9978cb59947bfe4b23d194b48d,
@@ -1465,9 +1470,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
+      propertyPath: animationData.Array.data[0].sound
+      value: event:/Interactables/Doors/Lever
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
       propertyPath: questData.Array.data[0].requiredStep
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
+      propertyPath: animationData.Array.data[0].isTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
+      propertyPath: animationData.Array.data[0].objectAnimator
+      value: 
+      objectReference: {fileID: 1536388095}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
       propertyPath: _localizedDialog.m_TableEntryReference.m_KeyId
@@ -1476,7 +1496,7 @@ PrefabInstance:
     - target: {fileID: 6503617237434657067, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
       propertyPath: m_Name
-      value: Interaction Dialog
+      value: iDialog_MPVP_Lever
       objectReference: {fileID: 0}
     - target: {fileID: 8377202729769960488, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
@@ -1842,7 +1862,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23220
+  m_Name: pb_Mesh40366
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9528,6 +9548,20 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1536387617}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1536388095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536387630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98760ad6b6aafb64ca66e20febd15110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowReferences: 1
+  _animator: {fileID: 1536388779}
 --- !u!95 &1536388779
 Animator:
   serializedVersion: 3
@@ -9538,7 +9572,7 @@ Animator:
   m_GameObject: {fileID: 1536387630}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 40a09b5c128b0634a919a98fdf12a3fe, type: 2}
+  m_Controller: {fileID: 22100000, guid: 58caa78e6a97aff4facbf0533ffae29b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

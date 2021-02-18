@@ -6,21 +6,33 @@ public class InteractionDialog : Interaction
 {
     [Header("Dialog")]
     [SerializeField] private LocalizedString _localizedDialog;
+    [Space]
+    [SerializeField] private bool _useOnlyOnce;
+    [SerializeField] private LocalizedString _localizedUsedDialog;
 
     private DialogSimpleEvent _interactionDialogEvent;
-    [SerializeField] private Animator anim;
-    [SerializeField] private bool _isPlaying;
+    private bool _used;
+    private string _usedId;
 
     private void Start()
     {
         _interactionDialogEvent = new DialogSimpleEvent();
+
+        _usedId = string.Format(DDParameters.Format, DDParameters.SimpleDialog, gameObject.name);
+
+        if (_useOnlyOnce)
+        {
+            _used = GameData.Instance.CheckID(_usedId);
+
+            if (_used)ExecuteAnimation(true);
+        }
+
     }
 
     public void OnInteractionEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Tags.Player))
         {
-
             Execute(true);
         }
     }
@@ -37,23 +49,29 @@ public class InteractionDialog : Interaction
     {
         base.Execute();
 
+        CanInteractEvent(enable);
+
         _interactionDialogEvent.enable = enable;
-        _interactionDialogEvent.localizedString = _localizedDialog;
+        _interactionDialogEvent.localizedString = _used ? _localizedUsedDialog : _localizedDialog;
         _interactionDialogEvent.questData = GetData();
         _interactionDialogEvent.questState = GetQuestState();
 
-        if (anim != null && !_isPlaying)
-        {
-            _isPlaying = true;
-
-            anim.SetBool("startAnim", true);
-
-            FMODUnity.RuntimeManager.PlayOneShot("event:/Interactables/Doors/Lever", GetComponent<Transform>().position);
-
-        }
-
         EventController.TriggerEvent(_interactionDialogEvent);
+    }
 
+    public override void OnInteractEvent()
+    {
+        base.OnInteractEvent();
+
+        ExecuteAnimation();
+
+        if (_useOnlyOnce && !_used)
+        {
+            _used = true;
+            Execute(false);
+
+            GameData.Instance.WriteID(_usedId);
+        }
     }
 
     private QuestSO GetData()

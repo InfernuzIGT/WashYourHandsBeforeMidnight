@@ -1,4 +1,5 @@
 ﻿using Events;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,6 +19,14 @@ public struct QuestData
     public int requiredStep;
 }
 
+[System.Serializable]
+public struct AnimationData
+{
+    public ObjectAnimator objectAnimator;
+    public bool isTrigger;
+    [EventRef] public string sound;
+}
+
 [RequireComponent(typeof(BoxCollider))]
 public class Interaction : MonoBehaviour, IDialogueable
 {
@@ -27,6 +36,8 @@ public class Interaction : MonoBehaviour, IDialogueable
     [Header("Interaction")]
     [SerializeField] private QuestData[] questData = null;
     [Space]
+    [SerializeField] private AnimationData[] animationData = null;
+    [Space]
     [SerializeField] private InteractionUnityEvent onEnter = null;
     [SerializeField] private InteractionUnityEvent onExit = null;
 
@@ -34,6 +45,7 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     // private SpriteRenderer _hintSprite;
     private bool _canInteract = true;
+    private bool _animationReady;
 
     private QuestEvent _questEvent;
     // private ShowInteractionHintEvent _showInteractionHintEvent;
@@ -93,6 +105,28 @@ public class Interaction : MonoBehaviour, IDialogueable
         ShowHint(false);
     }
 
+    protected void CanInteractEvent(bool canInteract)
+    {
+        if (canInteract)
+        {
+            EventController.AddListener<InteractionEvent>(OnInteractEvent);
+        }
+        else
+        {
+            EventController.RemoveListener<InteractionEvent>(OnInteractEvent);
+        }
+    }
+
+    private void OnInteractEvent(InteractionEvent evt)
+    {
+        OnInteractEvent();
+    }
+
+    public virtual void OnInteractEvent()
+    {
+        CanInteractEvent(false);
+    }
+
     protected void ShowHint(bool show)
     {
         // if (!_showHint)return;
@@ -101,6 +135,30 @@ public class Interaction : MonoBehaviour, IDialogueable
 
         // _showInteractionHintEvent.show = show;
         // EventController.TriggerEvent(_showInteractionHintEvent);
+    }
+
+    protected void ExecuteAnimation(bool instant = false)
+    {
+        if (animationData == null || _animationReady)return;
+
+        _animationReady = true;
+
+        if (!instant)
+        {
+            for (int i = 0; i < animationData.Length; i++)
+            {
+                animationData[i].objectAnimator.Execute(animationData[i].isTrigger);
+                RuntimeManager.PlayOneShot(animationData[i].sound, animationData[i].objectAnimator.gameObject.transform.position);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < animationData.Length; i++)
+            {
+                animationData[i].objectAnimator.Execute(animationData[i].isTrigger, true);
+            }
+        }
+
     }
 
     protected void ForceCleanInteraction()
@@ -118,7 +176,7 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         return questData[GameData.Instance.PlayerData.ID].state;
     }
-    
+
     public int GetQuestRequiredStep()
     {
         return questData[GameData.Instance.PlayerData.ID].requiredStep;

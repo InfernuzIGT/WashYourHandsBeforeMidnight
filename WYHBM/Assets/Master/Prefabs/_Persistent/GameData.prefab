@@ -47,9 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b16d0e33360a94d9849118f2893d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _devIsBuild: 0
   _devPrintInputInfo: 0
   _devDontSave: 0
-  _devLoadMainMenu: 0
   _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
   _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
   sessionIndex: 0
@@ -72,6 +72,10 @@ MonoBehaviour:
   _localizationUtility: {fileID: 8947044879963769972}
   _inputSystemUtility: {fileID: 6268669331600259658}
   _globalClock: {fileID: 2888425497679362494}
+  _canvasSplash: {fileID: 6346542456006749699, guid: 531cb818b8706aa47ad516eaff735a66,
+    type: 3}
+  _canvasFinish: {fileID: 1452941969968479313, guid: 8a72ead3d5205914f8bcb91481b8dd61,
+    type: 3}
 --- !u!114 &8947044879963769972
 MonoBehaviour:
   m_ObjectHideFlags: 0

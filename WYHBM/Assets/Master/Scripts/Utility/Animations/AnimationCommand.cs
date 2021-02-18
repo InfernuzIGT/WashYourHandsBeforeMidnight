@@ -19,6 +19,12 @@ public abstract class AnimationCommand
     protected readonly int hash_ActionType = Animator.StringToHash("actionType"); // Int
     protected readonly int hash_IsDetected = Animator.StringToHash("isDetected"); // Bool
 
+    // Object
+    protected readonly int hash_ObjectTrigger = Animator.StringToHash("objectTrigger"); // Trigger
+    protected readonly int hash_ObjectBool = Animator.StringToHash("objectBool"); // Bool
+    protected readonly int hash_AnimationTrigger = Animator.StringToHash("Trigger"); // Trigger
+    protected readonly int hash_AnimationBool = Animator.StringToHash("Bool"); // Bool
+
     // DEPRECATED
     protected readonly int hash_ClimbType = Animator.StringToHash("climbType"); // Int
     protected readonly int hash_CanClimbLedge = Animator.StringToHash("canClimbLedge"); // Bool
@@ -51,6 +57,7 @@ public abstract class AnimationCommandBool : AnimationCommand
 {
     public AnimationCommandBool(Animator animator) : base(animator) { }
     public abstract void Execute(bool value);
+    public abstract void ExecuteInstant(bool value);
 }
 #endregion
 
@@ -59,6 +66,7 @@ public abstract class AnimationCommandTrigger : AnimationCommand
 {
     public AnimationCommandTrigger(Animator animator) : base(animator) { }
     public abstract void Execute();
+    public abstract void ExecuteInstant();
 }
 #endregion
 
@@ -74,6 +82,8 @@ public class AnimIsAlive : AnimationCommandBool
     {
         _animator.SetBool(hash_IsAlive, value);
     }
+
+    public override void ExecuteInstant(bool value) { }
 }
 
 public class AnimMovementType : AnimationCommandInt
@@ -94,6 +104,9 @@ public class AnimIsWalking : AnimationCommandBool
     {
         _animator.SetBool(hash_IsWalking, value);
     }
+
+    public override void ExecuteInstant(bool value) { }
+
 }
 
 public class AnimIsGrounded : AnimationCommandBool
@@ -104,6 +117,9 @@ public class AnimIsGrounded : AnimationCommandBool
     {
         _animator.SetBool(hash_IsGrounded, value);
     }
+
+    public override void ExecuteInstant(bool value) { }
+
 }
 
 public class AnimIsFalling : AnimationCommandBool
@@ -114,6 +130,9 @@ public class AnimIsFalling : AnimationCommandBool
     {
         _animator.SetBool(hash_isFalling, value);
     }
+
+    public override void ExecuteInstant(bool value) { }
+
 }
 
 public class AnimValueX : AnimationCommandFloat
@@ -164,6 +183,9 @@ public class AnimSpecialAnimation : AnimationCommandTrigger
     {
         _animator.SetTrigger(hash_SpecialAnimation);
     }
+
+    public override void ExecuteInstant() { }
+
 }
 
 #endregion
@@ -188,6 +210,45 @@ public class AnimIsDetected : AnimationCommandBool
     {
         _animator.SetBool(hash_IsDetected, value);
     }
+
+    public override void ExecuteInstant(bool value) { }
+
+}
+
+#endregion
+
+#region Object
+
+public class AnimObjectTrigger : AnimationCommandTrigger
+{
+    public AnimObjectTrigger(Animator animator) : base(animator) { }
+
+    public override void Execute()
+    {
+        _animator.SetTrigger(hash_ObjectTrigger);
+    }
+
+    public override void ExecuteInstant()
+    {
+        Execute();
+        _animator.Play(hash_AnimationTrigger, 0, 1);
+    }
+}
+
+public class AnimObjectBool : AnimationCommandBool
+{
+    public AnimObjectBool(Animator animator) : base(animator) { }
+
+    public override void Execute(bool value)
+    {
+        _animator.SetBool(hash_ObjectBool, value);
+    }
+
+    public override void ExecuteInstant(bool value)
+    {
+        Execute(value);
+        _animator.Play(hash_AnimationBool, 0, 1);
+    }
 }
 
 #endregion
@@ -202,6 +263,9 @@ public class AnimCanClimbLedge : AnimationCommandBool
     {
         _animator.SetBool(hash_CanClimbLedge, value);
     }
+
+    public override void ExecuteInstant(bool value) { }
+
 }
 
 public class AnimCanClimbLadder : AnimationCommandBool
@@ -212,6 +276,9 @@ public class AnimCanClimbLadder : AnimationCommandBool
     {
         _animator.SetBool(hash_CanClimbLadder, value);
     }
+
+    public override void ExecuteInstant(bool value) { }
+
 }
 
 #endregion

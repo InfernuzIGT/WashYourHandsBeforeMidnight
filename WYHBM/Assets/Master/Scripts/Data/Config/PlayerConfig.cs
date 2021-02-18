@@ -21,6 +21,7 @@ public class PlayerConfig : ScriptableObject
     public float speedWalk = 5f;
     public float speedCrouchFast = 3.5f;
     public float speedCrouch = 2f;
+    public float speedLadder = 5f;
     [Space]
     public float gravity = 39.24f;
     public float magnitudeFall = 30f;
