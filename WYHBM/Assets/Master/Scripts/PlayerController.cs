@@ -113,10 +113,10 @@ public class PlayerController : MonoBehaviour
         _input = new CustomInputAction();
 
         _input.Player.Move.performed += ctx => _inputMovement = ctx.ReadValue<Vector2>();
-        _input.Player.Jump.performed += ctx => Jump();
+        // _input.Player.Jump.performed += ctx => Jump();
         _input.Player.Interaction.performed += ctx => Interaction();
         _input.Player.Crouch.performed += ctx => Crouch();
-        _input.Player.Item.performed += ctx => Item();
+        // _input.Player.Item.performed += ctx => Item();
         // _input.Player.Run.started += ctx => Run(true);
         // _input.Player.Run.canceled += ctx => Run(false);
 
