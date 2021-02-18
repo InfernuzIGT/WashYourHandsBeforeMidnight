@@ -14,6 +14,7 @@ public class NPCSO : CharacterSO
 
     [Header("IA")]
     [SerializeField] private bool _canMove = true;
+    [SerializeField] private bool _canPatrol = true;
     [SerializeField, Range(0f, 10f)] private float _speedMovement = 5;
     [SerializeField, Range(0f, 360f)] private float _speedRotation = 180;
     [SerializeField] private bool _useRandomPosition = false;
@@ -30,6 +31,7 @@ public class NPCSO : CharacterSO
     public List<Enemy> CombatEnemies { get { return combatEnemies; } }
     public bool CanCombat { get { return _canCombat; } }
     public bool CanMove { get { return _canMove; } }
+    public bool CanPatrol { get { return _canPatrol; } }
     public bool UseRandomPosition { get { return _useRandomPosition; } }
     public float WaitTime { get { return _waitTime; } }
     public float SpeedMovement { get { return _speedMovement; } }

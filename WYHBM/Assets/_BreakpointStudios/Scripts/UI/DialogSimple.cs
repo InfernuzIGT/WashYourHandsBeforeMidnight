@@ -128,6 +128,8 @@ public class DialogSimple : MonoBehaviour
         _enableMovementEvent.canMove = false;
         EventController.TriggerEvent(_enableMovementEvent);
 
+        _continueImg.SetActive(false);
+
         _canvasUtility.Show(true);
 
         _dialogTxt.maxVisibleCharacters = 0;

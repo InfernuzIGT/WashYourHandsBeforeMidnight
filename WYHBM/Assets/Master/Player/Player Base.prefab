@@ -274,12 +274,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerData: {fileID: 0}
   _movementState: 0
-  _inZipline: 0
-  endPos: {x: 0, y: 0, z: 0}
-  ledgeDetected: 0
-  wallCheck: {fileID: 6335019193980573163}
-  ledgeCheck: {fileID: 7148576689432955027}
-  wallCheckDistance: 1
   footstepSound: {fileID: 4696537044046352187}
   breathingSound: {fileID: 1859904522748835540}
   crouchSound: {fileID: 826237660855070424}
@@ -289,6 +283,7 @@ MonoBehaviour:
   _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
   _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
   _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
+  _shadow: {fileID: 8913232117615706260}
   _characterController: {fileID: 1255290931}
   _animatorController: {fileID: 5454344177718044526}
 --- !u!143 &1255290931
@@ -348,13 +343,13 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2442338011398168992, guid: 1a6ea2121a5839d4982dc7acbfeab926,
+  m_Sprite: {fileID: 1879133215234863237, guid: 1a6ea2121a5839d4982dc7acbfeab926,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 3.3333333, y: 3.3333333}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -598,6 +593,12 @@ PrefabInstance:
 --- !u!4 &686578095073932651 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7144510564144004452, guid: ff19a26930afa03498efdee027d55d1b,
+    type: 3}
+  m_PrefabInstance: {fileID: 7683512199635404815}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8913232117615706260 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1230459889460988059, guid: ff19a26930afa03498efdee027d55d1b,
     type: 3}
   m_PrefabInstance: {fileID: 7683512199635404815}
   m_PrefabAsset: {fileID: 0}

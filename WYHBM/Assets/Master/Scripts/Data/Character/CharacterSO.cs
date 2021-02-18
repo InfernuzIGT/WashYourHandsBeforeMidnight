@@ -19,6 +19,7 @@ public class CharacterSO : ScriptableObject
     [SerializeField] private string _name = "-";
     [SerializeField, PreviewTexture(64)] private Sprite _sprite = null;
     [SerializeField] private AnimatorOverrideController _animatorController = null;
+    [SerializeField] private bool _hasRandomIdles = false;
     [Space(24)]
     [PreviewTexture(48), SerializeField] private Sprite iconNone = null;
     [PreviewTexture(48), SerializeField] private Sprite iconHappy = null;
@@ -34,6 +35,7 @@ public class CharacterSO : ScriptableObject
     public string Name { get { return _name; } }
     public Sprite Sprite { get { return _sprite; } }
     public AnimatorOverrideController AnimatorController { get { return _animatorController; } }
+    public bool HasRandomIdles { get { return _hasRandomIdles; } }
 
     public Sprite GetIcon(EMOTION emotion)
     {

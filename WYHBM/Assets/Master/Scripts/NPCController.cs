@@ -33,19 +33,19 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     private Vector3 _originalPosition;
     private Quaternion _originalRotation;
     private Vector3 _lastDestination;
-    private Quaternion _lookRotation;
-    private bool _canMove;
+    private bool _canPatrol;
     private bool _isMoving;
     private bool _hearSound;
     private bool _backToStart;
     private bool _isDetectingPlayer;
     private int _positionIndex = 0;
 
-    private PlayerSO _playerData;
+    private PlayerController _player;
     private Coroutine _coroutinePatrol;
     private WaitForSeconds _waitForSeconds;
+    private WaitForSeconds _waitRandomIdle;
     private WaitUntil _waitUntilIsMoving;
-    private WaitUntil _waitUntilCanMove;
+    private WaitUntil _waitUntilCanPatrol;
 
     // Events
     private QuestEvent _questEvent;
@@ -67,10 +67,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Start()
     {
-
         _questEvent = new QuestEvent();
         _enableMovementEvent = new EnableMovementEvent();
-
 
         if (_data.CanCombat)
         {
@@ -79,28 +77,26 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _combatEvent.combatEnemies.AddRange(_data.CombatEnemies);
 
             StartRoaming();
-
         }
 
 #if UNITY_EDITOR
 
-        gameObject.name = string.Format("NPC_{0}", _data.Name);
-        _interactionNPC.gameObject.name = string.Format("InteractionNPC_{0}", _data.Name);
+        // gameObject.name = string.Format("NPC_{0}", _data.Name);
+        // _interactionNPC.gameObject.name = string.Format("InteractionNPC_{0}", _data.Name);
 
 #endif
 
-        _canMove = GetCanMove();
-
-        // if (_agent.isOnNavMesh && !_data.CanMove)
-        // {
-        //     _agent.areaMask = 0;
-        // }
+        _canPatrol = GetCanPatrol();
 
         _waitForSeconds = new WaitForSeconds(_data.WaitTime);
+        _waitRandomIdle = new WaitForSeconds(_worldConfig.randomIdleTime);
         _waitUntilIsMoving = new WaitUntil(() => _isMoving);
-        _waitUntilCanMove = new WaitUntil(() => _canMove);
+        _waitUntilCanPatrol = new WaitUntil(() => _canPatrol);
 
         _agent.updateRotation = false;
+
+        // TODO Mariano: Activate if is not moving
+        // StartCoroutine(RandomIdle());
 
         if (_data.DetectPlayer)
         {
@@ -109,10 +105,16 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
             _fieldOfView.transform.rotation = _originalRotation;
 
-            _fieldOfView.Init(_data.TimeToDetect, _viewRadius, _viewAngle, _timeline);
+            _fieldOfView.Init(_data.TimeToDetect, _viewRadius, _viewAngle, _data.SpeedRotation, _timeline);
 
             _holdUtility.Duration = _data.TimeToDetect;
             _holdUtility.OnFinished.AddListener(OnFinish);
+        }
+
+        if (!_data.CanMove)
+        {
+            _agent.enabled = false;
+            return;
         }
 
         _coroutinePatrol = StartCoroutine(MovementAgent());
@@ -160,12 +162,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Update()
     {
-        if (_agent.isOnNavMesh && _canMove && _timeline.timeScale > 0)
+        if (_agent.isOnNavMesh && _canPatrol && _timeline.timeScale > 0)
         {
             Movement();
             Rotation();
         }
-
     }
 
     private void Movement()
@@ -181,7 +182,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             {
                 _backToStart = false;
                 _fieldOfView.transform.rotation = _originalRotation;
-                _canMove = GetCanMove();
+                _canPatrol = GetCanPatrol();
             }
 
             if (_hearSound)
@@ -196,7 +197,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
                 _backToStart = true;
                 _isMoving = true;
-
 
             }
             else
@@ -217,8 +217,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     {
         if (_agent.velocity.sqrMagnitude > Mathf.Epsilon)
         {
-            _lookRotation = Quaternion.LookRotation(_agent.velocity.normalized);
-            _fieldOfView.transform.rotation = Quaternion.RotateTowards(_fieldOfView.transform.rotation, _lookRotation, _data.SpeedRotation * Time.deltaTime);
+            _fieldOfView.Rotation(Quaternion.LookRotation(_agent.velocity.normalized));
         }
     }
 
@@ -226,7 +225,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     {
         while (true)
         {
-            yield return _waitUntilCanMove;
+            yield return _waitUntilCanPatrol;
 
             ChangeDestination();
 
@@ -252,6 +251,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _lastDestination = _waypoints.positions[_positionIndex];
             _agent.SetDestination(_lastDestination);
             _isMoving = true;
+            
+            // TODO Mariano: Hacer que haga ida y vuelta
         }
     }
 
@@ -266,8 +267,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _holdUtility.SoundDetect(true);
             _fieldOfView.UpdateView(_data.TimeToDetect, _hearRadius, _viewAngle);
 
-            _canMove = true;
-
+            _canPatrol = true;
         }
     }
 
@@ -275,13 +275,12 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void OnFindTarget(Vector3 targetLastPosition)
     {
-        if (_canMove)
+        if (_canPatrol)
         {
             zombieAlert.Play();
 
             _agent.SetDestination(targetLastPosition);
-            if (_coroutinePatrol != null) StopCoroutine(_coroutinePatrol);
-
+            if (_coroutinePatrol != null)StopCoroutine(_coroutinePatrol);
         }
 
         _holdUtility.OnStart();
@@ -289,7 +288,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void OnLossTarget(Vector3 targetLastPosition)
     {
-        if (_canMove)
+        if (_canPatrol)
         {
             _agent.SetDestination(targetLastPosition);
             _coroutinePatrol = StartCoroutine(MovementAgent());
@@ -304,8 +303,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _fieldOfView.SetState(false);
 
         _isMoving = false;
-        _canMove = false;
-        if (_agent.isOnNavMesh) _agent.isStopped = true;
+        _canPatrol = false;
+        if (_agent.isOnNavMesh)_agent.isStopped = true;
 
         _animatorController.Movement(Vector3.zero);
         _animatorController.Detected(true);
@@ -332,11 +331,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             }
             else
             {
-                if (_agent.isOnNavMesh) _agent.isStopped = true;
+                if (_agent.isOnNavMesh)_agent.isStopped = true;
 
-                _canMove = false;
+                _canPatrol = false;
 
-                if (_playerData == null) _playerData = other.gameObject.GetComponent<PlayerController>().PlayerData;
+                if (_player == null)_player = other.gameObject.GetComponent<PlayerController>();
 
                 _animatorController?.Movement(Vector3.zero);
 
@@ -352,22 +351,35 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         {
             EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
 
-            if (_agent.isOnNavMesh) _agent.isStopped = false;
+            if (_agent.isOnNavMesh)_agent.isStopped = false;
 
-            _canMove = GetCanMove();
+            _canPatrol = GetCanPatrol();
 
             _interactionNPC.Execute(false, this);
         }
     }
 
+    private IEnumerator RandomIdle()
+    {
+        while (true)
+        {
+            yield return _waitRandomIdle;
+            _animatorController.RandomIdle();
+        }
+    }
+
+    private void FlipSprite()
+    {
+        _animatorController.FlipSprite((_player.transform.position.x - transform.position.x));
+    }
+
     private void OnStopMovement(EnableMovementEvent evt)
     {
-        if (!_data.CanMove || _waypoints == null)
-        {
-            return;
-        }
+        if (!_data.CanCombat && !evt.canMove)FlipSprite();
 
-        if (_data.CanMove) _agent.isStopped = !evt.canMove;
+        if (!_data.CanMove || _waypoints == null)return;
+
+        if (_data.CanPatrol)_agent.isStopped = !evt.canMove;
 
         _animatorController?.Movement(Vector3.zero);
     }
@@ -392,19 +404,19 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         return 0;
     }
 
-    private bool GetCanMove()
+    private bool GetCanPatrol()
     {
-        return !(!_agent.isOnNavMesh && _data.CanMove || !_data.CanMove || _waypoints == null);
+        return _agent.isOnNavMesh && _data.CanPatrol && _waypoints != null & _data.CanMove;
     }
 
     public TextAsset GetDialogData()
     {
-        return _data.Data[_playerData.ID].dialogDD;
+        return _data.Data.Length != 0 ? _data.Data[_player.PlayerData.ID].dialogDD : null;
     }
 
     public QuestSO GetQuestData()
     {
-        return _data.Data[_playerData.ID].quest;
+        return _data.Data.Length != 0 ? _data.Data[_player.PlayerData.ID].quest : null;
     }
 
     #region Dialogue Designer

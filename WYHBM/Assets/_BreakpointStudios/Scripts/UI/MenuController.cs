@@ -1,7 +1,8 @@
 ﻿using DG.Tweening;
 using Events;
 using FMOD.Studio;
-using FMODUnity;
+// using FMODUnity;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -56,19 +57,17 @@ public class MenuController : MonoBehaviour
     private ChangeSceneEvent _changeSceneEvent;
 
     private FadeEvent _fadeEvent;
+    private CustomFadeEvent _customfadeEvent;
     private GameObject _lastPanel;
 
     private Vector2 _logoStartSize = new Vector2(600, 600);
-    // private float _logoStartY = 50f;
-
     private Vector2 _logoEndSize = new Vector2(475, 475);
     private float _logoEndY = 150f;
+    private bool _disableInput;
+
     EventInstance menuMusic;
     EventInstance selectSound;
     EventInstance backSound;
-
-    // private bool _isDataLoaded;
-    // public bool IsDataLoaded { get { return _isDataLoaded; } }
 
     private void Awake()
     {
@@ -83,6 +82,14 @@ public class MenuController : MonoBehaviour
         backSound = FMODUnity.RuntimeManager.CreateInstance(_FMODConfig.back);
 
         menuMusic.start();
+
+        _customfadeEvent = new CustomFadeEvent();
+        _customfadeEvent.instant = false;
+        _customfadeEvent.fadeIn = false;
+        _customfadeEvent.duration = 2;
+
+        EventController.TriggerEvent(_customfadeEvent);
+
         _changeSceneEvent = new ChangeSceneEvent();
         _changeSceneEvent.load = true;
         _changeSceneEvent.useEnableMovementEvent = false;
@@ -123,6 +130,8 @@ public class MenuController : MonoBehaviour
         GameData.Instance.DetectDevice(action.control.device);
         _actionAnyButton.action.Disable();
 
+        StartCoroutine(InputMainMenu());
+
         _canvasHome.Show(false);
         _canvasMain.Show(true, 0.5f);
         _logoImg.rectTransform.DOLocalMoveY(_logoEndY, 1);
@@ -130,6 +139,17 @@ public class MenuController : MonoBehaviour
 
         EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectMain);
         _lastGameObject = _firstSelectMain;
+    }
+
+    private IEnumerator InputMainMenu()
+    {
+        _disableInput = true;
+        EventSystemUtility.Instance.DisableInput(true);
+
+        yield return new WaitForSeconds(1);
+
+        _disableInput = false;
+        EventSystemUtility.Instance.DisableInput(false);
     }
 
     private void AddListeners()
@@ -146,6 +166,8 @@ public class MenuController : MonoBehaviour
 
     private void Execute(UI_TYPE type)
     {
+        if (_disableInput)return;
+
         _currentUIType = type;
 
         switch (type)
@@ -189,6 +211,8 @@ public class MenuController : MonoBehaviour
 
     private void ExecuteBackInput()
     {
+        if (_disableInput)return;
+
         switch (_currentUIType)
         {
             case UI_TYPE.Options:

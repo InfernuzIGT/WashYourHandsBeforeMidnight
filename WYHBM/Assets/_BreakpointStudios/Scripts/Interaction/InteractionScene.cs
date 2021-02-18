@@ -7,6 +7,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 {
     [Header("Cutscene")]
     public Vector3 newPlayerPosition;
+    [SerializeField] private bool _onlyTeleport = false;
     [SerializeField] private bool _load = false;
     [SerializeField] private bool _isLoadAdditive = true;
     [SerializeField] private bool _instantFade = false;
@@ -34,6 +35,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         _listScenes = new List<AsyncOperation>();
 
         _changeSceneEvent = new ChangeSceneEvent();
+        _changeSceneEvent.onlyTeleport = _onlyTeleport;
         _changeSceneEvent.load = _load;
         _changeSceneEvent.useEnableMovementEvent = true;
         _changeSceneEvent.isLoadAdditive = _isLoadAdditive;
@@ -73,7 +75,6 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
             if (_holdUtility.isDoor)
             {
                 holdStart.Play();
-                
             }
         }
         else

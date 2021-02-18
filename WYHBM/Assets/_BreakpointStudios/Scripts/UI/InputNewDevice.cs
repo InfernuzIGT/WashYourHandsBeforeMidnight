@@ -79,7 +79,7 @@ public class InputNewDevice : MonoBehaviour
             .OnComplete(Complete);
     }
 
-    public void Complete()
+    private void Complete()
     {
         _canvasUtility.ShowInstant(false);
 
