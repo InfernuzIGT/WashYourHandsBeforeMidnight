@@ -3,7 +3,7 @@ using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
-using FMOD.Studio;
+// using FMOD.Studio;
 
 public class OptionsController : MonoBehaviour
 {
@@ -59,10 +59,11 @@ public class OptionsController : MonoBehaviour
             LoadDefaultSettings();
         }
     }
-    private void Update()
-    {
+    
+    // private void Update()
+    // {
         // changeSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/change");
-    }
+    // }
 
     private void OnEnable()
     {
@@ -282,7 +283,6 @@ public class OptionsController : MonoBehaviour
     private void VolumeMaster(float vol)
     {
         RuntimeManager.StudioSystem.setParameterByName(FMODParameters.MasterSlider, vol);
-        Debug.Log("VOLUME MASTER");
     }
 
     private void VolumeMusic(float vol)

@@ -20,9 +20,9 @@ public enum SESSION_OPTION
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Developer")]
+	[SerializeField] private bool _devIsBuild = false;
 	[SerializeField] private bool _devPrintInputInfo = false;
 	[SerializeField] private bool _devDontSave = false;
-	[SerializeField] private bool _devLoadMainMenu = false;
 
 	[Header("Configs")]
 	[SerializeField] private PlayerConfig _playerConfig;
@@ -40,13 +40,17 @@ public class GameData : MonoSingleton<GameData>
 	[SerializeField, ConditionalHide] private LocalizationUtility _localizationUtility;
 	[SerializeField, ConditionalHide] private InputSystemUtility _inputSystemUtility;
 	[SerializeField, ConditionalHide] private GlobalClock _globalClock;
+	[SerializeField, ConditionalHide] private CanvasSplash _canvasSplash;
+	[SerializeField, ConditionalHide] private CanvasFinish _canvasFinish;
 
 	private List<AsyncOperation> _listScenes;
 
 	private GlobalController _globalController;
+	private LevelManager _levelManager;
 	private SpawnPoint _spawnPoint;
 
 	// Scene Managment
+	private bool _onlyTeleport;
 	private bool _load;
 	private bool _isLoadAdditive;
 	private SceneSO _sceneData;
@@ -75,6 +79,7 @@ public class GameData : MonoSingleton<GameData>
 	// Properties
 	public PlayerSO PlayerData { get { return _globalController.PlayerData; } }
 	public SpawnPoint SpawnPoint { get { return _spawnPoint; } }
+	public LevelManager LevelManager { get { return _levelManager; } }
 
 	public bool DevDDLegacyMode { get { return _devDDLegacyMode; } set { _devDDLegacyMode = value; } }
 	public bool HomeUsed { get { return _homeUsed; } set { _homeUsed = value; } }
@@ -85,15 +90,14 @@ public class GameData : MonoSingleton<GameData>
 
 #if UNITY_EDITOR
 		Cursor.visible = true;
-		Cursor.lockState = CursorLockMode.None;
+		// Cursor.lockState = CursorLockMode.None;
 		if (_devPrintInputInfo)InputSystemAdapter.printInfo = true;
 #else
 		Cursor.visible = false;
-		Cursor.lockState = CursorLockMode.Locked;
+		// Cursor.lockState = CursorLockMode.Locked;
 #endif
 
 		base.Awake();
-
 	}
 
 	private void InitializeConfigs()
@@ -110,16 +114,28 @@ public class GameData : MonoSingleton<GameData>
 		_changePositionEvent = new ChangePositionEvent();
 
 		_customFadeEvent = new CustomFadeEvent();
+		_customFadeEvent.duration = 1;
 
 		_loadAnimationEvent = new LoadAnimationEvent();
 		_saveAnimationEvent = new SaveAnimationEvent();
 
 #if UNITY_EDITOR
 #else
-		if (!_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+		_devIsBuild = true;
 #endif
-		if (_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+		if (_devIsBuild)
+		{
+			Instantiate(_canvasSplash);
+		}
+		else
+		{
+			SceneManager.UnloadSceneAsync(0); // Persistent
+		}
+	}
 
+	public void FinishDemo()
+	{
+		Instantiate(_canvasFinish);
 	}
 
 	public List<Player> GetListPlayer()
@@ -142,17 +158,19 @@ public class GameData : MonoSingleton<GameData>
 			_globalController = GameObject.FindObjectOfType<GlobalController>();
 		}
 
-		_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+		_levelManager = GameObject.FindObjectOfType<LevelManager>();
 
-		while (_spawnPoint == null)
+		while (_levelManager == null)
 		{
 			yield return new WaitForSeconds(3);
-			_spawnPoint = GameObject.FindObjectOfType<SpawnPoint>();
+			_levelManager = GameObject.FindObjectOfType<LevelManager>();
 		}
+
+		_spawnPoint = _levelManager.GetSpawnPoint(PlayerData.ID);
 
 		_globalController.Init(_spawnPoint.transform.position);
 
-		if (_loadAnimationEvent.isLoading)
+		if (_loadAnimationEvent != null && _loadAnimationEvent.isLoading)
 		{
 			_loadAnimationEvent.isLoading = false;
 			EventController.TriggerEvent(_loadAnimationEvent);
@@ -276,6 +294,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		_changeSceneUseEvent = evt.useEnableMovementEvent;
 
+		_onlyTeleport = evt.onlyTeleport;
 		_load = evt.load;
 		_isLoadAdditive = evt.isLoadAdditive;
 		_sceneData = evt.sceneData;
@@ -296,6 +315,13 @@ public class GameData : MonoSingleton<GameData>
 
 	private void ChangeScene()
 	{
+		if (_onlyTeleport || _sceneData == null)
+		{
+			EventController.TriggerEvent(_changePositionEvent);
+			StartCoroutine(LoadingProgress());
+			return;
+		}
+
 		if (_load)
 		{
 			if (_isLoadAdditive)
@@ -331,7 +357,6 @@ public class GameData : MonoSingleton<GameData>
 		else
 		{
 			EventController.TriggerEvent(_changePositionEvent);
-
 			StartCoroutine(LoadingProgress());
 		}
 	}
@@ -408,8 +433,7 @@ public class GameData : MonoSingleton<GameData>
 		if (!_globalController.SessionData.listIds.Contains(id))
 		{
 			_globalController.SessionData.listIds.Add(id);
-			// sessionData.listIds.Add(id);
-			Save();
+			// Save();
 		}
 	}
 
@@ -420,8 +444,7 @@ public class GameData : MonoSingleton<GameData>
 		if (!containId)
 		{
 			_globalController.SessionData.listIds.Add(id);
-			// sessionData.listIds.Add(id);
-			Save();
+			// Save();
 		}
 
 		return containId;
@@ -481,15 +504,7 @@ public class GameData : MonoSingleton<GameData>
 				sessionData = JsonUtility.FromJson<SessionData>(original);
 				valid = true;
 			}
-			// else
-			// {
-			// 	sessionData = new SessionData();
-			// }
 		}
-		// else
-		// {
-		// 	sessionData = new SessionData();
-		// }
 
 		return valid;
 	}

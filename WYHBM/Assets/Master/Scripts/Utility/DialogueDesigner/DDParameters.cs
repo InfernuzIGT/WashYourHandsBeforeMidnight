@@ -12,5 +12,6 @@
     public const string Emotion = "emotion";
     public const string Cutscene = "Cutscene";
     public const string SimpleQuest = "SimpleQuest";
+    public const string SimpleDialog = "SimpleDialog";
 
 }

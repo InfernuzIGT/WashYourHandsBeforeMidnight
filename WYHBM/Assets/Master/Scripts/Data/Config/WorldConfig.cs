@@ -5,6 +5,7 @@ public class WorldConfig : ScriptableObject
 {
     [Header("General")]
     public float fovTime = 1f;
+    public float randomIdleTime = 10f;
 
     [Header("Fade")]
     public float fadeCutsceneDuration = 1;

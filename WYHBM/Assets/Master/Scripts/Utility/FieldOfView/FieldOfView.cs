@@ -29,6 +29,7 @@ public class FieldOfView : MonoBehaviour
     private Transform _target;
     private Vector3 _targetLastPosition;
     private Vector3 _directionToTarget;
+    private Quaternion _targetLookRotation;
     private bool _enable;
     private bool _targetVisible;
     private bool _targetDetected;
@@ -36,6 +37,7 @@ public class FieldOfView : MonoBehaviour
     private float _duration;
     private float _viewRadius;
     private float _viewAngle;
+    private float _rotationSpeed;
 
     private Coroutine _coroutineFindTarget;
     private WaitForSeconds _waitForSeconds;
@@ -48,7 +50,7 @@ public class FieldOfView : MonoBehaviour
     private List<Transform> _visibleTargets;
     public List<Transform> VisibleTargets { get { return _visibleTargets; } }
 
-    public void Init(float duration, float radius, float angle, Timeline timeline)
+    public void Init(float duration, float radius, float angle, float rotationSpeed, Timeline timeline)
     {
         _timeline = timeline;
 
@@ -63,7 +65,9 @@ public class FieldOfView : MonoBehaviour
 
         UpdateView(duration, radius, angle);
 
-        _waitForSeconds = new WaitForSeconds(.25f);
+        _rotationSpeed = rotationSpeed;
+
+        _waitForSeconds = new WaitForSeconds(.15f);
         _coroutineFindTarget = StartCoroutine(FindTargetsWithDelay());
 
         _enable = true;
@@ -87,6 +91,11 @@ public class FieldOfView : MonoBehaviour
     private void LateUpdate()
     {
         DrawFieldOfView();
+    }
+
+    public void Rotation(Quaternion lookRotation)
+    {
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, _targetDetected ? _targetLookRotation : lookRotation, _rotationSpeed * Time.deltaTime);
     }
 
     public void SetState(bool active)
@@ -134,6 +143,7 @@ public class FieldOfView : MonoBehaviour
                         OnFindTarget.Invoke(_targetLastPosition);
                     }
 
+                    _targetLookRotation = Quaternion.LookRotation(_target.transform.position - transform.position);
                     _targetLastPosition = _target.transform.position;
                     _targetVisible = true;
                 }
@@ -147,7 +157,7 @@ public class FieldOfView : MonoBehaviour
             // _fillAnimation.Kill();
             // _viewMeshRenderer.material.SetFloat(hash_IsDetected, 0);
 
-            Debug.Log($"<b> LOSS </b>");
+            // Debug.Log($"<b> LOSS </b>");
 
             OnLossTarget.Invoke(_targetLastPosition);
         }
