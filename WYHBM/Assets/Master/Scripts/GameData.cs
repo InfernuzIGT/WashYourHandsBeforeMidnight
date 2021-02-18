@@ -20,9 +20,9 @@ public enum SESSION_OPTION
 public class GameData : MonoSingleton<GameData>
 {
 	[Header("Developer")]
+	[SerializeField] private bool _devIsBuild = false;
 	[SerializeField] private bool _devPrintInputInfo = false;
 	[SerializeField] private bool _devDontSave = false;
-	[SerializeField] private bool _devLoadMainMenu = false;
 
 	[Header("Configs")]
 	[SerializeField] private PlayerConfig _playerConfig;
@@ -40,6 +40,8 @@ public class GameData : MonoSingleton<GameData>
 	[SerializeField, ConditionalHide] private LocalizationUtility _localizationUtility;
 	[SerializeField, ConditionalHide] private InputSystemUtility _inputSystemUtility;
 	[SerializeField, ConditionalHide] private GlobalClock _globalClock;
+	[SerializeField, ConditionalHide] private CanvasSplash _canvasSplash;
+	[SerializeField, ConditionalHide] private CanvasFinish _canvasFinish;
 
 	private List<AsyncOperation> _listScenes;
 
@@ -88,17 +90,14 @@ public class GameData : MonoSingleton<GameData>
 
 #if UNITY_EDITOR
 		Cursor.visible = true;
-		Cursor.lockState = CursorLockMode.None;
+		// Cursor.lockState = CursorLockMode.None;
 		if (_devPrintInputInfo)InputSystemAdapter.printInfo = true;
 #else
 		Cursor.visible = false;
-		Cursor.lockState = CursorLockMode.Locked;
-
-		DeleteAll();
+		// Cursor.lockState = CursorLockMode.Locked;
 #endif
 
 		base.Awake();
-
 	}
 
 	private void InitializeConfigs()
@@ -115,16 +114,28 @@ public class GameData : MonoSingleton<GameData>
 		_changePositionEvent = new ChangePositionEvent();
 
 		_customFadeEvent = new CustomFadeEvent();
+		_customFadeEvent.duration = 1;
 
 		_loadAnimationEvent = new LoadAnimationEvent();
 		_saveAnimationEvent = new SaveAnimationEvent();
 
 #if UNITY_EDITOR
 #else
-		if (!_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+		_devIsBuild = true;
 #endif
-		if (_devLoadMainMenu)SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive); // Main Menu
+		if (_devIsBuild)
+		{
+			Instantiate(_canvasSplash);
+		}
+		else
+		{
+			SceneManager.LoadSceneAsync(1); // Main Menu
+		}
+	}
 
+	public void FinishDemo()
+	{
+		Instantiate(_canvasFinish);
 	}
 
 	public List<Player> GetListPlayer()

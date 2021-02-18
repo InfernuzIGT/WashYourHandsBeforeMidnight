@@ -88,17 +88,17 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         if (evt.fadeIn)
         {
             _fadeImg
-                .DOFade(1, evt.instant ? 0 : 1)
+                .DOFade(1, evt.instant ? 0 : evt.duration)
                 .OnComplete(() => evt.callbackFadeIn?.Invoke());
-
-            SetCanvas(true);
         }
         else
         {
             _fadeImg
-                .DOFade(0, evt.instant ? 0 : 1)
+                .DOFade(0, evt.instant ? 0 : evt.duration)
                 .OnComplete(() => SetCanvas(false));
         }
+
+        SetCanvas(true);
     }
 
     private void SetCanvas(bool isEnabled)
