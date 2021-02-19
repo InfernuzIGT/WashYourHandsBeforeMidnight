@@ -18,13 +18,6 @@ public class Quest
 [RequireComponent(typeof(Volume), typeof(PlayableDirector))]
 public class GlobalController : MonoBehaviour
 {
-
-    public StudioEventEmitter listenModeOnSound;
-    public StudioEventEmitter listenModeOffSound;
-    //FMOD.Studio.EventInstance _pauseSnapshot;
-    public StudioEventEmitter battleMusic;
-    public StudioEventEmitter victorySound;
-
     [Header("Developer")]
     [SerializeField] private bool _devAutoInit = false;
     [SerializeField] private bool _devSilentSteps = false;
@@ -38,6 +31,11 @@ public class GlobalController : MonoBehaviour
     [SerializeField, ReadOnly] private bool _inCombat;
     [Space]
     [SerializeField] private SessionData sessionData;
+
+    [Header("FMOD")]
+    [SerializeField] private StudioEventEmitter listenModeOnSound;
+    [SerializeField] private StudioEventEmitter listenModeOffSound;
+    [SerializeField] private StudioEventEmitter battleMusic;
 
     private bool skipEncounters = true;
     // public ItemSO[] items;
@@ -203,8 +201,7 @@ public class GlobalController : MonoBehaviour
 
         if (!_inCombat)
         {
-            battleMusic.Stop();
-            victorySound.Play();
+            battleMusic.EventInstance.setParameterByName(FMODParameters.BattleEnd, 1);
         }
 
         ChangeToCombatCamera(_inCombat ? _combatController.GetCombatAreaCamera() : null);
@@ -229,10 +226,10 @@ public class GlobalController : MonoBehaviour
             //         break;
             // }
         }
-         else
-         {
-        //_pauseSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-         }
+        else
+        {
+            //_pauseSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
 
         _ppColorAdjustments.saturation.value = _isPaused ? -80 : 0;
         _ppDepthOfField.gaussianStart.value = _isPaused ? 0 : 22.5f;
@@ -445,6 +442,7 @@ public class GlobalController : MonoBehaviour
             // _playerCamera.gameObject.SetActive(false);
             _combatCamera = combatCamera;
 
+            battleMusic.EventInstance.setParameterByName(FMODParameters.BattleEnd, 0);
             battleMusic.Play();
         }
     }

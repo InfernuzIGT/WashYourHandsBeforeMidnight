@@ -116,20 +116,19 @@ public class CombatController : MonoBehaviour
 
         switch (evt.item.type)
         {
-            case ITEM_TYPE.WeaponMelee:
+            case ITEM_TYPE.ActionA:
                 _animState = ANIM_STATE.Attack_1;
                 HighlightCharacters(true, false);
                 break;
 
-            case ITEM_TYPE.WeaponOneHand:
-            case ITEM_TYPE.WeaponTwoHands:
+            case ITEM_TYPE.ActionB:
                 _animState = ANIM_STATE.Attack_2;
                 HighlightCharacters(true, false);
                 break;
 
-            case ITEM_TYPE.ItemHeal:
-            case ITEM_TYPE.ItemGrenade:
-            case ITEM_TYPE.ItemDefense:
+            case ITEM_TYPE.ActionHeal:
+            case ITEM_TYPE.ActionDefense:
+            case ITEM_TYPE.ActionItem:
                 _animState = ANIM_STATE.Item;
                 HighlightCharacters(true, true);
                 break;
@@ -319,6 +318,7 @@ public class CombatController : MonoBehaviour
             _listSelectionCharacters[_indexCharacter].Select(_currentItem);
 
             _currentCharacter.AnimationAction(_animState);
+            _currentCharacter.PlayActionSound(_currentItem);
             _currentCharacter.DoAction();
         }
         else
@@ -356,7 +356,7 @@ public class CombatController : MonoBehaviour
     private void FinishGame(bool isWin)
     {
         _isEndOfCombat = true;
-        
+
         _combatEvent.isWin = isWin;
         EventController.TriggerEvent(_combatEvent);
     }

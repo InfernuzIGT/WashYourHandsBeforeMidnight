@@ -1,8 +1,12 @@
 ﻿using Events;
+using FMODUnity;
 using UnityEngine;
 
 public class InteractionNPC : Interaction
 {
+    [Header ("FMOD")]
+    [SerializeField, EventRef] private string _canDialog = null;
+
     private DialogDesignerEvent _interactionDialogEvent;
     private TextAsset _dialogue;
 
@@ -18,6 +22,8 @@ public class InteractionNPC : Interaction
         _dialogue = currentNPC.GetDialogData();
 
         if (_dialogue == null)return;
+
+        if (enable && _canDialog != "")RuntimeManager.PlayOneShot(_canDialog);
 
         _interactionDialogEvent.enable = enable;
         _interactionDialogEvent.npc = currentNPC;

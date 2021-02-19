@@ -60,16 +60,15 @@ public class CanvasCombat : MonoBehaviour
         {
             switch (evt.item.type)
             {
-                case ITEM_TYPE.WeaponMelee:
-                case ITEM_TYPE.WeaponOneHand:
-                case ITEM_TYPE.WeaponTwoHands:
-                case ITEM_TYPE.ItemGrenade:
+                case ITEM_TYPE.ActionA:
+                case ITEM_TYPE.ActionB:
                     _actionsTxt.enabled = true;
                     _localizedAction = _combatConfig.actionSelectEnemy;
                     break;
 
-                case ITEM_TYPE.ItemDefense:
-                case ITEM_TYPE.ItemHeal:
+                case ITEM_TYPE.ActionHeal:
+                case ITEM_TYPE.ActionDefense:
+                case ITEM_TYPE.ActionItem:
                     _actionsTxt.enabled = true;
                     _localizedAction = _combatConfig.actionSelectPlayer;
                     break;

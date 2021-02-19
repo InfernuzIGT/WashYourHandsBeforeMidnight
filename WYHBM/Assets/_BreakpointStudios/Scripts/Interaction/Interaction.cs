@@ -148,7 +148,7 @@ public class Interaction : MonoBehaviour, IDialogueable
             for (int i = 0; i < animationData.Length; i++)
             {
                 animationData[i].objectAnimator.Execute(animationData[i].isTrigger);
-                RuntimeManager.PlayOneShot(animationData[i].sound, animationData[i].objectAnimator.gameObject.transform.position);
+                if (animationData[i].sound != "")RuntimeManager.PlayOneShot(animationData[i].sound, animationData[i].objectAnimator.gameObject.transform.position);
             }
         }
         else
