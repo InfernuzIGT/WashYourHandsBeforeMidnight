@@ -16,6 +16,7 @@ MonoBehaviour:
   _sprite: {fileID: -726141498979709977, guid: a04388e9d8f582a4fa5e1eff478e6527, type: 3}
   _animatorController: {fileID: 22100000, guid: 2bcbadd00395df441af5fac6ee62da83,
     type: 2}
+  _hasRandomIdles: 0
   iconNone: {fileID: 0}
   iconHappy: {fileID: 0}
   iconSad: {fileID: 0}
@@ -32,9 +33,9 @@ MonoBehaviour:
   - {fileID: 7509734975322126681, guid: f698a5b1e1774f642b01199eb11041d4, type: 3}
   _canMove: 1
   _canPatrol: 1
-  _speedMovement: 5
-  _speedRotation: 180
-  _useRandomPosition: 0
-  _waitTime: 5
+  _speedMovement: 2
+  _speedRotation: 160
+  _useRandomPosition: 1
+  _waitTime: 5.6
   _detectPlayer: 1
   _timeToDetect: 1
