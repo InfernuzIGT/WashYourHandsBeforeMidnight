@@ -603,7 +603,7 @@ public class GlobalController : MonoBehaviour
                 break;
         }
 
-        _gameData.SaveSession(sessionData);
+        // _gameData.SaveSession(sessionData);
     }
 
     #endregion

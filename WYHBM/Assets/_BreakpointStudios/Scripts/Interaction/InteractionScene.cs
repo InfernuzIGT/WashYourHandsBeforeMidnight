@@ -7,7 +7,7 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
 {
     [Header("Cutscene")]
     public Vector3 newPlayerPosition;
-    [SerializeField] private bool _onlyTeleport = false;
+    [SerializeField] private bool _onlyTeleport = true;
     [SerializeField] private bool _load = false;
     [SerializeField] private bool _isLoadAdditive = true;
     [SerializeField] private bool _instantFade = false;

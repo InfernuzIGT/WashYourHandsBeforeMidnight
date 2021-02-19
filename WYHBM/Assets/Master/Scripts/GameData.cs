@@ -404,6 +404,9 @@ public class GameData : MonoSingleton<GameData>
 			EventController.TriggerEvent(_enableMovementEvent);
 		}
 
+		_loadAnimationEvent.isLoading = false;
+		EventController.TriggerEvent(_loadAnimationEvent);
+
 		// GetSceneReferences();
 		// TODO Mariano: Search another checkpoint?
 	}

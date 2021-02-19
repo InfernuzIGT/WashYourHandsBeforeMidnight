@@ -169,6 +169,8 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public QuestSO GetQuestData()
     {
+        if (questData == null) return null;
+        
         return questData[GameData.Instance.PlayerData.ID].quest;
     }
 
