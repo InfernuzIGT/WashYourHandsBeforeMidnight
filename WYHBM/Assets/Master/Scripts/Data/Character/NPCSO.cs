@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New NPC", menuName = "Characters/NPC", order = 2)]

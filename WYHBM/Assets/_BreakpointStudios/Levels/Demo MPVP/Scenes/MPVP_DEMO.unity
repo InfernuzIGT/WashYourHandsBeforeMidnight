@@ -402,6 +402,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
+      propertyPath: _sound
+      value: event:/Interactables/Doors/Door Locked
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
       propertyPath: questData.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -496,15 +501,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
         type: 3}
-      propertyPath: sceneData
-      value: 
-      objectReference: {fileID: 11400000, guid: b68d46afafcbd6d43834e83ea826813c,
-        type: 2}
-    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
-        type: 3}
       propertyPath: _showDebug
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
+        type: 3}
+      propertyPath: _onlyTeleport
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
+        type: 3}
+      propertyPath: _ambienceToPlay
+      value: 
+      objectReference: {fileID: 1068406400}
+    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
+        type: 3}
+      propertyPath: _ambienceToStop
+      value: 
+      objectReference: {fileID: 1552111348}
     - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
         type: 3}
       propertyPath: newPlayerPosition.x
@@ -1183,6 +1197,16 @@ PrefabInstance:
       objectReference: {fileID: 1536388779}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
+      propertyPath: _sound
+      value: event:/Interactables/Doors/Lever
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
+      propertyPath: _useOnlyOnce
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
       propertyPath: hasAnimation
       value: 1
       objectReference: {fileID: 0}
@@ -1231,6 +1255,16 @@ PrefabInstance:
         type: 3}
       propertyPath: _localizedDialog.m_TableEntryReference.m_KeyId
       value: 603928300986368
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
+      propertyPath: _localizedUsedDialog.m_TableEntryReference.m_KeyId
+      value: 7107843531313152
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
+      propertyPath: _localizedUsedDialog.m_TableReference.m_TableCollectionName
+      value: GUID:f0d379af0f527094e95f9ff4353f37e9
       objectReference: {fileID: 0}
     - target: {fileID: 6503617237434657067, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
@@ -1407,11 +1441,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1068406402}
-  - component: {fileID: 1068406401}
   - component: {fileID: 1068406400}
   - component: {fileID: 1068406403}
   m_Layer: 0
-  m_Name: SoundStreet
+  m_Name: FMODAmbience_ExteriorStreets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1426,23 +1459,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1068406399}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7175a318d62d447b9c51e59c827384, type: 3}
+  m_Script: {fileID: 11500000, guid: 6726089517bca9a4ebe87f008c083efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  streetsSound: {fileID: 1068406403}
---- !u!65 &1068406401
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068406399}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 128.94362, y: 14.79356, z: 176.60199}
-  m_Center: {x: 55.964973, y: 8.205996, z: -12.004101}
+  _playInStart: 1
+  _emitter: {fileID: 1068406403}
 --- !u!4 &1068406402
 Transform:
   m_ObjectHideFlags: 0
@@ -1469,7 +1490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionTag: 
+  CollisionTag: Player
   Event: event:/AFX/exterior_streets
   PlayEvent: 0
   StopEvent: 0
@@ -1606,7 +1627,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh47750
+  m_Name: pb_Mesh23978
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2099,6 +2120,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
+      propertyPath: _sound
+      value: event:/Interactables/Doors/Door Locked
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
       propertyPath: questData.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -2320,6 +2346,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
+      propertyPath: _sound
+      value: event:/Interactables/Doors/Door Locked
       objectReference: {fileID: 0}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
@@ -4250,6 +4281,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 88ac1b1eebedc6e49ab9ef9f65d0279f, type: 2}
+    - target: {fileID: -1514505063208182749, guid: 63cc11348281d374faf4183370bd08e0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -25.88
+      objectReference: {fileID: 0}
     - target: {fileID: -1475271350998701819, guid: 63cc11348281d374faf4183370bd08e0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -11493,11 +11529,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1552111350}
-  - component: {fileID: 1552111349}
   - component: {fileID: 1552111348}
   - component: {fileID: 1552111351}
   m_Layer: 0
-  m_Name: SoundRooftop
+  m_Name: FMODAmbience_ExteriorRooftop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11512,23 +11547,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1552111347}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16b6911659d55f14cb0fe3ad28f0317a, type: 3}
+  m_Script: {fileID: 11500000, guid: 6726089517bca9a4ebe87f008c083efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rooftopSound: {fileID: 1552111351}
---- !u!65 &1552111349
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1552111347}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 30.149582, y: 6.1588974, z: 34.56308}
-  m_Center: {x: -25.73864, y: 39.19945, z: 40.815323}
+  _playInStart: 0
+  _emitter: {fileID: 1552111351}
 --- !u!4 &1552111350
 Transform:
   m_ObjectHideFlags: 0
@@ -11555,7 +11578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionTag: 
+  CollisionTag: Player
   Event: event:/AFX/exterior_rooftop
   PlayEvent: 0
   StopEvent: 0
@@ -11635,9 +11658,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
+      propertyPath: _sound
+      value: event:/Interactables/Doors/Door Locked
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
       propertyPath: questData.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
+        type: 3}
+      propertyPath: questData.Array.data[0].quest
+      value: 
+      objectReference: {fileID: 11400000, guid: 586bb04ab73fb444ba68eccc01aa1029,
+        type: 2}
     - target: {fileID: 5916925748176518425, guid: 2e5c4299a943a8b42920fd9af60da3d9,
         type: 3}
       propertyPath: _localizedDialog.m_TableEntryReference.m_KeyId
@@ -12366,19 +12400,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
         type: 3}
-      propertyPath: sceneData
-      value: 
-      objectReference: {fileID: 11400000, guid: b68d46afafcbd6d43834e83ea826813c,
-        type: 2}
-    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
-        type: 3}
       propertyPath: _showDebug
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
         type: 3}
+      propertyPath: _onlyTeleport
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
+        type: 3}
+      propertyPath: _ambienceToPlay
+      value: 
+      objectReference: {fileID: 1552111348}
+    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
+        type: 3}
+      propertyPath: _ambienceToStop
+      value: 
+      objectReference: {fileID: 1068406400}
+    - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
+        type: 3}
       propertyPath: newPlayerPosition.x
-      value: -24.446804
+      value: -21.430494
       objectReference: {fileID: 0}
     - target: {fileID: 2344881707344555067, guid: e6757cead478bc84d83dfdc0397a3f63,
         type: 3}
@@ -12935,17 +12978,17 @@ PrefabInstance:
     - target: {fileID: 8291343348467503923, guid: f368d4fb4e5a6c64488b8a9048a343f6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 50.49
+      value: 51.74
       objectReference: {fileID: 0}
     - target: {fileID: 8291343348467503923, guid: f368d4fb4e5a6c64488b8a9048a343f6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.149
+      value: 13.32
       objectReference: {fileID: 0}
     - target: {fileID: 8291343348467503923, guid: f368d4fb4e5a6c64488b8a9048a343f6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -89.68
+      value: -88.89
       objectReference: {fileID: 0}
     - target: {fileID: 8291343348467503923, guid: f368d4fb4e5a6c64488b8a9048a343f6,
         type: 3}

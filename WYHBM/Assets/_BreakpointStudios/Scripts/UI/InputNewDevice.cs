@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Events;
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class InputNewDevice : MonoBehaviour
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
+    [SerializeField, ConditionalHide] protected FMODConfig _FMODConfig = null;
     [SerializeField, ConditionalHide] private DeviceConfig _deviceConfig = null;
     [SerializeField, ConditionalHide] private TextMeshProUGUI _deviceTxt = null;
     [SerializeField, ConditionalHide] private Image _deviceImg = null;
@@ -59,6 +61,8 @@ public class InputNewDevice : MonoBehaviour
         if (_isPlaying)return;
 
         _isPlaying = true;
+
+        RuntimeManager.PlayOneShot(_FMODConfig.popupDevice);
 
         _canvasUtility.Show(true);
 

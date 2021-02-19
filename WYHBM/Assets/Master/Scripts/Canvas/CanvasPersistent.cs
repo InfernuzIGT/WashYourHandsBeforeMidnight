@@ -69,7 +69,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
             .DOFade(1, _fadeInstant ? 0 : _worldConfig.fadeDuration)
             .OnKill(FadeIn);
 
-        SetCanvas(true);
+        // SetCanvas(true);
     }
 
     private void FadeIn()
@@ -79,7 +79,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         _fadeImg
             .DOFade(0, _fadeInstant ? 0 : _worldConfig.fadeDuration)
             .SetDelay(_delay)
-            .OnComplete(() => SetCanvas(false))
+            // .OnComplete(() => SetCanvas(false))
             .OnKill(() => _callbackEnd?.Invoke());
     }
 
@@ -89,22 +89,24 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         {
             _fadeImg
                 .DOFade(1, evt.instant ? 0 : evt.duration)
-                .OnComplete(() => evt.callbackFadeIn?.Invoke());
+                .OnComplete(() => evt.callbackFadeIn?.Invoke())
+                .OnKill(() => evt.callbackFMODStop?.Invoke());
         }
         else
         {
             _fadeImg
                 .DOFade(0, evt.instant ? 0 : evt.duration)
-                .OnComplete(() => SetCanvas(false));
+                // .OnComplete(() => SetCanvas(false))
+                .OnKill(() => evt.callbackFMODPlay?.Invoke());
         }
 
-        SetCanvas(true);
+        // SetCanvas(true);
     }
 
-    private void SetCanvas(bool isEnabled)
-    {
-        _canvas.enabled = isEnabled;
-    }
+    // private void SetCanvas(bool isEnabled)
+    // {
+    //     _canvas.enabled = isEnabled;
+    // }
 
     private void OnCutscene(CutsceneEvent evt)
     {
@@ -119,14 +121,14 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
             .SetRelative()
             .OnKill(CheckLetterbox);
 
-        SetCanvas(true);
+        // SetCanvas(true);
     }
 
     private void CheckLetterbox()
     {
         if (_show)return;
 
-        SetCanvas(false);
+        // SetCanvas(false);
     }
 
     private void OnSaveAnimation(SaveAnimationEvent evt)

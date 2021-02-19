@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Events;
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -18,6 +19,7 @@ public class QuestPopup : MonoBehaviour
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
+    [SerializeField, ConditionalHide] protected FMODConfig _FMODConfig = null;
     [SerializeField, ConditionalHide] private TextMeshProUGUI _titleTxt = null;
     [SerializeField, ConditionalHide] private TextMeshProUGUI _stateTxt = null;
     [SerializeField, ConditionalHide] private LocalizeStringEvent _localizeStringTitle = null;
@@ -82,6 +84,8 @@ public class QuestPopup : MonoBehaviour
         if (_isPlaying)return;
 
         _isPlaying = true;
+
+        RuntimeManager.PlayOneShot(_FMODConfig.popupDevice);
 
         _canvasUtility.Show(true);
 

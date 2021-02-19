@@ -1,4 +1,5 @@
 ﻿using Events;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -6,6 +7,7 @@ public class InteractionDialog : Interaction
 {
     [Header("Dialog")]
     [SerializeField] private LocalizedString _localizedDialog;
+    [SerializeField, EventRef] private string _sound = "";
     [Space]
     [SerializeField] private bool _useOnlyOnce;
     [SerializeField] private LocalizedString _localizedUsedDialog;
@@ -62,6 +64,8 @@ public class InteractionDialog : Interaction
     public override void OnInteractEvent()
     {
         base.OnInteractEvent();
+
+        if (_sound != "")RuntimeManager.PlayOneShot(_sound);
 
         ExecuteAnimation();
 

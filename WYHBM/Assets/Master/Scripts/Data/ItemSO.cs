@@ -7,7 +7,7 @@ public class ItemSO : ScriptableObject
     public string title;
     [TextArea] public string description;
     [PreviewTexture(48)] public Sprite icon;
-    
+
     [Header("Data")]
     public ITEM_TYPE type;
     public Vector2Int value;

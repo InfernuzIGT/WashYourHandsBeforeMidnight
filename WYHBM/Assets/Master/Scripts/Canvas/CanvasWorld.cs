@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
 using Events;
+using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,13 +15,11 @@ public class CanvasWorld : MonoBehaviour
     [SerializeField, ReadOnly] private GameObject _lastGameObject = null;
     [SerializeField] private SceneSO sceneData = null;
 
-    [Header("FMOD")]
-    //private FMOD.Studio.EventInstance _pauseSnapshot;
-
     [Header("References")]
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
+    [SerializeField, ConditionalHide] protected FMODConfig _FMODConfig = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _panelPause;
     [SerializeField, ConditionalHide] private OptionsController _optionsController = null;
     [SerializeField, ConditionalHide] private InputActionReference _actionBack = null;
@@ -37,6 +36,9 @@ public class CanvasWorld : MonoBehaviour
     [SerializeField, ConditionalHide] private GameObject _firstSelectQuit = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonYes = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonNo = null;
+
+    // FMOD
+    private EventInstance _pauseSnapshot;
 
     [Header("DEPRECATED")]
     public Popup popup;
@@ -84,14 +86,6 @@ public class CanvasWorld : MonoBehaviour
         _canvasUtility = GetComponent<CanvasGroupUtility>();
     }
 
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    void Update()
-    {
-        //_pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/path del snapshot");
-    }
-
     private void Start()
     {
         dicQuestTitle = new Dictionary<QuestSO, QuestTitle>();
@@ -105,6 +99,8 @@ public class CanvasWorld : MonoBehaviour
         _changeSceneEvent.isLoadAdditive = false;
         _changeSceneEvent.sceneData = sceneData;
         _changeSceneEvent.instantFade = false;
+
+        _pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance(_FMODConfig.snapshotPause);
 
         AddListeners();
     }
@@ -258,12 +254,14 @@ public class CanvasWorld : MonoBehaviour
         if (evt.isPaused)
         {
             _actionBack.action.performed += ExecuteBackInput;
-            //_pauseSnapshot.start();
+
+            _pauseSnapshot.start();
         }
         else
         {
             _actionBack.action.performed -= ExecuteBackInput;
-            //_pauseSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
+            _pauseSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
 
     }

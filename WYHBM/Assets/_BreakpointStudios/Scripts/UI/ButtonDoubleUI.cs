@@ -20,6 +20,7 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
     [Header("Button Double")]
     [SerializeField] private bool _dynamicArrows = true;
 
+    // private bool _isLeft;
     private bool _isSelected;
     private bool _arrowLeftState;
     private bool _arrowRightState;
@@ -46,6 +47,8 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
 
     public void UpdateUI(string text, bool isLeft)
     {
+        // _isLeft = isLeft;
+        
         _optionTxt.text = text;
 
         if (!_dynamicArrows)return;
@@ -58,6 +61,16 @@ public class ButtonDoubleUI : ButtonUI, IMoveHandler
 
     public void UpdateUI(LocalizedString text, bool isLeft)
     {
+        // if (isLeft != _isLeft)
+        // {
+            
+        // }else
+        // {
+            
+        // }
+        
+        // _isLeft = isLeft;
+        
         _localizeStringEvent.StringReference = text;
         _localizeStringEvent.OnUpdateString.Invoke(_optionTxt.text);
 

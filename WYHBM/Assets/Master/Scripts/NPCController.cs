@@ -76,7 +76,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _combatEvent.isEnter = true;
             _combatEvent.combatEnemies.AddRange(_data.CombatEnemies);
 
-            StartRoaming();
+            zombieRoaming.Play();
         }
 
 #if UNITY_EDITOR
@@ -125,7 +125,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _fieldOfView.OnFindTarget += OnFindTarget;
         _fieldOfView.OnLossTarget += OnLossTarget;
 
-        EventController.AddListener<CombatEvent>(OnCombat);
+        if (_data.CanCombat)EventController.AddListener<CombatEvent>(OnCombat);
     }
 
     private void OnDisable()
@@ -133,19 +133,14 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _fieldOfView.OnFindTarget -= OnFindTarget;
         _fieldOfView.OnLossTarget -= OnLossTarget;
 
-        EventController.RemoveListener<CombatEvent>(OnCombat);
-    }
-
-    private void StartRoaming()
-    {
-        zombieRoaming.Play();
+        if (_data.CanCombat)EventController.RemoveListener<CombatEvent>(OnCombat);
     }
 
     private void OnCombat(CombatEvent evt)
     {
         if (evt.isEnter)
         {
-
+            zombieRoaming.Stop();
         }
         else
         {
@@ -153,9 +148,15 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
             if (_isDetectingPlayer)
             {
+                zombieRoaming.Stop();
+                
                 InteractionCorpse corpse = Instantiate(_worldConfig.interactionCorpse, _shadow.position, Quaternion.identity);
                 corpse.Init(_data.SpriteCorpse);
                 Destroy(gameObject);
+            }
+            else
+            {
+                zombieRoaming.Play();
             }
         }
     }
@@ -251,7 +252,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
             _lastDestination = _waypoints.positions[_positionIndex];
             _agent.SetDestination(_lastDestination);
             _isMoving = true;
-            
+
             // TODO Mariano: Hacer que haga ida y vuelta
         }
     }
