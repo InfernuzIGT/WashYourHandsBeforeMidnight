@@ -1,0 +1,297 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1907660403231058587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4743548554045305307}
+  - component: {fileID: 6512722851819327880}
+  m_Layer: 0
+  m_Name: FMOD_Footsteps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4743548554045305307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1907660403231058587}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.4615886, y: 0.046234205, z: -2.7535608}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4472252580763155065}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6512722851819327880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1907660403231058587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Enemies/Zombie_base/footsteps
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &4425713962293047819
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1850081116094764960}
+  - component: {fileID: 8479115855342292134}
+  m_Layer: 0
+  m_Name: FMOD_Alert
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1850081116094764960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4425713962293047819}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.4615886, y: 0.046234205, z: -2.7535608}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4472252580763155065}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8479115855342292134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4425713962293047819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Enemies/Zombie_base/alert
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 30
+--- !u!1 &7329282284966841571
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4215784248841105785}
+  - component: {fileID: 8791755217119017341}
+  m_Layer: 0
+  m_Name: FMOD_Roaming
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4215784248841105785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329282284966841571}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.4615886, y: 0.046234205, z: -2.7535608}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4472252580763155065}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8791755217119017341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329282284966841571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Enemies/Zombie_base/roaming
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1001 &6013984622991435750
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2638707246716020119, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633472, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_Name
+      value: NPC_Zombie_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633473, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 2bcbadd00395df441af5fac6ee62da83,
+        type: 2}
+    - target: {fileID: 7882800319852633502, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 4.4444447
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633502, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 4.4444447
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633502, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -726141498979709977, guid: a04388e9d8f582a4fa5e1eff478e6527,
+        type: 3}
+    - target: {fileID: 7882800319852633502, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8781508375878358936, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: _data
+      value: 
+      objectReference: {fileID: 11400000, guid: 577fe24a01720e24187666469fd12dc7,
+        type: 2}
+    - target: {fileID: 8781508375878358936, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: zombieAlert
+      value: 
+      objectReference: {fileID: 8479115855342292134}
+    - target: {fileID: 8781508375878358936, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: zombieRoaming
+      value: 
+      objectReference: {fileID: 8791755217119017341}
+    - target: {fileID: 8781508375878358936, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: zombieFootstep
+      value: 
+      objectReference: {fileID: 6512722851819327880}
+    - target: {fileID: 8781508375878358936, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+        type: 3}
+      propertyPath: _startLookDirection
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b39e516f6a2ba1b4fa87e04d066189f9, type: 3}
+--- !u!4 &4472252580763155065 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7882800319852633503, guid: b39e516f6a2ba1b4fa87e04d066189f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6013984622991435750}
+  m_PrefabAsset: {fileID: 0}

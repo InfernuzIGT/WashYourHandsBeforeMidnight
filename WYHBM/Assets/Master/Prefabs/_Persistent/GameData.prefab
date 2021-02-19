@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &439076535493010450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1437412301544893386}
+  - component: {fileID: 7222876601119083809}
+  - component: {fileID: 8947044879963769972}
+  - component: {fileID: 6268669331600259658}
+  - component: {fileID: 1418817179881555418}
+  - component: {fileID: 2888425497679362494}
+  m_Layer: 0
+  m_Name: GameData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1437412301544893386
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439076535493010450}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7222876601119083809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439076535493010450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b16d0e33360a94d9849118f2893d09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _devIsBuild: 0
+  _devPrintInputInfo: 0
+  _devDontSave: 0
+  _playerConfig: {fileID: 11400000, guid: 9fb29115352a11048a9f1cc73e5dd287, type: 2}
+  _deviceConfig: {fileID: 11400000, guid: 5bb233fb443c9944581577a3e8374737, type: 2}
+  sessionIndex: 0
+  sessionData:
+    sessionIndex: 0
+    playerData: {fileID: 0}
+    newSpawnPoint: {fileID: 0}
+    listQuest: []
+    listIds: []
+  sessionSettings:
+    language: {fileID: 0}
+    quality: 0
+    fullScreen: 0
+    vSync: 0
+    masterVolume: 0
+    soundEffects: 0
+    music: 0
+    vibration: 0
+  ShowReferences: 0
+  _localizationUtility: {fileID: 8947044879963769972}
+  _inputSystemUtility: {fileID: 6268669331600259658}
+  _globalClock: {fileID: 2888425497679362494}
+  _canvasSplash: {fileID: 6346542456006749699, guid: 531cb818b8706aa47ad516eaff735a66,
+    type: 3}
+  _canvasFinish: {fileID: 1452941969968479313, guid: 8a72ead3d5205914f8bcb91481b8dd61,
+    type: 3}
+--- !u!114 &8947044879963769972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439076535493010450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfcb2e4ec94b8af40bc7e0e6f124f08a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _locale: {fileID: 0}
+  _language: 
+--- !u!114 &6268669331600259658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439076535493010450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b11175bb8490e498c4c55b6c787cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentDevice: 0
+--- !u!114 &1418817179881555418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439076535493010450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a10179de595094539a3ca7ba94d6b1c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debug: 0
+  _maxParticleLoops: 10
+--- !u!114 &2888425497679362494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439076535493010450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0144e3ad8a88947298e2dca62625e6ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _localTimeScale: 1
+  _paused: 0
+  _parentKey: 
+  _parentBlend: 0
+  _key: Root

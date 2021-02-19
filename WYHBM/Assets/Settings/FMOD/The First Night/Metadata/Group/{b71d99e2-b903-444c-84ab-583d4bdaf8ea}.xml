@@ -39,9 +39,13 @@
 		<relationship name="automationPoints">
 			<destination>{87a06ec0-4c76-419d-9d7e-17accaa0613a}</destination>
 			<destination>{d9dfd56d-74bd-4b4c-bd2a-1c81030128a2}</destination>
+			<destination>{439a74db-ac6e-45bf-bf7f-9575dba2d4c8}</destination>
 		</relationship>
 	</object>
 	<object class="MultibandEqEffect" id="{e3cbb061-5fcf-4677-a5a0-3132e193ba78}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
 		<property name="filterTypeA">
 			<value>0</value>
 		</property>
@@ -73,7 +77,7 @@
 			<value>-80</value>
 		</property>
 		<property name="curveShape">
-			<value>-0.377074093</value>
+			<value>-0.335758746</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{d9dfd56d-74bd-4b4c-bd2a-1c81030128a2}">
@@ -82,6 +86,14 @@
 		</property>
 		<property name="value">
 			<value>0</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{439a74db-ac6e-45bf-bf7f-9575dba2d4c8}">
+		<property name="position">
+			<value>0.2019773958553911</value>
+		</property>
+		<property name="value">
+			<value>-11</value>
 		</property>
 	</object>
 </objects>

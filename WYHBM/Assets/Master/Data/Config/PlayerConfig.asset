@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c12e9a5325e4a7e49938289c30041364, type: 3}
+  m_Name: PlayerConfig
+  m_EditorClassIdentifier: 
+  height: 3.15
+  speedRun: 16
+  speedJogging: 12
+  speedWalk: 5
+  speedCrouchFast: 3.5
+  speedCrouch: 2
+  gravity: 39.24
+  magnitudeFall: 5
+  soundRadiusRun: 25
+  soundRadiusJogging: 15
+  soundRadiusWalk: 5
+  soundRadiusCrouch: 1
+  axisLimit: 0.7
+  axisLimitCrouch: 0.5
+  stickDeadZone: 0.05
+  mouseOffset: {x: 0.5, y: 0.5}
+  zoomValues:
+  - 3
+  - 9
+  - 18
+  rumbleValues:
+  - type: 0
+    duration: 1
+    frequency: 0.25
+  - type: 1
+    duration: 0.2
+    frequency: 1
+  - type: 2
+    duration: 0.25
+    frequency: 0.25
+  - type: 3
+    duration: 0.5
+    frequency: 0.5

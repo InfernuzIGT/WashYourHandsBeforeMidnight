@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{c6e72913-1d34-4bf6-a35f-8c4835e229e0}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-10</value>
 		</property>
 		<property name="name">
 			<value>Player Footsteps Bus</value>
@@ -19,11 +19,33 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{a9be7696-5ec8-4abf-833b-b68315aa15d7}">
 		<relationship name="effects">
+			<destination>{7be81c07-0145-44b8-a671-de5554572f42}</destination>
 			<destination>{2278f1aa-a653-4955-ac58-441c5ff38f03}</destination>
 			<destination>{b5f827df-f43d-4c02-a965-0c58b9c4edd3}</destination>
+			<destination>{87b504e8-1560-4ca8-b24a-ae5a9027f3f6}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{0fd9c02f-e626-4c34-a150-e93d31494f8a}" />
+	<object class="ThreeEQEffect" id="{7be81c07-0145-44b8-a671-de5554572f42}">
+		<property name="lowGain">
+			<value>-4</value>
+		</property>
+		<property name="midGain">
+			<value>-12</value>
+		</property>
+		<property name="highGain">
+			<value>-11</value>
+		</property>
+		<property name="lowCrossover">
+			<value>460</value>
+		</property>
+		<property name="highCrossover">
+			<value>4200</value>
+		</property>
+		<property name="crossoverSlope">
+			<value>2</value>
+		</property>
+	</object>
 	<object class="LimiterEffect" id="{2278f1aa-a653-4955-ac58-441c5ff38f03}">
 		<property name="boost">
 			<value>6</value>
@@ -33,4 +55,41 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{b5f827df-f43d-4c02-a965-0c58b9c4edd3}" />
+	<object class="MixerSend" id="{87b504e8-1560-4ca8-b24a-ae5a9027f3f6}">
+		<property name="level">
+			<value>1</value>
+		</property>
+		<property name="inputFormat">
+			<value>2</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{3b260e48-def9-4d57-9434-26b502970763}</destination>
+			<destination>{7b57c8e6-6028-4a29-9fb9-1b035dfd4013}</destination>
+		</relationship>
+		<relationship name="mixerReturn">
+			<destination>{605413b9-6cce-41d2-8030-666b5822e51c}</destination>
+		</relationship>
+	</object>
+	<object class="RandomizerModulator" id="{3b260e48-def9-4d57-9434-26b502970763}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>level</value>
+		</property>
+		<property name="amount">
+			<value>3.5</value>
+		</property>
+	</object>
+	<object class="LFOModulator" id="{7b57c8e6-6028-4a29-9fb9-1b035dfd4013}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>level</value>
+		</property>
+		<property name="rate">
+			<value>1.5</value>
+		</property>
+		<property name="depth">
+			<value>2</value>
+		</property>
+		<property name="direction">
+			<value>-100</value>
+		</property>
+	</object>
 </objects>

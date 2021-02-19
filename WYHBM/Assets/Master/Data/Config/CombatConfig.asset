@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e0e2cef7fa61943bbaba6cf0a1150e, type: 3}
+  m_Name: CombatConfig
+  m_EditorClassIdentifier: 
+  positionAction: {x: -0.5, y: 0, z: 0}
+  animationDuration: 0.2
+  fillDuration: 2
+  actionSelectAction:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950520419225600
+      m_Key: 
+  actionSelectEnemy:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950522365382656
+      m_Key: 
+  actionSelectPlayer:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950524038909952
+      m_Key: 
+  actionEnemyTurn:
+    m_TableReference:
+      m_TableCollectionName: GUID:f02bbf0cde5790045a0fe29556643fa1
+    m_TableEntryReference:
+      m_KeyId: 34950524768718848
+      m_Key: 
+  fadeDuration: 3
+  canvasFadeDuration: 0.35
+  fadeOutEndDuration: 0.75
+  layerNone:
+    serializedVersion: 2
+    m_Bits: 1
+  layerPlayer:
+    serializedVersion: 2
+    m_Bits: 131072
+  layerEnemy:
+    serializedVersion: 2
+    m_Bits: 262144
+  actionsPrefab: {fileID: 4881200032687338928, guid: d5a423c754feb174fa5a2f68fa6779f0,
+    type: 3}
+  actionButtonPrefab: {fileID: 7751982766169152188, guid: 341774259ecbcc1429c89ebbd636de36,
+    type: 3}
+  actionTimeThresholdMultiplier: 1
+  waitTimeToStart: 1.5
+  waitTimeToFinish: 1.5
+  waitTimePerAction: 0.5
+  waitTimeBetweenTurns: 0.25
+  shakeDuration: 0.25
+  shakeAmplitude: 0.75
+  shakeFrequency: 25

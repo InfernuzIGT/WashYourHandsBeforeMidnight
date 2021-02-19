@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff53125cee42c46468b18344a184018a, type: 3}
+  m_Name: Combat_Zombie_02
+  m_EditorClassIdentifier: 
+  _name: Zombie 02
+  _sprite: {fileID: -1214187709566318675, guid: 69b4139c1fac3bb44ae29afe227ec4d4,
+    type: 3}
+  _animatorController: {fileID: 22100000, guid: 53a833ea9baacda4497e721d14d87c18,
+    type: 2}
+  _equipment:
+    actionA: {fileID: 11400000, guid: 34b2218e0c93b904f96d4b3df279f1fa, type: 2}
+    actionB: {fileID: 11400000, guid: c8f292d16401e96449ed2a6e2b7ecf85, type: 2}
+    actionItem:
+    - {fileID: 11400000, guid: e70eea3ebf5822a4b8713f6f324360ff, type: 2}
+  _statsHealthMax: 100
+  _statsHealthStart: 100
+  _statsBaseDamage: 20
+  _statsBaseDefense: 20
+  _statsReaction: 3

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036b42f3713f2e14594d971d498cf1b4, type: 3}
+  m_Name: NPC_Zombie_01
+  m_EditorClassIdentifier: 
+  _name: Zombie 01
+  _sprite: {fileID: -8218742200999940457, guid: f7c5d44a562b8a4418b0c810331692bb,
+    type: 3}
+  _animatorController: {fileID: 22100000, guid: 83788a6a51caec44582f27bc5c956549,
+    type: 2}
+  iconNone: {fileID: 0}
+  iconHappy: {fileID: 0}
+  iconSad: {fileID: 0}
+  iconAngry: {fileID: 0}
+  iconSurprise: {fileID: 0}
+  iconCurious: {fileID: 0}
+  iconSleep: {fileID: 0}
+  iconSpecial1: {fileID: 0}
+  iconSpecial2: {fileID: 0}
+  _data: []
+  _canCombat: 1
+  _spriteCorpse: {fileID: 21300000, guid: 0b17d2e42c6d77e40b21cce5c928b2ee, type: 3}
+  combatEnemies:
+  - {fileID: 7509734975322126681, guid: 3750b2288bd06c343baa6284e71cdb8e, type: 3}
+  _canMove: 1
+  _canPatrol: 0
+  _speedMovement: 5
+  _speedRotation: 180
+  _useRandomPosition: 0
+  _waitTime: 5
+  _detectPlayer: 1
+  _timeToDetect: 1
