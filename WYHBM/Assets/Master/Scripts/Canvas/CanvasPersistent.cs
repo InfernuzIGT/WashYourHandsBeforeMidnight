@@ -3,11 +3,11 @@ using Events;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Canvas))]
 public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 {
     [Header("General")]
     [SerializeField] private WorldConfig _worldConfig = null;
+    [SerializeField] private CanvasGroupUtility _canvasUtility = null;
 
     [Header("Fade")]
     [SerializeField] private Image _fadeImg = null;
@@ -29,12 +29,8 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     protected readonly int hash_IsSaving = Animator.StringToHash("isSaving");
     protected readonly int hash_IsLoading = Animator.StringToHash("isLoading");
 
-    private Canvas _canvas;
-
     private void Start()
     {
-        _canvas = GetComponent<Canvas>();
-
         _letterboxSize = _letterboxTopImg.rectTransform.sizeDelta.y;
     }
 
@@ -69,7 +65,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
             .DOFade(1, _fadeInstant ? 0 : _worldConfig.fadeDuration)
             .OnKill(FadeIn);
 
-        // SetCanvas(true);
+        SetCanvas(true);
     }
 
     private void FadeIn()
@@ -79,7 +75,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         _fadeImg
             .DOFade(0, _fadeInstant ? 0 : _worldConfig.fadeDuration)
             .SetDelay(_delay)
-            // .OnComplete(() => SetCanvas(false))
+            .OnComplete(() => SetCanvas(false))
             .OnKill(() => _callbackEnd?.Invoke());
     }
 
@@ -96,17 +92,17 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         {
             _fadeImg
                 .DOFade(0, evt.instant ? 0 : evt.duration)
-                // .OnComplete(() => SetCanvas(false))
+                .OnComplete(() => SetCanvas(false))
                 .OnKill(() => evt.callbackFMODPlay?.Invoke());
         }
 
-        // SetCanvas(true);
+        SetCanvas(true);
     }
 
-    // private void SetCanvas(bool isEnabled)
-    // {
-    //     _canvas.enabled = isEnabled;
-    // }
+    private void SetCanvas(bool isEnabled)
+    {
+        _canvasUtility.ShowInstant(isEnabled);
+    }
 
     private void OnCutscene(CutsceneEvent evt)
     {
@@ -121,14 +117,14 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
             .SetRelative()
             .OnKill(CheckLetterbox);
 
-        // SetCanvas(true);
+        SetCanvas(true);
     }
 
     private void CheckLetterbox()
     {
         if (_show)return;
 
-        // SetCanvas(false);
+        SetCanvas(false);
     }
 
     private void OnSaveAnimation(SaveAnimationEvent evt)
