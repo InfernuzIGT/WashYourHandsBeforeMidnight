@@ -8,6 +8,8 @@ public class Enemy : CombatCharacter
 {
 	private CombatEnemyEvent _combatEnemyEvent;
 
+	private ItemSO _currentItem;
+
 	public override void Start()
 	{
 		base.Start();
@@ -22,7 +24,7 @@ public class Enemy : CombatCharacter
 	{
 		_vibrationEvent.type = RUMBLE_TYPE.Attack;
 		EventController.TriggerEvent(_vibrationEvent);
-		
+
 	}
 
 	public void Select()
@@ -30,10 +32,11 @@ public class Enemy : CombatCharacter
 		int randomPlayer = Random.Range(0, GameData.Instance.GetListPlayer().Count);
 		int randomAction = Random.Range(0, 2);
 
-		GameData.Instance.GetListPlayer()[randomPlayer].Select(randomAction == 0 ? Data.Equipment.actionA : Data.Equipment.actionB);
+		_currentItem = randomAction == 0 ? Data.Equipment.actionA : Data.Equipment.actionB;
+		GameData.Instance.GetListPlayer()[randomPlayer].Select(_currentItem);
+		
 		AnimationAction(randomAction == 0 ? ANIM_STATE.Attack_1 : ANIM_STATE.Attack_2);
-
-
+		PlayActionSound(_currentItem);
 		DoAction();
 	}
 

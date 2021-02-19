@@ -57,12 +57,11 @@ public enum DIALOG_STATE
 public enum ITEM_TYPE
 {
     None = 0,
-    WeaponMelee = 1,
-    WeaponOneHand = 2,
-    WeaponTwoHands = 3,
-    ItemHeal = 4,
-    ItemDefense = 5,
-    ItemGrenade = 6
+    ActionA = 1,
+    ActionB = 2,
+    ActionHeal = 3,
+    ActionDefense = 4,
+    ActionItem = 5
 }
 
 public enum LADDER_EXIT

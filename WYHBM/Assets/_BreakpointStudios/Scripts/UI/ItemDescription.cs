@@ -15,18 +15,18 @@ public class ItemDescription : MonoBehaviour
 
         switch (item.type)
         {
-            case ITEM_TYPE.WeaponMelee:
-            case ITEM_TYPE.WeaponOneHand:
-            case ITEM_TYPE.WeaponTwoHands:
-            case ITEM_TYPE.ItemGrenade:
+            case ITEM_TYPE.ActionA:
+            case ITEM_TYPE.ActionB:
+            // case ITEM_TYPE.ActionC:
+            case ITEM_TYPE.ActionDefense:
                 // valueTxt.text = string.Format(GameData.Instance.textConfig.itemDamage, item.value.x, item.value.y);
                 break;
 
-            case ITEM_TYPE.ItemHeal:
+            // case ITEM_TYPE.ItemHeal:
                 // valueTxt.text = string.Format(GameData.Instance.textConfig.itemHeal, item.value.x, item.value.y);
-                break;
+                // break;
 
-            case ITEM_TYPE.ItemDefense:
+            case ITEM_TYPE.ActionHeal:
                 // valueTxt.text = string.Format(GameData.Instance.textConfig.itemDefense, item.value.x);
                 break;
 

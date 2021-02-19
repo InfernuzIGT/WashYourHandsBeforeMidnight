@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Events;
-using UnityEngine;
 using FMODUnity;
+using UnityEngine;
 
 [System.Serializable]
 public class Equipment
@@ -18,13 +18,6 @@ public class CombatCharacter : MonoBehaviour
     [Header("General")]
     [SerializeField] protected CombatCharacterSO _data = null;
 
-    [Header("FMOD")]
-    public StudioEventEmitter hurtSound;
-    public StudioEventEmitter attackSound;
-    public StudioEventEmitter dodgeSound;
-    public StudioEventEmitter deathSound;
-    public StudioEventEmitter itemSound;
-
     [Header("References")]
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
@@ -34,6 +27,9 @@ public class CombatCharacter : MonoBehaviour
     [SerializeField, ConditionalHide] private HealthBar _healthBar;
     [SerializeField, ConditionalHide] private CombatAnimator _combatAnimator;
     [SerializeField, ConditionalHide] private GameObject _shadow;
+    [Space]
+    [SerializeField, ConditionalHide] private StudioEventEmitter _actionSound;
+    [SerializeField, ConditionalHide] private StudioEventEmitter _stateSound;
 
     // Protected
     protected bool _isActionDone;
@@ -120,6 +116,57 @@ public class CombatCharacter : MonoBehaviour
         _healthBar.UpdateBar(false, _healthActual / _data.StatsHealthMax);
     }
 
+    public void PlayActionSound(ItemSO item)
+    {
+        switch (item.type)
+        {
+            case ITEM_TYPE.ActionA:
+                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 1);
+                break;
+
+            case ITEM_TYPE.ActionB:
+                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 2);
+                break;
+
+            case ITEM_TYPE.ActionHeal:
+                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 3);
+                break;
+
+            case ITEM_TYPE.ActionDefense:
+                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 4);
+                break;
+
+            case ITEM_TYPE.ActionItem:
+                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 5);
+                break;
+        }
+
+        _actionSound.Play();
+    }
+
+    private void PlayStateSound(ANIM_STATE state)
+    {
+        switch (state)
+        {
+            case ANIM_STATE.Hit:
+                _stateSound.EventInstance.setParameterByName(FMODParameters.StateSound, 1);
+                break;
+
+            case ANIM_STATE.Dodge:
+                _stateSound.EventInstance.setParameterByName(FMODParameters.StateSound, 2);
+                break;
+
+            case ANIM_STATE.Dead:
+                _stateSound.EventInstance.setParameterByName(FMODParameters.StateSound, 3);
+                break;
+
+            default:
+                return;
+        }
+
+        _stateSound.Play();
+    }
+
     #region Actions
 
     public void Select(ItemSO item)
@@ -134,23 +181,25 @@ public class CombatCharacter : MonoBehaviour
 
         switch (item.type)
         {
-            case ITEM_TYPE.WeaponMelee:
-            case ITEM_TYPE.WeaponOneHand:
-            case ITEM_TYPE.WeaponTwoHands:
-            case ITEM_TYPE.ItemGrenade:
+            case ITEM_TYPE.ActionA:
+            case ITEM_TYPE.ActionB:
                 _itemAttack = item;
                 ActionReceiveDamage();
                 break;
 
-            case ITEM_TYPE.ItemHeal:
+            case ITEM_TYPE.ActionHeal:
                 _itemHeal = item;
                 ActionHeal();
                 break;
 
-            case ITEM_TYPE.ItemDefense:
+            case ITEM_TYPE.ActionDefense:
                 _itemDefense = item;
                 _inDefense = true;
                 break;
+
+                // TODO Mariano: Implementar
+                // case ITEM_TYPE.ActionItem:
+                //     break;
         }
 
         AnimationRecovery();
@@ -158,12 +207,12 @@ public class CombatCharacter : MonoBehaviour
 
     public void ActionReceiveDamage()
     {
-        if (_healthActual == 0) return;
+        if (_healthActual == 0)return;
 
         if (!GetProbability())
         {
             AnimationAction(ANIM_STATE.Dodge);
-            dodgeSound.Play();
+            PlayStateSound(ANIM_STATE.Dodge);
             return;
         }
 
@@ -175,14 +224,13 @@ public class CombatCharacter : MonoBehaviour
             _inDefense = false;
 
             _totalDefense = GetItemDefense();
-            if (_totalDefense > _totalDamage) _totalDefense = _totalDamage;
+            if (_totalDefense > _totalDamage)_totalDefense = _totalDamage;
 
             AnimationAction(ANIM_STATE.Idle);
         }
         else
         {
             MaterialDamage();
-
 
             _totalDefense = 0;
 
@@ -191,7 +239,6 @@ public class CombatCharacter : MonoBehaviour
 
         _healthActual -= (_totalDamage - _totalDefense);
 
-
         if (_healthActual <= 0)
         {
             _healthActual = 0;
@@ -199,8 +246,7 @@ public class CombatCharacter : MonoBehaviour
             RemoveCharacter();
 
             AnimationAction(ANIM_STATE.Dead);
-
-            deathSound.Play();
+            PlayStateSound(ANIM_STATE.Dead);
 
             _healthBar.UpdateBar(true, _healthActual / _data.StatsHealthMax);
             Kill();
@@ -208,8 +254,7 @@ public class CombatCharacter : MonoBehaviour
         else
         {
             AnimationAction(ANIM_STATE.Hit);
-
-            hurtSound.Play();
+            PlayStateSound(ANIM_STATE.Hit);
 
             _healthBar.UpdateBar(true, _healthActual / _data.StatsHealthMax, Kill);
         }
@@ -229,7 +274,7 @@ public class CombatCharacter : MonoBehaviour
 
         // ShowInfoText(amountHeal, _textConfig.colorMsgHeal);
 
-        if (_healthActual > _data.StatsHealthMax) _healthActual = _data.StatsHealthMax;
+        if (_healthActual > _data.StatsHealthMax)_healthActual = _data.StatsHealthMax;
 
         _healthBar.UpdateBar(false, _healthActual / _data.StatsHealthMax);
     }
@@ -274,7 +319,7 @@ public class CombatCharacter : MonoBehaviour
     {
         yield return _waitPerAction;
 
-        if (_isAlive) AnimationAction(ANIM_STATE.Idle);
+        if (_isAlive)AnimationAction(ANIM_STATE.Idle);
     }
 
     // // TODO Mariano: Review
@@ -313,7 +358,6 @@ public class CombatCharacter : MonoBehaviour
         // {
         //     _totalValue = _data.StatsBaseDamage;
         // }
-
 
         _totalValue = _data.StatsBaseDamage;
 
@@ -386,7 +430,6 @@ public class CombatCharacter : MonoBehaviour
             .DOFloat(0, hash_Lerp, _combatConfig.waitTimePerAction)
             .SetEase(Ease.InBack);
 
-
     }
 
     protected void MaterialHeal()
@@ -426,9 +469,6 @@ public class CombatCharacter : MonoBehaviour
             _isActionDone = true;
             _isMyTurn = false;
         }
-
-        attackSound.Play();
-
     }
 
     /// <summary>

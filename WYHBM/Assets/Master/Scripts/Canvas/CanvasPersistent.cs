@@ -3,11 +3,11 @@ using Events;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Canvas))]
 public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 {
     [Header("General")]
     [SerializeField] private WorldConfig _worldConfig = null;
+    [SerializeField] private CanvasGroupUtility _canvasUtility = null;
 
     [Header("Fade")]
     [SerializeField] private Image _fadeImg = null;
@@ -29,12 +29,8 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
     protected readonly int hash_IsSaving = Animator.StringToHash("isSaving");
     protected readonly int hash_IsLoading = Animator.StringToHash("isLoading");
 
-    private Canvas _canvas;
-
     private void Start()
     {
-        _canvas = GetComponent<Canvas>();
-
         _letterboxSize = _letterboxTopImg.rectTransform.sizeDelta.y;
     }
 
@@ -89,13 +85,15 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
         {
             _fadeImg
                 .DOFade(1, evt.instant ? 0 : evt.duration)
-                .OnComplete(() => evt.callbackFadeIn?.Invoke());
+                .OnComplete(() => evt.callbackFadeIn?.Invoke())
+                .OnKill(() => evt.callbackFMODStop?.Invoke());
         }
         else
         {
             _fadeImg
                 .DOFade(0, evt.instant ? 0 : evt.duration)
-                .OnComplete(() => SetCanvas(false));
+                .OnComplete(() => SetCanvas(false))
+                .OnKill(() => evt.callbackFMODPlay?.Invoke());
         }
 
         SetCanvas(true);
@@ -103,7 +101,7 @@ public class CanvasPersistent : MonoSingleton<CanvasPersistent>
 
     private void SetCanvas(bool isEnabled)
     {
-        _canvas.enabled = isEnabled;
+        _canvasUtility.ShowInstant(isEnabled);
     }
 
     private void OnCutscene(CutsceneEvent evt)
