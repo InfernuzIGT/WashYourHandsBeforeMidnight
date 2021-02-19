@@ -112,6 +112,8 @@ namespace Events
         public bool fadeIn;
         public TweenCallback callbackFadeIn;
         public float duration;
+        public TweenCallback callbackFMODPlay;
+        public TweenCallback callbackFMODStop;
     }
 
     public class CutsceneEvent : GameEvent
@@ -130,6 +132,8 @@ namespace Events
         public SceneSO sceneData;
         public Vector3 newPlayerPosition;
         public bool instantFade;
+        public TweenCallback callbackFMODPlay;
+        public TweenCallback callbackFMODStop;
     }
 
     public class ChangePositionEvent : GameEvent

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Events;
-using UnityEngine;
 using FMODUnity;
+using UnityEngine;
 
 public class InteractionScene : Interaction, IInteractable, IHoldeable
 {
     [Header("Cutscene")]
     public Vector3 newPlayerPosition;
-    [SerializeField] private bool _onlyTeleport = false;
+    [SerializeField] private bool _onlyTeleport = true;
     [SerializeField] private bool _load = false;
     [SerializeField] private bool _isLoadAdditive = true;
     [SerializeField] private bool _instantFade = false;
@@ -20,13 +20,15 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
     [SerializeField] private Color _color = new Color(0, 1, 0, 0.5f);
 
     [Header("FMOD")]
-    public StudioEventEmitter holdStart;
-    public StudioEventEmitter holdStop;
-    public StudioEventEmitter doorSound;
+    [SerializeField] private FMODAmbience _ambienceToPlay;
+    [SerializeField] private FMODAmbience _ambienceToStop;
+    [Space]
+    [SerializeField] private StudioEventEmitter holdStart;
+    [SerializeField] private StudioEventEmitter holdStop;
+    [SerializeField] private StudioEventEmitter doorSound;
 
     private List<AsyncOperation> _listScenes;
     private ChangeSceneEvent _changeSceneEvent;
-
 
     public bool ShowDebug { get { return _showDebug; } }
 
@@ -42,6 +44,8 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         _changeSceneEvent.newPlayerPosition = newPlayerPosition;
         _changeSceneEvent.sceneData = sceneData;
         _changeSceneEvent.instantFade = _instantFade;
+        _changeSceneEvent.callbackFMODPlay = () => _ambienceToPlay.Execute(true);
+        _changeSceneEvent.callbackFMODStop = () => _ambienceToStop.Execute(false);
 
         _holdUtility.OnStarted.AddListener(OnStart);
         _holdUtility.OnCanceled.AddListener(OnCancel);

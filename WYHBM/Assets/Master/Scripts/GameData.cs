@@ -97,6 +97,8 @@ public class GameData : MonoSingleton<GameData>
 		// Cursor.lockState = CursorLockMode.Locked;
 #endif
 
+		// DeleteAll();
+
 		base.Awake();
 	}
 
@@ -112,6 +114,7 @@ public class GameData : MonoSingleton<GameData>
 
 		_enableMovementEvent = new EnableMovementEvent();
 		_changePositionEvent = new ChangePositionEvent();
+		_changePositionEvent.useY = true;
 
 		_customFadeEvent = new CustomFadeEvent();
 		_customFadeEvent.duration = 1;
@@ -130,6 +133,8 @@ public class GameData : MonoSingleton<GameData>
 		else
 		{
 			SceneManager.UnloadSceneAsync(0); // Persistent
+			_customFadeEvent.fadeIn = false;
+			EventController.TriggerEvent(_customFadeEvent);
 		}
 	}
 
@@ -303,6 +308,8 @@ public class GameData : MonoSingleton<GameData>
 		_customFadeEvent.instant = evt.instantFade;
 		_customFadeEvent.fadeIn = true;
 		_customFadeEvent.callbackFadeIn = ChangeScene;
+		_customFadeEvent.callbackFMODPlay = evt.callbackFMODPlay;
+		_customFadeEvent.callbackFMODStop = evt.callbackFMODStop;
 		EventController.TriggerEvent(_customFadeEvent);
 
 		if (_changeSceneUseEvent)
@@ -396,6 +403,9 @@ public class GameData : MonoSingleton<GameData>
 			_enableMovementEvent.canMove = true;
 			EventController.TriggerEvent(_enableMovementEvent);
 		}
+
+		_loadAnimationEvent.isLoading = false;
+		EventController.TriggerEvent(_loadAnimationEvent);
 
 		// GetSceneReferences();
 		// TODO Mariano: Search another checkpoint?
