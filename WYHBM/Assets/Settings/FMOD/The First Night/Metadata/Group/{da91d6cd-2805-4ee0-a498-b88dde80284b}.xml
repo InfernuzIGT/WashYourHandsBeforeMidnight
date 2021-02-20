@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="MixerGroup" id="{da91d6cd-2805-4ee0-a498-b88dde80284b}">
 		<property name="name">
-			<value>Sounds</value>
+			<value>InGameSFX</value>
 		</property>
 		<relationship name="automators">
 			<destination>{635df4cd-6527-4866-838e-c92533f0be41}</destination>
@@ -14,16 +14,13 @@
 			<destination>{5f14eb69-736d-40c4-870b-40ab0941b65e}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{644a7600-b59d-4d98-aabd-4c7d638bee60}</destination>
+			<destination>{151e4b40-067e-4144-ab47-c59eb11e0eaa}</destination>
 		</relationship>
 	</object>
 	<object class="Automator" id="{635df4cd-6527-4866-838e-c92533f0be41}">
 		<property name="nameOfPropertyBeingAutomated">
 			<value>volume</value>
 		</property>
-		<relationship name="automationCurves">
-			<destination>{b31d4eca-30b9-4318-8af9-a4d4674899ee}</destination>
-		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{1c1ac370-84e2-4fb9-9337-0a265d6180ca}">
 		<relationship name="effects">
@@ -31,33 +28,5 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{5f14eb69-736d-40c4-870b-40ab0941b65e}" />
-	<object class="AutomationCurve" id="{b31d4eca-30b9-4318-8af9-a4d4674899ee}">
-		<relationship name="parameter">
-			<destination>{e2c9a39c-3f82-4323-9c3b-20a1bf346946}</destination>
-		</relationship>
-		<relationship name="automationPoints">
-			<destination>{d9a5c2ed-432d-4c49-9e2d-d9cdfb1bc914}</destination>
-			<destination>{078da43c-a0da-40df-8f54-8a2671fc8d6f}</destination>
-		</relationship>
-	</object>
 	<object class="MixerBusFader" id="{8b9c241d-534f-46d4-898a-6e53295c5321}" />
-	<object class="AutomationPoint" id="{d9a5c2ed-432d-4c49-9e2d-d9cdfb1bc914}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="value">
-			<value>-3.87619019</value>
-		</property>
-		<property name="curveShape">
-			<value>-0.446385235</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{078da43c-a0da-40df-8f54-8a2671fc8d6f}">
-		<property name="position">
-			<value>10</value>
-		</property>
-		<property name="value">
-			<value>10</value>
-		</property>
-	</object>
 </objects>
