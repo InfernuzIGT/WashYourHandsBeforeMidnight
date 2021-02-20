@@ -97,6 +97,13 @@ namespace Events
         public RUMBLE_TYPE type;
     }
 
+    public class TutorialEvent : GameEvent
+    {
+        // public TUTORIAL tutorial;
+        public INPUT_ACTION actionTutorial;
+        public bool show;
+    }
+
     public class FadeEvent : GameEvent
     {
         public bool instant;
