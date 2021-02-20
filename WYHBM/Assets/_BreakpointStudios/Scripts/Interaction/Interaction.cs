@@ -169,18 +169,22 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     public QuestSO GetQuestData()
     {
-        if (questData == null) return null;
-        
+        if (questData.Length == 0)return null;
+
         return questData[GameData.Instance.PlayerData.ID].quest;
     }
 
     public QUEST_STATE GetQuestState()
     {
+        if (questData.Length == 0)return QUEST_STATE.New;
+
         return questData[GameData.Instance.PlayerData.ID].state;
     }
 
     public int GetQuestRequiredStep()
     {
+        if (questData.Length == 0)return 0;
+
         return questData[GameData.Instance.PlayerData.ID].requiredStep;
     }
 
