@@ -44,6 +44,13 @@ public enum DIALOG_STATE
     Locked = 3
 }
 
+// public enum TUTORIAL
+// {
+//     None = 0,
+//     Interaction = 1,
+//     Crouch = 2,
+// }
+
 // public enum TIER
 // {
 //     none = 0,

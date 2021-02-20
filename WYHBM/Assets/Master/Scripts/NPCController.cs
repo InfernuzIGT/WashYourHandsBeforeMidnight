@@ -68,6 +68,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Start()
     {
+        _player = null;
+
         _questEvent = new QuestEvent();
         _enableMovementEvent = new EnableMovementEvent();
 
