@@ -254,6 +254,7 @@ MonoBehaviour:
   - quest: {fileID: 0}
     state: 0
     requiredStep: 0
+  animationData: []
   onEnter:
     m_PersistentCalls:
       m_Calls:
@@ -272,7 +273,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6164535065273914911}
-        m_MethodName: OnInteractionEnter
+        m_MethodName: OnInteractionExit
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -44,8 +44,8 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
         _changeSceneEvent.newPlayerPosition = newPlayerPosition;
         _changeSceneEvent.sceneData = sceneData;
         _changeSceneEvent.instantFade = _instantFade;
-        _changeSceneEvent.callbackFMODPlay = () => _ambienceToPlay.Execute(true);
-        _changeSceneEvent.callbackFMODStop = () => _ambienceToStop.Execute(false);
+        _changeSceneEvent.callbackFMODPlay = PlayAmbience;
+        _changeSceneEvent.callbackFMODStop = StopAmbience;
 
         _holdUtility.OnStarted.AddListener(OnStart);
         _holdUtility.OnCanceled.AddListener(OnCancel);
@@ -96,6 +96,16 @@ public class InteractionScene : Interaction, IInteractable, IHoldeable
     public void ResetPosition()
     {
         newPlayerPosition = gameObject.transform.position + new Vector3(1, 0, 1);
+    }
+
+    private void PlayAmbience()
+    {
+        if (_ambienceToPlay != null)_ambienceToPlay.Execute(true);
+    }
+
+    private void StopAmbience()
+    {
+        if (_ambienceToStop != null)_ambienceToStop.Execute(false);
     }
 
     #region Hold System
