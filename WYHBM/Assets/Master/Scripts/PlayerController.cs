@@ -7,7 +7,7 @@ using UnityEngine.Events;
 // using UnityEngine.VFX;
 // using UnityEngine.VFX.Utility;
 
-[RequireComponent(typeof(CharacterController), typeof(SpriteRenderer), typeof(Animator))]
+[RequireComponent(typeof(CharacterController), typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
     [Header("General")]
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     // [SerializeField] private FMODConfig _fmodConfig = null;
     [Space]
     [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
+    [SerializeField, ConditionalHide] private SpriteRenderer _spriteRenderer = null;
     // [SerializeField, ConditionalHide] private VisualEffect _vfxFootstep = null;
     [SerializeField, ConditionalHide] private CharacterController _characterController = null;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
@@ -157,6 +158,7 @@ public class PlayerController : MonoBehaviour
         EventController.AddListener<ChangePositionEvent>(OnChangePosition);
         EventController.AddListener<CurrentInteractEvent>(OnCurrentInteraction);
         EventController.AddListener<LadderEvent>(OnLadder);
+        EventController.AddListener<SpriteEvent>(OnSprite);
     }
 
     private void OnDisable()
@@ -166,6 +168,7 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<ChangePositionEvent>(OnChangePosition);
         EventController.RemoveListener<CurrentInteractEvent>(OnCurrentInteraction);
         EventController.RemoveListener<LadderEvent>(OnLadder);
+        EventController.RemoveListener<SpriteEvent>(OnSprite);
     }
 
     private void Update()
@@ -659,6 +662,11 @@ public class PlayerController : MonoBehaviour
                 // TODO Mariano: Animation Top
                 break;
         }
+    }
+
+    private void OnSprite(SpriteEvent evt)
+    {
+        _spriteRenderer.enabled = evt.isEnabled;
     }
 
     private void OnCurrentInteraction(CurrentInteractEvent evt)

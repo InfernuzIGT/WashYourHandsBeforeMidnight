@@ -86,6 +86,7 @@ public class GlobalController : MonoBehaviour
     private DialogDesignerEvent _interactionDialogEvent;
     private PauseEvent _pauseEvent;
     private FadeEvent _fadeEvent;
+    private SpriteEvent _spriteEvent;
 
     public SessionData SessionData { get { return sessionData; } set { sessionData = value; } }
     public PlayerSO PlayerData { get { return playerData; } }
@@ -115,6 +116,8 @@ public class GlobalController : MonoBehaviour
         _cutsceneEvent.show = false;
 
         _pauseEvent = new PauseEvent();
+
+        _spriteEvent = new SpriteEvent();
 
         _fadeEvent = new FadeEvent();
         _fadeEvent.callbackMid = SwitchAmbient;
@@ -203,6 +206,9 @@ public class GlobalController : MonoBehaviour
         {
             battleMusic.EventInstance.setParameterByName(FMODParameters.BattleEnd, 1);
         }
+
+        _spriteEvent.isEnabled = !_inCombat;
+        EventController.TriggerEvent(_spriteEvent);
 
         ChangeToCombatCamera(_inCombat ? _combatController.GetCombatAreaCamera() : null);
     }
@@ -428,7 +434,7 @@ public class GlobalController : MonoBehaviour
     //     interiorCamera.gameObject.SetActive(_isInteriorCamera);
     // }
 
-    public void ChangeToCombatCamera(CinemachineVirtualCamera combatCamera)
+    private void ChangeToCombatCamera(CinemachineVirtualCamera combatCamera)
     {
         if (combatCamera == null)
         {
