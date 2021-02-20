@@ -178,6 +178,11 @@ namespace Events
         public bool isPaused;
         public PAUSE_TYPE pauseType;
     }
+    
+    public class SpriteEvent : GameEvent
+    {
+        public bool isEnabled;
+    }
 
     public class InfoTextEvent : GameEvent
     {
