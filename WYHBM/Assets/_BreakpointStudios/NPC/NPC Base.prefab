@@ -154,18 +154,19 @@ MonoBehaviour:
   _viewRadius: 7.5
   _hearRadius: 12
   _viewAngle: 130
+  zombieRoaming: {fileID: 0}
+  zombieFootstep: {fileID: 0}
+  zombieAlert: {fileID: 0}
   ShowReferences: 0
   _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
   _shadow: {fileID: 2638707246716020119}
+  _spriteRenderer: {fileID: 7882800319852633502}
   _interactionNPC: {fileID: 5757332508381093149}
   _holdUtility: {fileID: 7844868855792061304}
   _fieldOfView: {fileID: 7308171088025437376}
   _animatorController: {fileID: 2203801389680832686}
   _agent: {fileID: 7724327999077537402}
   _timeline: {fileID: 1101214639555105302}
-  zombieRoaming: {fileID: 0}
-  zombieFootstep: {fileID: 0}
-  zombieAlert: {fileID: 0}
 --- !u!195 &7724327999077537402
 NavMeshAgent:
   m_ObjectHideFlags: 0

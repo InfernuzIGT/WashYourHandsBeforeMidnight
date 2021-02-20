@@ -28,6 +28,7 @@ public class CombatCharacter : MonoBehaviour
     [SerializeField, ConditionalHide] private CombatAnimator _combatAnimator;
     [SerializeField, ConditionalHide] private GameObject _shadow;
     [Space]
+    [SerializeField, ConditionalHide] protected FMODConfig _FMODConfig = null;
     [SerializeField, ConditionalHide] private StudioEventEmitter _actionSound;
     [SerializeField, ConditionalHide] private StudioEventEmitter _stateSound;
 
@@ -121,23 +122,23 @@ public class CombatCharacter : MonoBehaviour
         switch (item.type)
         {
             case ITEM_TYPE.ActionA:
-                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 1);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.actionSound, 1);
                 break;
 
             case ITEM_TYPE.ActionB:
-                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 2);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.actionSound, 2);
                 break;
 
             case ITEM_TYPE.ActionHeal:
-                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 3);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.actionSound, 3);
                 break;
 
             case ITEM_TYPE.ActionDefense:
-                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 4);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.actionSound, 4);
                 break;
 
             case ITEM_TYPE.ActionItem:
-                _actionSound.EventInstance.setParameterByName(FMODParameters.ActionSound, 5);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.actionSound, 5);
                 break;
         }
 
@@ -149,15 +150,15 @@ public class CombatCharacter : MonoBehaviour
         switch (state)
         {
             case ANIM_STATE.Hit:
-                _stateSound.EventInstance.setParameterByName(FMODParameters.StateSound, 1);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.stateSound, 1);
                 break;
 
             case ANIM_STATE.Dodge:
-                _stateSound.EventInstance.setParameterByName(FMODParameters.StateSound, 2);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.stateSound, 2);
                 break;
 
             case ANIM_STATE.Dead:
-                _stateSound.EventInstance.setParameterByName(FMODParameters.StateSound, 3);
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.stateSound, 3);
                 break;
 
             default:

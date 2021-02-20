@@ -17,6 +17,7 @@ public class OptionsController : MonoBehaviour
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
+    [SerializeField, ConditionalHide] private FMODConfig _FMODConfig = null;
     [SerializeField, ConditionalHide] private GameObject _firstSelectOptions = null;
     [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonLanguage = null;
     [SerializeField, ConditionalHide] private ButtonDoubleUI _buttonResolution = null;
@@ -43,8 +44,6 @@ public class OptionsController : MonoBehaviour
 
     public GameObject FirstSelectOptions { get { return _firstSelectOptions; } }
 
-    FMOD.Studio.EventInstance changeSound;
-
     private void Start()
     {
         _isLoaded = GameData.Instance.LoadSettings();
@@ -59,11 +58,6 @@ public class OptionsController : MonoBehaviour
             LoadDefaultSettings();
         }
     }
-
-    // private void Update()
-    // {
-    // changeSound = FMODUnity.RuntimeManager.CreateInstance("event:/Main_Menu/change");
-    // }
 
     private void OnEnable()
     {
@@ -131,9 +125,13 @@ public class OptionsController : MonoBehaviour
         _buttonFullscreen.UpdateUI(_sessionSettings.fullScreen ? _localizedOn : _localizedOff, !Screen.fullScreen);
         _buttonVsync.UpdateUI(_sessionSettings.vSync == 0 ? _localizedOff : _localizedOn, QualitySettings.vSyncCount == 0);
 
-        _buttonMasterVolume.UpdateUI(_sessionSettings.masterVolume.ToString(), _sessionSettings.masterVolume, 10);
-        _buttonSoundEffects.UpdateUI(_sessionSettings.soundEffects.ToString(), _sessionSettings.soundEffects, 10);
-        _buttonMusic.UpdateUI(_sessionSettings.music.ToString(), _sessionSettings.music, 10);
+        _indexMasterVolume = _sessionSettings.masterVolume;
+        _indexSoundEffects = _sessionSettings.soundEffects;
+        _indexMusic = _sessionSettings.music;
+
+        _buttonMasterVolume.UpdateUI(_indexMasterVolume.ToString(), _indexMasterVolume, 10);
+        _buttonSoundEffects.UpdateUI(_indexSoundEffects.ToString(), _indexSoundEffects, 10);
+        _buttonMusic.UpdateUI(_indexMusic.ToString(), _indexMusic, 10);
 
         _buttonVibration.UpdateUI(_sessionSettings.vibration ? _localizedOff : _localizedOn, _sessionSettings.vibration);
 
@@ -281,17 +279,17 @@ public class OptionsController : MonoBehaviour
 
     private void VolumeMaster(int vol)
     {
-        RuntimeManager.StudioSystem.setParameterByName(FMODParameters.MasterSlider, vol);
+        RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.masterSlider, vol);
     }
 
     private void VolumeMusic(int vol)
     {
-        RuntimeManager.StudioSystem.setParameterByName(FMODParameters.MusicSlider, vol);
+        RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.musicSlider, vol);
     }
 
     private void VolumeSound(int vol)
     {
-        RuntimeManager.StudioSystem.setParameterByName(FMODParameters.SoundsSlider, vol);
+        RuntimeManager.StudioSystem.setParameterByName(_FMODConfig.soundSlider, vol);
     }
 
     #endregion

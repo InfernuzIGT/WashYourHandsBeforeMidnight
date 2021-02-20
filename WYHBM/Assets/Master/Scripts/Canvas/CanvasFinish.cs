@@ -11,6 +11,7 @@ public class CanvasFinish : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _finishTxt = null;
 
     private CustomFadeEvent _customfadeEvent;
+    private EnableMovementEvent _enableMovementEvent;
 
     private void Start()
     {
@@ -19,7 +20,12 @@ public class CanvasFinish : MonoBehaviour
         _customfadeEvent.fadeIn = true;
         _customfadeEvent.duration = 5;
 
+        _enableMovementEvent = new EnableMovementEvent();
+        _enableMovementEvent.canMove = false;
+        _enableMovementEvent.isDetected = false;
+
         EventController.TriggerEvent(_customfadeEvent);
+        EventController.TriggerEvent(_enableMovementEvent);
 
         FadeIn();
     }
