@@ -98,7 +98,7 @@ public class GameData : MonoSingleton<GameData>
 		Cursor.visible = false;
 		// Cursor.lockState = CursorLockMode.Locked;
 
-		_devIsBuild = false;
+		_devIsBuild = true;
 		_devPrintInputInfo = false;
 		_devDontSave = false;
 #endif
@@ -223,6 +223,11 @@ public class GameData : MonoSingleton<GameData>
 	public Interaction GetPlayerCurrentInteraction()
 	{
 		return _globalController.GetPlayerCurrentInteraction();
+	}
+	
+	public bool HaveGlobalController()
+	{
+		return _globalController != null;
 	}
 
 	#region Localization

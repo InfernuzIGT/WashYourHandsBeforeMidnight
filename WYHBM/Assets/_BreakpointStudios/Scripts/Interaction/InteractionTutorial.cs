@@ -11,10 +11,29 @@ public class InteractionTutorial : Interaction
 
     private void Start()
     {
+        _checkCurrentInteraction = false;
+
         _tutorialEvent = new TutorialEvent();
         _tutorialEvent.actionTutorial = _actionTutorial;
 
         CheckPersistence(string.Format(DDParameters.Format, DDParameters.SimpleDialog, gameObject.name));
+    }
+
+    public override void OnEnableExtra()
+    {
+        base.OnEnableExtra();
+        EventController.AddListener<InteractionEvent>(OnInteract);
+    }
+
+    public override void OnDisableExtra()
+    {
+        base.OnDisableExtra();
+        EventController.RemoveListener<InteractionEvent>(OnInteract);
+    }
+
+    private void OnInteract(InteractionEvent evt)
+    {
+        Execute(false);
     }
 
     public override void Used()

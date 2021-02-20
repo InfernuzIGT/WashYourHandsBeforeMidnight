@@ -17,6 +17,8 @@ public class InteractionLever : Interaction
 
     private void Start()
     {
+        _checkCurrentInteraction = false;
+
         _enableMovementEvent = new EnableMovementEvent();
         _enableMovementEvent.isDetected = false;
 

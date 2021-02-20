@@ -56,6 +56,7 @@ public class Interaction : MonoBehaviour, IDialogueable
     private bool _canInteract = true;
     private bool _animationReady;
     protected bool _showHint = true;
+    protected bool _checkCurrentInteraction = true;
 
     public virtual void Awake()
     {
@@ -73,12 +74,17 @@ public class Interaction : MonoBehaviour, IDialogueable
     private void OnEnable()
     {
         EventController.AddListener<CutsceneEvent>(OnCutscene);
+        OnEnableExtra();
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+        OnDisableExtra();
     }
+
+    public virtual void OnEnableExtra() { }
+    public virtual void OnDisableExtra() { }
 
     private void OnCutscene(CutsceneEvent evt)
     {
@@ -91,10 +97,13 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         if (!_canInteract)return;
 
-        if (GameData.Instance.GetPlayerCurrentInteraction() != null)return;
+        if (_checkCurrentInteraction)
+        {
+            if (GameData.Instance.GetPlayerCurrentInteraction() != null)return;
 
-        _currentInteractionEvent.currentInteraction = this;
-        EventController.TriggerEvent(_currentInteractionEvent);
+            _currentInteractionEvent.currentInteraction = this;
+            EventController.TriggerEvent(_currentInteractionEvent);
+        }
 
         onEnter.Invoke(other);
         ShowHint(true);
@@ -104,10 +113,13 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         if (!_canInteract)return;
 
-        if (GameData.Instance.GetPlayerCurrentInteraction() != this)return;
+        if (_checkCurrentInteraction)
+        {
+            if (GameData.Instance.GetPlayerCurrentInteraction() != this)return;
 
-        _currentInteractionEvent.currentInteraction = null;
-        EventController.TriggerEvent(_currentInteractionEvent);
+            _currentInteractionEvent.currentInteraction = null;
+            EventController.TriggerEvent(_currentInteractionEvent);
+        }
 
         onExit.Invoke(other);
         ShowHint(false);
@@ -188,7 +200,10 @@ public class Interaction : MonoBehaviour, IDialogueable
 
     private IEnumerator CheckingPersistence()
     {
-        yield return new WaitForSeconds(0.5f);
+        while (!GameData.Instance.HaveGlobalController())
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
 
         _used = GameData.Instance.CheckID(_usedId);
         if (_used)Used();
