@@ -11,8 +11,8 @@ public class FMODConfig : ScriptableObject
     [ParamRef] public string masterSlider;
     [ParamRef] public string musicSlider;
     [ParamRef] public string soundSlider;
-    
-    [Header ("Instance")]
+
+    [Header("Instance")]
     [EventRef] public string music = null;
     [EventRef] public string select = null;
     [EventRef] public string back = null;
@@ -24,8 +24,11 @@ public class FMODConfig : ScriptableObject
     [EventRef] public string scroll = null;
     [EventRef] public string change = null;
 
-    [Header("Other")]
-    [EventRef] public string snapshotPause = null;
+    [Header("Popup")]
     [EventRef] public string popupQuest = null;
     [EventRef] public string popupDevice = null;
+    [EventRef] public string popupTutorial = null;
+
+    [Header("Other")]
+    [EventRef] public string snapshotPause = null;
 }

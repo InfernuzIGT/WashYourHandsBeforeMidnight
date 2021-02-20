@@ -1,4 +1,5 @@
-﻿using Events;
+﻿using System.Collections;
+using Events;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.Events;
@@ -41,21 +42,29 @@ public class Interaction : MonoBehaviour, IDialogueable
     [SerializeField] private InteractionUnityEvent onEnter = null;
     [SerializeField] private InteractionUnityEvent onExit = null;
 
-    protected bool _showHint = true;
+    // Persistence
+    protected bool _used;
+    protected string _usedId;
 
-    // private SpriteRenderer _hintSprite;
-    private bool _canInteract = true;
-    private bool _animationReady;
-
+    // Events
     private QuestEvent _questEvent;
     // private ShowInteractionHintEvent _showInteractionHintEvent;
     private CurrentInteractEvent _currentInteractionEvent;
+
+    // private SpriteRenderer _hintSprite;
+    private BoxCollider _boxCollider;
+    private bool _canInteract = true;
+    private bool _animationReady;
+    protected bool _showHint = true;
+    protected bool _checkCurrentInteraction = true;
 
     public virtual void Awake()
     {
         // _hintSprite = transform.GetComponentInChildren<SpriteRenderer>();
 
         // _hintSprite.enabled = false;
+
+        _boxCollider = GetComponent<BoxCollider>();
 
         _questEvent = new QuestEvent();
         // _showInteractionHintEvent = new ShowInteractionHintEvent();
@@ -65,12 +74,17 @@ public class Interaction : MonoBehaviour, IDialogueable
     private void OnEnable()
     {
         EventController.AddListener<CutsceneEvent>(OnCutscene);
+        OnEnableExtra();
     }
 
     private void OnDisable()
     {
         EventController.RemoveListener<CutsceneEvent>(OnCutscene);
+        OnDisableExtra();
     }
+
+    public virtual void OnEnableExtra() { }
+    public virtual void OnDisableExtra() { }
 
     private void OnCutscene(CutsceneEvent evt)
     {
@@ -83,10 +97,13 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         if (!_canInteract)return;
 
-        if (GameData.Instance.GetPlayerCurrentInteraction() != null)return;
+        if (_checkCurrentInteraction)
+        {
+            if (GameData.Instance.GetPlayerCurrentInteraction() != null)return;
 
-        _currentInteractionEvent.currentInteraction = this;
-        EventController.TriggerEvent(_currentInteractionEvent);
+            _currentInteractionEvent.currentInteraction = this;
+            EventController.TriggerEvent(_currentInteractionEvent);
+        }
 
         onEnter.Invoke(other);
         ShowHint(true);
@@ -96,10 +113,13 @@ public class Interaction : MonoBehaviour, IDialogueable
     {
         if (!_canInteract)return;
 
-        if (GameData.Instance.GetPlayerCurrentInteraction() != this)return;
+        if (_checkCurrentInteraction)
+        {
+            if (GameData.Instance.GetPlayerCurrentInteraction() != this)return;
 
-        _currentInteractionEvent.currentInteraction = null;
-        EventController.TriggerEvent(_currentInteractionEvent);
+            _currentInteractionEvent.currentInteraction = null;
+            EventController.TriggerEvent(_currentInteractionEvent);
+        }
 
         onExit.Invoke(other);
         ShowHint(false);
@@ -166,6 +186,30 @@ public class Interaction : MonoBehaviour, IDialogueable
         _currentInteractionEvent.currentInteraction = null;
         EventController.TriggerEvent(_currentInteractionEvent);
     }
+
+    protected void SetCollider(bool enabled)
+    {
+        _boxCollider.enabled = enabled;
+    }
+
+    protected void CheckPersistence(string id)
+    {
+        _usedId = id;
+        StartCoroutine(CheckingPersistence());
+    }
+
+    private IEnumerator CheckingPersistence()
+    {
+        while (!GameData.Instance.HaveGlobalController())
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        _used = GameData.Instance.CheckID(_usedId);
+        if (_used)Used();
+    }
+
+    public virtual void Used() { }
 
     public QuestSO GetQuestData()
     {

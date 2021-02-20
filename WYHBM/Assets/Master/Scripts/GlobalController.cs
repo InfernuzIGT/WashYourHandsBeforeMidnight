@@ -93,6 +93,14 @@ public class GlobalController : MonoBehaviour
 
     private void Start()
     {
+
+#if UNITY_EDITOR
+#else
+        _devAutoInit = false;
+        _devSilentSteps = false;
+        _devDDLegacyMode = false;
+#endif
+
         if (_devAutoInit)CheckPersistenceObjects();
     }
 
@@ -238,7 +246,7 @@ public class GlobalController : MonoBehaviour
         }
 
         _ppColorAdjustments.saturation.value = _isPaused ? -80 : 0;
-        _ppDepthOfField.gaussianStart.value = _isPaused ? 0 : 22.5f;
+        _ppDepthOfField.gaussianStart.value = _isPaused ? 0 : 30f;
         _ppDepthOfField.gaussianEnd.value = _isPaused ? 0 : 60;
 
         _enableMovementEvent.canMove = !evt.isPaused;
@@ -377,7 +385,7 @@ public class GlobalController : MonoBehaviour
     {
         _ppColorAdjustments.saturation.value = Mathf.Lerp(0, -50, (_fovCurrentTime / _worldConfig.fovTime));
         _ppLensDistortion.intensity.value = Mathf.Lerp(0, 0.15f, (_fovCurrentTime / _worldConfig.fovTime));
-        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(22.5f, 24, (_fovCurrentTime / _worldConfig.fovTime));
+        _ppDepthOfField.gaussianStart.value = Mathf.Lerp(30, 24, (_fovCurrentTime / _worldConfig.fovTime));
         _ppDepthOfField.gaussianEnd.value = Mathf.Lerp(60, 30f, (_fovCurrentTime / _worldConfig.fovTime));
         _ppVignette.intensity.value = Mathf.Lerp(0.2f, 0.5f, (_fovCurrentTime / _worldConfig.fovTime));
         _ppVignette.smoothness.value = Mathf.Lerp(1, 0.5f, (_fovCurrentTime / _worldConfig.fovTime));
