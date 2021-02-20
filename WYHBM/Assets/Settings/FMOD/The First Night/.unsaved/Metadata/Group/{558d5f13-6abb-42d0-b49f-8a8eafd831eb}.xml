@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="MixerGroup" id="{558d5f13-6abb-42d0-b49f-8a8eafd831eb}">
+		<property name="name">
+			<value>Battle Music</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{0c10eea3-ee7f-4540-92a6-6687be7fd796}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{783a77a5-a5e1-4d14-af5b-b6040f235333}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{b71d99e2-b903-444c-84ab-583d4bdaf8ea}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{0c10eea3-ee7f-4540-92a6-6687be7fd796}">
+		<relationship name="effects">
+			<destination>{c4e6da53-ca26-4335-9f4a-f9f47cba2619}</destination>
+			<destination>{01c183c4-8749-49b0-8541-418516f0a9d4}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{783a77a5-a5e1-4d14-af5b-b6040f235333}" />
+	<object class="MixerBusFader" id="{c4e6da53-ca26-4335-9f4a-f9f47cba2619}" />
+	<object class="Sidechain" id="{01c183c4-8749-49b0-8541-418516f0a9d4}" />
+</objects>
