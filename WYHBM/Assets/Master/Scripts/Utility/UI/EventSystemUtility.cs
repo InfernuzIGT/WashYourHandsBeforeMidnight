@@ -31,6 +31,11 @@ public class EventSystemUtility : MonoSingleton<EventSystemUtility>
         _eventSystem.firstSelectedGameObject = objectSelected;
         _eventSystem.SetSelectedGameObject(objectSelected);
     }
+    
+    public GameObject GetSelectedGameObject()
+    {
+        return _eventSystem.firstSelectedGameObject;
+    }
 
     public void DisableInput(bool disable)
     {

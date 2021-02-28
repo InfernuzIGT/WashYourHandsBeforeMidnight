@@ -99,8 +99,9 @@ namespace Events
 
     public class TutorialEvent : GameEvent
     {
+        public TutorialSO data;
         // public TUTORIAL tutorial;
-        public INPUT_ACTION actionTutorial;
+        // public INPUT_ACTION actionTutorial;
         public bool show;
     }
 
