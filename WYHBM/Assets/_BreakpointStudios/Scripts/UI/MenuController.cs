@@ -43,14 +43,18 @@ public class MenuController : MonoBehaviour
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasHome = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasMain = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasOptions = null;
+    [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasCredits = null;
     [SerializeField, ConditionalHide] private CanvasGroupUtility _canvasExit = null;
     [Space]
-    [SerializeField, ConditionalHide] private GameObject _firstSelectMain = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonPlay = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonOptions = null;
+    [SerializeField, ConditionalHide] private ButtonUI _buttonCredits = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonQuit = null;
     [Space]
+    [SerializeField, ConditionalHide] private GameObject _firstSelectMain = null;
+    [SerializeField, ConditionalHide] private GameObject _firstSelectCredits = null;
     [SerializeField, ConditionalHide] private GameObject _firstSelectQuit = null;
+    [Space]
     [SerializeField, ConditionalHide] private ButtonUI _buttonYes = null;
     [SerializeField, ConditionalHide] private ButtonUI _buttonNo = null;
 
@@ -156,6 +160,7 @@ public class MenuController : MonoBehaviour
     {
         _buttonPlay.AddListener(() => Execute(UI_TYPE.Play));
         _buttonOptions.AddListener(() => Execute(UI_TYPE.Options));
+        _buttonCredits.AddListener(() => Execute(UI_TYPE.Credits));
         _buttonQuit.AddListener(() => Execute(UI_TYPE.Quit));
 
         _buttonYes.AddListener(() => ExecuteQuit(true));
@@ -192,6 +197,17 @@ public class MenuController : MonoBehaviour
                 _lastGameObject = _buttonOptions.gameObject;
                 break;
 
+            case UI_TYPE.Credits:
+                selectSound.start();
+
+                _canvasMain.Show(false);
+                _canvasLogo.Show(false);
+                _canvasCredits.Show(true, 0.5f);
+
+                EventSystemUtility.Instance.SetSelectedGameObject(_firstSelectCredits);
+                _lastGameObject = _buttonCredits.gameObject;
+                break;
+
             case UI_TYPE.Quit:
                 selectSound.start();
 
@@ -216,6 +232,7 @@ public class MenuController : MonoBehaviour
         switch (_currentUIType)
         {
             case UI_TYPE.Options:
+            case UI_TYPE.Credits:
                 ExecuteBack(true);
                 break;
 
@@ -236,7 +253,21 @@ public class MenuController : MonoBehaviour
         {
             backSound.start();
 
-            _canvasOptions.Show(false);
+            switch (_currentUIType)
+            {
+                case UI_TYPE.Options:
+                    _canvasOptions.Show(false);
+                    break;
+
+                case UI_TYPE.Credits:
+                    _canvasCredits.Show(false);
+                    break;
+
+                case UI_TYPE.None:
+                default:
+                    break;
+            }
+
             _canvasMain.Show(true, 0.5f);
             _canvasLogo.Show(true, 0.5f);
 

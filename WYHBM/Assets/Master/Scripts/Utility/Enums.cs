@@ -92,4 +92,5 @@ public enum UI_TYPE
     Play = 1,
     Options = 2,
     Quit = 3,
+    Credits = 4,
 }
