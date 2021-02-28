@@ -82,21 +82,24 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
     private void Update()
     {
-        if (_isFade || !_canMove || !_isInitialized || !Application.isFocused || _inCombat)
+        // if (_isFade || !_canMove || !_isInitialized || !Application.isFocused || _inCombat)
+        if (_isFade || !_canMove || !_isInitialized || !Application.isFocused || _inCombat || _currentDevice == DEVICE.PC)
         {
             _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
             _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;
             return;
         }
 
-        if (_currentDevice != DEVICE.PC)
-        {
-            UpdateValuesGamepad();
-        }
-        else
-        {
-            UpdateValuesMouse();
-        }
+        UpdateValuesGamepad();
+        
+        // if (_currentDevice != DEVICE.PC)
+        // {
+        //     UpdateValuesGamepad();
+        // }
+        // else
+        // {
+        //     UpdateValuesMouse();
+        // }
     }
 
     private void UpdateValuesGamepad()
