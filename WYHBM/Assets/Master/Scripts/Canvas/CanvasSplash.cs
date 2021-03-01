@@ -3,33 +3,61 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 [RequireComponent(typeof(Canvas))]
 public class CanvasSplash : MonoBehaviour
 {
     [Header("Splash")]
-    [SerializeField] private Image _splashImg = null;
+    [SerializeField] private TextMeshProUGUI _titlePoloTxt = null;
+    [SerializeField] private Image _splashPoloImg = null;
+    [SerializeField] private Image _splashFMODImg = null;
 
     private void Start()
     {
-        FadeIn();
+        Splash();
     }
 
-    private void FadeIn()
+    private void Splash()
     {
-        _splashImg
+        _splashPoloImg
             .DOFade(1, 0.5f)
-            .SetEase(Ease.Linear)
-            .OnComplete(FadeOut);
-    }
+            .SetEase(Ease.Linear);
 
-    private void FadeOut()
-    {
-        _splashImg
+        _splashPoloImg
             .DOFade(0, 0.5f)
             .SetEase(Ease.Linear)
-            .SetDelay(1)
+            .SetDelay(1.75f)
             .OnComplete(LoadMainMenu);
+            
+        _titlePoloTxt
+            .DOFade(1, 0.5f)
+            .SetEase(Ease.Linear);
+
+        _titlePoloTxt
+            .DOFade(0, 0.5f)
+            .SetEase(Ease.Linear)
+            .SetDelay(1.75f);
+
+        // _splashPoloImg
+        //     .DOFade(1, 0.5f)
+        //     .SetEase(Ease.Linear);
+
+        // _splashPoloImg
+        //     .DOFade(0, 0.5f)
+        //     .SetEase(Ease.Linear)
+        //     .SetDelay(1.75f);
+
+        // _splashFMODImg
+        //     .DOFade(1, 0.5f)
+        //     .SetEase(Ease.Linear)
+        //     .SetDelay(2.5f);
+
+        // _splashFMODImg
+        //     .DOFade(0, 0.5f)
+        //     .SetEase(Ease.Linear)
+        //     .SetDelay(3.75f)
+        //     .OnComplete(LoadMainMenu);
     }
 
     private void LoadMainMenu()
@@ -39,7 +67,7 @@ public class CanvasSplash : MonoBehaviour
 
     private IEnumerator Load()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.25f);
         SceneManager.LoadSceneAsync(1); // Main Menu
         Destroy(gameObject);
     }

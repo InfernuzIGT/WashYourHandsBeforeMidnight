@@ -34,7 +34,7 @@ public class TutorialHint : MonoBehaviour
         if (_show)
         {
             RuntimeManager.PlayOneShot(_FMODConfig.popupDevice);
-            _inputInfo.SetInputAction(evt.actionTutorial);
+            // _inputInfo.SetInputAction(evt.actionTutorial);
         }
 
         _canvasUtility.Show(_show);

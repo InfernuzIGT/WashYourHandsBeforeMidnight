@@ -1,47 +1,33 @@
 ﻿using Events;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InteractionTutorial : Interaction
 {
     [Header("Tutorial")]
-    // [SerializeField] private TUTORIAL _tutorial = TUTORIAL.None;
-    [SerializeField] private INPUT_ACTION _actionTutorial = INPUT_ACTION.Interact;
+    [SerializeField] private TutorialSO _tutorialData = null;
+
+    [Header("References")]
+#pragma warning disable 0414
+    [SerializeField] private bool ShowReferences = true;
+#pragma warning restore 0414
+    [SerializeField, ConditionalHide] private InputActionReference _actionSelect = null;
+    [SerializeField, ConditionalHide] private InputActionReference _actionBack = null;
 
     private TutorialEvent _tutorialEvent;
+    private EnableMovementEvent _enableMovementEvent;
+
+    private bool _removed;
 
     private void Start()
     {
         _checkCurrentInteraction = false;
 
         _tutorialEvent = new TutorialEvent();
-        _tutorialEvent.actionTutorial = _actionTutorial;
+        _tutorialEvent.data = _tutorialData;
 
-        CheckPersistence(string.Format(DDParameters.Format, DDParameters.SimpleDialog, gameObject.name));
-    }
-
-    public override void OnEnableExtra()
-    {
-        base.OnEnableExtra();
-        EventController.AddListener<InteractionEvent>(OnInteract);
-    }
-
-    public override void OnDisableExtra()
-    {
-        base.OnDisableExtra();
-        EventController.RemoveListener<InteractionEvent>(OnInteract);
-    }
-
-    private void OnInteract(InteractionEvent evt)
-    {
-        Execute(false);
-    }
-
-    public override void Used()
-    {
-        base.Used();
-
-        ExecuteAnimation(true);
-        SetCollider(false);
+        _enableMovementEvent = new EnableMovementEvent();
+        _enableMovementEvent.isDetected = false;
     }
 
     public void OnInteractionEnter(Collider other)
@@ -52,34 +38,39 @@ public class InteractionTutorial : Interaction
         }
     }
 
-    public void OnInteractionExit(Collider other)
-    {
-        if (other.gameObject.CompareTag(Tags.Player))
-        {
-            Execute(false);
-        }
-    }
+    public void OnInteractionExit(Collider other) { }
 
     public override void Execute(bool enable)
     {
         base.Execute();
 
+        // if (_removed)return;
+
+        _enableMovementEvent.canMove = !enable;
+        EventController.TriggerEvent(_enableMovementEvent);
+
         _tutorialEvent.show = enable;
         EventController.TriggerEvent(_tutorialEvent);
+
+        if (enable)
+        {
+            _actionSelect.action.performed += RemoveUI;
+            _actionBack.action.performed += RemoveUI;
+        }
+        else
+        {
+            _removed = true;
+
+            _actionSelect.action.performed -= RemoveUI;
+            _actionBack.action.performed -= RemoveUI;
+
+            Destroy(gameObject);
+        }
+
     }
 
-    // private void Action()
-    // {
-    //     Execute(false);
-
-    //     if (!_used)
-    //     {
-    //         _used = true;
-    //         Execute(false);
-    //         SetCollider(false);
-
-    //         GameData.Instance.WriteID(_usedId);
-    //     }
-    // }
-
+    private void RemoveUI(InputAction.CallbackContext context)
+    {
+        Execute(false);
+    }
 }
