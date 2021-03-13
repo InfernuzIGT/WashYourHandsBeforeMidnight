@@ -16,7 +16,8 @@ MonoBehaviour:
   _sprite: {fileID: 2616965915910937436, guid: 027073e010a7e9f4ea00f6b7f3e2f892, type: 3}
   _animatorController: {fileID: 22100000, guid: ff0f4154c4330934796313e18a8f8b23,
     type: 2}
-  iconNone: {fileID: -7683171440787982949, guid: 544af810c2ddc3744804f8937722bfc7,
+  _hasRandomIdles: 0
+  iconNone: {fileID: 4870464921443794561, guid: 544af810c2ddc3744804f8937722bfc7,
     type: 3}
   iconHappy: {fileID: 4916186530635813187, guid: 544af810c2ddc3744804f8937722bfc7,
     type: 3}
@@ -27,15 +28,17 @@ MonoBehaviour:
     type: 3}
   iconCurious: {fileID: 0}
   iconSleep: {fileID: 0}
-  iconSpecial1: {fileID: 2372395298560368491, guid: 544af810c2ddc3744804f8937722bfc7,
+  iconSpecial1: {fileID: 4870464921443794561, guid: 544af810c2ddc3744804f8937722bfc7,
     type: 3}
   iconSpecial2: {fileID: 0}
   _data:
   - dialogDD: {fileID: 4900000, guid: 8b6a294332888a84095b97c62e3438a3, type: 3}
     quest: {fileID: 0}
   _canCombat: 0
+  _spriteCorpse: {fileID: 0}
   combatEnemies: []
   _canMove: 1
+  _canPatrol: 1
   _speedMovement: 5
   _speedRotation: 180
   _useRandomPosition: 1

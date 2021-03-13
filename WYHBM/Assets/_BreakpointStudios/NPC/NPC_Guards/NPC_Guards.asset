@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 036b42f3713f2e14594d971d498cf1b4, type: 3}
-  m_Name: NPC_HomelessMan
+  m_Name: NPC_Guards
   m_EditorClassIdentifier: 
-  _name: Igor
-  _sprite: {fileID: -587432438532168016, guid: 3dd5777e30761a64da6e61c35092cd67, type: 3}
-  _animatorController: {fileID: 22100000, guid: f00eb2cac516ac94182c99f62b63a072,
+  _name: Guards
+  _sprite: {fileID: -7324301835228057839, guid: 161e0973edae39c479bf04827af6753b,
+    type: 3}
+  _animatorController: {fileID: 22100000, guid: 7b95b44c54b102b4797a8f238afdc440,
     type: 2}
   _hasRandomIdles: 0
-  iconNone: {fileID: -349366897019472457, guid: 544af810c2ddc3744804f8937722bfc7,
+  iconNone: {fileID: -4492474233568068338, guid: 544af810c2ddc3744804f8937722bfc7,
     type: 3}
   iconHappy: {fileID: 0}
   iconSad: {fileID: 0}
@@ -25,19 +26,20 @@ MonoBehaviour:
   iconSurprise: {fileID: 0}
   iconCurious: {fileID: 0}
   iconSleep: {fileID: 0}
-  iconSpecial1: {fileID: 0}
+  iconSpecial1: {fileID: 4989505377503655735, guid: 544af810c2ddc3744804f8937722bfc7,
+    type: 3}
   iconSpecial2: {fileID: 0}
   _data:
-  - dialogDD: {fileID: 4900000, guid: d614d746fa12b964682f0e8ef100fa8b, type: 3}
-    quest: {fileID: 11400000, guid: c933de9978cb59947bfe4b23d194b48d, type: 2}
+  - dialogDD: {fileID: 4900000, guid: 2512e73a55393ca46a24f752c5deb105, type: 3}
+    quest: {fileID: 11400000, guid: 5dd96672da4f60840962bb993757257b, type: 2}
   _canCombat: 0
   _spriteCorpse: {fileID: 0}
   combatEnemies: []
   _canMove: 0
-  _canPatrol: 1
+  _canPatrol: 0
   _speedMovement: 5
   _speedRotation: 180
-  _useRandomPosition: 1
+  _useRandomPosition: 0
   _waitTime: 5
   _detectPlayer: 0
   _timeToDetect: 1
