@@ -7,7 +7,7 @@ using UnityEngine.Events;
 // using UnityEngine.VFX;
 // using UnityEngine.VFX.Utility;
 
-[RequireComponent(typeof(CharacterController), typeof(SpriteRenderer), typeof(Animator))]
+[RequireComponent(typeof(CharacterController), typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
     [Header("General")]
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     // [SerializeField] private FMODConfig _fmodConfig = null;
     [Space]
     [SerializeField, ConditionalHide] private MeshRenderer _shadow = null;
+    [SerializeField, ConditionalHide] private SpriteRenderer _spriteRenderer = null;
     // [SerializeField, ConditionalHide] private VisualEffect _vfxFootstep = null;
     [SerializeField, ConditionalHide] private CharacterController _characterController = null;
     [SerializeField, ConditionalHide] private WorldAnimator _animatorController = null;
@@ -157,6 +158,7 @@ public class PlayerController : MonoBehaviour
         EventController.AddListener<ChangePositionEvent>(OnChangePosition);
         EventController.AddListener<CurrentInteractEvent>(OnCurrentInteraction);
         EventController.AddListener<LadderEvent>(OnLadder);
+        EventController.AddListener<SpriteEvent>(OnSprite);
     }
 
     private void OnDisable()
@@ -166,6 +168,7 @@ public class PlayerController : MonoBehaviour
         EventController.RemoveListener<ChangePositionEvent>(OnChangePosition);
         EventController.RemoveListener<CurrentInteractEvent>(OnCurrentInteraction);
         EventController.RemoveListener<LadderEvent>(OnLadder);
+        EventController.RemoveListener<SpriteEvent>(OnSprite);
     }
 
     private void Update()
@@ -237,17 +240,14 @@ public class PlayerController : MonoBehaviour
                 if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimit || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimit)
                 {
                     _speedHorizontal = _playerConfig.speedWalk;
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
                 else if (Mathf.Abs(_inputMovement.x) > _playerConfig.axisLimitCrouch || Mathf.Abs(_inputMovement.y) > _playerConfig.axisLimitCrouch)
                 {
                     _speedHorizontal = _playerConfig.speedCrouchFast;
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
                 else
                 {
                     _speedHorizontal = _playerConfig.speedCrouch;
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
                 }
 
                 // _canPlayVFXFootstep = false;
@@ -316,7 +316,6 @@ public class PlayerController : MonoBehaviour
 
         //Sound
         _canPlayFootstep = _characterController.isGrounded && _characterController.velocity.magnitude != 0;
-        // footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
     }
 
     private void MovementLadder()
@@ -392,9 +391,10 @@ public class PlayerController : MonoBehaviour
 
         if (_characterController.isGrounded && _isCrouching)
         {
-            crouchSound.Play();
+            // TODO Mariano: Enable
+            // crouchSound.Play();
 
-            //footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
+            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 0);
 
             ChangeMovementState(MOVEMENT_STATE.Crouch);
 
@@ -403,9 +403,10 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            standSound.Play();
+            // TODO Mariano: Enable
+            // standSound.Play();
 
-            //footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
+            footstepSound.EventInstance.setParameterByName(FMODParameters.Sprint, 1);
 
             ChangeMovementState();
 
@@ -424,7 +425,10 @@ public class PlayerController : MonoBehaviour
     {
         if (!_canPlayFootstep)return;
 
+        footstepSound.Play();
+
         FootstepDetection();
+
         FootstepSound();
     }
 
@@ -467,7 +471,7 @@ public class PlayerController : MonoBehaviour
 
                 default:
                     // _vfxFootstep.SetTexture(hash_FootstepTexture, _worldConfig.textureDefault);
-                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 1);
+                    footstepSound.EventInstance.setParameterByName(FMODParameters.GroundType, 0);
                     break;
             }
         }
@@ -475,8 +479,6 @@ public class PlayerController : MonoBehaviour
         // {
         // _shadow.enabled = false;
         // }
-
-        footstepSound.Play();
 
         // if (_canPlayVFXFootstep)_vfxFootstep.Play();
     }
@@ -660,6 +662,11 @@ public class PlayerController : MonoBehaviour
                 // TODO Mariano: Animation Top
                 break;
         }
+    }
+
+    private void OnSprite(SpriteEvent evt)
+    {
+        _spriteRenderer.enabled = evt.isEnabled;
     }
 
     private void OnCurrentInteraction(CurrentInteractEvent evt)

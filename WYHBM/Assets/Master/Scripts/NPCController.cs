@@ -17,12 +17,18 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     [SerializeField, Range(0, 30)] private float _hearRadius = 12f;
     [SerializeField, Range(0, 360)] private float _viewAngle = 135f;
 
+    [Header("FMOD")]
+    [SerializeField] private StudioEventEmitter zombieRoaming;
+    [SerializeField] private StudioEventEmitter zombieFootstep;
+    [SerializeField] private StudioEventEmitter zombieAlert;
+
     [Header("References")]
 #pragma warning disable 0414
     [SerializeField] private bool ShowReferences = true;
 #pragma warning restore 0414
     [SerializeField, ConditionalHide] private WorldConfig _worldConfig = null;
     [SerializeField, ConditionalHide] private Transform _shadow = null;
+    [SerializeField, ConditionalHide] private SpriteRenderer _spriteRenderer = null;
     [SerializeField, ConditionalHide] private InteractionNPC _interactionNPC = null;
     [SerializeField, ConditionalHide] private InputHoldUtility _holdUtility = null;
     [SerializeField, ConditionalHide] private FieldOfView _fieldOfView = null;
@@ -52,11 +58,6 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
     private EnableMovementEvent _enableMovementEvent;
     private CombatEvent _combatEvent;
 
-    // FMOD
-    public StudioEventEmitter zombieRoaming;
-    public StudioEventEmitter zombieFootstep;
-    public StudioEventEmitter zombieAlert;
-
     // Properties
     public DIRECTION StartLookDirection { get { return _startLookDirection; } set { _startLookDirection = value; } }
 
@@ -67,6 +68,8 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void Start()
     {
+        _player = null;
+
         _questEvent = new QuestEvent();
         _enableMovementEvent = new EnableMovementEvent();
 
@@ -126,6 +129,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _fieldOfView.OnLossTarget += OnLossTarget;
 
         if (_data.CanCombat)EventController.AddListener<CombatEvent>(OnCombat);
+        EventController.AddListener<SpriteEvent>(OnSprite);
     }
 
     private void OnDisable()
@@ -134,6 +138,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         _fieldOfView.OnLossTarget -= OnLossTarget;
 
         if (_data.CanCombat)EventController.RemoveListener<CombatEvent>(OnCombat);
+        EventController.RemoveListener<SpriteEvent>(OnSprite);
     }
 
     private void OnCombat(CombatEvent evt)
@@ -148,8 +153,9 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
             if (_isDetectingPlayer)
             {
+                EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
                 zombieRoaming.Stop();
-                
+
                 InteractionCorpse corpse = Instantiate(_worldConfig.interactionCorpse, _shadow.position, Quaternion.identity);
                 corpse.Init(_data.SpriteCorpse);
                 Destroy(gameObject);
@@ -159,6 +165,11 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
                 zombieRoaming.Play();
             }
         }
+    }
+
+    private void OnSprite(SpriteEvent evt)
+    {
+        if (_isDetectingPlayer)_spriteRenderer.enabled = evt.isEnabled;
     }
 
     private void Update()

@@ -13,22 +13,19 @@ public class InteractionDialog : Interaction
     [SerializeField] private LocalizedString _localizedUsedDialog;
 
     private DialogSimpleEvent _interactionDialogEvent;
-    private bool _used;
-    private string _usedId;
 
     private void Start()
     {
         _interactionDialogEvent = new DialogSimpleEvent();
 
-        _usedId = string.Format(DDParameters.Format, DDParameters.SimpleDialog, gameObject.name);
+        if (_useOnlyOnce)CheckPersistence(string.Format(DDParameters.Format, DDParameters.SimpleDialog, gameObject.name));
+    }
 
-        if (_useOnlyOnce)
-        {
-            _used = GameData.Instance.CheckID(_usedId);
+    public override void Used()
+    {
+        base.Used();
 
-            if (_used)ExecuteAnimation(true);
-        }
-
+        ExecuteAnimation(true);
     }
 
     public void OnInteractionEnter(Collider other)

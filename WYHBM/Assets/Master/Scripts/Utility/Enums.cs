@@ -44,6 +44,13 @@ public enum DIALOG_STATE
     Locked = 3
 }
 
+// public enum TUTORIAL
+// {
+//     None = 0,
+//     Interaction = 1,
+//     Crouch = 2,
+// }
+
 // public enum TIER
 // {
 //     none = 0,
@@ -85,4 +92,5 @@ public enum UI_TYPE
     Play = 1,
     Options = 2,
     Quit = 3,
+    Credits = 4,
 }

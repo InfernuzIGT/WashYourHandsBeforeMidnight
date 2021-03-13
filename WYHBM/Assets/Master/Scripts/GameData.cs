@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Chronos;
 using Events;
+using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
@@ -26,6 +27,7 @@ public class GameData : MonoSingleton<GameData>
 
 	[Header("Configs")]
 	[SerializeField] private PlayerConfig _playerConfig;
+	[SerializeField] private FMODConfig _FMODConfig;
 	[SerializeField] private DeviceConfig _deviceConfig;
 
 	[Header("Persistence")]
@@ -95,6 +97,10 @@ public class GameData : MonoSingleton<GameData>
 #else
 		Cursor.visible = false;
 		// Cursor.lockState = CursorLockMode.Locked;
+
+		_devIsBuild = true;
+		_devPrintInputInfo = false;
+		_devDontSave = false;
 #endif
 
 		// DeleteAll();
@@ -141,6 +147,7 @@ public class GameData : MonoSingleton<GameData>
 	public void FinishDemo()
 	{
 		Instantiate(_canvasFinish);
+		DeleteAll();
 	}
 
 	public List<Player> GetListPlayer()
@@ -216,6 +223,11 @@ public class GameData : MonoSingleton<GameData>
 	public Interaction GetPlayerCurrentInteraction()
 	{
 		return _globalController.GetPlayerCurrentInteraction();
+	}
+	
+	public bool HaveGlobalController()
+	{
+		return _globalController != null;
 	}
 
 	#region Localization
@@ -435,11 +447,15 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool CheckID(string id)
 	{
+		if (_globalController == null)Debug.Log($"<b> GLOBAL NULL </b>");
+
 		return _globalController.SessionData.listIds.Contains(id);
 	}
 
 	public void WriteID(string id)
 	{
+		if (_globalController == null)Debug.Log($"<b> GLOBAL NULL </b>");
+
 		if (!_globalController.SessionData.listIds.Contains(id))
 		{
 			_globalController.SessionData.listIds.Add(id);
@@ -449,6 +465,8 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool CheckAndWriteID(string id)
 	{
+		if (_globalController == null)Debug.Log($"<b> GLOBAL NULL </b>");
+
 		bool containId = _globalController.SessionData.listIds.Contains(id);
 
 		if (!containId)
@@ -462,6 +480,8 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool CheckQuestCurrentStep(QuestSO questData)
 	{
+		if (_globalController == null)Debug.Log($"<b> GLOBAL NULL </b>");
+
 		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
 			if (_globalController.SessionData.listQuest[i].data == questData)
@@ -475,6 +495,8 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool CheckQuestRequiredStep(QuestSO questData, int requiredSteps)
 	{
+		if (_globalController == null)Debug.Log($"<b> GLOBAL NULL </b>");
+
 		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
 			if (_globalController.SessionData.listQuest[i].data == questData)
@@ -488,6 +510,8 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool HaveQuest(QuestSO questData)
 	{
+		if (_globalController == null)Debug.Log($"<b> GLOBAL NULL </b>");
+
 		for (int i = 0; i < _globalController.SessionData.listQuest.Count; i++)
 		{
 			if (_globalController.SessionData.listQuest[i].data == questData)

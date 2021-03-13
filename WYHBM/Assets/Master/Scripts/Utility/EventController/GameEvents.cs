@@ -97,6 +97,14 @@ namespace Events
         public RUMBLE_TYPE type;
     }
 
+    public class TutorialEvent : GameEvent
+    {
+        public TutorialSO data;
+        // public TUTORIAL tutorial;
+        // public INPUT_ACTION actionTutorial;
+        public bool show;
+    }
+
     public class FadeEvent : GameEvent
     {
         public bool instant;
@@ -177,6 +185,11 @@ namespace Events
     {
         public bool isPaused;
         public PAUSE_TYPE pauseType;
+    }
+    
+    public class SpriteEvent : GameEvent
+    {
+        public bool isEnabled;
     }
 
     public class InfoTextEvent : GameEvent

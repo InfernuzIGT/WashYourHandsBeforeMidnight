@@ -12,10 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c320e68ac8e93ec42ae169f32d0c27b9, type: 3}
   m_Name: FMODConfig
   m_EditorClassIdentifier: 
-  climbing: event:/Player/Exploration/climbing
-  snapshotPause: snapshot:/Pause_Mode
+  actionSound: Action Sound
+  stateSound: State Sound
+  masterSlider: 
+  musicSlider: MusicSlider
+  soundSlider: SoundsSlider
   music: event:/Main_Menu/music
-  scroll: event:/Main_Menu/scroll
   select: event:/Main_Menu/select
   back: event:/Main_Menu/back
+  climbing: event:/Player/Exploration/climbing
+  scroll: event:/Main_Menu/scroll
   change: event:/Main_Menu/change
+  popupQuest: event:/UI/Popup_Quest_Update
+  popupDevice: event:/UI/Popup_Device
+  popupTutorial: event:/UI/Popup_Device
+  snapshotPause: snapshot:/Pause_Mode

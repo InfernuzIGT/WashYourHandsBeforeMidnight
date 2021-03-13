@@ -9,6 +9,9 @@ using UnityEngine.Localization.Components;
 [RequireComponent(typeof(CanvasGroupUtility))]
 public class QuestPopup : MonoBehaviour
 {
+    [Header("DEMO")]
+    public QuestSO _finalQuestDemo;
+
     [Header("General")]
     [SerializeField] private LocalizedString _stateNone;
     [SerializeField] private LocalizedString _stateNew;
@@ -59,6 +62,9 @@ public class QuestPopup : MonoBehaviour
         _localizeStringState.OnUpdateString.Invoke(_stateTxt.text);
 
         Play();
+
+        // TODO Mariano: REMOVE
+        if (evt.data == _finalQuestDemo && evt.state == QUEST_STATE.Complete)GameData.Instance.FinishDemo();
     }
 
     private LocalizedString GetLocalizedState(QUEST_STATE state)

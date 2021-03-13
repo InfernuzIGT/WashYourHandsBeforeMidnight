@@ -20,7 +20,7 @@ public class InputInfo : MonoBehaviour
     [SerializeField, ConditionalHide] private TextMeshProUGUI _infoTxt = null;
 
     private DeviceAction _deviceAction;
-    
+
     private void OnEnable()
     {
         EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
@@ -34,12 +34,24 @@ public class InputInfo : MonoBehaviour
     private void OnDeviceChange(DeviceChangeEvent evt)
     {
         currentDevice = evt.device;
-        
-        _deviceAction = _deviceConfig.GetDeviceAction(action);
 
+        UpdateData();
+    }
+    
+    private void UpdateData()
+    {
+        _deviceAction = _deviceConfig.GetDeviceAction(action);
+        
         _infoImg.sprite = _deviceConfig.GetDeviceIcon(_deviceAction, currentDevice);
         _localizeStringEvent.StringReference = _deviceAction.localizedString;
         _localizeStringEvent.OnUpdateString.Invoke(_infoTxt.text);
+    }
+
+    public void SetInputAction(INPUT_ACTION newAction)
+    {
+        action = newAction;
+        
+        UpdateData();
     }
 
 }
