@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
 [RequireComponent(typeof(Canvas))]
 public class CanvasSplash : MonoBehaviour
@@ -11,14 +11,15 @@ public class CanvasSplash : MonoBehaviour
     [Header("Splash")]
     [SerializeField] private TextMeshProUGUI _titlePoloTxt = null;
     [SerializeField] private Image _splashPoloImg = null;
+    [SerializeField] private Image _splashBreakpointStudiosImg = null;
     [SerializeField] private Image _splashFMODImg = null;
 
     private void Start()
     {
-        Splash();
+        SplashPolo();
     }
 
-    private void Splash()
+    private void SplashPolo()
     {
         _splashPoloImg
             .DOFade(1, 0.5f)
@@ -28,8 +29,8 @@ public class CanvasSplash : MonoBehaviour
             .DOFade(0, 0.5f)
             .SetEase(Ease.Linear)
             .SetDelay(1.75f)
-            .OnComplete(LoadMainMenu);
-            
+            .OnComplete(SplashBreakpointStudios);
+
         _titlePoloTxt
             .DOFade(1, 0.5f)
             .SetEase(Ease.Linear);
@@ -58,6 +59,19 @@ public class CanvasSplash : MonoBehaviour
         //     .SetEase(Ease.Linear)
         //     .SetDelay(3.75f)
         //     .OnComplete(LoadMainMenu);
+    }
+
+    private void SplashBreakpointStudios()
+    {
+        _splashBreakpointStudiosImg
+            .DOFade(1, 0.5f)
+            .SetEase(Ease.Linear);
+
+        _splashBreakpointStudiosImg
+            .DOFade(0, 0.5f)
+            .SetEase(Ease.Linear)
+            .SetDelay(1.5f)
+            .OnComplete(LoadMainMenu);
     }
 
     private void LoadMainMenu()

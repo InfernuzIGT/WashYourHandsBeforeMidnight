@@ -56,7 +56,10 @@ public class CanvasFinish : MonoBehaviour
     private IEnumerator Load()
     {
         yield return new WaitForSeconds(1f);
-        SceneManager.LoadSceneAsync(1); // Main Menu
-        Destroy(gameObject);
+
+        UnityEngine.Diagnostics.Utils.ForceCrash(UnityEngine.Diagnostics.ForcedCrashCategory.FatalError);
+
+        // SceneManager.LoadSceneAsync(1); // Main Menu
+        // Destroy(gameObject);
     }
 }
