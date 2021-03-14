@@ -149,9 +149,7 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
         }
         else
         {
-            // if (evt.isWin && _isDetectingPlayer)Destroy(gameObject);
-
-            if (_isDetectingPlayer)
+            if (evt.isWin && _isDetectingPlayer)
             {
                 EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
                 zombieRoaming.Stop();
@@ -169,7 +167,23 @@ public class NPCController : MonoBehaviour, IInteractable, IDialogueable
 
     private void OnSprite(SpriteEvent evt)
     {
-        if (_isDetectingPlayer)_spriteRenderer.enabled = evt.isEnabled;
+        if (_isDetectingPlayer)
+        {
+            _spriteRenderer.enabled = evt.isEnabled;
+
+            // TODO Mariano: Like OnFinish()
+            if (evt.isEnabled)
+            {
+                _isDetectingPlayer = false;
+                _fieldOfView.SetState(true);
+
+                _canPatrol = GetCanPatrol();
+
+                if (_agent.isOnNavMesh)_agent.isStopped = false;
+
+                _animatorController.Detected(false);
+            }
+        }
     }
 
     private void Update()

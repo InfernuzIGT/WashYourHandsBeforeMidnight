@@ -11,6 +11,11 @@ public class LevelManager : MonoBehaviour
     {
         return _spawnPoints[ID];
     }
+    
+    public Vector3 GetSpawnPointPosition(int ID)
+    {
+        return _spawnPoints[ID].transform.position;
+    }
 
     public CombatArea GetCombatArea()
     {

@@ -84,6 +84,7 @@ public class GlobalController : MonoBehaviour
     private EnableMovementEvent _enableMovementEvent;
     private CutsceneEvent _cutsceneEvent;
     private DialogDesignerEvent _interactionDialogEvent;
+    private CurrentInteractEvent _currentInteractEvent;
     private PauseEvent _pauseEvent;
     private FadeEvent _fadeEvent;
     private SpriteEvent _spriteEvent;
@@ -104,10 +105,10 @@ public class GlobalController : MonoBehaviour
         if (_devAutoInit)CheckPersistenceObjects();
     }
 
-    private void Update()
-    {
-        //_pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/Pause_Mode");
-    }
+    // private void Update()
+    // {
+    //     //_pauseSnapshot = FMODUnity.RuntimeManager.CreateInstance("snapshot:/Pause_Mode");
+    // }
 
     public void Init(Vector3 spawnPosition)
     {
@@ -116,6 +117,9 @@ public class GlobalController : MonoBehaviour
         if (!_devAutoInit)CheckPersistenceObjects();
 
         _enableMovementEvent = new EnableMovementEvent();
+
+        _currentInteractEvent = new CurrentInteractEvent();
+        _currentInteractEvent.currentInteraction = null;
 
         _interactionDialogEvent = new DialogDesignerEvent();
         _interactionDialogEvent.enable = false;
@@ -179,6 +183,7 @@ public class GlobalController : MonoBehaviour
             _fadeEvent.instant = true;
             _fadeEvent.delay = _worldConfig.fadeDelay;
             _fadeEvent.callbackEnd = _combatController.InitiateTurn;
+
             StartCoroutine(StartCombat());
         }
         else
@@ -186,6 +191,15 @@ public class GlobalController : MonoBehaviour
             _fadeEvent.instant = false;
             _fadeEvent.delay = 0;
             _fadeEvent.callbackEnd = () => EnableMovement(true, true);
+
+            if (!evt.isWin)
+            {
+                // TODO Mariano: GAME OVER
+                GameData.Instance.Respawn();
+            }
+
+            EventController.TriggerEvent(_currentInteractEvent);
+
             StartCoroutine(FinishCombat());
         }
     }
@@ -580,11 +594,11 @@ public class GlobalController : MonoBehaviour
         switch (evt.state)
         {
             case QUEST_STATE.New:
-                for (int i = 0; i < sessionData.listQuest.Count; i++)
-                {
-                    if (sessionData.listQuest[i].data = evt.data)break;
-                }
-
+                // for (int i = 0; i < sessionData.listQuest.Count; i++)
+                // {
+                //     if (sessionData.listQuest[i].data = evt.data)break;
+                // }
+                
                 Quest newQuest = new Quest();
                 newQuest.data = evt.data;
                 newQuest.currentStep = 0;

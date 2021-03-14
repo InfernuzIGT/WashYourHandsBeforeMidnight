@@ -24,6 +24,7 @@ public class DialogSimple : MonoBehaviour
     [SerializeField, ConditionalHide] private GameObject _continueImg = null;
 
     // Dialogues
+    private bool _inDialog;
     private bool _isReading;
     private int _totalVisibleCharacters;
     private int _counter;
@@ -82,7 +83,6 @@ public class DialogSimple : MonoBehaviour
 
             EventController.AddListener<InteractionEvent>(OnInteractionDialog);
             _actionCancel.action.performed += Select;
-
         }
         else
         {
@@ -100,6 +100,8 @@ public class DialogSimple : MonoBehaviour
 
     private void Select(InputAction.CallbackContext context)
     {
+        if (!_inDialog) return;
+        
         Select();
     }
 
@@ -123,6 +125,8 @@ public class DialogSimple : MonoBehaviour
 
     private void Play()
     {
+        _inDialog = true;
+
         _dialogState = DIALOG_STATE.InProgress;
 
         _enableMovementEvent.canMove = false;
@@ -141,6 +145,8 @@ public class DialogSimple : MonoBehaviour
 
     private void Stop()
     {
+        _inDialog = false;
+
         _dialogState = DIALOG_STATE.Locked;
 
         _canvasUtility.Show(false);
