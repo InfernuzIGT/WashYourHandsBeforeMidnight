@@ -594,11 +594,11 @@ public class GlobalController : MonoBehaviour
         switch (evt.state)
         {
             case QUEST_STATE.New:
-                for (int i = 0; i < sessionData.listQuest.Count; i++)
-                {
-                    if (sessionData.listQuest[i].data = evt.data)break;
-                }
-
+                // for (int i = 0; i < sessionData.listQuest.Count; i++)
+                // {
+                //     if (sessionData.listQuest[i].data = evt.data)break;
+                // }
+                
                 Quest newQuest = new Quest();
                 newQuest.data = evt.data;
                 newQuest.currentStep = 0;
