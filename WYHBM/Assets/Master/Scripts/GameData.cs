@@ -150,6 +150,12 @@ public class GameData : MonoSingleton<GameData>
 		DeleteAll();
 	}
 
+	public void Respawn()
+	{
+		_changePositionEvent.newPosition = _levelManager.GetSpawnPointPosition(PlayerData.ID);
+		EventController.TriggerEvent(_changePositionEvent);
+	}
+
 	public List<Player> GetListPlayer()
 	{
 		return _globalController.GetListPlayer();
@@ -224,7 +230,7 @@ public class GameData : MonoSingleton<GameData>
 	{
 		return _globalController.GetPlayerCurrentInteraction();
 	}
-	
+
 	public bool HaveGlobalController()
 	{
 		return _globalController != null;
