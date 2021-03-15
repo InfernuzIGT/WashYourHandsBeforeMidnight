@@ -614,7 +614,8 @@ public class GlobalController : MonoBehaviour
                         sessionData.listQuest[i].currentStep++;
 
                         if (sessionData.listQuest[i].currentStep >= evt.data.steps)CompleteQuest(i);
-                        break;
+                        // break;
+                        return;
                     }
                 }
                 break;
@@ -625,7 +626,8 @@ public class GlobalController : MonoBehaviour
                     if (sessionData.listQuest[i].data = evt.data)
                     {
                         CompleteQuest(i);
-                        break;
+                        // break;
+                        return;
                     }
                 }
                 break;
