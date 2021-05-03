@@ -19,9 +19,7 @@ public class Quest
 public class GlobalController : MonoBehaviour
 {
     [Header("Developer")]
-    [SerializeField] private bool _devAutoInit = false;
-    [SerializeField] private bool _devSilentSteps = false;
-    [SerializeField] private bool _devDDLegacyMode = false;
+    [SerializeField] private DeveloperConfig _devConfig;
 
     [Header("General")]
     [SerializeField, ReadOnly] private PlayerSO playerData;
@@ -97,12 +95,12 @@ public class GlobalController : MonoBehaviour
 
 #if UNITY_EDITOR
 #else
-        _devAutoInit = false;
-        _devSilentSteps = false;
-        _devDDLegacyMode = false;
+        _devConfig.autoInit = false;
+        _devConfig.silentSteps = false;
+        _devConfig.dDLegacyMode = false;
 #endif
 
-        if (_devAutoInit)CheckPersistenceObjects();
+        if (_devConfig.autoInit)CheckPersistenceObjects();
     }
 
     // private void Update()
@@ -114,7 +112,7 @@ public class GlobalController : MonoBehaviour
     {
         UnityEngine.SceneManagement.SceneManager.SetActiveScene(UnityEngine.SceneManagement.SceneManager.GetSceneByName("Player"));
 
-        if (!_devAutoInit)CheckPersistenceObjects();
+        if (!_devConfig.autoInit)CheckPersistenceObjects();
 
         _enableMovementEvent = new EnableMovementEvent();
 
@@ -279,8 +277,8 @@ public class GlobalController : MonoBehaviour
         GameData tempGamedata = GameObject.FindObjectOfType<GameData>();
 
         _gameData = tempGamedata != null ? tempGamedata : Instantiate(_gameData);
-        _gameData.DevDDLegacyMode = _devDDLegacyMode;
-        if (_devAutoInit)_gameData.GetSceneReferences();
+        _gameData.DevDDLegacyMode = _devConfig.dDLegacyMode;
+        if (_devConfig.autoInit)_gameData.GetSceneReferences();
         sessionData = _gameData.LoadSessionData();
 
         CanvasPersistent tempCanvasPersistent = GameObject.FindObjectOfType<CanvasPersistent>();
@@ -291,7 +289,7 @@ public class GlobalController : MonoBehaviour
     private void SpawnPlayer(Vector3 spawnPosition)
     {
         _playerController = Instantiate(_playerController, spawnPosition, Quaternion.identity);
-        _playerController.DevSilentSteps = _devSilentSteps;
+        _playerController.DevSilentSteps = _devConfig.silentSteps;
         _playerController.SetInput(() => Pause(PAUSE_TYPE.PauseMenu), () => Pause(PAUSE_TYPE.Inventory));
         _playerController.SetPlayerData(playerData);
 
@@ -598,7 +596,7 @@ public class GlobalController : MonoBehaviour
                 // {
                 //     if (sessionData.listQuest[i].data = evt.data)break;
                 // }
-                
+
                 Quest newQuest = new Quest();
                 newQuest.data = evt.data;
                 newQuest.currentStep = 0;

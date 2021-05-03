@@ -266,13 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e0f67d7c74265045ab9170ddba87d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listenModeOnSound: {fileID: 8595930083817840210}
-  listenModeOffSound: {fileID: 4390616561249191365}
-  battleMusic: {fileID: 7703780164367567968}
-  victorySound: {fileID: 7898988882149721693}
-  _devAutoInit: 0
-  _devSilentSteps: 0
-  _devDDLegacyMode: 0
+  _devConfig: {fileID: 11400000, guid: 0de828e214e2ee24f95509aa005a04a3, type: 2}
   playerData: {fileID: 11400000, guid: 6020afc7547868d44800533f731f5ac3, type: 2}
   _isPaused: 0
   _inDialog: 0
@@ -283,6 +277,9 @@ MonoBehaviour:
     newSpawnPoint: {fileID: 0}
     listQuest: []
     listIds: []
+  listenModeOnSound: {fileID: 8595930083817840210}
+  listenModeOffSound: {fileID: 4390616561249191365}
+  battleMusic: {fileID: 7703780164367567968}
   ShowReferences: 0
   _worldConfig: {fileID: 11400000, guid: 9517167fddd5bf24abc446188c63738b, type: 2}
   _combatConfig: {fileID: 11400000, guid: aef813af54698824ba8ae4f7bee4a0c3, type: 2}

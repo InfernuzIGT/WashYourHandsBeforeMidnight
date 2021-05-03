@@ -589,7 +589,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c0123517-f285-419d-bf44-3ee80a5470e3"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Generic;Steam;Xbox360;PS3"",
@@ -600,7 +600,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""bfd22d73-0018-4c41-9083-51cd92d12fb2"",
-                    ""path"": ""<DualShockGamepad>/leftStickPress"",
+                    ""path"": ""<DualShockGamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PS4"",
@@ -611,7 +611,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""26d067ad-24a4-4897-985b-cdc4da39187c"",
-                    ""path"": ""<XInputController>/leftStickPress"",
+                    ""path"": ""<XInputController>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XboxOne"",
@@ -622,7 +622,7 @@ public class @CustomInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ccb1a1da-393d-43db-bfc9-9b273b453757"",
-                    ""path"": ""<SwitchProControllerHID>/leftStickPress"",
+                    ""path"": ""<SwitchProControllerHID>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Switch"",

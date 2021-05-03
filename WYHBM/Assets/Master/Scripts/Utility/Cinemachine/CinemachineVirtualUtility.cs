@@ -7,8 +7,8 @@ public class CinemachineVirtualUtility : MonoBehaviour
 {
     [SerializeField] private PlayerConfig _playerConfig;
 
-    [Range(0, 100), SerializeField] private float _lookSpeed = 30f;
-    [Range(0, 10), SerializeField] private float _limit = 5f;
+    [Range(0, 100), /* SerializeField */] private float _lookSpeed = 30f;
+    [Range(0, 10), /* SerializeField */] private float _limit = 5f;
     [Space]
     [ReadOnly, SerializeField] private int _startIndexZoom = 1;
 
@@ -44,17 +44,17 @@ public class CinemachineVirtualUtility : MonoBehaviour
 
     private void OnEnable()
     {
-        EventController.AddListener<CustomFadeEvent>(OnCustomFade);
-        EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
-        EventController.AddListener<EnableMovementEvent>(OnStopMovement);
+        // EventController.AddListener<CustomFadeEvent>(OnCustomFade);
+        // EventController.AddListener<DeviceChangeEvent>(OnDeviceChange);
+        // EventController.AddListener<EnableMovementEvent>(OnStopMovement);
         EventController.AddListener<CombatEvent>(OnCombat);
     }
 
     private void OnDisable()
     {
-        EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
-        EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
-        EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
+        // EventController.RemoveListener<CustomFadeEvent>(OnCustomFade);
+        // EventController.RemoveListener<DeviceChangeEvent>(OnDeviceChange);
+        // EventController.RemoveListener<EnableMovementEvent>(OnStopMovement);
         EventController.RemoveListener<CombatEvent>(OnCombat);
     }
 
@@ -80,27 +80,26 @@ public class CinemachineVirtualUtility : MonoBehaviour
         _isInitialized = true;
     }
 
-    private void Update()
-    {
-        // if (_isFade || !_canMove || !_isInitialized || !Application.isFocused || _inCombat)
-        if (_isFade || !_canMove || !_isInitialized || !Application.isFocused || _inCombat || _currentDevice == DEVICE.PC)
-        {
-            _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
-            _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;
-            return;
-        }
+    // private void Update()
+    // {
+    //     if (_isFade || !_canMove || !_isInitialized || !Application.isFocused || _inCombat || _currentDevice == DEVICE.PC)
+    //     {
+    //         _cinemachineFramingTransposer.m_TrackedObjectOffset.x = _originalX;
+    //         _cinemachineFramingTransposer.m_TrackedObjectOffset.z = _originalZ;
+    //         return;
+    //     }
 
-        UpdateValuesGamepad();
+    //     UpdateValuesGamepad();
         
-        // if (_currentDevice != DEVICE.PC)
-        // {
-        //     UpdateValuesGamepad();
-        // }
-        // else
-        // {
-        //     UpdateValuesMouse();
-        // }
-    }
+    //     // if (_currentDevice != DEVICE.PC)
+    //     // {
+    //     //     UpdateValuesGamepad();
+    //     // }
+    //     // else
+    //     // {
+    //     //     UpdateValuesMouse();
+    //     // }
+    // }
 
     private void UpdateValuesGamepad()
     {

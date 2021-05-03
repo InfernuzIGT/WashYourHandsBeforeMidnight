@@ -20,12 +20,8 @@ public enum SESSION_OPTION
 [RequireComponent(typeof(LocalizationUtility), typeof(InputSystemUtility))]
 public class GameData : MonoSingleton<GameData>
 {
-	[Header("Developer")]
-	[SerializeField] private bool _devIsBuild = false;
-	[SerializeField] private bool _devPrintInputInfo = false;
-	[SerializeField] private bool _devDontSave = false;
-
 	[Header("Configs")]
+	[SerializeField] private DeveloperConfig _devConfig;
 	[SerializeField] private PlayerConfig _playerConfig;
 	[SerializeField] private FMODConfig _FMODConfig;
 	[SerializeField] private DeviceConfig _deviceConfig;
@@ -93,13 +89,13 @@ public class GameData : MonoSingleton<GameData>
 #if UNITY_EDITOR
 		Cursor.visible = true;
 		// Cursor.lockState = CursorLockMode.None;
-		if (_devPrintInputInfo)InputSystemAdapter.printInfo = true;
+		if (_devConfig.printInputInfo)InputSystemAdapter.printInfo = true;
 #else
 		Cursor.visible = false;
 		// Cursor.lockState = CursorLockMode.Locked;
 
 		_devIsBuild = true;
-		_devPrintInputInfo = false;
+		_devConfig.printInputInfo = false;
 		_devDontSave = false;
 #endif
 
@@ -130,9 +126,9 @@ public class GameData : MonoSingleton<GameData>
 
 #if UNITY_EDITOR
 #else
-		_devIsBuild = true;
+		_devConfig.isBuild = true;
 #endif
-		if (_devIsBuild)
+		if (_devConfig.isBuild)
 		{
 			Instantiate(_canvasSplash);
 		}
@@ -551,7 +547,7 @@ public class GameData : MonoSingleton<GameData>
 
 	public bool Save()
 	{
-		if (_devDontSave)return true;
+		if (_devConfig.dontSave)return true;
 
 		EventController.TriggerEvent(_saveAnimationEvent);
 
