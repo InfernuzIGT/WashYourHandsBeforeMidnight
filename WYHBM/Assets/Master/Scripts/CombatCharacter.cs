@@ -110,7 +110,7 @@ public class CombatCharacter : MonoBehaviour
         _isMyTurn = false;
 
         _combatIndex = index;
-        _healthActual = _data.StatsHealthStart;
+        _healthActual = _data.StatsHealthMax;
 
         // _equipment.AddRange(inventoryCombat);
 
@@ -460,62 +460,62 @@ public class CombatCharacter : MonoBehaviour
 
     #region Turn System
 
-    /// <summary>
-    /// Ejecuta la accion
-    /// </summary>
-    public void DoAction()
-    {
-        if (_isMyTurn)
-        {
-            _isActionDone = true;
-            _isMyTurn = false;
-        }
-    }
+    // /// <summary>
+    // /// Ejecuta la accion
+    // /// </summary>
+    // public void DoAction()
+    // {
+    //     if (_isMyTurn)
+    //     {
+    //         _isActionDone = true;
+    //         _isMyTurn = false;
+    //     }
+    // }
 
-    /// <summary>
-    /// Comienza a esperar la accion
-    /// </summary>
-    public Coroutine StartWaitingForAction()
-    {
-        return StartCoroutine(WaitingForAction());
-    }
+    // /// <summary>
+    // /// Comienza a esperar la accion
+    // /// </summary>
+    // public Coroutine StartWaitingForAction()
+    // {
+    //     return StartCoroutine(WaitingForAction());
+    // }
 
-    /// <summary>
-    /// Espera la accion
-    /// </summary>
-    public virtual IEnumerator WaitingForAction()
-    {
-        yield return null;
-    }
+    // /// <summary>
+    // /// Espera la accion
+    // /// </summary>
+    // public virtual IEnumerator WaitingForAction()
+    // {
+    //     yield return null;
+    // }
 
-    public void StartGettingAhead()
-    {
-        _coroutineGettingAhead = StartCoroutine(GettingAhead());
-    }
+    // public void StartGettingAhead()
+    // {
+    //     _coroutineGettingAhead = StartCoroutine(GettingAhead());
+    // }
 
-    public void StopGettingAhead()
-    {
-        StopCoroutine(_coroutineGettingAhead);
-    }
+    // public void StopGettingAhead()
+    // {
+    //     StopCoroutine(_coroutineGettingAhead);
+    // }
 
-    /// <summary>
-    /// Luego de un lapso de tiempo, se mueve hacia la punta de la lista de Characters
-    /// </summary>
-    private IEnumerator GettingAhead()
-    {
-        float elapsedTime = 0;
+    // /// <summary>
+    // /// Luego de un lapso de tiempo, se mueve hacia la punta de la lista de Characters
+    // /// </summary>
+    // private IEnumerator GettingAhead()
+    // {
+    //     float elapsedTime = 0;
 
-        float timeThreshold = (10 / _data.StatsReaction) * _combatConfig.actionTimeThresholdMultiplier;
+    //     float timeThreshold = (10 / _data.StatsReaction) * _combatConfig.actionTimeThresholdMultiplier;
 
-        while (elapsedTime <= timeThreshold)
-        {
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
+    //     while (elapsedTime <= timeThreshold)
+    //     {
+    //         elapsedTime += Time.deltaTime;
+    //         yield return null;
+    //     }
 
-        EventController.TriggerEvent(_combatCharacterGoAheadEvent);
-        // GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
-    }
+    //     EventController.TriggerEvent(_combatCharacterGoAheadEvent);
+    //     // GameManager.Instance.combatManager.CharacterIsReadyToGoAhead(this);
+    // }
 
     #endregion 
 

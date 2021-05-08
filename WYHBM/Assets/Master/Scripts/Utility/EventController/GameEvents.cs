@@ -9,6 +9,15 @@ namespace Events
 {
     public class GameEvent { }
 
+    #region Combat
+
+    public class ActionCommandEvent : GameEvent
+    {
+        public ACTION_TYPE type;
+    }
+
+    #endregion
+
     #region Interaction
 
     public class InteractionEvent : GameEvent
@@ -186,7 +195,7 @@ namespace Events
         public bool isPaused;
         public PAUSE_TYPE pauseType;
     }
-    
+
     public class SpriteEvent : GameEvent
     {
         public bool isEnabled;
